@@ -1,0 +1,380 @@
+
+:root {
+    --azul-integra: #1d2e68;
+    --laranja-integra: #ff8500;
+    --texto-secundario: #777777;
+    --borda-campo: #cccccc;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.login {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+/* Lado esquerdo da tela */
+
+.login-apresentacao {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    flex-shrink: 0;
+    min-height: 100vh;
+    padding: 45px 40px 35px;
+    background-color: var(--azul-integra);
+    color: #ffffff;
+    box-shadow: 10px 0 25px rgba(0, 0, 0, 0.40);
+    position: relative;
+}
+
+.marca-integra {
+    display: flex;
+    align-items: center;
+}
+
+.logo-integra {
+    display: block;
+    width: 450px;
+    height: 200px;
+    object-fit: contain;
+    object-position: left center;
+}
+
+.texto-apresentacao {
+    margin-top: 24px;
+}
+
+
+.texto-apresentacao h1 {
+    margin: 0 0 0 20px;
+    font-size: clamp(34px, 3.5vw, 44px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    margin-left: 21px;
+}
+
+.texto-apresentacao h1 span {
+    display: block;
+    color: var(--laranja-integra);
+    font-weight: 600;
+}
+
+.texto-apresentacao p {
+    max-width: 400px;
+    margin: 14px 0 0 20px;
+    color: #d5daea;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-left: 21px;
+}
+
+
+/* Informações na parte inferior */
+
+.vantagens {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    max-width: 330px;
+    margin-top: auto;
+    padding: 0 10px 35px;
+    margin-left: 21px;
+}
+
+.vantagem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+}
+
+.vantagem img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.vantagem span {
+    color: #c3c9dc;
+    font-size: 13px;
+    line-height: 1.25;
+}
+
+/* Lado direito da tela */
+
+.login-formulario {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 100vh;
+    padding: 40px 50px;
+    background-color: #ffffff;
+}
+
+.formulario-conteudo {
+    width: 100%;
+    max-width: 430px;
+}
+
+/* Título e subtítulo */
+
+.formulario-cabecalho {
+    margin-bottom: 52px;
+}
+
+.formulario-cabecalho h2 {
+    margin: 0;
+    color: var(--azul-integra);
+    font-size: 32px;
+    font-weight: 500;
+}
+
+.formulario-cabecalho p {
+    margin: 8px 0 0;
+    color: var(--texto-secundario);
+    font-size: 14px;
+}
+
+/* Campos de preenchimento */
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 42px;
+}
+
+.campo label {
+    margin-bottom: 7px;
+    color: #222222;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.campo input {
+    width: 100%;
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid var(--borda-campo);
+    border-radius: 4px;
+    outline: none;
+    background-color: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.campo input:focus {
+    border-color: var(--azul-integra);
+}
+
+.campo input::placeholder {
+    color: #888888;
+}
+
+.campo-senha {
+    margin-bottom: 42px;
+}
+
+/* Recuperar senha */
+
+.link-recuperar {
+    align-self: flex-end;
+    margin-top: 7px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--laranja-integra);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.link-recuperar:hover,
+.link-criar-conta:hover {
+    text-decoration: underline;
+}
+
+/* Botão principal */
+
+.botao-entrar {
+    width: 100%;
+    height: 46px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--azul-integra);
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.botao-entrar:hover {
+    background-color: #142250;
+}
+
+.botao-entrar:focus-visible,
+.link-recuperar:focus-visible,
+.link-criar-conta:focus-visible {
+    outline: 2px solid var(--laranja-integra);
+    outline-offset: 3px;
+}
+
+/* Separador entre as opções */
+
+.divisor {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 15px 6px 14px;
+}
+
+.divisor span {
+    flex: 1;
+    height: 1px;
+    background-color: #e7e7e7;
+}
+
+.divisor small {
+    color: #bbbbbb;
+    font-size: 12px;
+}
+
+/* Criar conta */
+
+.link-criar-conta {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--laranja-integra);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Ajustes para celulares e tablets */
+
+@media (max-width: 900px) {
+    .login-apresentacao {
+        width: 42%;
+        flex-shrink: 1;
+        padding: 35px 25px;
+    }
+
+    .logo-integra {
+        max-width: 100%;
+        height: 85px;
+    }
+
+    .login-formulario {
+        padding: 35px 30px;
+    }
+
+    .texto-apresentacao h1 {
+        margin-left: 10px;
+    }
+
+    .texto-apresentacao p {
+        margin-left: 10px;
+    }
+}
+
+@media (max-width: 700px) {
+    .login {
+        flex-direction: column;
+    }
+
+    .login-apresentacao {
+        width: 100%;
+        flex-shrink: 0;
+        min-height: auto;
+        padding: 30px 25px;
+    }
+
+    .logo-integra {
+        max-width: 280px;
+        height: 75px;
+    }
+
+    .texto-apresentacao {
+        margin-top: 20px;
+    }
+
+    .texto-apresentacao h1 {
+        margin-left: 0;
+    }
+
+    .texto-apresentacao p {
+        max-width: 400px;
+        margin-left: 0;
+    }
+
+    .vantagens {
+        margin-top: 30px;
+        padding: 0;
+    }
+
+    .login-formulario {
+        flex: none;
+        width: 100%;
+        min-height: auto;
+        padding: 40px 25px;
+    }
+
+    .formulario-conteudo {
+        max-width: 430px;
+    }
+
+    .formulario-cabecalho {
+        margin-bottom: 35px;
+    }
+
+    .formulario-cabecalho h2 {
+        font-size: 28px;
+    }
+
+    .campo {
+        margin-bottom: 30px;
+    }
+
+    .campo-senha {
+        margin-bottom: 35px;
+    }
+}
+
+@media (max-width: 380px) {
+    .login-apresentacao {
+        padding: 25px 18px;
+    }
+
+    .texto-apresentacao h1 {
+        font-size: 25px;
+    }
+
+    .formulario-cabecalho h2 {
+        font-size: 26px;
+    }
+
+    .login-formulario {
+        padding: 35px 20px;
+    }
+}
