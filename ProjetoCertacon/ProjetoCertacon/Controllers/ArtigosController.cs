@@ -54,7 +54,7 @@ namespace ProjetoCertacon.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> CriarArtigo(ArtigoRequest dados)
         {
             if (string.IsNullOrWhiteSpace(dados.Titulo) ||
@@ -76,11 +76,17 @@ namespace ProjetoCertacon.Controllers
             if (!Guid.TryParse(usuarioId, out var autorId))
                 return Unauthorized("Usuario do token invalido.");
 
-            var temaExiste = await _context.Temas
-                .AnyAsync(t => t.TemaId == dados.TemaId);
+            var tema = await _context.Temas
+                .FirstOrDefaultAsync(t => t.TemaId == dados.TemaId);
 
-            if (!temaExiste)
+            if (tema == null)
                 return BadRequest("O tema informado nao existe.");
+
+            if (!PodeCriarNoTema(tema.Nome))
+            {
+                return StatusCode(403,
+                    "Seu perfil nao pode criar artigos neste tema.");
+            }
 
             var artigo = new Artigo
             {
@@ -279,6 +285,97 @@ namespace ProjetoCertacon.Controllers
                 artigo.ArtigoId,
                 artigo.Status
             });
+        }
+
+        [HttpGet("{id:guid}/historico")]
+        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        public async Task<IActionResult> GetHistorico(Guid id)
+        {
+            var artigoExiste = await _context.Artigos
+                .AnyAsync(a => a.ArtigoId == id);
+
+            if (!artigoExiste)
+                return NotFound("Artigo nao encontrado.");
+
+            var historico = await _context.RevisaoArtigos
+                .Where(r => r.ArtigoId == id)
+                .OrderByDescending(r => r.DataRevisao)
+                .Select(r => new
+                {
+                    r.RevisaoArtigoId,
+                    r.ArtigoId,
+                    Revisor = r.Usuario.Nome,
+                    r.Status,
+                    r.Comentario,
+                    r.StatusAnterior,
+                    r.StatusNovo,
+                    r.DataRevisao
+                })
+                .ToListAsync();
+
+            return Ok(historico);
+        }
+
+        [HttpPost("{id:guid}/publicar")]
+        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        public async Task<IActionResult> PublicarArtigo(Guid id)
+        {
+            var artigo = await _context.Artigos
+                .FirstOrDefaultAsync(a => a.ArtigoId == id);
+
+            if (artigo == null)
+                return NotFound("Artigo nao encontrado.");
+
+            if (artigo.Status != "APROVADO")
+                return BadRequest(
+                    "Somente artigos aprovados podem ser publicados.");
+
+            artigo.Status = "PUBLICADO";
+            artigo.DataPublicacao = DateTime.UtcNow;
+            artigo.DataAtualizacao = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                mensagem = "Artigo publicado com sucesso.",
+                artigo.ArtigoId,
+                artigo.Titulo,
+                artigo.Status,
+                artigo.DataPublicacao
+            });
+        }
+
+        private bool PodeCriarNoTema(string nomeTema)
+        {
+            if (User.IsInRole("Administrador") ||
+                User.IsInRole("Coordenador Fiscal"))
+            {
+                return true;
+            }
+
+            if (User.IsInRole("Analista SPED") &&
+                (nomeTema == "SPED EFD" ||
+                 nomeTema == "EFD-Contribuições"))
+            {
+                return true;
+            }
+
+            if (User.IsInRole("Analista de Documentos Fiscais") &&
+                (nomeTema == "NF-e" ||
+                 nomeTema == "NFP" ||
+                 nomeTema == "XML"))
+            {
+                return true;
+            }
+
+            if (User.IsInRole("Analista de Reforma Tributária") &&
+                nomeTema == "Reforma Tributária")
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private Guid? ObterUsuarioId()

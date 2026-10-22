@@ -76,3 +76,59 @@ ORDER BY DataCriacao DESC;
 SELECT Artigo_Id, Titulo, Status
 FROM dbo.ARTIGO
 WHERE Status = 'RASCUNHO';
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    Visibilidade,
+    DataAtualizacao,
+    DataPublicacao
+FROM dbo.ARTIGO
+ORDER BY DataCriacao DESC;
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    DataPublicacao
+FROM dbo.ARTIGO
+WHERE Artigo_Id = 'E7576BC0-F189-4A4B-8708-225C7725EDC3';
+
+SELECT
+    u.Nome,
+    u.Email,
+    p.Nome AS Perfil
+FROM dbo.USUARIO u
+INNER JOIN dbo.USUARIO_PERFIL up
+    ON up.Usuario_Id = u.Usuario_Id
+INNER JOIN dbo.PERFIL p
+    ON p.Perfil_Id = up.Perfil_Id
+ORDER BY u.Nome;
+
+SELECT *
+FROM dbo.PERFIL;
+GO
+
+
+SELECT COLUMN_NAME, DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'PERFIL'
+ORDER BY ORDINAL_POSITION;
+GO
+
+
+SELECT
+    u.Nome,
+    u.Email,
+    p.Nome AS Perfil,
+    u.Ativo
+FROM dbo.USUARIO u
+INNER JOIN dbo.USUARIO_PERFIL up
+    ON up.Usuario_Id = u.Usuario_Id
+INNER JOIN dbo.PERFIL p
+    ON p.Perfil_Id = up.Perfil_Id
+ORDER BY p.Nome;

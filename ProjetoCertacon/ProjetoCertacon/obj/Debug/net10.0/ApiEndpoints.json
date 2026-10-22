@@ -64,6 +64,38 @@
   },
   {
     "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
+    "Method": "GetHistorico",
+    "RelativePath": "api/Artigos/{id}/historico",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
+    "Method": "PublicarArtigo",
+    "RelativePath": "api/Artigos/{id}/publicar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
     "Method": "RejeitarArtigo",
     "RelativePath": "api/Artigos/{id}/rejeitar",
     "HttpMethod": "POST",
@@ -154,6 +186,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
+    "Method": "Cadastrar",
+    "RelativePath": "api/Usuarios",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.UsuarioRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]
