@@ -5,13 +5,18 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using ProjetoCertacon.Data;
 using ProjetoCertacon.Models;
+using ProjetoCertacon.Services;
 using System.Text;
+using ProjetoCertacon.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddScoped<ArmazenamentoXmlService>();
+builder.Services.AddScoped<ValidacaoNfeService>();
+builder.Services.AddScoped<AuditoriaService>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

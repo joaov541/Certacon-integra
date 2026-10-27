@@ -132,3 +132,417 @@ INNER JOIN dbo.USUARIO_PERFIL up
 INNER JOIN dbo.PERFIL p
     ON p.Perfil_Id = up.Perfil_Id
 ORDER BY p.Nome;
+
+
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'ARTIGO';
+
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    Visibilidade
+FROM dbo.ARTIGO
+WHERE Status = 'RASCUNHO';
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    Visibilidade,
+    DataCriacao
+FROM dbo.ARTIGO
+WHERE Status = 'RASCUNHO'
+ORDER BY DataCriacao DESC;
+
+
+
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status
+FROM dbo.ARTIGO
+WHERE Artigo_Id = '366D6CFD-71B5-42FB-B094-B160D7BF0BCE';
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    DataAtualizacao
+FROM dbo.ARTIGO
+WHERE Artigo_Id = '366D6CFD-71B5-42FB-B094-B160D7BF0BCE';
+
+
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    DataPublicacao
+FROM dbo.ARTIGO
+WHERE Artigo_Id = '366D6CFD-71B5-42FB-B094-B160D7BF0BCE';
+
+
+SELECT
+    NotaFiscal_Id,
+    Usuario_Id,
+    Numero,
+    Status,
+    ValorTotal
+FROM dbo.NOTA_FISCAL;
+
+
+
+
+
+SELECT
+    Usuario_Id,
+    Nome,
+    Email
+FROM dbo.USUARIO
+WHERE Email = 'cliente@integra.local';
+
+
+DECLARE @UsuarioId UNIQUEIDENTIFIER =
+    'D47E14EF-DF9E-4BFE-BB5D-48ED4FC9A5F4';
+
+DECLARE @NotaFiscalId UNIQUEIDENTIFIER = NEWID();
+
+INSERT INTO dbo.NOTA_FISCAL
+(
+    NotaFiscal_Id,
+    Usuario_Id,
+    Numero,
+    Serie,
+    ChaveAcesso,
+    CNPJEmitente,
+    CNPJDestinatario,
+    DataEmissao,
+    ValorTotal,
+    Status,
+    CaminhoArquivo,
+    DataEnvio
+)
+VALUES
+(
+    @NotaFiscalId,
+    @UsuarioId,
+    '1001',
+    '1',
+    NULL,
+    '12345678000195',
+    '98765432000110',
+    GETDATE(),
+    150.00,
+    'PROCESSADO',
+    NULL,
+    GETDATE()
+);
+
+
+
+
+SELECT
+    name AS Restricao,
+    definition AS ValoresPermitidos
+FROM sys.check_constraints
+WHERE name = 'CK_NOTA_FISCAL_Status';
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+DECLARE @UsuarioId UNIQUEIDENTIFIER;
+DECLARE @NotaFiscalId UNIQUEIDENTIFIER = NEWID();
+
+SELECT @UsuarioId = Usuario_Id
+FROM dbo.USUARIO
+WHERE Email = 'cliente@integra.local';
+
+IF @UsuarioId IS NULL
+BEGIN
+    PRINT 'Cliente nao encontrado.';
+    RETURN;
+END;
+
+INSERT INTO dbo.NOTA_FISCAL
+(
+    NotaFiscal_Id,
+    Usuario_Id,
+    Numero,
+    Serie,
+    ChaveAcesso,
+    CNPJEmitente,
+    CNPJDestinatario,
+    DataEmissao,
+    ValorTotal,
+    Status,
+    CaminhoArquivo,
+    DataEnvio
+)
+VALUES
+(
+    @NotaFiscalId,
+    @UsuarioId,
+    '1001',
+    '1',
+    NULL,
+    '12345678000195',
+    '98765432000110',
+    GETDATE(),
+    150.00,
+    'IMPORTADA',
+    NULL,
+    GETDATE()
+);
+
+INSERT INTO dbo.ITEM_NOTA_FISCAL
+(
+    ItemNotaFiscal_Id,
+    NotaFiscal_Id,
+    NumeroItem,
+    CodigoProduto,
+    Descricao,
+    NCM,
+    CFOP,
+    Quantidade,
+    ValorUnitario,
+    ValorTotal
+)
+VALUES
+(
+    NEWID(),
+    @NotaFiscalId,
+    1,
+    'PROD001',
+    'Produto de teste',
+    '00000000',
+    '5102',
+    2,
+    50.00,
+    100.00
+),
+(
+    NEWID(),
+    @NotaFiscalId,
+    2,
+    'PROD002',
+    'Material de escritorio',
+    '00000000',
+    '5102',
+    1,
+    50.00,
+    50.00
+);
+
+SELECT
+    @NotaFiscalId AS NotaFiscalId,
+    @UsuarioId AS UsuarioId;
+GO
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT TABLE_SCHEMA, TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_NAME LIKE '%Auditoria%';
+
+
+SELECT TOP 10 *
+FROM dbo.LOG_AUDITORIA
+ORDER BY DataHora DESC;
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    COLUMN_NAME,
+    DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'LOG_AUDITORIA'
+ORDER BY ORDINAL_POSITION;
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT TOP 10
+    LogAuditoria_Id,
+    Usuario_Id,
+    Acao,
+    TabelaAfetada,
+    Registro_Id,
+    EnderecoIP,
+    Detalhes,
+    DataHora
+FROM dbo.LOG_AUDITORIA
+WHERE Acao = 'ARTIGO_APROVADO'
+ORDER BY DataHora DESC;
+
+
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status
+FROM dbo.ARTIGO
+WHERE Status = 'APROVADO';
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT TOP 10
+    LogAuditoria_Id,
+    Usuario_Id,
+    Acao,
+    TabelaAfetada,
+    Registro_Id,
+    EnderecoIP,
+    Detalhes,
+    DataHora
+FROM dbo.LOG_AUDITORIA
+WHERE Acao = 'ARTIGO_PUBLICADO'
+ORDER BY DataHora DESC;
+
+
+
+
+
+SELECT TOP 10
+    LogAuditoria_Id,
+    Usuario_Id,
+    Acao,
+    TabelaAfetada,
+    Registro_Id,
+    Detalhes,
+    DataHora
+FROM dbo.LOG_AUDITORIA
+WHERE Acao = 'ARTIGO_REJEITADO'
+ORDER BY DataHora DESC;
+
+
+
+
+SELECT TOP 10 *
+FROM dbo.LOG_AUDITORIA
+WHERE Acao = 'ARTIGO_REJEITADO'
+ORDER BY DataHora DESC;
+
+
+
+SELECT TOP 10 *
+FROM dbo.LOG_AUDITORIA
+WHERE Acao = 'ARTIGO_AJUSTES_SOLICITADOS'
+ORDER BY DataHora DESC;
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT TOP 10
+    NotaFiscal_Id,
+    Usuario_Id,
+    Numero,
+    Serie,
+    ChaveAcesso,
+    Status,
+    CaminhoArquivo,
+    DataEnvio
+FROM dbo.NOTA_FISCAL
+ORDER BY DataEnvio DESC;
+
+
+SELECT
+    n.Numero,
+    n.ChaveAcesso,
+    COUNT(i.ItemNotaFiscal_Id) AS QuantidadeItens
+FROM dbo.NOTA_FISCAL n
+LEFT JOIN dbo.ITEM_NOTA_FISCAL i
+    ON i.NotaFiscal_Id = n.NotaFiscal_Id
+GROUP BY
+    n.Numero,
+    n.ChaveAcesso
+ORDER BY n.Numero;
+
+
+
+
+SELECT *
+FROM dbo.NOTA_FISCAL
+WHERE Numero = '1001';
+
+
+SELECT *
+FROM dbo.ITEM_NOTA_FISCAL
+WHERE NotaFiscal_Id = '7BF73295-2975-4758-8C13-0F9B4159BB96';
+
+
+
+SELECT
+    NotaFiscal_Id,
+    Numero,
+    ChaveAcesso,
+    ValorTotal,
+    Status,
+    CaminhoArquivo
+FROM dbo.NOTA_FISCAL
+WHERE NotaFiscal_Id =
+    '3A4CE39C-4C2A-4F43-843A-A04FDFD0E7DB';
+
+
+
+    SELECT *
+FROM dbo.ITEM_NOTA_FISCAL
+WHERE NotaFiscal_Id =
+    '3A4CE39C-4C2A-4F43-843A-A04FDFD0E7DB';
+
+
+
+
+    SELECT
+    Numero,
+    ChaveAcesso,
+    CaminhoArquivo,
+    Status
+FROM dbo.NOTA_FISCAL
+WHERE CaminhoArquivo IS NOT NULL;
+
+
+
+SELECT *
+FROM dbo.NOTA_FISCAL
+ORDER BY DataEnvio DESC;
+
+
+SELECT TOP 5
+    Numero,
+    ChaveAcesso,
+    Status,
+    DataEnvio
+FROM dbo.NOTA_FISCAL
+ORDER BY DataEnvio DESC;

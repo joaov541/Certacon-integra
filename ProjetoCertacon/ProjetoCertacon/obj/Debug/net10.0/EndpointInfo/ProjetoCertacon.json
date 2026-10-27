@@ -253,6 +253,18 @@
         }
       }
     },
+    "/api/Auditoria": {
+      "get": {
+        "tags": [
+          "Auditoria"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Autenticacao/cadastrar": {
       "post": {
         "tags": [
@@ -304,6 +316,73 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotasFiscais": {
+      "get": {
+        "tags": [
+          "NotasFiscais"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotasFiscais/{id}": {
+      "get": {
+        "tags": [
+          "NotasFiscais"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotasFiscais/upload": {
+      "post": {
+        "tags": [
+          "NotasFiscais"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "arquivo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "arquivo": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -483,7 +562,13 @@
       "name": "Artigos"
     },
     {
+      "name": "Auditoria"
+    },
+    {
       "name": "Autenticacao"
+    },
+    {
+      "name": "NotasFiscais"
     },
     {
       "name": "Temas"

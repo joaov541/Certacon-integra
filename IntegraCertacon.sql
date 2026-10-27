@@ -196,3 +196,14 @@ FROM dbo.TEMA;
 
 SELECT Usuario_Id, Nome, Email
 FROM dbo.USUARIO;
+
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    Visibilidade,
+    Data_Criacao
+FROM dbo.ARTIGO
+WHERE Status = 'RASCUNHO'
+ORDER BY Data_Criacao DESC;

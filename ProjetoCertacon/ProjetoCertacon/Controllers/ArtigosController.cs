@@ -1,9 +1,10 @@
 ﻿
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoCertacon.Data;
 using ProjetoCertacon.Models;
+using ProjetoCertacon.Services;
 using System.Security.Claims;
 
 namespace ProjetoCertacon.Controllers
@@ -13,10 +14,14 @@ namespace ProjetoCertacon.Controllers
     public class ArtigosController : ControllerBase
     {
         private readonly IntegraCertaconContext _context;
+        private readonly AuditoriaService _auditoria;
 
-        public ArtigosController(IntegraCertaconContext context)
+        public ArtigosController(
+            IntegraCertaconContext context,
+            AuditoriaService auditoria)
         {
             _context = context;
+            _auditoria = auditoria;
         }
 
         [HttpGet]
@@ -103,6 +108,14 @@ namespace ProjetoCertacon.Controllers
 
             _context.Artigos.Add(artigo);
             await _context.SaveChangesAsync();
+
+            await _auditoria.RegistrarAsync(
+                autorId,
+                "ARTIGO_CRIADO",
+                "ARTIGO",
+                artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Artigo criado: " + artigo.Titulo);
 
             return Ok(new
             {
@@ -202,6 +215,14 @@ namespace ProjetoCertacon.Controllers
             _context.RevisaoArtigos.Add(revisao);
             await _context.SaveChangesAsync();
 
+            await _auditoria.RegistrarAsync(
+                revisorId.Value,
+                "ARTIGO_APROVADO",
+                "ARTIGO",
+                artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Artigo aprovado: " + artigo.Titulo);
+
             return Ok(new
             {
                 mensagem = "Artigo aprovado com sucesso.",
@@ -236,8 +257,13 @@ namespace ProjetoCertacon.Controllers
             artigo.Status = "REJEITADO";
             artigo.DataAtualizacao = DateTime.UtcNow;
 
-            _context.RevisaoArtigos.Add(revisao);
-            await _context.SaveChangesAsync();
+            await _auditoria.RegistrarAsync(
+     revisorId.Value,
+     "ARTIGO_REJEITADO",
+     "ARTIGO",
+     artigo.ArtigoId,
+     HttpContext.Connection.RemoteIpAddress?.ToString(),
+     "Artigo rejeitado: " + artigo.Titulo);
 
             return Ok(new
             {
@@ -276,8 +302,13 @@ namespace ProjetoCertacon.Controllers
             artigo.Status = "RASCUNHO";
             artigo.DataAtualizacao = DateTime.UtcNow;
 
-            _context.RevisaoArtigos.Add(revisao);
-            await _context.SaveChangesAsync();
+            await _auditoria.RegistrarAsync(
+     revisorId.Value,
+     "ARTIGO_AJUSTES_SOLICITADOS",
+     "ARTIGO",
+     artigo.ArtigoId,
+     HttpContext.Connection.RemoteIpAddress?.ToString(),
+     "Ajustes solicitados para o artigo: " + artigo.Titulo);
 
             return Ok(new
             {
@@ -320,6 +351,11 @@ namespace ProjetoCertacon.Controllers
         [Authorize(Roles = "Administrador,Coordenador Fiscal")]
         public async Task<IActionResult> PublicarArtigo(Guid id)
         {
+            var usuarioId = ObterUsuarioId();
+
+            if (usuarioId == null)
+                return Unauthorized("Usuario do token invalido.");
+
             var artigo = await _context.Artigos
                 .FirstOrDefaultAsync(a => a.ArtigoId == id);
 
@@ -335,6 +371,14 @@ namespace ProjetoCertacon.Controllers
             artigo.DataAtualizacao = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            await _auditoria.RegistrarAsync(
+                usuarioId.Value,
+                "ARTIGO_PUBLICADO",
+                "ARTIGO",
+                artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Artigo publicado: " + artigo.Titulo);
 
             return Ok(new
             {
