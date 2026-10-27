@@ -38,15 +38,13 @@
 }
 
 .cadastro-logo {
-    width: 150px;
-    max-width: 100%;
-    height: 42px;
+    width: 300px;
     object-fit: contain;
     object-position: left center;
 }
 
 .cadastro-texto h1 {
-    margin: 0;
+    margin-left: 20px;
     font-size: clamp(19px, 1.65vw, 27px);
     line-height: 1.15;
     font-weight: 700;
@@ -61,6 +59,7 @@
     flex-direction: column;
     gap: 25px;
     margin-top: 54px;
+    margin-left: 20px;
 }
 
 .cadastro-vantagem {
@@ -74,29 +73,29 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 36px;
-    width: 36px;
-    height: 36px;
+    width: 60px;
+    height: 60  px;
     border-radius: 6px;
     background: #293f8b;
 }
 
 .cadastro-icone img {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
 }
 
 .cadastro-vantagem h3 {
     margin: 0 0 3px;
     color: var(--laranja-integra);
-    font-size: 12px;
+    font-size: 19px;
     font-weight: 500;
 }
 
 .cadastro-vantagem p {
     margin: 0;
     color: #c8cfe2;
-    font-size: 9px;
+    font-size: 13px;
     line-height: 1.3;
 }
 
@@ -135,6 +134,8 @@
 .cadastro-botao-entrar:hover {
     background: var(--laranja-integra);
     color: #fff;
+    
+    
 }
 
 .cadastro-cartao {
@@ -170,7 +171,7 @@
     object-fit: contain;
 }
 
-/* Título principal: uma única regra base */
+/* Título principal */
 
 .cadastro .cadastro-cartao .cadastro-cabecalho h2 {
     margin: 0;
@@ -198,14 +199,15 @@
     align-items: center;
     gap: 6px;
     margin-bottom: 25px;
+    font-size: 200px;
 }
 
 .cadastro-mini-icone {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
+    width: 33px;
+    height: 33px;
     border-radius: 50%;
     background: #fff0e2;
     color: var(--laranja-integra);
@@ -215,7 +217,7 @@
 .cadastro-titulo-secao h3 {
     margin: 0;
     color: var(--laranja-integra);
-    font-size: 11px;
+    font-size: 20px;
     font-weight: 500;
 }
 
@@ -234,14 +236,14 @@
 
 .cadastro-campo label {
     margin-bottom: 5px;
-    font-size: 9px;
+    font-size: 13px;
     font-weight: 500;
 }
 
 .cadastro-campo input {
     width: 100%;
     min-width: 0;
-    height: 29px;
+    height: 34px;
     padding: 0 10px;
     border: 1px solid #d2d2d2;
     border-radius: 4px;
@@ -249,7 +251,7 @@
     color: #333;
     background: #fff;
     font-family: inherit;
-    font-size: 10px;
+    font-size: 13px;
 }
 
 .cadastro-campo input::placeholder {
@@ -290,13 +292,39 @@
     box-shadow: none;
 }
 
-.cadastro-input-senha button {
-    padding: 0 8px;
+/* Esconde o olho nativo do navegador */
+
+.cadastro-input-senha input::-ms-reveal,
+.cadastro-input-senha input::-ms-clear {
+    display: none;
+}
+
+.cadastro-input-senha input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+}
+
+/* Botão do olho personalizado */
+
+.cadastro-input-senha .cadastro-olho-senha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 32px;
+    padding: 0;
     border: none;
     background: transparent;
-    color: #777;
-    font-size: 9px;
     cursor: pointer;
+}
+
+.cadastro-input-senha .cadastro-olho-senha img {
+    display: block;
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
 }
 
 /* Dados da empresa */
@@ -315,6 +343,11 @@
     row-gap: 14px;
 }
 
+.cadastro-secao-empresa img{
+    width: 20px;
+    height: 20px;
+}
+
 /* Botão principal */
 
 .cadastro-botao-submit {
@@ -323,19 +356,52 @@
     justify-content: center;
     gap: 5px;
     width: 100%;
-    height: 32px;
+    height: 37px;
     margin-top: 14px;
     border: none;
     border-radius: 4px;
     background: var(--azul-integra);
     color: #fff;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s ease;
+}
+
+.cadastro-botao-submit img{
+    height: 20px;
+    width: 20px;
 }
 
 .cadastro-botao-submit:hover {
     background: #293f8b;
 }
 
+
+/* Botão de validar CNPJ */
+
+.cadastro-botao-verificar {
+    width: 250px;
+    height: 34px;
+    padding: 0 16px;
+    margin-top: 20px;
+    border: 1px solid var(--laranja-integra);
+    border-radius: 4px;
+    background: var(--laranja-integra);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.cadastro-botao-verificar:hover:not(:disabled) {
+    background: #e87500;
+    border-color: #e87500;
+}
+
+.cadastro-botao-verificar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

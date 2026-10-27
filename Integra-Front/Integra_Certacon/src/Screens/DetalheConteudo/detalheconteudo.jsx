@@ -1,77 +1,68 @@
 
-// import "./detalheRevisao.css";
-
-// import {
-//   IoHomeOutline,
-//   IoPeopleOutline,
-//   IoDocumentTextOutline,
-//   IoPersonOutline,
-//   IoSearchOutline,
-//   IoChevronBackOutline,
-//   IoDownloadOutline,
-//   IoCalendarOutline,
-//   IoEyeOutline,
-//   IoEllipsisVertical,
-// } from "react-icons/io5";
+// import "./detalheconteudo.css";
 
 // import LogoImagem from "../../assets/Icones/LogoImagem.png";
 // import LogoNome from "../../assets/Icones/LogoNome.png";
+
+// import CasaBranca from "../../assets/Icones/CasaBranca.png";
+// import LivroBranco from "../../assets/Icones/LivroBranco.png";
+// import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
+// import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
+// import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
+// import LupaCinza from "../../assets/Icones/LupaCinza.png";
+// import SairBranco from "../../assets/Icones/SairBranco.png";
+
+// import calendario from "../../assets/Icones/calendario.png";
+// import Pessoa from "../../assets/Icones/Pessoa.png";
+// import TresPontos from "../../assets/Icones/TresPontos.png";
 // import EscudoLaranja from "../../assets/Icones/EscudoLaranja.png";
-// import Livro from "../../assets/Icones/Livro.png";
 
 // function DetalheRevisao() {
+//   const menuItems = [
+//     { label: "Início", icon: CasaBranca },
+//     { label: "Conteúdos", icon: LivroBranco, active: true },
+//     { label: "Notas Fiscais", icon: DoisDocumentosBranco },
+//     { label: "Clientes", icon: ADDProfileBranco },
+//     { label: "Usuários", icon: PessoaBranca },
+//   ];
+
 //   return (
 //     <div className="pagina-revisao">
-
-//       {/* Menu lateral */}
 //       <aside className="menu-lateral">
-
 //         <div className="logo">
-//           <img src={LogoImagem} alt="Logo Integra" />
-//           <img src={LogoNome} alt="Integra" />
+//           <img src={LogoImagem} alt="Logo INTEGRA" />
+//           <img src={LogoNome} alt="INTEGRA" />
 //         </div>
 
 //         <nav className="opcoes-menu">
-//           <a href="#">
-//             <IoHomeOutline />
-//             <span>Início</span>
-//           </a>
-
-//           <a href="#">
-//             <IoPeopleOutline />
-//             <span>Organizações</span>
-//           </a>
-
-//           <a href="#">
-//             <IoDocumentTextOutline />
-//             <span>Portal Fiscal</span>
-//           </a>
-
-//           <a href="#">
-//             <IoPersonOutline />
-//             <span>Clientes</span>
-//           </a>
-
-//           <a href="#">
-//             <IoPeopleOutline />
-//             <span>Usuários</span>
-//           </a>
+//           {menuItems.map((item) => (
+//             <a
+//               key={item.label}
+//               href="#"
+//               className={item.active ? "menu-ativo" : ""}
+//               onClick={(e) => {
+//                 if (item.active) e.preventDefault();
+//               }}
+//             >
+//               <img src={item.icon} alt="" />
+//               <span>{item.label}</span>
+//             </a>
+//           ))}
 //         </nav>
 
-//         <button className="botao-sair">
-//           Sair
+//         <button
+//           className="botao-sair"
+//           onClick={() => alert("Saindo do sistema...")}
+//         >
+//           <img src={SairBranco} alt="" />
+//           <span>Sair</span>
 //         </button>
-
 //       </aside>
 
-//       {/* Área principal */}
 //       <main className="conteudo-principal">
-
-//         {/* Cabeçalho */}
 //         <header className="cabecalho">
-
 //           <div className="pesquisa">
-//             <IoSearchOutline />
+//             <img src={LupaCinza} alt="" />
 //             <input
 //               type="text"
 //               placeholder="Buscar conteúdos, notas fiscais, etc..."
@@ -79,148 +70,134 @@
 //           </div>
 
 //           <div className="perfil-usuario">
-//             <img src={LogoImagem} alt="Foto do usuário" />
+//             <div className="foto-perfil">JS</div>
 
-//             <div>
+//             <div className="dados-usuario">
 //               <strong>João Silva</strong>
-//               <span>Analista Fiscal</span>
+//               <span>Analista SPED</span>
 //             </div>
-//           </div>
 
+//             <button
+//               className="botao-perfil-opcoes"
+//               aria-label="Mais opções do perfil"
+//               onClick={() => alert("Opções do perfil")}
+//             >
+//               <img src={TresPontos} alt="" />
+//             </button>
+//           </div>
 //         </header>
 
-//         {/* Conteúdo da página */}
 //         <section className="detalhe-revisao">
-
 //           <button
 //             className="botao-voltar"
 //             onClick={() => window.history.back()}
 //           >
-//             <IoChevronBackOutline />
-//             Voltar
+//             <span className="seta-voltar">←</span>
+//             <span>Voltar</span>
 //           </button>
 
 //           <div className="area-artigo">
-
-//             {/* Informações do artigo */}
-//             <div className="artigo">
-
+//             <article className="artigo">
 //               <h1>
 //                 Reforma Tributária: Novas Regras do IBS e CBS
 //               </h1>
 
-//               <span className="status-artigo">
-//                 Revisão Pendente
+//               <span className="categoria-artigo">
+//                 Reforma Tributária
 //               </span>
 
 //               <div className="informacoes-artigo">
+//                 <span>
+//                   <img src={calendario} alt="" />
+//                   Publicado em 09/10/2026
+//                 </span>
 
 //                 <span>
-//                   <IoPersonOutline />
+//                   <img src={Pessoa} alt="" />
 //                   Por Maria de Oliveira
 //                 </span>
 
-//                 <span>
-//                   <IoCalendarOutline />
-//                   16/10/2026
-//                 </span>
-
-//                 <span>
-//                   <IoEyeOutline />
-//                   Revisão
+//                 <span className="versao-artigo">
+//                   ⓧ Versão 1.0
 //                 </span>
 
 //                 <button
 //                   className="botao-opcoes"
-//                   aria-label="Mais opções"
+//                   aria-label="Mais opções do artigo"
+//                   onClick={() => alert("Mais opções do artigo")}
 //                 >
-//                   <IoEllipsisVertical />
+//                   <img src={TresPontos} alt="" />
 //                 </button>
-
 //               </div>
 
 //               <div className="texto-artigo">
-
 //                 <p>
-//                   A Reforma Tributária traz mudanças importantes
-//                   para o sistema de impostos no Brasil. Entre as
-//                   principais alterações, estão a criação do
-//                   Imposto sobre Bens e Serviços (IBS) e da
-//                   Contribuição sobre Bens e Serviços (CBS).
+//                   A Reforma Tributária do consumo no Brasil foi
+//                   oficializada pela Emenda Constitucional nº 132/2023
+//                   e tem como objetivo simplificar o sistema de
+//                   impostos do país, acabando com a cumulatividade
+//                   (efeito cascata) e reduzindo a burocracia.
 //                 </p>
-
-//                 <p>
-//                   Essas mudanças buscam simplificar a cobrança
-//                   de impostos, melhorar a transparência e
-//                   facilitar o entendimento das obrigações fiscais
-//                   das empresas.
-//                 </p>
-
-//                 <p>
-//                   As empresas devem acompanhar as novas regras
-//                   para se adaptar aos prazos e às mudanças
-//                   previstas na legislação.
-//                 </p>
-
-//               </div>
-
-//               <div className="topicos-artigo">
-
-//                 <h2>Tópicos abordados</h2>
 
 //                 <ul>
 //                   <li>
-//                     O que muda com o IBS e a CBS
+//                     CBS (Contribuição sobre Bens e Serviços):
+//                     imposto de competência federal que substitui PIS,
+//                     Cofins e IPI.
 //                   </li>
 
 //                   <li>
-//                     Cronograma de implementação
+//                     IBS (Imposto sobre Bens e Serviços): imposto
+//                     compartilhado entre estados e municípios que
+//                     substitui o ICMS e o ISS.
 //                   </li>
 
 //                   <li>
-//                     Principais impactos para as empresas
+//                     IS (Imposto Seletivo): conhecido como "imposto do
+//                     pecado", incide sobre bens e serviços prejudiciais
+//                     à saúde ou ao meio ambiente.
 //                   </li>
 //                 </ul>
-
 //               </div>
 
-//             </div>
+//               <div className="topicos-artigo">
+//                 <h2>Tópicos abordados</h2>
 
-//             {/* Documentos do artigo */}
+//                 <ul>
+//                   <li>O que muda com IBS e a CBS</li>
+//                   <li>Cronograma de implementação</li>
+//                   <li>Principais impactos para as empresas</li>
+//                 </ul>
+//               </div>
+//             </article>
+
 //             <aside className="area-documentos">
-
 //               <h2>Documentos</h2>
 
 //               <div className="documento">
-
 //                 <img
 //                   src={EscudoLaranja}
-//                   alt=""
+//                   alt="Documento PDF"
 //                 />
 
 //                 <div className="informacao-documento">
-//                   <strong>Reforma_Tributaria.pdf</strong>
-//                   <span>Arquivo PDF</span>
+//                   <strong>reforma_Tributária.pdf</strong>
+//                   <span>2,4mb</span>
 //                 </div>
-
 //               </div>
 
 //               <button
 //                 className="botao-baixar"
-//                 onClick={() => alert("Adicione o arquivo PDF para habilitar o download.")}
+//                 onClick={() =>
+//                   alert("Adicione o arquivo PDF para habilitar o download.")
+//                 }
 //               >
-//                 <IoDownloadOutline />
 //                 Baixar
 //               </button>
-
 //             </aside>
-
 //           </div>
-
 //         </section>
-
 //       </main>
-
 //     </div>
 //   );
 // }

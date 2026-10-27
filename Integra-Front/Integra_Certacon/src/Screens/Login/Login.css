@@ -273,108 +273,212 @@ input {
 
 /* Ajustes para celulares e tablets */
 
-@media (max-width: 900px) {
+@media screen and (max-width: 600px) {
+    .login {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 100vh;
+        padding: 0;
+        background: #f3f6fc;
+    }
+
+    .login-apresentacao {
+        display: none;
+    }
+
+    .login-formulario {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 100vh;
+        padding: 20px 18px 24px;
+        background: #f3f6fc;
+    }
+
+    .formulario-conteudo {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+    }
+
+    .formulario-cabecalho {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .marca-integra {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin: 0 auto 12px;
+    }
+
+    .logo-integra {
+        display: block;
+        width: 150px;
+        max-width: 75%;
+        height: 125px;
+        margin: 0 auto;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .formulario-cabecalho h1,
+    .formulario-cabecalho h2 {
+        margin: 0 0 7px;
+        color: #1d2e68;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .formulario-cabecalho p {
+        margin: 0;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .campo {
+        width: 100%;
+        margin-bottom: 9px;
+    }
+
+    .campo label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 11px;
+    }
+
+    .campo input {
+        width: 100%;
+        height: 37px;
+        padding: 0 12px;
+        border: 1px solid #d8d8d8;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 11px;
+        outline: none;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.18);
+    }
+
+    .campo input:focus {
+        border-color: #1d2e68;
+    }
+
+    .campo-senha {
+        margin-bottom: 8px;
+    }
+
+    .campo-senha input {
+        padding-right: 36px;
+    }
+
+    .link-recuperar {
+        display: block;
+        align-self: flex-end;
+        margin: 0 0 10px;
+        color: #3978cf;
+        font-size: 9px;
+        text-align: right;
+        text-decoration: none;
+    }
+
+    .botao-entrar {
+        width: 100%;
+        min-height: 36px;
+        margin-top: 0;
+        border: none;
+        border-radius: 5px;
+        background: #1d2e68;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+
+    .divisor {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin: 15px 0 12px;
+        color: #999;
+        font-size: 8px;
+        text-align: center;
+    }
+
+    .divisor::before,
+    .divisor::after {
+        flex: 1;
+        height: 1px;
+        background: #e1e4e9;
+        content: "";
+    }
+
+    .divisor span {
+        padding: 0 10px;
+    }
+
+    /* Link Criar conta */
+    .link-criar-conta {
+        display: block;
+        width: 100%;
+        margin-top: 0;
+        color: #3978cf;
+        font-size: 9px;
+        text-align: center;
+        text-decoration: none;
+    }
+}
+
+/* Celulares menores */
+@media screen and (max-width: 360px) {
+    .login-formulario {
+        padding: 16px 12px 20px;
+    }
+
+    .formulario-conteudo {
+        max-width: 100%;
+    }
+
+    .logo-integra {
+        width: 135px;
+        height: 115px;
+    }
+}
+
+/* tela de duas colunas */
+@media screen and (min-width: 601px) and (max-width: 900px) {
     .login-apresentacao {
         width: 42%;
-        flex-shrink: 1;
-        padding: 35px 25px;
+        padding: 30px 22px;
+    }
+
+    .login-formulario {
+        padding: 30px 24px;
+    }
+
+    .formulario-conteudo {
+        max-width: 400px;
     }
 
     .logo-integra {
         max-width: 100%;
-        height: 85px;
-    }
-
-    .login-formulario {
-        padding: 35px 30px;
-    }
-
-    .texto-apresentacao h1 {
-        margin-left: 10px;
-    }
-
-    .texto-apresentacao p {
-        margin-left: 10px;
-    }
-}
-
-@media (max-width: 700px) {
-    .login {
-        flex-direction: column;
-    }
-
-    .login-apresentacao {
-        width: 100%;
-        flex-shrink: 0;
-        min-height: auto;
-        padding: 30px 25px;
-    }
-
-    .logo-integra {
-        max-width: 280px;
-        height: 75px;
-    }
-
-    .texto-apresentacao {
-        margin-top: 20px;
-    }
-
-    .texto-apresentacao h1 {
-        margin-left: 0;
-    }
-
-    .texto-apresentacao p {
-        max-width: 400px;
-        margin-left: 0;
-    }
-
-    .vantagens {
-        margin-top: 30px;
-        padding: 0;
-    }
-
-    .login-formulario {
-        flex: none;
-        width: 100%;
-        min-height: auto;
-        padding: 40px 25px;
-    }
-
-    .formulario-conteudo {
-        max-width: 430px;
-    }
-
-    .formulario-cabecalho {
-        margin-bottom: 35px;
-    }
-
-    .formulario-cabecalho h2 {
-        font-size: 28px;
-    }
-
-    .campo {
-        margin-bottom: 30px;
-    }
-
-    .campo-senha {
-        margin-bottom: 35px;
-    }
-}
-
-@media (max-width: 380px) {
-    .login-apresentacao {
-        padding: 25px 18px;
-    }
-
-    .texto-apresentacao h1 {
-        font-size: 25px;
-    }
-
-    .formulario-cabecalho h2 {
-        font-size: 26px;
-    }
-
-    .login-formulario {
-        padding: 35px 20px;
     }
 }
