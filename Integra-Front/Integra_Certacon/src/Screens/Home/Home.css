@@ -53,9 +53,7 @@
 }
 
 .home-logo {
-    width: 220px;
-    max-width: 100%;
-    height: 56px;
+   
 
     object-fit: contain;
     object-position: left center;
@@ -330,7 +328,7 @@
     height: 52px;
 
     border-radius: 12px;
-    background: #fff3e7;
+    background: #E9F4F8;
 }
 
 .home-card-icone img {

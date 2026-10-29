@@ -16,6 +16,7 @@ import iconeExpandir from "../../assets/Icones/ExpandirText.png";
 import iconeUpload from "../../assets/Icones/Upload.png";
 import iconeGrupo from "../../assets/Icones/GrupoPessoasLaranja.png";
 import arquivoHome from "../../assets/Icones/ArquivoDashboard.png";
+import DoisDocumentos from "../../assets/Icones/DoisDocumentos.png"
 
 export default function Home() {
     return (
@@ -153,7 +154,7 @@ export default function Home() {
                             </div>
 
                             <div className="home-card-info">
-                                <p>Notas fiscal</p>
+                                <p>Notas fiscais</p>
                                 <strong>100</strong>
                             </div>
 
@@ -190,7 +191,7 @@ export default function Home() {
                             <div className="home-lista-item">
 
                                 <div className="home-lista-icone home-lista-icone-verde">
-                                    <img src={iconeDocumento} alt="" />
+                                    <img src={DoisDocumentos} alt="" />
                                 </div>
 
                                 <div className="home-lista-texto">
@@ -210,19 +211,19 @@ export default function Home() {
                             <div className="home-lista-item">
 
                                 <div className="home-lista-icone home-lista-icone-vermelho">
-                                    <img src={iconeDocumento} alt="" />
+                                    <img src={DoisDocumentos} alt="" />
                                 </div>
 
                                 <div className="home-lista-texto">
                                     <h3>
-                                        SPED Fiscal 2025 - Principais mudanças
+                                        Atualização de Tabelas Liquidas
                                     </h3>
 
                                     <p>Publicado em 02/10/2026</p>
                                 </div>
 
                                 <span className="home-tag home-tag-roxo">
-                                    SPED
+                                    Reforma Tributária
                                 </span>
 
                             </div>
@@ -230,7 +231,7 @@ export default function Home() {
                             <div className="home-lista-item">
 
                                 <div className="home-lista-icone home-lista-icone-azul">
-                                    <img src={iconeDocumento} alt="" />
+                                    <img src={DoisDocumentos} alt="" />
                                 </div>
 
                                 <div className="home-lista-texto">

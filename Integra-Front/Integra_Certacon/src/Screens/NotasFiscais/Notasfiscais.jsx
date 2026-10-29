@@ -1,230 +1,352 @@
-import "./notasfiscais.css";
 
-import logoIntegra from "../../assets/Icones/LogoNome.png";
-import iconeCasa from "../../assets/Icones/Casa.png";
-import iconeLivro from "../../assets/Icones/Livro.png";
-import iconeNotas from "../../assets/Icones/DoisDocumentos.png";
-import iconeClientesBranco from "../../assets/Icones/GrupoPessoasBranco.png";
-import iconePessoa from "../../assets/Icones/Pessoa.png";
-import iconeSair from "../../assets/Icones/Sair.png";
-import iconeLupa from "../../assets/Icones/LupaPesquisa.png";
-import PerfilLaranja from "../../assets/Icones/PerfilLaranja.png";
-import iconeTresPontos from "../../assets/Icones/TresPontos.png";
-import iconeCalendario from "../../assets/Icones/calendario.png";
-import iconeLixeira from "../../assets/Icones/Lixeira.png";
+import { useState } from "react";
+import "./NotasFiscais.css";
 
-export default function NotasFiscais() {
-    return (
-        <main className="notas">
-            <aside className="notas-menu">
-                <div className="notas-marca">
-                    <img
-                        src={logoIntegra}
-                        alt="Portal Tributário"
-                        className="notas-logo"
-                    />
-                </div>
+import CasaBranca from "../../assets/Icones/CasaBranca.png";
+import LivroBranco from "../../assets/Icones/LivroBranco.png";
+import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
+import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
+import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
+import LupaCinza from "../../assets/Icones/LupaCinza.png";
+import SairBranco from "../../assets/Icones/SairBranco.png";
+import Lixeira from "../../assets/Icones/Lixeira.png";
+import LogoNome from "../../assets/Icones/LogoNome.png";
 
-                <nav className="notas-menu-lista">
-                    <button type="button" className="notas-menu-item">
-                        <img src={iconeCasa} alt="" />
-                        <span>Início</span>
-                    </button>
+const notasIniciais = [
+  {
+    id: 1,
+    chave: "3523041234567800019555001000123451000123451",
+    emissao: "14/04/2025",
+    cliente: "Empresa ABC",
+    valor: "R$1420,00",
+    status: "Autenticada",
+  },
+  {
+    id: 2,
+    chave: "3523049876543200017155002000987651612309876",
+    emissao: "14/04/2025",
+    cliente: "Empresa ABC",
+    valor: "R$600,00",
+    status: "Autenticada",
+  },
+  {
+    id: 3,
+    chave: "3523049012345600018855003000123451890123456",
+    emissao: "27/04/2025",
+    cliente: "Cliente LDTA",
+    valor: "R$2300,00",
+    status: "Cancelada",
+  },
+  {
+    id: 4,
+    chave: "3523045556667700014455004000054321709012345",
+    emissao: "14/04/2025",
+    cliente: "Empresa ABC",
+    valor: "R$673,00",
+    status: "Autenticada",
+  },
+  {
+    id: 5,
+    chave: "3523041234567800019555001000123451000123452",
+    emissao: "10/05/2025",
+    cliente: "Empresa XYZ",
+    valor: "R$890,00",
+    status: "Autenticada",
+  },
+];
 
-                    <button type="button" className="notas-menu-item">
-                        <img src={iconeLivro} alt="" />
-                        <span>Conteúdos</span>
-                    </button>
+function NotasFiscais() {
+  const [notas, setNotas] = useState(notasIniciais);
+  const [pesquisa, setPesquisa] = useState("");
+  const [cliente, setCliente] = useState("Todos");
+  const [status, setStatus] = useState("Todos");
+  const [dataInicio, setDataInicio] = useState("2026-04-04");
+  const [dataFim, setDataFim] = useState("2026-10-15");
+  const [buscaRealizada, setBuscaRealizada] = useState(false);
+  const [pagina, setPagina] = useState(1);
 
-                    <button
-                        type="button"
-                        className="notas-menu-item notas-menu-item-ativo"
-                    >
-                        <img src={iconeNotas} alt="" />
-                        <span>Notas Fiscais</span>
-                    </button>
+  const itensPorPagina = 4;
 
-                    <button type="button" className="notas-menu-item">
-                        <img src={iconeClientesBranco} alt="" />
-                        <span>Clientes</span>
-                    </button>
-
-                    <button type="button" className="notas-menu-item">
-                        <img src={iconePessoa} alt="" />
-                        <span>Usuários</span>
-                    </button>
-                </nav>
-
-                <button
-                    type="button"
-                    className="notas-menu-item notas-menu-sair"
-                >
-                    <img src={iconeSair} alt="" />
-                    <span>Sair</span>
-                </button>
-            </aside>
-
-            <section className="notas-area">
-                <header className="notas-topo">
-                    <div className="notas-busca">
-                        <img src={iconeLupa} alt="" />
-                        <input
-                            type="text"
-                            placeholder="Buscar conteúdos, notas fiscais, etc..."
-                        />
-                    </div>
-
-                    <div className="notas-usuario">
-                        <div className="notas-usuario-foto">
-                            <img src={PerfilLaranja} alt="Foto do usuário" />
-                        </div>
-
-                        <div>
-                            <h3>João Silva</h3>
-                            <p>Analista SPED</p>
-                        </div>
-
-                        <button type="button" className="notas-usuario-opcoes">
-                            <img src={iconeTresPontos} alt="Mais opções" />
-                        </button>
-                    </div>
-                </header>
-
-                <div className="notas-conteudo">
-                    <h1>Notas Fiscais</h1>
-
-                    <div className="notas-filtros">
-                        <div className="notas-campo notas-campo-periodo">
-                            <label htmlFor="periodo">Período</label>
-
-                            <div className="notas-input-icone">
-                                <input
-                                    id="periodo"
-                                    type="text"
-                                    defaultValue="04/04/2026 - 15/10/2026"
-                                />
-                                <img src={iconeCalendario} alt="Calendário" />
-                            </div>
-                        </div>
-
-                        <div className="notas-campo notas-campo-cliente">
-                            <label htmlFor="cliente">Cliente</label>
-
-                            <div className="notas-select">
-                                <select id="cliente">
-                                    <option>Todos</option>
-                                    <option>Empresa ABC</option>
-                                    <option>Cliente LDTA</option>
-                                </select>
-                                <span>▼</span>
-                            </div>
-                        </div>
-
-                        <div className="notas-campo notas-campo-status">
-                            <label htmlFor="status">Status</label>
-
-                            <div className="notas-select">
-                                <select id="status">
-                                    <option>Status</option>
-                                    <option>Autenticada</option>
-                                    <option>Cancelada</option>
-                                </select>
-                                <span>▼</span>
-                            </div>
-                        </div>
-
-                        <button type="button" className="notas-botao-buscar">
-                            Buscar
-                        </button>
-                    </div>
-
-                    <div className="notas-tabela">
-                        <div className="notas-linha notas-linha-cabecalho">
-                            <span>Chave de acesso</span>
-                            <span>Emissão</span>
-                            <span>Cliente</span>
-                            <span>Valor</span>
-                            <span>Status</span>
-                            <span>Ações</span>
-                        </div>
-
-                        <div className="notas-linha">
-                            <span className="notas-chave">
-                                35230412345678000195550010000123451000123451
-                            </span>
-                            <span>14/04/2025</span>
-                            <span>Empresa ABC</span>
-                            <span>R$ 1.420,00</span>
-                            <span className="notas-tag notas-tag-verde">
-                                Autenticada
-                            </span>
-                            <button type="button" className="notas-lixeira">
-                                <img src={iconeLixeira} alt="Excluir nota" />
-                            </button>
-                        </div>
-
-                        <div className="notas-linha">
-                            <span className="notas-chave">
-                                35230498765432000171550020000987651612309876
-                            </span>
-                            <span>14/04/2025</span>
-                            <span>Empresa ABC</span>
-                            <span>R$ 600,00</span>
-                            <span className="notas-tag notas-tag-verde">
-                                Autenticada
-                            </span>
-                            <button type="button" className="notas-lixeira">
-                                <img src={iconeLixeira} alt="Excluir nota" />
-                            </button>
-                        </div>
-
-                        <div className="notas-linha">
-                            <span className="notas-chave">
-                                35230490123456000188550030000123451890123456
-                            </span>
-                            <span>27/04/2025</span>
-                            <span>Cliente LDTA</span>
-                            <span>R$ 2.300,00</span>
-                            <span className="notas-tag notas-tag-vermelho">
-                                Cancelada
-                            </span>
-                            <button type="button" className="notas-lixeira">
-                                <img src={iconeLixeira} alt="Excluir nota" />
-                            </button>
-                        </div>
-
-                        <div className="notas-linha">
-                            <span className="notas-chave">
-                                35230455566677000144550040000543217090123457
-                            </span>
-                            <span>14/04/2025</span>
-                            <span>Empresa ABC</span>
-                            <span>R$ 673,00</span>
-                            <span className="notas-tag notas-tag-verde">
-                                Autenticada
-                            </span>
-                            <button type="button" className="notas-lixeira">
-                                <img src={iconeLixeira} alt="Excluir nota" />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="notas-paginacao">
-                        <button
-                            type="button"
-                            className="notas-pagina notas-pagina-ativa"
-                        >
-                            1
-                        </button>
-                        <button type="button" className="notas-pagina">
-                            2
-                        </button>
-                        <button type="button" className="notas-pagina">
-                            3
-                        </button>
-                    </div>
-                </div>
-            </section>
-        </main>
+  function excluirNota(id) {
+    const confirmar = window.confirm(
+      "Deseja realmente excluir esta nota fiscal?"
     );
+
+    if (confirmar) {
+      setNotas((lista) => lista.filter((nota) => nota.id !== id));
+    }
+  }
+
+  const notasFiltradas = notas.filter((nota) => {
+    const correspondePesquisa =
+      nota.chave.toLowerCase().includes(pesquisa.toLowerCase()) ||
+      nota.cliente.toLowerCase().includes(pesquisa.toLowerCase());
+
+    const correspondeCliente =
+      cliente === "Todos" || nota.cliente === cliente;
+
+    const correspondeStatus =
+      status === "Todos" || nota.status === status;
+
+    const converterData = (data) => {
+      const [dia, mes, ano] = data.split("/");
+      return `${ano}-${mes}-${dia}`;
+    };
+
+    const dataNota = converterData(nota.emissao);
+
+    const correspondeData =
+      !buscaRealizada ||
+      ((!dataInicio || dataNota >= dataInicio) &&
+        (!dataFim || dataNota <= dataFim));
+
+    return (
+      correspondePesquisa &&
+      correspondeCliente &&
+      correspondeStatus &&
+      correspondeData
+    );
+  });
+
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(notasFiltradas.length / itensPorPagina)
+  );
+
+  const notasPagina = notasFiltradas.slice(
+    (pagina - 1) * itensPorPagina,
+    pagina * itensPorPagina
+  );
+
+  function buscarNotas() {
+    setBuscaRealizada(true);
+    setPagina(1);
+  }
+
+  return (
+    <div className="pagina-notas">
+      <Sidebar />
+
+      <main className="principal-notas">
+        <Header pesquisa={pesquisa} setPesquisa={setPesquisa} />
+
+        <section className="conteudo-notas">
+          <h1>Notas Fiscais</h1>
+
+          <div className="filtros-notas">
+            <div className="filtro-periodo">
+              <label>Período</label>
+              <div className="campo-periodo">
+                <input
+                  type="date"
+                  value={dataInicio}
+                  onChange={(e) => setDataInicio(e.target.value)}
+                />
+                <span>-</span>
+                <input
+                  type="date"
+                  value={dataFim}
+                  onChange={(e) => setDataFim(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="filtro-cliente">
+              <label>Cliente</label>
+              <select
+                value={cliente}
+                onChange={(e) => {
+                  setCliente(e.target.value);
+                  setPagina(1);
+                }}
+              >
+                <option value="Todos">Todos</option>
+                <option value="Empresa ABC">Empresa ABC</option>
+                <option value="Cliente LDTA">Cliente LDTA</option>
+                <option value="Empresa XYZ">Empresa XYZ</option>
+              </select>
+            </div>
+
+            <div className="filtro-status">
+              <label>Status</label>
+              <select
+                value={status}
+                onChange={(e) => {
+                  setStatus(e.target.value);
+                  setPagina(1);
+                }}
+              >
+                <option value="Todos">Todos</option>
+                <option value="Autenticada">Autenticada</option>
+                <option value="Cancelada">Cancelada</option>
+                <option value="Pendente">Pendente</option>
+              </select>
+            </div>
+
+            <button className="botao-buscar-notas" onClick={buscarNotas}>
+              Buscar
+            </button>
+          </div>
+
+          <div className="tabela-notas-container">
+            <table className="tabela-notas">
+              <thead>
+                <tr>
+                  <th>Chave de acesso</th>
+                  <th>Emissão</th>
+                  <th>Cliente</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {notasPagina.length > 0 ? (
+                  notasPagina.map((nota) => (
+                    <tr key={nota.id}>
+                      <td className="chave-nota">{nota.chave}</td>
+                      <td>{nota.emissao}</td>
+                      <td>{nota.cliente}</td>
+                      <td>{nota.valor}</td>
+                      <td>
+                        <span
+                          className={`status-nota ${
+                            nota.status === "Autenticada"
+                              ? "status-autenticada"
+                              : nota.status === "Cancelada"
+                              ? "status-cancelada"
+                              : "status-pendente"
+                          }`}
+                        >
+                          {nota.status}
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          className="botao-excluir-nota"
+                          title="Excluir nota fiscal"
+                          onClick={() => excluirNota(nota.id)}
+                        >
+                          <img src={Lixeira} alt="Excluir" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="nenhuma-nota">
+                      Nenhuma nota fiscal encontrada.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="paginacao-notas">
+            <button
+              disabled={pagina === 1}
+              onClick={() => setPagina(pagina - 1)}
+            >
+              Anterior
+            </button>
+
+            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
+              (numero) => (
+                <button
+                  key={numero}
+                  className={pagina === numero ? "pagina-ativa" : ""}
+                  onClick={() => setPagina(numero)}
+                >
+                  {numero}
+                </button>
+              )
+            )}
+
+            <button
+              disabled={pagina === totalPaginas}
+              onClick={() => setPagina(pagina + 1)}
+            >
+              &gt;
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 }
+
+function Sidebar() {
+  return (
+    <aside className="menu-notas">
+      <div className="logo-notas">
+        <img src={LogoNome} alt="Integra" />
+      </div>
+
+      <nav className="navegacao-notas">
+        <a href="#" className="item-menu-notas">
+          <img src={CasaBranca} alt="" />
+          <span>Início</span>
+        </a>
+
+        <a href="#" className="item-menu-notas">
+          <img src={LivroBranco} alt="" />
+          <span>Conteúdos</span>
+        </a>
+
+        <a href="#" className="item-menu-notas menu-notas-ativo">
+          <img src={DoisDocumentosBranco} alt="" />
+          <span>Notas Fiscais</span>
+        </a>
+
+        <a href="#" className="item-menu-notas">
+          <img src={ADDProfileBranco} alt="" />
+          <span>Clientes</span>
+        </a>
+
+        <a href="#" className="item-menu-notas">
+          <img src={PessoaBranca} alt="" />
+          <span>Usuários</span>
+        </a>
+      </nav>
+
+      <button
+        className="sair-notas"
+        onClick={() => alert("Configure aqui a saída da conta.")}
+      >
+        <img src={SairBranco} alt="" />
+        <span>Sair</span>
+      </button>
+    </aside>
+  );
+}
+
+function Header({ pesquisa, setPesquisa }) {
+  return (
+    <header className="topo-notas">
+      <div className="pesquisa-topo-notas">
+        <img src={LupaCinza} alt="" />
+        <input
+          type="text"
+          placeholder="Buscar conteúdos, notas fiscais, etc..."
+          value={pesquisa}
+          onChange={(e) => {
+            setPesquisa(e.target.value);
+          }}
+        />
+      </div>
+
+      <div className="usuario-topo-notas">
+        <div className="foto-usuario-notas">JS</div>
+        <div>
+          <strong>João Silva</strong>
+          <span>Analista SPED</span>
+        </div>
+        <span className="tres-pontos-notas">•••</span>
+      </div>
+    </header>
+  );
+}
+
+export default NotasFiscais;
