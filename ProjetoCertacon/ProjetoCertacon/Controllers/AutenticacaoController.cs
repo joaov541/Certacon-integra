@@ -80,25 +80,69 @@ namespace ProjetoCertacon.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest dados)
         {
-            var email = dados.Email?.Trim().ToLowerInvariant();
-
-            if (string.IsNullOrWhiteSpace(email) ||
+            if (string.IsNullOrWhiteSpace(dados.Identificador) ||
                 string.IsNullOrWhiteSpace(dados.Senha))
             {
-                return BadRequest("Informe o e-mail e a senha.");
+                return BadRequest("Informe o CNPJ ou e-mail e a senha.");
             }
 
-            var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Email == email);
+            var identificador = dados.Identificador.Trim();
+            Usuario? usuario;
 
-            if (usuario == null || !usuario.Ativo)
-                return Unauthorized("E-mail ou senha inválidos.");
+            // Cliente entra com CNPJ.
+            if (!identificador.Contains('@'))
+            {
+                var cnpj = new string(
+                    identificador.Where(char.IsDigit).ToArray());
+
+                usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.Cnpj == cnpj);
+
+                if (usuario == null || !usuario.Ativo)
+                    return Unauthorized("CNPJ ou senha inválidos.");
+
+                var ehCliente = await _context.UsuarioPerfils
+                    .Where(up => up.UsuarioId == usuario.UsuarioId)
+                    .Join(
+                        _context.Perfils,
+                        up => up.PerfilId,
+                        p => p.PerfilId,
+                        (up, p) => p.Nome)
+                    .AnyAsync(p => p == "Cliente");
+
+                if (!ehCliente)
+                    return Unauthorized("CNPJ ou senha inválidos.");
+            }
+            else
+            {
+                // Administradores e equipe entram com e-mail.
+                var email = identificador.ToLowerInvariant();
+
+                usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.Email == email);
+
+                if (usuario == null || !usuario.Ativo)
+                    return Unauthorized("E-mail ou senha inválidos.");
+
+                var ehCliente = await _context.UsuarioPerfils
+                    .Where(up => up.UsuarioId == usuario.UsuarioId)
+                    .Join(
+                        _context.Perfils,
+                        up => up.PerfilId,
+                        p => p.PerfilId,
+                        (up, p) => p.Nome)
+                    .AnyAsync(p => p == "Cliente");
+
+                if (ehCliente)
+                    return Unauthorized(
+                        "Clientes devem entrar usando o CNPJ.");
+            }
 
             var resultado = _passwordHasher.VerifyHashedPassword(
                 usuario, usuario.SenhaHash, dados.Senha);
 
             if (resultado == PasswordVerificationResult.Failed)
-                return Unauthorized("E-mail ou senha inválidos.");
+                return Unauthorized("Credenciais inválidas.");
 
             var perfis = await _context.UsuarioPerfils
                 .Where(up => up.UsuarioId == usuario.UsuarioId)
@@ -106,9 +150,13 @@ namespace ProjetoCertacon.Controllers
                     _context.Perfils,
                     up => up.PerfilId,
                     p => p.PerfilId,
-                    (up, p) => p.Nome
-                )
+                    (up, p) => new { p.Nome, p.Ativo })
+                .Where(p => p.Ativo)
+                .Select(p => p.Nome)
                 .ToListAsync();
+
+            if (perfis.Count == 0)
+                return Unauthorized("Usuário sem perfil ativo.");
 
             var claims = new List<Claim>
             {
@@ -150,6 +198,9 @@ namespace ProjetoCertacon.Controllers
                 token = new JwtSecurityTokenHandler()
                     .WriteToken(token),
                 expiracao = token.ValidTo,
+                usuario.UsuarioId,
+                usuario.Nome,
+                usuario.Email,
                 perfis
             });
         }
@@ -167,7 +218,7 @@ namespace ProjetoCertacon.Controllers
 
     public class LoginRequest
     {
-        public string Email { get; set; } = "";
+        public string Identificador { get; set; } = "";
         public string Senha { get; set; } = "";
     }
 }

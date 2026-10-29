@@ -64,21 +64,16 @@ namespace ProjetoCertacon.Controllers
         {
             if (string.IsNullOrWhiteSpace(dados.Titulo) ||
                 string.IsNullOrWhiteSpace(dados.Conteudo))
-            {
                 return BadRequest("Preencha o titulo e o conteudo.");
-            }
 
             if (dados.Visibilidade != "PUBLICO" &&
                 dados.Visibilidade != "EXCLUSIVO")
-            {
                 return BadRequest(
                     "A visibilidade deve ser PUBLICO ou EXCLUSIVO.");
-            }
 
-            var usuarioId = User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+            var autorId = ObterUsuarioId();
 
-            if (!Guid.TryParse(usuarioId, out var autorId))
+            if (autorId == null)
                 return Unauthorized("Usuario do token invalido.");
 
             var tema = await _context.Temas
@@ -88,16 +83,13 @@ namespace ProjetoCertacon.Controllers
                 return BadRequest("O tema informado nao existe.");
 
             if (!PodeCriarNoTema(tema.Nome))
-            {
-                return StatusCode(403,
-                    "Seu perfil nao pode criar artigos neste tema.");
-            }
+                return Forbid();
 
             var artigo = new Artigo
             {
                 ArtigoId = Guid.NewGuid(),
                 TemaId = dados.TemaId,
-                AutorUsuarioId = autorId,
+                AutorUsuarioId = autorId.Value,
                 Titulo = dados.Titulo.Trim(),
                 Resumo = dados.Resumo,
                 Conteudo = dados.Conteudo,
@@ -110,7 +102,7 @@ namespace ProjetoCertacon.Controllers
             await _context.SaveChangesAsync();
 
             await _auditoria.RegistrarAsync(
-                autorId,
+                autorId.Value,
                 "ARTIGO_CRIADO",
                 "ARTIGO",
                 artigo.ArtigoId,
@@ -126,6 +118,135 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+        [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
+        public async Task<IActionResult> EditarArtigo(
+            Guid id, ArtigoRequest dados)
+        {
+            if (string.IsNullOrWhiteSpace(dados.Titulo) ||
+                string.IsNullOrWhiteSpace(dados.Conteudo))
+                return BadRequest("Preencha o titulo e o conteudo.");
+
+            if (dados.Visibilidade != "PUBLICO" &&
+                dados.Visibilidade != "EXCLUSIVO")
+                return BadRequest("Visibilidade invalida.");
+
+            var usuarioId = ObterUsuarioId();
+
+            if (usuarioId == null)
+                return Unauthorized("Usuario do token invalido.");
+
+            var artigo = await _context.Artigos
+                .FirstOrDefaultAsync(a => a.ArtigoId == id);
+
+            if (artigo == null)
+                return NotFound("Artigo nao encontrado.");
+
+            if (artigo.Status == "ARQUIVADO")
+                return BadRequest("O artigo esta arquivado.");
+
+            bool adminOuCoordenador =
+                User.IsInRole("Administrador") ||
+                User.IsInRole("Coordenador Fiscal");
+
+            bool ehAutor = artigo.AutorUsuarioId == usuarioId.Value;
+
+            if (!ehAutor && !adminOuCoordenador)
+                return Forbid();
+
+            if (artigo.Status != "RASCUNHO" &&
+                !(adminOuCoordenador &&
+                  artigo.Status == "EM_REVISAO"))
+                return BadRequest(
+                    "Este artigo nao pode ser editado neste status.");
+
+            var tema = await _context.Temas
+                .FirstOrDefaultAsync(t => t.TemaId == dados.TemaId);
+
+            if (tema == null)
+                return BadRequest("O tema informado nao existe.");
+
+            if (!PodeCriarNoTema(tema.Nome) && !adminOuCoordenador)
+                return Forbid();
+
+            artigo.TemaId = dados.TemaId;
+            artigo.Titulo = dados.Titulo.Trim();
+            artigo.Resumo = dados.Resumo;
+            artigo.Conteudo = dados.Conteudo;
+            artigo.Visibilidade = dados.Visibilidade;
+            artigo.DataAtualizacao = DateTime.UtcNow;
+
+            if (artigo.Status == "EM_REVISAO")
+                artigo.Status = "RASCUNHO";
+
+            await _context.SaveChangesAsync();
+
+            await _auditoria.RegistrarAsync(
+                usuarioId.Value,
+                "ARTIGO_EDITADO",
+                "ARTIGO",
+                artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Artigo editado: " + artigo.Titulo);
+
+            return Ok(new
+            {
+                mensagem = "Artigo atualizado com sucesso.",
+                artigo.ArtigoId,
+                artigo.Titulo,
+                artigo.Status
+            });
+        }
+
+        [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
+        public async Task<IActionResult> ExcluirArtigo(Guid id)
+        {
+            var usuarioId = ObterUsuarioId();
+
+            if (usuarioId == null)
+                return Unauthorized("Usuario do token invalido.");
+
+            var artigo = await _context.Artigos
+                .FirstOrDefaultAsync(a => a.ArtigoId == id);
+
+            if (artigo == null)
+                return NotFound("Artigo nao encontrado.");
+
+            if (artigo.Status == "ARQUIVADO")
+                return BadRequest("O artigo ja esta arquivado.");
+
+            bool adminOuCoordenador =
+                User.IsInRole("Administrador") ||
+                User.IsInRole("Coordenador Fiscal");
+
+            bool ehAutor = artigo.AutorUsuarioId == usuarioId.Value;
+
+            if (!adminOuCoordenador &&
+                (!ehAutor || artigo.Status != "RASCUNHO"))
+                return Forbid();
+
+            artigo.Status = "ARQUIVADO";
+            artigo.DataAtualizacao = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            await _auditoria.RegistrarAsync(
+                usuarioId.Value,
+                "ARTIGO_ARQUIVADO",
+                "ARTIGO",
+                artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Artigo arquivado: " + artigo.Titulo);
+
+            return Ok(new
+            {
+                mensagem = "Artigo excluido com sucesso.",
+                artigo.ArtigoId,
+                artigo.Status
+            });
+        }
+
         [HttpPost("{id:guid}/enviar-revisao")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> EnviarParaRevisao(Guid id)
@@ -136,15 +257,14 @@ namespace ProjetoCertacon.Controllers
             if (artigo == null)
                 return NotFound("Artigo nao encontrado.");
 
-            var usuarioId = User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+            var autorId = ObterUsuarioId();
 
-            if (!Guid.TryParse(usuarioId, out var autorId))
+            if (autorId == null)
                 return Unauthorized("Usuario do token invalido.");
 
-            var ehAdministrador = User.IsInRole("Administrador");
+            bool ehAdministrador = User.IsInRole("Administrador");
 
-            if (artigo.AutorUsuarioId != autorId && !ehAdministrador)
+            if (artigo.AutorUsuarioId != autorId.Value && !ehAdministrador)
                 return Forbid();
 
             if (artigo.Status != "RASCUNHO")
@@ -257,13 +377,16 @@ namespace ProjetoCertacon.Controllers
             artigo.Status = "REJEITADO";
             artigo.DataAtualizacao = DateTime.UtcNow;
 
+            _context.RevisaoArtigos.Add(revisao);
+            await _context.SaveChangesAsync();
+
             await _auditoria.RegistrarAsync(
-     revisorId.Value,
-     "ARTIGO_REJEITADO",
-     "ARTIGO",
-     artigo.ArtigoId,
-     HttpContext.Connection.RemoteIpAddress?.ToString(),
-     "Artigo rejeitado: " + artigo.Titulo);
+                revisorId.Value,
+                "ARTIGO_REJEITADO",
+                "ARTIGO",
+                artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Artigo rejeitado: " + artigo.Titulo);
 
             return Ok(new
             {
@@ -302,13 +425,16 @@ namespace ProjetoCertacon.Controllers
             artigo.Status = "RASCUNHO";
             artigo.DataAtualizacao = DateTime.UtcNow;
 
+            _context.RevisaoArtigos.Add(revisao);
+            await _context.SaveChangesAsync();
+
             await _auditoria.RegistrarAsync(
-     revisorId.Value,
-     "ARTIGO_AJUSTES_SOLICITADOS",
-     "ARTIGO",
-     artigo.ArtigoId,
-     HttpContext.Connection.RemoteIpAddress?.ToString(),
-     "Ajustes solicitados para o artigo: " + artigo.Titulo);
+                revisorId.Value,
+                "ARTIGO_AJUSTES_SOLICITADOS",
+                "ARTIGO",
+                artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Ajustes solicitados para o artigo: " + artigo.Titulo);
 
             return Ok(new
             {
@@ -394,30 +520,22 @@ namespace ProjetoCertacon.Controllers
         {
             if (User.IsInRole("Administrador") ||
                 User.IsInRole("Coordenador Fiscal"))
-            {
                 return true;
-            }
 
             if (User.IsInRole("Analista SPED") &&
                 (nomeTema == "SPED EFD" ||
                  nomeTema == "EFD-Contribuições"))
-            {
                 return true;
-            }
 
             if (User.IsInRole("Analista de Documentos Fiscais") &&
                 (nomeTema == "NF-e" ||
                  nomeTema == "NFP" ||
                  nomeTema == "XML"))
-            {
                 return true;
-            }
 
             if (User.IsInRole("Analista de Reforma Tributária") &&
                 nomeTema == "Reforma Tributária")
-            {
                 return true;
-            }
 
             return false;
         }

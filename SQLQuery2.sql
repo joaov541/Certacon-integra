@@ -637,11 +637,6 @@ HAVING COUNT(*) > 1;
 
 
 
-CREATE UNIQUE INDEX IX_NOTA_FISCAL_ChaveAcesso
-ON dbo.NOTA_FISCAL (ChaveAcesso)
-WHERE ChaveAcesso IS NOT NULL;
-GO
-
 
 
 
@@ -668,3 +663,237 @@ INNER JOIN dbo.ITEM_NOTA_FISCAL i
     ON n.NotaFiscal_Id = i.NotaFiscal_Id
 WHERE n.ChaveAcesso =
     '35261012345678000195550010000000011000000011';
+
+
+
+
+    -- Listar as chaves estrangeiras do banco
+SELECT
+    OBJECT_NAME(fk.parent_object_id) AS Tabela,
+    COL_NAME(
+        fkc.parent_object_id,
+        fkc.parent_column_id
+    ) AS Coluna,
+    OBJECT_NAME(fk.referenced_object_id) AS TabelaRelacionada,
+    COL_NAME(
+        fkc.referenced_object_id,
+        fkc.referenced_column_id
+    ) AS ColunaRelacionada
+FROM sys.foreign_keys fk
+INNER JOIN sys.foreign_key_columns fkc
+    ON fk.object_id = fkc.constraint_object_id
+ORDER BY Tabela;
+
+
+
+
+USE IntegraCertacon;
+GO
+
+-- Itens sem nota fiscal correspondente
+SELECT i.*
+FROM ITEM_NOTA_FISCAL i
+LEFT JOIN NOTA_FISCAL n
+    ON i.NotaFiscal_Id = n.NotaFiscal_Id
+WHERE n.NotaFiscal_Id IS NULL;
+
+-- Notas fiscais sem usuário correspondente
+SELECT n.*
+FROM NOTA_FISCAL n
+LEFT JOIN USUARIO u
+    ON n.Usuario_Id = u.Usuario_Id
+WHERE u.Usuario_Id IS NULL;
+
+-- Artigos sem tema correspondente
+SELECT a.*
+FROM ARTIGO a
+LEFT JOIN TEMA t
+    ON a.Tema_Id = t.Tema_Id
+WHERE t.Tema_Id IS NULL;
+
+-- Artigos sem autor correspondente
+SELECT a.*
+FROM ARTIGO a
+LEFT JOIN USUARIO u
+    ON a.AutorUsuario_Id = u.Usuario_Id
+WHERE u.Usuario_Id IS NULL;
+
+
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+-- Usuários vinculados a perfis inexistentes
+SELECT up.*
+FROM USUARIO_PERFIL up
+LEFT JOIN PERFIL p
+    ON up.Perfil_Id = p.Perfil_Id
+WHERE p.Perfil_Id IS NULL;
+
+-- Usuários inexistentes nas revisões
+SELECT r.*
+FROM REVISAO_ARTIGO r
+LEFT JOIN USUARIO u
+    ON r.Usuario_Id = u.Usuario_Id
+WHERE u.Usuario_Id IS NULL;
+
+-- Artigos inexistentes nas revisões
+SELECT r.*
+FROM REVISAO_ARTIGO r
+LEFT JOIN ARTIGO a
+    ON r.Artigo_Id = a.Artigo_Id
+WHERE a.Artigo_Id IS NULL;
+
+-- Usuários inexistentes nos registros de auditoria
+SELECT l.*
+FROM LOG_AUDITORIA l
+LEFT JOIN USUARIO u
+    ON l.Usuario_Id = u.Usuario_Id
+WHERE u.Usuario_Id IS NULL;
+
+
+
+
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+-- Notas fiscais com valor total negativo
+SELECT *
+FROM NOTA_FISCAL
+WHERE ValorTotal < 0;
+
+-- Itens com quantidade ou valor negativo
+SELECT *
+FROM ITEM_NOTA_FISCAL
+WHERE Quantidade < 0
+   OR ValorUnitario < 0
+   OR ValorTotal < 0;
+
+-- Notas fiscais sem usuário vinculado
+SELECT *
+FROM NOTA_FISCAL
+WHERE Usuario_Id IS NULL;
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT TOP 10
+    n.NotaFiscal_Id,
+    n.Numero,
+    n.Usuario_Id,
+    n.ValorTotal,
+    n.Status,
+    COUNT(i.ItemNotaFiscal_Id) AS QuantidadeItens
+FROM NOTA_FISCAL n
+LEFT JOIN ITEM_NOTA_FISCAL i
+    ON n.NotaFiscal_Id = i.NotaFiscal_Id
+GROUP BY
+    n.NotaFiscal_Id,
+    n.Numero,
+    n.Usuario_Id,
+    n.ValorTotal,
+    n.Status
+ORDER BY n.Numero;
+
+
+
+
+
+
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT *
+FROM NOTA_FISCAL
+WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
+
+SELECT *
+FROM ITEM_NOTA_FISCAL
+WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
+
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+ALTER TABLE dbo.NOTA_FISCAL
+DROP CONSTRAINT CK_NOTA_FISCAL_Status;
+GO
+
+ALTER TABLE dbo.NOTA_FISCAL
+ADD CONSTRAINT CK_NOTA_FISCAL_Status
+CHECK (
+    [Status] IN (
+        'IMPORTADA',
+        'VALIDADA',
+        'REJEITADA',
+        'ARQUIVADA'
+    )
+);
+GO
+
+
+
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+-- 1. Verificar se a nota continua no banco
+SELECT
+    NotaFiscal_Id,
+    Numero,
+    Status,
+    ValorTotal
+FROM dbo.NOTA_FISCAL
+WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
+
+-- 2. Verificar se os itens continuam vinculados
+SELECT
+    ItemNotaFiscal_Id,
+    NotaFiscal_Id,
+    CodigoProduto,
+    Descricao,
+    Quantidade,
+    ValorTotal
+FROM dbo.ITEM_NOTA_FISCAL
+WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
+
+
+
+
+SELECT
+    NotaFiscal_Id,
+    Usuario_Id,
+    Status
+FROM dbo.NOTA_FISCAL
+WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';

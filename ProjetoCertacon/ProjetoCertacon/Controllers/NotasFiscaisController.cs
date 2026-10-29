@@ -110,6 +110,104 @@ public class NotasFiscaisController : ControllerBase
     }
 
 
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Administrador")]
+    public async Task<IActionResult> ExcluirNota(Guid id)
+    {
+        var nota = await _context.NotaFiscals
+            .FirstOrDefaultAsync(n => n.NotaFiscalId == id);
+
+        if (nota == null)
+            return NotFound("Nota fiscal não encontrada.");
+
+        nota.Status = "ARQUIVADA";
+
+        try
+        {
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                mensagem = "Nota fiscal arquivada com sucesso.",
+                nota.NotaFiscalId,
+                nota.Status
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Erro ao arquivar a nota fiscal {NotaFiscalId}.", id);
+
+            return StatusCode(500,
+                "Não foi possível arquivar a nota fiscal.");
+        }
+    }
+
+    [HttpDelete("{id:guid}/xml")]
+    public async Task<IActionResult> ExcluirXml(Guid id)
+    {
+        var usuarioId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
+
+        if (!Guid.TryParse(usuarioId, out var idUsuario))
+            return Unauthorized();
+
+        var nota = await _context.NotaFiscals
+            .FirstOrDefaultAsync(n =>
+                n.NotaFiscalId == id &&
+                n.UsuarioId == idUsuario);
+
+        if (nota == null)
+            return NotFound("Nota fiscal não encontrada.");
+
+        if (string.IsNullOrWhiteSpace(nota.CaminhoArquivo))
+            return NotFound("A nota não possui um XML associado.");
+
+        var caminhoArquivo = nota.CaminhoArquivo;
+
+        try
+        {
+            // Primeiro remove a referência ao arquivo no banco.
+            nota.CaminhoArquivo = null;
+            await _context.SaveChangesAsync();
+
+            // Depois tenta remover o arquivo físico.
+            if (System.IO.File.Exists(caminhoArquivo))
+            {
+                try
+                {
+                    System.IO.File.Delete(caminhoArquivo);
+                }
+                catch (IOException ex)
+                {
+                    _logger.LogError(ex,
+                        "Não foi possível remover o XML da nota {NotaFiscalId}.",
+                        id);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    _logger.LogError(ex,
+                        "Sem permissão para remover o XML da nota {NotaFiscalId}.",
+                        id);
+                }
+            }
+
+            return Ok(new
+            {
+                mensagem = "Solicitação de exclusão do XML concluída.",
+                nota.NotaFiscalId
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Erro ao excluir o XML da nota fiscal {NotaFiscalId}.", id);
+
+            return StatusCode(500,
+                "Não foi possível atualizar os dados do XML.");
+        }
+    }
+
     private void ExcluirArquivo(string? caminho)
     {
         if (string.IsNullOrWhiteSpace(caminho))

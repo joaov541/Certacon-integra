@@ -27,6 +27,43 @@
   },
   {
     "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
+    "Method": "EditarArtigo",
+    "RelativePath": "api/Artigos/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.ArtigoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
+    "Method": "ExcluirArtigo",
+    "RelativePath": "api/Artigos/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
     "Method": "AprovarArtigo",
     "RelativePath": "api/Artigos/{id}/aprovar",
     "HttpMethod": "POST",
@@ -216,6 +253,38 @@
   },
   {
     "ContainingType": "ProjetoCertacon.Controllers.NotasFiscaisController",
+    "Method": "ExcluirNota",
+    "RelativePath": "api/NotasFiscais/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.NotasFiscaisController",
+    "Method": "ExcluirXml",
+    "RelativePath": "api/NotasFiscais/{id}/xml",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.NotasFiscaisController",
     "Method": "EnviarXml",
     "RelativePath": "api/NotasFiscais/upload",
     "HttpMethod": "POST",
@@ -242,6 +311,16 @@
   },
   {
     "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
+    "Method": "Listar",
+    "RelativePath": "api/Usuarios",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
     "Method": "Cadastrar",
     "RelativePath": "api/Usuarios",
     "HttpMethod": "POST",
@@ -251,6 +330,64 @@
       {
         "Name": "dados",
         "Type": "ProjetoCertacon.Controllers.UsuarioRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
+    "Method": "Editar",
+    "RelativePath": "api/Usuarios/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.UsuarioAtualizarRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
+    "Method": "Excluir",
+    "RelativePath": "api/Usuarios/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
+    "Method": "AlterarStatus",
+    "RelativePath": "api/Usuarios/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.UsuarioStatusRequest",
         "IsRequired": true
       }
     ],
