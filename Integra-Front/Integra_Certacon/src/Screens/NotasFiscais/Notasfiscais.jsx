@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import "./NotasFiscais.css";
+import "./Notasfiscais.css";
 
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
@@ -11,6 +10,7 @@ import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
+import Calendario from "../../assets/Icones/calendario.png";
 
 const notasIniciais = [
   {
@@ -136,23 +136,47 @@ function NotasFiscais() {
           <div className="filtros-notas">
             <div className="filtro-periodo">
               <label>Período</label>
+
               <div className="campo-periodo">
-                <input
-                  type="date"
-                  value={dataInicio}
-                  onChange={(e) => setDataInicio(e.target.value)}
-                />
+                <div className="campo-data-notas">
+                  <input
+                    type="date"
+                    value={dataInicio}
+                    onChange={(e) => setDataInicio(e.target.value)}
+                  />
+
+                  <img
+                    src={Calendario}
+                    alt="Selecionar data inicial"
+                    onClick={(e) =>
+                      e.currentTarget.previousElementSibling.showPicker?.()
+                    }
+                  />
+                </div>
+
                 <span>-</span>
-                <input
-                  type="date"
-                  value={dataFim}
-                  onChange={(e) => setDataFim(e.target.value)}
-                />
+
+                <div className="campo-data-notas">
+                  <input
+                    type="date"
+                    value={dataFim}
+                    onChange={(e) => setDataFim(e.target.value)}
+                  />
+
+                  <img
+                    src={Calendario}
+                    alt="Selecionar data final"
+                    onClick={(e) =>
+                      e.currentTarget.previousElementSibling.showPicker?.()
+                    }
+                  />
+                </div>
               </div>
             </div>
 
             <div className="filtro-cliente">
               <label>Cliente</label>
+
               <select
                 value={cliente}
                 onChange={(e) => {
@@ -169,6 +193,7 @@ function NotasFiscais() {
 
             <div className="filtro-status">
               <label>Status</label>
+
               <select
                 value={status}
                 onChange={(e) => {
@@ -183,7 +208,10 @@ function NotasFiscais() {
               </select>
             </div>
 
-            <button className="botao-buscar-notas" onClick={buscarNotas}>
+            <button
+              className="botao-buscar-notas"
+              onClick={buscarNotas}
+            >
               Buscar
             </button>
           </div>
@@ -209,6 +237,7 @@ function NotasFiscais() {
                       <td>{nota.emissao}</td>
                       <td>{nota.cliente}</td>
                       <td>{nota.valor}</td>
+
                       <td>
                         <span
                           className={`status-nota ${
@@ -222,6 +251,7 @@ function NotasFiscais() {
                           {nota.status}
                         </span>
                       </td>
+
                       <td>
                         <button
                           className="botao-excluir-nota"
@@ -252,17 +282,18 @@ function NotasFiscais() {
               Anterior
             </button>
 
-            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
-              (numero) => (
-                <button
-                  key={numero}
-                  className={pagina === numero ? "pagina-ativa" : ""}
-                  onClick={() => setPagina(numero)}
-                >
-                  {numero}
-                </button>
-              )
-            )}
+            {Array.from(
+              { length: totalPaginas },
+              (_, i) => i + 1
+            ).map((numero) => (
+              <button
+                key={numero}
+                className={pagina === numero ? "pagina-ativa" : ""}
+                onClick={() => setPagina(numero)}
+              >
+                {numero}
+              </button>
+            ))}
 
             <button
               disabled={pagina === totalPaginas}
@@ -295,7 +326,10 @@ function Sidebar() {
           <span>Conteúdos</span>
         </a>
 
-        <a href="#" className="item-menu-notas menu-notas-ativo">
+        <a
+          href="#"
+          className="item-menu-notas menu-notas-ativo"
+        >
           <img src={DoisDocumentosBranco} alt="" />
           <span>Notas Fiscais</span>
         </a>
@@ -327,22 +361,23 @@ function Header({ pesquisa, setPesquisa }) {
     <header className="topo-notas">
       <div className="pesquisa-topo-notas">
         <img src={LupaCinza} alt="" />
+
         <input
           type="text"
           placeholder="Buscar conteúdos, notas fiscais, etc..."
           value={pesquisa}
-          onChange={(e) => {
-            setPesquisa(e.target.value);
-          }}
+          onChange={(e) => setPesquisa(e.target.value)}
         />
       </div>
 
       <div className="usuario-topo-notas">
         <div className="foto-usuario-notas">JS</div>
+
         <div>
           <strong>João Silva</strong>
           <span>Analista SPED</span>
         </div>
+
         <span className="tres-pontos-notas">•••</span>
       </div>
     </header>
