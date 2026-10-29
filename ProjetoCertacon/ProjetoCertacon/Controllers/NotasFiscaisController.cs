@@ -20,16 +20,22 @@ public class NotasFiscaisController : ControllerBase
     private readonly IntegraCertaconContext _context;
     private readonly ArmazenamentoXmlService _armazenamento;
     private readonly ValidacaoNfeService _validacaoNfe;
+    private readonly ILogger<NotasFiscaisController> _logger;
 
     public NotasFiscaisController(
+        ILogger<NotasFiscaisController> logger,
         IntegraCertaconContext context,
         ArmazenamentoXmlService armazenamento,
         ValidacaoNfeService validacaoNfe)
+
     {
+        _logger = logger;
         _context = context;
         _armazenamento = armazenamento;
         _validacaoNfe = validacaoNfe;
     }
+
+
 
     [HttpGet]
     public async Task<IActionResult> Listar()
@@ -102,6 +108,30 @@ public class NotasFiscaisController : ControllerBase
 
         return Ok(nota);
     }
+
+
+    private void ExcluirArquivo(string? caminho)
+    {
+        if (string.IsNullOrWhiteSpace(caminho))
+            return;
+
+        try
+        {
+            if (System.IO.File.Exists(caminho))
+                System.IO.File.Delete(caminho);
+        }
+        catch (IOException ex)
+        {
+            _logger.LogError(ex,
+                "Erro ao excluir o XML após falha na importação.");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogError(ex,
+                "Sem permissão para excluir o XML.");
+        }
+    }
+
 
     [HttpPost("upload")]
     [RequestSizeLimit(5_000_000)]
@@ -361,12 +391,22 @@ public class NotasFiscaisController : ControllerBase
 
             return Conflict("Não foi possível gravar a nota. Verifique se a chave já foi importada.");
         }
-        catch
+        catch (Exception ex)
         {
-            await transacao.RollbackAsync(cancellationToken);
+            try
+            {
+                await transacao.RollbackAsync(CancellationToken.None);
+            }
+            catch (Exception erroRollback)
+            {
+                _logger.LogError(erroRollback,
+                    "Erro ao desfazer a transação da nota fiscal.");
+            }
 
-            if (caminhoArquivo != null && System.IO.File.Exists(caminhoArquivo))
-                System.IO.File.Delete(caminhoArquivo);
+            ExcluirArquivo(caminhoArquivo);
+
+            _logger.LogError(ex,
+                "Erro inesperado durante a importação da nota fiscal.");
 
             throw;
         }

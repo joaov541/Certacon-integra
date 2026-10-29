@@ -546,3 +546,125 @@ SELECT TOP 5
     DataEnvio
 FROM dbo.NOTA_FISCAL
 ORDER BY DataEnvio DESC;
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    NotaFiscal_Id,
+    Numero,
+    ChaveAcesso,
+    CaminhoArquivo
+FROM dbo.NOTA_FISCAL
+ORDER BY Numero;
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    n.Numero,
+    n.ChaveAcesso,
+    i.*
+FROM dbo.NOTA_FISCAL n
+LEFT JOIN dbo.ITEM_NOTA_FISCAL i
+    ON i.ItemNotaFiscal_Id = n.NotaFiscal_Id
+ORDER BY n.Numero;
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME IN ('NOTA_FISCAL', 'ITEM_NOTA_FISCAL')
+ORDER BY TABLE_NAME, ORDINAL_POSITION;
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    n.Numero,
+    n.ChaveAcesso,
+    i.NumeroItem,
+    i.CodigoProduto,
+    i.Descricao,
+    i.Quantidade,
+    i.ValorUnitario,
+    i.ValorTotal
+FROM dbo.NOTA_FISCAL n
+LEFT JOIN dbo.ITEM_NOTA_FISCAL i
+    ON i.NotaFiscal_Id = n.NotaFiscal_Id
+ORDER BY n.Numero, i.NumeroItem;
+
+
+
+
+
+SELECT
+    Numero,
+    ChaveAcesso,
+    CaminhoArquivo
+FROM dbo.NOTA_FISCAL
+WHERE CaminhoArquivo IS NOT NULL;
+
+
+
+
+SELECT
+    ChaveAcesso,
+    COUNT(*) AS Quantidade
+FROM dbo.NOTA_FISCAL
+WHERE ChaveAcesso IS NOT NULL
+GROUP BY ChaveAcesso
+HAVING COUNT(*) > 1;
+
+
+
+
+CREATE UNIQUE INDEX IX_NOTA_FISCAL_ChaveAcesso
+ON dbo.NOTA_FISCAL (ChaveAcesso)
+WHERE ChaveAcesso IS NOT NULL;
+GO
+
+
+
+
+SELECT
+    Numero,
+    ChaveAcesso,
+    CaminhoArquivo,
+    Status
+FROM dbo.NOTA_FISCAL
+WHERE ChaveAcesso =
+    '35261012345678000195550010000000011000000011';
+
+
+
+    SELECT
+    n.Numero,
+    i.NumeroItem,
+    i.Descricao,
+    i.Quantidade,
+    i.ValorUnitario,
+    i.ValorTotal
+FROM dbo.NOTA_FISCAL n
+INNER JOIN dbo.ITEM_NOTA_FISCAL i
+    ON n.NotaFiscal_Id = i.NotaFiscal_Id
+WHERE n.ChaveAcesso =
+    '35261012345678000195550010000000011000000011';
