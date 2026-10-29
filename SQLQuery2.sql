@@ -891,9 +891,83 @@ WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
 
 
 
+USE IntegraCertacon;
+GO
+
 SELECT
     NotaFiscal_Id,
     Usuario_Id,
-    Status
+    Status,
+    CaminhoArquivo
 FROM dbo.NOTA_FISCAL
 WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT
+    NotaFiscal_Id,
+    Status,
+    CaminhoArquivo
+FROM dbo.NOTA_FISCAL
+WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
+
+SELECT *
+FROM dbo.ITEM_NOTA_FISCAL
+WHERE NotaFiscal_Id = 'F8CAE4C7-5374-4918-B1F8-E5C69409FBEC';
+
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT *
+FROM NOTA_FISCAL
+WHERE NotaFiscal_Id = '354efa33-bf6a-4263-81d8-52925c17f5ac';
+
+SELECT *
+FROM ITEM_NOTA_FISCAL
+WHERE NotaFiscal_Id = '354efa33-bf6a-4263-81d8-52925c17f5ac';
+
+
+
+
+
+
+
+
+SELECT ChaveAcesso, COUNT(*) AS Quantidade
+FROM NOTA_FISCAL
+WHERE ChaveAcesso = '35261012345678000195550010000002921876543210'
+GROUP BY ChaveAcesso;
+
+
+
+
+SELECT TOP 20 *
+FROM LOG_AUDITORIA
+ORDER BY DataHora DESC;
+
+
+
+
+SELECT TOP 30 *
+FROM LOG_AUDITORIA
+WHERE Acao LIKE '%USUARIO%'
+   OR Acao LIKE '%NOTA_FISCAL%'
+   OR Acao LIKE '%XML%'
+ORDER BY DataHora DESC;
+
+
+
+
+SELECT Acao, COUNT(*) AS Quantidade
+FROM LOG_AUDITORIA
+GROUP BY Acao
+ORDER BY Acao;

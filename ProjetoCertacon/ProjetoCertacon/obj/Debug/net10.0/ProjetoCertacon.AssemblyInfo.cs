@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProjetoCertacon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9f2a23918d42551debb901dda6398a0348dac24f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ba0383f41eac2454acb782e21f823155ebab800")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProjetoCertacon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProjetoCertacon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
