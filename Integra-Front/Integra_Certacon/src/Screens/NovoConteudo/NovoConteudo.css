@@ -15,12 +15,13 @@
     color: #111;
 }
 
-/* Menu lateral */
+/* MENU LATERAL */
 
 .menu-novo-conteudo {
     display: flex;
     flex-direction: column;
     width: 334px;
+    min-width: 214px;
     min-height: 100vh;
     padding: 25px 20px;
     background: var(--azul-integra);
@@ -41,6 +42,10 @@
     max-width: 300px;
     height: 100px;
     object-fit: contain;
+}
+
+.logo-mobile {
+    display: none;
 }
 
 .simbolo-logo {
@@ -109,7 +114,7 @@
     object-fit: contain;
 }
 
-/* Área principal */
+/* ÁREA PRINCIPAL */
 
 .principal-novo-conteudo {
     display: flex;
@@ -118,7 +123,7 @@
     min-width: 0;
 }
 
-/* Cabeçalho */
+/* CABEÇALHO */
 
 .topo-novo-conteudo {
     display: flex;
@@ -197,7 +202,7 @@
     font-size: 20px;
 }
 
-/* Conteúdo da página */
+/* CONTEÚDO DA PÁGINA */
 
 .area-novo-conteudo {
     flex: 1;
@@ -210,7 +215,7 @@
     color: #1d2e68;
 }
 
-/* Formulário */
+/* FORMULÁRIO */
 
 .formulario-conteudo {
     display: grid;
@@ -238,7 +243,7 @@
     color: #1d2e68;
 }
 
-/* Campos de texto */
+/* CAMPOS DE TEXTO */
 
 .campo-conteudo input,
 .select-tema-container select {
@@ -258,7 +263,7 @@
     border-color: var(--azul-integra);
 }
 
-/* Campo Tema */
+/* CAMPO TEMA */
 
 .select-tema-container {
     position: relative;
@@ -268,16 +273,11 @@
 .select-tema-container select {
     display: block;
     padding-right: 40px;
-
-    /* Esconde a seta padrão do navegador */
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-
     cursor: pointer;
 }
-
-/* Imagem dentro do campo Tema */
 
 .icone-expandir-tema {
     position: absolute;
@@ -292,7 +292,7 @@
     pointer-events: none;
 }
 
-/* Editor de texto */
+/* EDITOR DE TEXTO */
 
 .editor-conteudo {
     width: 100%;
@@ -352,7 +352,7 @@
     pointer-events: none;
 }
 
-/* Envio de arquivo */
+/* ENVIO DE ARQUIVO */
 
 .area-arquivo {
     min-width: 0;
@@ -419,7 +419,7 @@
     display: none;
 }
 
-/* Botões */
+/* BOTÕES */
 
 .botoes-conteudo {
     display: flex;
@@ -459,20 +459,173 @@
     background: #e87500;
 }
 
-/* Telas menores */
+/* =========================================
+   TABLETS
+========================================= */
 
-@media (max-width: 900px) {
+@media (min-width: 561px) and (max-width: 900px) {
+
     .menu-novo-conteudo {
-        flex-basis: 190px;
-        padding: 25px 14px;
+        flex: 0 0 180px;
+        width: 180px;
+        min-width: 180px;
+        padding: 22px 13px;
     }
+
+    .logo-novo-conteudo {
+        margin-bottom: 28px;
+    }
+
+    .logo-novo-conteudo img {
+        width: 100%;
+        height: 75px;
+    }
+
+    .navegacao-novo-conteudo {
+        gap: 18px;
+    }
+
+    .item-menu-novo {
+        gap: 9px;
+        padding: 7px 5px;
+        font-size: 12px;
+    }
+
+    .item-menu-novo img {
+        width: 29px;
+        height: 29px;
+    }
+
+    .item-menu-novo span {
+        width: 20px;
+        font-size: 18px;
+    }
+
+    .sair-novo-conteudo {
+        font-size: 12px;
+    }
+
+    /* HEADER */
+
+    .topo-novo-conteudo {
+        min-height: 75px;
+        gap: 15px;
+        padding: 12px 20px;
+    }
+
+    .pesquisa-topo-novo {
+        height: 38px;
+    }
+
+    .usuario-novo-conteudo {
+        gap: 8px;
+    }
+
+    .foto-usuario-novo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .dados-usuario-novo strong {
+        font-size: 11px;
+    }
+
+    .dados-usuario-novo span {
+        font-size: 10px;
+    }
+
+    /* CONTEÚDO */
 
     .area-novo-conteudo {
         padding: 30px 22px;
     }
 
+    .area-novo-conteudo h1 {
+        margin-bottom: 25px;
+        font-size: 25px;
+    }
+
+    /* FORMULÁRIO */
+
+    .formulario-conteudo {
+        grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.8fr);
+        gap: 18px;
+    }
+
+    .formulario-esquerda {
+        gap: 18px;
+    }
+
+    .campo-conteudo input,
+    .select-tema-container select {
+        height: 40px;
+    }
+
+    .area-texto {
+        height: 140px;
+    }
+
+    /* UPLOAD */
+
+    .area-arquivo {
+        padding-top: 27px;
+    }
+
+    .caixa-upload {
+        min-height: 200px;
+        padding: 18px 10px;
+    }
+
+    .icone-upload-imagem {
+        width: 38px;
+        height: 38px;
+    }
+
+    .informacoes-arquivo {
+        font-size: 10px;
+    }
+
+    /* BOTÕES */
+
+    .botoes-conteudo {
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .botoes-conteudo button {
+        min-height: 38px;
+        padding: 0 14px;
+    }
+}
+
+/* TABLETS MENORES */
+
+@media (min-width: 561px) and (max-width: 700px) {
+
+    .menu-novo-conteudo {
+        flex-basis: 145px;
+        width: 145px;
+        min-width: 145px;
+        padding: 18px 9px;
+    }
+
+    .item-menu-novo {
+        gap: 6px;
+        font-size: 11px;
+    }
+
+    .item-menu-novo img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .area-novo-conteudo {
+        padding: 25px 16px;
+    }
+
     .formulario-conteudo {
         grid-template-columns: 1fr;
+        gap: 18px;
     }
 
     .area-arquivo {
@@ -480,64 +633,302 @@
     }
 
     .caixa-upload {
-        min-height: 200px;
+        min-height: 170px;
     }
 }
 
+/* =========================================
+   CELULARES
+========================================= */
+
 @media (max-width: 560px) {
+
     .pagina-novo-conteudo {
+        display: flex;
         flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+        padding: 0;
+        overflow-x: hidden;
     }
 
+    /* MENU / LOGO */
+
     .menu-novo-conteudo {
-        flex: none;
-        min-height: auto;
-        padding: 15px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        min-width: 0;
+        min-height: 75px;
+        padding: 8px 15px;
+        background: #f3f6fc;
+        color: #1d2e68;
     }
 
     .logo-novo-conteudo {
         justify-content: flex-start;
-        margin-bottom: 20px;
+        width: 100%;
+        margin: 0;
     }
 
-    .navegacao-novo-conteudo {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
+    .logo-novo-conteudo .logo-desktop {
+        display: none;
     }
 
-    .item-menu-novo {
-        gap: 5px;
-        padding: 7px;
+    .logo-novo-conteudo .logo-mobile {
+        display: block;
+        width: 150px;
+        max-width: 60%;
+        height: 58px;
+        object-fit: contain;
+        object-position: left center;
     }
 
-    .item-menu-novo span {
-        width: auto;
-    }
-
+    .navegacao-novo-conteudo,
     .sair-novo-conteudo {
-        margin-top: 15px;
+        display: none;
     }
+
+    /* ÁREA PRINCIPAL */
+
+    .principal-novo-conteudo {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+    }
+
+    /* HEADER */
 
     .topo-novo-conteudo {
-        flex-wrap: wrap;
-        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        min-height: auto;
+        padding: 5px 15px 12px;
+        background: #f3f6fc;
+    }
+
+    .usuario-novo-conteudo {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 7px;
+        width: 100%;
+    }
+
+    .foto-usuario-novo {
+        width: 34px;
+        height: 34px;
+        font-size: 11px;
+    }
+
+    .dados-usuario-novo strong {
+        font-size: 11px;
+    }
+
+    .dados-usuario-novo span {
+        font-size: 9px;
+    }
+
+    .opcoes-usuario-novo {
+        font-size: 17px;
     }
 
     .pesquisa-topo-novo {
-        flex-basis: 100%;
+        width: 100%;
         max-width: none;
+        height: 36px;
+        margin: 0;
     }
 
+    .pesquisa-topo-novo span {
+        font-size: 19px;
+    }
+
+    .pesquisa-topo-novo input {
+        font-size: 11px;
+    }
+
+    /* CONTEÚDO */
+
     .area-novo-conteudo {
-        padding: 25px 15px;
+        width: 100%;
+        padding: 18px 15px 25px;
     }
 
     .area-novo-conteudo h1 {
-        font-size: 23px;
+        margin-bottom: 20px;
+        font-size: 19px;
+    }
+
+    /* FORMULÁRIO */
+
+    .formulario-conteudo {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        width: 100%;
+    }
+
+    .formulario-esquerda {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        width: 100%;
+    }
+
+    .campo-conteudo {
+        gap: 6px;
+        width: 100%;
+    }
+
+    .campo-conteudo label {
+        font-size: 16px;
+    }
+
+    .campo-conteudo input,
+    .select-tema-container select {
+        width: 100%;
+        height: 40px;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    /* EDITOR */
+
+    .editor-conteudo {
+        width: 100%;
+    }
+
+    .barra-editor {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        min-height: 35px;
+        padding: 4px 8px;
+    }
+
+    .barra-editor button {
+        min-width: 18px;
+        padding: 2px;
+    }
+
+    .barra-editor button img {
+        width: 17px;
+        height: 17px;
+    }
+
+    .area-texto {
+        width: 100%;
+        height: 120px;
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    /* UPLOAD */
+
+    .area-arquivo {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+    }
+
+    .caixa-upload {
+        width: 175px;
+        min-height: 110px;
+        padding: 12px 8px;
+        border-radius: 8px;
+    }
+
+    .icone-upload-imagem {
+        width: 28px;
+        height: 28px;
+        margin-bottom: 6px;
+    }
+
+    .caixa-upload p {
+        margin-bottom: 5px;
+        font-size: 10px;
+    }
+
+    .caixa-upload > span {
+        font-size: 10px;
+    }
+
+    .informacoes-arquivo {
+        gap: 4px;
+        margin-top: 8px;
+        font-size: 9px;
+    }
+
+    .nome-arquivo {
+        margin-top: 8px;
+        font-size: 10px;
+    }
+
+    /* BOTÕES */
+
+    .botoes-conteudo {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        margin-top: 25px;
+    }
+
+    .botoes-conteudo button {
+        min-height: 38px;
+        padding: 0 15px;
+        font-size: 11px;
+    }
+
+    .botao-cancelar {
+        order: 1;
+    }
+
+    .botao-rascunho {
+        order: 2;
+    }
+}
+
+/* CELULARES MUITO ESTREITOS */
+
+@media (max-width: 350px) {
+
+    .menu-novo-conteudo {
+        padding: 8px 12px;
+    }
+
+    .logo-novo-conteudo .logo-mobile {
+        width: 135px;
+        height: 52px;
+    }
+
+    .area-novo-conteudo {
+        padding: 15px 12px 20px;
+    }
+
+    .area-texto {
+        height: 105px;
+    }
+
+    .caixa-upload {
+        width: 155px;
     }
 
     .botoes-conteudo {
-        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .botoes-conteudo button {
+        padding: 0 10px;
+        font-size: 10px;
     }
 }

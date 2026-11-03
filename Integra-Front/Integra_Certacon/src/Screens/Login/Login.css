@@ -27,7 +27,7 @@ input {
     background-color: #ffffff;
 }
 
-/* Lado esquerdo da tela */
+/* LADO ESQUERDO */
 
 .login-apresentacao {
     display: flex;
@@ -59,14 +59,12 @@ input {
     margin-top: 24px;
 }
 
-
 .texto-apresentacao h1 {
-    margin: 0 0 0 20px;
+    margin: 0 0 0 21px;
     font-size: clamp(34px, 3.5vw, 44px);
     font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.5px;
-    margin-left: 21px;
 }
 
 .texto-apresentacao h1 span {
@@ -77,15 +75,13 @@ input {
 
 .texto-apresentacao p {
     max-width: 400px;
-    margin: 14px 0 0 20px;
+    margin: 14px 0 0 21px;
     color: #d5daea;
     font-size: 16px;
     line-height: 1.6;
-    margin-left: 21px;
 }
 
-
-/* Informações na parte inferior */
+/* VANTAGENS */
 
 .vantagens {
     display: flex;
@@ -118,7 +114,7 @@ input {
     line-height: 1.25;
 }
 
-/* Lado direito da tela */
+/* LADO DIREITO */
 
 .login-formulario {
     display: flex;
@@ -136,7 +132,7 @@ input {
     max-width: 430px;
 }
 
-/* Título e subtítulo */
+/* CABEÇALHO */
 
 .formulario-cabecalho {
     margin-bottom: 52px;
@@ -145,8 +141,8 @@ input {
 .formulario-cabecalho h2 {
     margin: 0;
     color: var(--azul-integra);
-    font-size: 32px;
-    font-weight: 500;
+    font-size: 36px;
+    font-weight: 700;
 }
 
 .formulario-cabecalho p {
@@ -155,7 +151,7 @@ input {
     font-size: 14px;
 }
 
-/* Campos de preenchimento */
+/* CAMPOS */
 
 .campo {
     display: flex;
@@ -168,6 +164,17 @@ input {
     color: #222222;
     font-size: 14px;
     font-weight: 600;
+}
+
+/* ÍCONES OCULTOS NO DESKTOP */
+
+.campo-icone {
+    display: none;
+}
+
+.campo-input {
+    position: relative;
+    width: 100%;
 }
 
 .campo input {
@@ -195,7 +202,7 @@ input {
     margin-bottom: 42px;
 }
 
-/* Recuperar senha */
+/* RECUPERAR SENHA */
 
 .link-recuperar {
     align-self: flex-end;
@@ -213,7 +220,7 @@ input {
     text-decoration: underline;
 }
 
-/* Botão principal */
+/* BOTÃO ENTRAR */
 
 .botao-entrar {
     width: 100%;
@@ -238,7 +245,7 @@ input {
     outline-offset: 3px;
 }
 
-/* Separador entre as opções */
+/* DIVISOR */
 
 .divisor {
     display: flex;
@@ -258,7 +265,7 @@ input {
     font-size: 12px;
 }
 
-/* Criar conta */
+/* CRIAR CONTA */
 
 .link-criar-conta {
     display: block;
@@ -271,16 +278,26 @@ input {
     cursor: pointer;
 }
 
-/* Ajustes para celulares e tablets */
+/* LOGO MOBILE */
+
+.logo-mobile {
+    display: none;
+}
+
+/* =========================================
+   CELULARES
+========================================= */
 
 @media screen and (max-width: 600px) {
+
     .login {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
+        
         width: 100%;
         min-height: 100vh;
+        min-height: 100dvh;
         padding: 0;
         background: #f3f6fc;
     }
@@ -294,10 +311,11 @@ input {
         flex: 1;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
+       
         width: 100%;
         min-height: 100vh;
-        padding: 20px 18px 24px;
+        min-height: 100dvh;
+        padding: 20px 14px 24px;
         background: #f3f6fc;
     }
 
@@ -309,146 +327,172 @@ input {
         margin: 0 auto;
     }
 
+    /* LOGO MOBILE */
+
+    .logo-mobile {
+        display: block;
+        width: 352px;
+        height: auto;
+        max-width: 80%;
+        margin: 0 auto 20px;
+        object-fit: contain;
+    }
+
+    /* CABEÇALHO */
+
     .formulario-cabecalho {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin-bottom: 8px;
+        margin-bottom: 15px;
         text-align: center;
     }
 
-    .marca-integra {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin: 0 auto 12px;
-    }
-
-    .logo-integra {
-        display: block;
-        width: 150px;
-        max-width: 75%;
-        height: 125px;
-        margin: 0 auto;
-        object-fit: contain;
-        object-position: center;
-    }
-
-    .formulario-cabecalho h1,
     .formulario-cabecalho h2 {
         margin: 0 0 7px;
-        color: #1d2e68;
+        color: var(--azul-integra);
         font-size: 14px;
         font-weight: 600;
         line-height: 1.4;
-        text-align: center;
     }
 
     .formulario-cabecalho p {
-        margin: 0;
-        font-size: 11px;
-        text-align: center;
+        display: none;
     }
 
+    /* CAMPOS */
+
     .campo {
+        position: relative;
         width: 100%;
-        margin-bottom: 9px;
+        margin-bottom: 14px;
     }
 
     .campo label {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 11px;
+        display: none;
+    }
+
+    .campo-input {
+        position: relative;
+        width: 100%;
     }
 
     .campo input {
         width: 100%;
-        height: 37px;
-        padding: 0 12px;
-        border: 1px solid #d8d8d8;
-        border-radius: 6px;
-        background: #fff;
-        font-size: 11px;
+        height: 56px;
+        padding: 0 14px 0 62px;
+        border: 1px solid #d0d0d0;
+        border-radius: 9px;
+        background-color: #fffafa;
+        color: #333;
+        font-size: 14px;
         outline: none;
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.18);
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
     }
 
     .campo input:focus {
-        border-color: #1d2e68;
+        border-color: var(--azul-integra);
     }
+
+    .campo input::placeholder {
+        color: #a0a0a0;
+    }
+
+    /* ÍCONES DENTRO DOS INPUTS */
+
+    .campo-icone {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 14px;
+        z-index: 1;
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    /* SENHA */
 
     .campo-senha {
         margin-bottom: 8px;
     }
 
-    .campo-senha input {
-        padding-right: 36px;
-    }
+    /* RECUPERAR SENHA */
 
     .link-recuperar {
         display: block;
-        align-self: flex-end;
-        margin: 0 0 10px;
+        align-self: center;
+        margin: 8px auto 14px;
         color: #3978cf;
-        font-size: 9px;
-        text-align: right;
+        font-size: 10px;
+        text-align: center;
         text-decoration: none;
     }
 
+    /* BOTÃO ENTRAR */
+
     .botao-entrar {
         width: 100%;
-        min-height: 36px;
+        min-height: 55px;
         margin-top: 0;
         border: none;
-        border-radius: 5px;
-        background: #1d2e68;
+        border-radius: 8px;
+        background: var(--azul-integra);
         color: #fff;
-        font-size: 12px;
+        font-size: 16px;
         font-weight: 600;
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
         cursor: pointer;
     }
+
+    /* DIVISOR */
 
     .divisor {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin: 15px 0 12px;
+        margin: 24px 0 16px;
         color: #999;
-        font-size: 8px;
+        font-size: 9px;
         text-align: center;
     }
 
-    .divisor::before,
-    .divisor::after {
+    .divisor span {
         flex: 1;
         height: 1px;
         background: #e1e4e9;
-        content: "";
     }
 
-    .divisor span {
+    .divisor small {
         padding: 0 10px;
+        color: #999;
+        font-size: 9px;
     }
 
-    /* Link Criar conta */
+    /* CRIAR CONTA */
+
     .link-criar-conta {
         display: block;
         width: 100%;
         margin-top: 0;
         color: #3978cf;
-        font-size: 9px;
+        font-size: 10px;
         text-align: center;
         text-decoration: none;
     }
 }
 
-/* Celulares menores */
+/* =========================================
+   CELULARES MENORES
+========================================= */
+
 @media screen and (max-width: 360px) {
+
     .login-formulario {
         padding: 16px 12px 20px;
     }
@@ -457,14 +501,26 @@ input {
         max-width: 100%;
     }
 
-    .logo-integra {
-        width: 135px;
-        height: 115px;
+    .logo-mobile {
+        width: 322px;
+        margin-bottom: 16px;
+    }
+
+    .campo input {
+        height: 52px;
+    }
+
+    .botao-entrar {
+        min-height: 50px;
     }
 }
 
-/* tela de duas colunas */
+/* =========================================
+   TABLETS
+========================================= */
+
 @media screen and (min-width: 601px) and (max-width: 900px) {
+
     .login-apresentacao {
         width: 42%;
         padding: 30px 22px;

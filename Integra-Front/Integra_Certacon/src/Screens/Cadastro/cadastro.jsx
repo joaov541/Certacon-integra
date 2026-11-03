@@ -1,17 +1,21 @@
-
 import { useState } from "react";
 import "./cadastro.css";
 
 import PerfilLaranja from "../../assets/Icones/PerfilLaranja.png";
-import logoIntegra from "../../assets/Icones/LogoNome.png";
-import iconeEscudo from "../../assets/Icones/EscudoLaranja.png";
-import iconeDocumento from "../../assets/Icones/documentoLaranja.png";
-import iconeGrupo from "../../assets/Icones/GrupoPessoasLaranja.png";
+import iconeEscudo from "../../assets/Icones/EscudoBranco.png";
+import iconeDocumento from "../../assets/Icones/quadroEstatistica.png";
+import quadroEnergia from "../../assets/Icones/quadroEnergia.png";
+import iconeGrupo from "../../assets/Icones/GrupoBranco.png";
 import iconeDadosPessoais from "../../assets/Icones/Component 3.png";
 import cidadeLaranja from "../../assets/Icones/cidadeLaranja.png";
 import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
 import olhoAberto from "../../assets/Icones/OlhoAberto.png";
 import olhoFechado from "../../assets/Icones/olhoFechado.png";
+import TelefoneCinza from "../../assets/Icones/TelefoneCinza.png";
+import PessoaCinza from "../../assets/Icones/PessoaCinza.png";
+import EmailCinza from "../../assets/Icones/EmailCinza.png";
+import CadeadoCinza from "../../assets/Icones/CadeadoCinza.png";
+import prime_book from "../../assets/Icones/prime_book.png";
 
 export default function Cadastro() {
     const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -29,33 +33,43 @@ export default function Cadastro() {
         razaoSocial: "",
     });
 
+    // Atualiza os campos do formulário
     const atualizarCampo = (e) => {
         const { name, value } = e.target;
+
+        if (name === "cnpj") {
+            let cnpj = value.replace(/\D/g, "");
+
+            cnpj = cnpj.slice(0, 14);
+
+            cnpj = cnpj
+                .replace(/^(\d{2})(\d)/, "$1.$2")
+                .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+                .replace(/\.(\d{3})(\d)/, ".$1/$2")
+                .replace(/(\d{4})(\d)/, "$1-$2");
+
+            setDados((anterior) => ({
+                ...anterior,
+                cnpj: cnpj,
+                razaoSocial: "",
+            }));
+
+            setCnpjVerificado(false);
+            return;
+        }
 
         setDados((anterior) => ({
             ...anterior,
             [name]: value,
         }));
-
-        if (name === "cnpj") {
-            setCnpjVerificado(false);
-
-            setDados((anterior) => ({
-                ...anterior,
-                cnpj: value,
-                razaoSocial: "",
-            }));
-        }
     };
 
+    // Consulta o CNPJ
     const verificarCnpj = async () => {
-        const cnpjLimpo = dados.cnpj
-            .trim()
-            .replace(/[^a-zA-Z0-9]/g, "")
-            .toUpperCase();
+        const cnpjLimpo = dados.cnpj.replace(/\D/g, "");
 
         if (cnpjLimpo.length !== 14) {
-            alert("Digite um CNPJ com 14 caracteres.");
+            alert("Digite um CNPJ com 14 números.");
             return;
         }
 
@@ -75,7 +89,7 @@ export default function Cadastro() {
 
             if (!empresa.razao_social) {
                 throw new Error(
-                    "A consulta não retornou a razão social da empresa."
+                    "A consulta não retornou a razão social."
                 );
             }
 
@@ -89,7 +103,7 @@ export default function Cadastro() {
             alert("CNPJ consultado com sucesso!");
         } catch (erro) {
             alert(
-                "Não foi possível verificar esse CNPJ. Confira os dados e tente novamente. Se o CNPJ for alfanumérico, o serviço de consulta pode ainda não oferecer suporte a esse formato."
+                "Não foi possível verificar esse CNPJ. Confira os dados e tente novamente."
             );
 
             setDados((anterior) => ({
@@ -101,6 +115,7 @@ export default function Cadastro() {
         }
     };
 
+    // Finaliza o cadastro
     const handleCadastrar = (e) => {
         e.preventDefault();
 
@@ -133,13 +148,22 @@ export default function Cadastro() {
 
     return (
         <main className="cadastro">
+
+            {/* Painel azul esquerdo */}
+
             <aside className="cadastro-apresentacao">
+
                 <div className="cadastro-marca">
                     <img
-                        src={logoIntegra}
-                        alt="Portal Tributário"
+                        src={prime_book}
+                        alt="Livro do Portal Tributário"
                         className="cadastro-logo"
                     />
+
+                    <div className="cadastro-marca-texto">
+                        <h2>Portal Tributário</h2>
+                        <p>Centralizado</p>
+                    </div>
                 </div>
 
                 <div className="cadastro-texto">
@@ -153,10 +177,12 @@ export default function Cadastro() {
                 </div>
 
                 <div className="cadastro-vantagens">
+
                     <div className="cadastro-vantagem">
                         <div className="cadastro-icone">
                             <img src={iconeEscudo} alt="" />
                         </div>
+
                         <div>
                             <h3>Mais segurança</h3>
                             <p>Controle de acesso por perfil e CNPJ</p>
@@ -167,6 +193,7 @@ export default function Cadastro() {
                         <div className="cadastro-icone">
                             <img src={iconeDocumento} alt="" />
                         </div>
+
                         <div>
                             <h3>Tudo em um só lugar</h3>
                             <p>
@@ -178,8 +205,9 @@ export default function Cadastro() {
 
                     <div className="cadastro-vantagem">
                         <div className="cadastro-icone">
-                            <img src={iconeEscudo} alt="" />
+                            <img src={quadroEnergia} alt="" />
                         </div>
+
                         <div>
                             <h3>Agilidade no seu dia a dia</h3>
                             <p>
@@ -192,6 +220,7 @@ export default function Cadastro() {
                         <div className="cadastro-icone">
                             <img src={iconeGrupo} alt="" />
                         </div>
+
                         <div>
                             <h3>Atendimento eficiente</h3>
                             <p>
@@ -200,10 +229,14 @@ export default function Cadastro() {
                             </p>
                         </div>
                     </div>
+
                 </div>
             </aside>
 
+            {/* Área do formulário */}
+
             <section className="cadastro-area">
+
                 <header className="cadastro-topo">
                     <span>Já tem uma conta?</span>
 
@@ -217,6 +250,7 @@ export default function Cadastro() {
                 </header>
 
                 <div className="cadastro-cartao">
+
                     <div className="cadastro-cabecalho">
                         <div className="cadastro-avatar">
                             <img
@@ -235,6 +269,9 @@ export default function Cadastro() {
                     </div>
 
                     <form onSubmit={handleCadastrar}>
+
+                        {/* Dados pessoais */}
+
                         <div className="cadastro-secao">
                             <div className="cadastro-titulo-secao">
                                 <img
@@ -242,55 +279,95 @@ export default function Cadastro() {
                                     alt=""
                                     className="cadastro-mini-icone"
                                 />
+
                                 <h3>Dados pessoais</h3>
                             </div>
                         </div>
 
                         <div className="cadastro-grade">
-                            <div className="cadastro-campo">
-                                <label htmlFor="nome">Nome Completo *</label>
-                                <input
-                                    id="nome"
-                                    name="nome"
-                                    value={dados.nome}
-                                    onChange={atualizarCampo}
-                                    placeholder="Digite seu nome completo"
-                                    autoComplete="name"
-                                    required
-                                />
-                            </div>
+
+                            {/* Nome */}
 
                             <div className="cadastro-campo">
-                                <label htmlFor="email">E-mail *</label>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    value={dados.email}
-                                    onChange={atualizarCampo}
-                                    placeholder="exemplo@dominio.com"
-                                    autoComplete="email"
-                                    required
-                                />
+                                <label htmlFor="nome">
+                                    Nome Completo *
+                                </label>
+
+                                <div className="cadastro-input-icone">
+                                    <img src={PessoaCinza} alt="" />
+
+                                    <input
+                                        id="nome"
+                                        name="nome"
+                                        value={dados.nome}
+                                        onChange={atualizarCampo}
+                                        placeholder="Digite seu nome completo"
+                                        autoComplete="name"
+                                        required
+                                    />
+                                </div>
                             </div>
 
-                            <div className="cadastro-campo">
-                                <label htmlFor="telefone">Telefone *</label>
-                                <input
-                                    id="telefone"
-                                    name="telefone"
-                                    type="tel"
-                                    value={dados.telefone}
-                                    onChange={atualizarCampo}
-                                    placeholder="(11) 91234-5678"
-                                    autoComplete="tel"
-                                    required
-                                />
-                            </div>
+                            {/* E-mail */}
 
                             <div className="cadastro-campo">
-                                <label htmlFor="senha">Senha *</label>
+                                <label htmlFor="email">
+                                    E-mail *
+                                </label>
+
+                                <div className="cadastro-input-icone">
+                                    <img src={EmailCinza} alt="" />
+
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        value={dados.email}
+                                        onChange={atualizarCampo}
+                                        placeholder="exemplo@dominio.com"
+                                        autoComplete="email"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Telefone */}
+
+                            <div className="cadastro-campo">
+                                <label htmlFor="telefone">
+                                    Telefone *
+                                </label>
+
+                                <div className="cadastro-input-icone">
+                                    <img src={TelefoneCinza} alt="" />
+
+                                    <input
+                                        id="telefone"
+                                        name="telefone"
+                                        type="tel"
+                                        value={dados.telefone}
+                                        onChange={atualizarCampo}
+                                        placeholder="(11) 91234-5678"
+                                        autoComplete="tel"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Senha */}
+
+                            <div className="cadastro-campo">
+                                <label htmlFor="senha">
+                                    Senha *
+                                </label>
+
                                 <div className="cadastro-input-senha">
+                                    <img
+                                        src={CadeadoCinza}
+                                        alt=""
+                                        className="cadastro-icone-input"
+                                    />
+
                                     <input
                                         id="senha"
                                         name="senha"
@@ -326,11 +403,20 @@ export default function Cadastro() {
                                 </div>
                             </div>
 
+                            {/* Confirmar senha */}
+
                             <div className="cadastro-campo cadastro-campo-largo">
                                 <label htmlFor="confirmarSenha">
                                     Confirmar senha *
                                 </label>
+
                                 <div className="cadastro-input-senha">
+                                    <img
+                                        src={CadeadoCinza}
+                                        alt=""
+                                        className="cadastro-icone-input"
+                                    />
+
                                     <input
                                         id="confirmarSenha"
                                         name="confirmarSenha"
@@ -371,26 +457,40 @@ export default function Cadastro() {
                                     </button>
                                 </div>
                             </div>
+
                         </div>
 
+                        {/* Dados da empresa */}
+
                         <div className="cadastro-secao cadastro-secao-empresa">
+
                             <div className="cadastro-titulo-secao">
                                 <span className="cadastro-mini-icone">
                                     <img src={cidadeLaranja} alt="" />
                                 </span>
+
                                 <h3>Dados da empresa</h3>
                             </div>
 
                             <div className="cadastro-grade">
+
+                                {/* CNPJ */}
+
                                 <div className="cadastro-campo">
-                                    <label htmlFor="cnpj">CNPJ *</label>
+                                    <label htmlFor="cnpj">
+                                        CNPJ *
+                                    </label>
+
                                     <input
                                         id="cnpj"
                                         name="cnpj"
+                                        type="text"
                                         value={dados.cnpj}
                                         onChange={atualizarCampo}
-                                        placeholder="Digite o CNPJ da empresa"
+                                        placeholder="00.000.000/0000-00"
                                         autoComplete="off"
+                                        maxLength={18}
+                                        inputMode="numeric"
                                         required
                                     />
 
@@ -412,10 +512,13 @@ export default function Cadastro() {
                                     )}
                                 </div>
 
+                                {/* Razão social */}
+
                                 <div className="cadastro-campo">
                                     <label htmlFor="razaoSocial">
                                         Razão social *
                                     </label>
+
                                     <input
                                         id="razaoSocial"
                                         name="razaoSocial"
@@ -425,8 +528,11 @@ export default function Cadastro() {
                                         required
                                     />
                                 </div>
+
                             </div>
                         </div>
+
+                        {/* Botão cadastrar */}
 
                         <button
                             type="submit"
@@ -435,6 +541,7 @@ export default function Cadastro() {
                             <img src={ADDProfileBranco} alt="" />
                             Cadastrar
                         </button>
+
                     </form>
                 </div>
             </section>

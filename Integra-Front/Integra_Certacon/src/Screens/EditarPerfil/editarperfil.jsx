@@ -1,180 +1,386 @@
 
-// import { useState } from "react";
-// import "./editarperfil.css";
+import { useState } from "react";
+import "./editarperfil.css";
 
-// import LogoImagem from "../../assets/Icones/LogoImagem.png";
-// import LogoNome from "../../assets/Icones/LogoNome.png";
-// import CasaBranca from "../../assets/Icones/CasaBranca.png";
-// import LivroBranco from "../../assets/Icones/LivroBranco.png";
-// import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
-// import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
-// import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-// import LupaCinza from "../../assets/Icones/LupaCinza.png";
-// import SairBranco from "../../assets/Icones/SairBranco.png";
-// import Pessoa from "../../assets/Icones/Pessoa.png";
-// import CadeadoAberto from "../../assets/Icones/CadeadoAberto.png";
-// import calendario from "../../assets/Icones/calendario.png";
+import CasaBranca from "../../assets/Icones/CasaBranca.png";
+import LivroBranco from "../../assets/Icones/LivroBranco.png";
+import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
+import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
+import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
+import LupaCinza from "../../assets/Icones/LupaCinza.png";
+import SairBranco from "../../assets/Icones/SairBranco.png";
+import LogoNome from "../../assets/Icones/LogoNome.png";
 
-// function EditarPerfil() {
-//   const [editando, setEditando] = useState(false);
+import Email from "../../assets/Icones/Email.png";
+import Telefone from "../../assets/Icones/Telefone.png";
+import CidadeEmpresa from "../../assets/Icones/CidadeEmpresa.png";
+import Pessoa from "../../assets/Icones/Pessoa.png";
 
-//   const [nome, setNome] = useState("João Silva");
-//   const [cargo, setCargo] = useState("Analista SPED");
-//   const [email, setEmail] = useState("joao.silva@gmail.com");
-//   const [departamento, setDepartamento] = useState("Fiscal");
-//   const [telefone, setTelefone] = useState("1192029-2013");
+import ChaveSenha from "../../assets/Icones/ChaveSenha.png"
+import TelefonePerfil from "../../assets/Icones/TelefonePerfil.png"
+import SairCinza from "../../assets/Icones/SairCinza.png"
+import EmailPerfil from "../../assets/Icones/EmailPerfil.png"
+import EscudoCinzaPerfil from "../../assets/Icones/EscudoCinzaPerfil.png"
+import EmpresaPerfil from "../../assets/Icones/EmpresaPerfil.png"
+import FusoHorario from "../../assets/Icones/FusoHorario.png"
+import Idioma from "../../assets/Icones/Idioma.png"
+import PredioPerfil from "../../assets/Icones/PredioPerfil.png"
 
-//   function salvarPerfil(event) {
-//     event.preventDefault();
-//     setEditando(false);
-//     alert("Perfil atualizado com sucesso!");
-//   }
+function EditarPerfil() {
+    const [modoEdicao, setModoEdicao] = useState(false);
 
-//   return (
-//     <div className="pagina-perfil">
-//       <aside className="menu-lateral">
-//         <div className="logo">
-//           <img src={LogoImagem} alt="Logo Integra" />
-//           <img src={LogoNome} alt="Integra" />
-//         </div>
+    const [perfil, setPerfil] = useState({
+        nome: "João Silva",
+        cargo: "Analista SPED Sênior",
+        email: "JoaoSilva@gmail.com",
+        telefone: "1199229-2013",
+        departamento: "Fiscal",
+        empresa: "Costa & Silva Consu",
+    });
 
-//         <nav className="menu-itens">
-//           <a href="#"><img src={CasaBranca} alt="" />Início</a>
-//           <a href="#"><img src={LivroBranco} alt="" />Conteúdos</a>
-//           <a href="#"><img src={DoisDocumentosBranco} alt="" />Notas Fiscais</a>
-//           <a href="#"><img src={ADDProfileBranco} alt="" />Clientes</a>
-//           <a href="#"><img src={PessoaBranca} alt="" />Usuários</a>
-//         </nav>
+    const [pesquisa, setPesquisa] = useState("");
 
-//         <button className="botao-sair" onClick={() => alert("Saindo do sistema...")}>
-//           <img src={SairBranco} alt="" />
-//           Sair
-//         </button>
-//       </aside>
+    function atualizarCampo(e) {
+        const { name, value } = e.target;
 
-//       <main className="conteudo-perfil">
-//         <header className="topo-perfil">
-//           <div className="campo-pesquisa">
-//             <img src={LupaCinza} alt="" />
-//             <input type="text" placeholder="Buscar ações..." />
-//           </div>
+        setPerfil((anterior) => ({
+            ...anterior,
+            [name]: value,
+        }));
+    }
 
-//           <div className="usuario-logado">
-//             <span>JS</span>
-//             <div>
-//               <strong>João Silva</strong>
-//               <small>Administrador</small>
-//             </div>
-//           </div>
-//         </header>
+    function salvarPerfil() {
+        setModoEdicao(false);
+        alert("Perfil atualizado com sucesso!");
+    }
 
-//         <h1>Meu Perfil</h1>
+    return (
+        <div className="pagina-perfil">
 
-//         <div className="area-perfil">
-//           <section className="cartao-perfil">
-//             <div className="foto-grande">
-//               <img src={Pessoa} alt="Foto do perfil" />
-//             </div>
+            <Sidebar />
 
-//             {editando ? (
-//               <form className="formulario-perfil" onSubmit={salvarPerfil}>
-//                 <label>Nome</label>
-//                 <input value={nome} onChange={(e) => setNome(e.target.value)} required />
+            <main className="principal-perfil">
 
-//                 <label>Cargo</label>
-//                 <input value={cargo} onChange={(e) => setCargo(e.target.value)} required />
+                <Header
+                    pesquisa={pesquisa}
+                    setPesquisa={setPesquisa}
+                />
 
-//                 <label>E-mail corporativo</label>
-//                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <section className="conteudo-perfil">
 
-//                 <label>Departamento</label>
-//                 <input value={departamento} onChange={(e) => setDepartamento(e.target.value)} required />
+                    <h1>Meu Perfil</h1>
 
-//                 <label>Telefone corporativo</label>
-//                 <input value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
+                    <div className="area-perfil">
 
-//                 <div className="botoes-formulario">
-//                   <button type="submit">Salvar</button>
-//                   <button type="button" onClick={() => setEditando(false)}>Cancelar</button>
-//                 </div>
-//               </form>
-//                 ): ( <>
-//                 <h2>{nome}</h2>
-//                 <p className="cargo-perfil">{cargo}</p>
+                        {/* CARTÃO PRINCIPAL */}
+                        <div className="cartao-perfil">
 
-//                 <div className="dados-perfil">
-//                   <div>
-//                     <strong>E-mail Corporativo</strong>
-//                     <p>{email}</p>
-//                   </div>
+                            <div className="foto-perfil">
+                                <img src={Pessoa} alt="Foto do usuário" />
+                            </div>
 
-//                   <div>
-//                     <strong>Telefone Corporativo</strong>
-//                     <p>{telefone}</p>
-//                   </div>
+                            <div className="identificacao-perfil">
 
-//                   <div>
-//                     <strong>Departamento</strong>
-//                     <p>{departamento}</p>
-//                   </div>
+                                {modoEdicao ? (
+                                    <>
+                                        <input
+                                            type="text"
+                                            name="nome"
+                                            value={perfil.nome}
+                                            onChange={atualizarCampo}
+                                            className="input-nome-perfil"
+                                        />
 
-//                   <div>
-//                     <strong>Empresa Vinculada</strong>
-//                     <p>Conta & Silva Consultoria</p>
-//                   </div>
-//                 </div>
+                                        <input
+                                            type="text"
+                                            name="cargo"
+                                            value={perfil.cargo}
+                                            onChange={atualizarCampo}
+                                            className="input-cargo-perfil"
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <h2>{perfil.nome}</h2>
+                                        <p>{perfil.cargo}</p>
+                                    </>
+                                )}
 
-//                 <button className="botao-editar" onClick={() => setEditando(true)}>
-//                   Editar Perfil
-//                 </button>
-//               </>
-//             )}
-//           </section>
+                            </div>
 
-//           <aside className="informacoes-seguranca">
-//             <section className="cartao-seguranca">
-//               <h3>Segurança</h3>
-//               <div className="item-seguranca">
-//                 <img src={CadeadoAberto} alt="" />
-//                 <div>
-//                   <strong>MFA</strong>
-//                   <p>Ativo / Inativo</p>
-//                 </div>
-//               </div>
-//               <div className="item-seguranca">
-//                 <img src={calendario} alt="" />
-//                 <div>
-//                   <strong>Último login</strong>
-//                   <p>24/12/2026 14:38:37</p>
-//                 </div>
-//               </div>
-//               <button onClick={() => alert("Função de alteração de senha ainda não configurada.")}>
-//                 Alterar Senha
-//               </button>
-//             </section>
+                            <div className="informacoes-perfil">
 
-//             <section className="cartao-seguranca">
-//               <h3>Preferências</h3>
-//               <div className="item-seguranca">
-//                 <img src={PessoaBranca} alt="" />
-//                 <div>
-//                   <strong>Idioma</strong>
-//                   <p>Português - BR</p>
-//                 </div>
-//               </div>
-//               <div className="item-seguranca">
-//                 <img src={calendario} alt="" />
-//                 <div>
-//                   <strong>Fuso Horário</strong>
-//                   <p>BRT - Brasília</p>
-//                 </div>
-//               </div>
-//             </section>
-//           </aside>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
+                                <div className="informacao-item">
+                                    <img src={EmailPerfil} alt="" />
 
-// export default EditarPerfil;
+                                    <div>
+                                        <span>Email Corporativo</span>
+
+                                        {modoEdicao ? (
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={perfil.email}
+                                                onChange={atualizarCampo}
+                                            />
+                                        ) : (
+                                            <p>{perfil.email}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="informacao-item">
+                                    <img src={TelefonePerfil} alt="" />
+
+                                    <div>
+                                        <span>Telefone Corporativo</span>
+
+                                        {modoEdicao ? (
+                                            <input
+                                                type="text"
+                                                name="telefone"
+                                                value={perfil.telefone}
+                                                onChange={atualizarCampo}
+                                            />
+                                        ) : (
+                                            <p>{perfil.telefone}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="informacao-item">
+                                    <img src={PredioPerfil} alt="" />
+
+                                    <div>
+                                        <span>Departamento</span>
+
+                                        {modoEdicao ? (
+                                            <input
+                                                type="text"
+                                                name="departamento"
+                                                value={perfil.departamento}
+                                                onChange={atualizarCampo}
+                                            />
+                                        ) : (
+                                            <p>{perfil.departamento}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="informacao-item">
+                                    <img src={EmpresaPerfil} alt="" />
+
+                                    <div>
+                                        <span>Empresa Vinculada</span>
+
+                                        {modoEdicao ? (
+                                            <input
+                                                type="text"
+                                                name="empresa"
+                                                value={perfil.empresa}
+                                                onChange={atualizarCampo}
+                                            />
+                                        ) : (
+                                            <p>{perfil.empresa}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div className="acoes-perfil">
+
+                                {modoEdicao ? (
+                                    <>
+                                        <button
+                                            className="botao-salvar-perfil"
+                                            onClick={salvarPerfil}
+                                        >
+                                            Salvar alterações
+                                        </button>
+
+                                        <button
+                                            className="botao-cancelar-perfil"
+                                            onClick={() => setModoEdicao(false)}
+                                        >
+                                            Cancelar
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        className="botao-editar-perfil"
+                                        onClick={() => setModoEdicao(true)}
+                                    >
+                                        Editar Perfil
+                                    </button>
+                                )}
+
+                            </div>
+
+                        </div>
+
+                        {/* CARTÕES LATERAIS */}
+                        <div className="configuracoes-perfil">
+
+                            <div className="cartao-configuracao">
+
+                                <h3>Segurança</h3>
+
+                                <div className="configuracao-item">
+                                    <span className="icone-configuracao">
+                                        <img src={EscudoCinzaPerfil} alt="" />
+                                    </span>
+
+                                    <div>
+                                        <span>MFA</span>
+                                        <p>
+                                            <strong>Ativo</strong>/inativo
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="configuracao-item">
+                                    <span className="icone-configuracao">
+                                        <img src={SairCinza} alt="" />
+                                    </span>
+
+                                    <div>
+                                        <span>Último login</span>
+                                        <p>24/12/2020&nbsp; 14:38:37</p>
+                                    </div>
+                                </div>
+
+                                <div className="linha-configuracao"></div>
+
+                                <button
+                                    className="alterar-senha"
+                                    onClick={() => alert("Configure aqui a alteração de senha.")}
+                                >
+                                    <img src={ChaveSenha} alt="" />
+                                    Alterar Senha
+                                </button>
+
+                            </div>
+
+                            <div className="cartao-configuracao cartao-preferencias">
+
+                                <h3>Segurança</h3>
+
+                                <div className="configuracao-item">
+                                    <span className="icone-configuracao">
+                                        <img src={Idioma} alt="" />
+                                    </span>
+
+                                    <div>
+                                        <span>Idioma</span>
+                                        <p>Português - BR</p>
+                                    </div>
+                                </div>
+
+                                <div className="configuracao-item">
+                                    <span className="icone-configuracao">
+                                    <img src={FusoHorario} alt="" />
+                                    </span>
+
+                                    <div>
+                                        <span>Fuso Horário</span>
+                                        <p>BRT - Brasília</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+    );
+}
+
+function Sidebar() {
+    return (
+        <aside className="menu-perfil">
+
+            <div className="logo-perfil">
+                <img src={LogoNome} alt="Integra" />
+            </div>
+
+            <nav className="navegacao-perfil">
+
+                <a href="#" className="item-menu-perfil">
+                    <img src={CasaBranca} alt="" />
+                    <span>Início</span>
+                </a>
+
+                <a href="#" className="item-menu-perfil">
+                    <img src={LivroBranco} alt="" />
+                    <span>Conteúdos</span>
+                </a>
+
+                <a href="#" className="item-menu-perfil">
+                    <img src={DoisDocumentosBranco} alt="" />
+                    <span>Notas Fiscais</span>
+                </a>
+
+                <a href="#" className="item-menu-perfil">
+                    <img src={ADDProfileBranco} alt="" />
+                    <span>Clientes</span>
+                </a>
+
+                <a href="#" className="item-menu-perfil">
+                    <img src={PessoaBranca} alt="" />
+                    <span>Usuários</span>
+                </a>
+
+            </nav>
+
+            <button
+                className="sair-perfil"
+                onClick={() => alert("Configure aqui a saída da conta.")}
+            >
+                <img src={SairBranco} alt="" />
+                <span>Sair</span>
+            </button>
+
+        </aside>
+    );
+}
+
+function Header({ pesquisa, setPesquisa }) {
+    return (
+        <header className="topo-perfil">
+
+            <div className="pesquisa-topo-perfil">
+                <img src={LupaCinza} alt="" />
+
+                <input
+                    type="text"
+                    placeholder="Buscar ações..."
+                    value={pesquisa}
+                    onChange={(e) => setPesquisa(e.target.value)}
+                />
+            </div>
+
+            <div className="usuario-topo-perfil">
+
+                <div className="avatar-topo-perfil">
+                    JS
+                </div>
+
+                <div className="dados-usuario-perfil">
+                    <strong>João Silva</strong>
+                    <span>Administrador</span>
+                </div>
+
+            </div>
+
+        </header>
+    );
+}
+
+export default EditarPerfil;

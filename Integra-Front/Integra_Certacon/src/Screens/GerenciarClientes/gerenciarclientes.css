@@ -1,0 +1,784 @@
+
+* {
+    box-sizing: border-box;
+}
+
+.pagina-gerenciar-clientes {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background: #fff;
+    font-family: Arial, sans-serif;
+}
+
+/* MENU LATERAL */
+
+.menu-gerenciar-clientes {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    min-width: 334px;
+    min-height: 100vh;
+    padding: 20px 15px;
+    background: #1d2e68;
+    color: white;
+}
+
+.logo-gerenciar-clientes {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.logo-gerenciar-clientes img {
+    object-fit: contain;
+    object-position: left center;
+}
+
+.navegacao-gerenciar-clientes {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.item-menu-clientes {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 9px 8px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-left: 20px;
+}
+
+.item-menu-clientes:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.item-menu-clientes.ativo {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.item-menu-clientes img {
+    width: 33px;
+    height: 33px;
+    object-fit: contain;
+}
+
+.item-menu-clientes span {
+    font-size: 14px;
+}
+
+.sair-gerenciar-clientes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    margin-left: 20px;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.sair-gerenciar-clientes img {
+    width: 33px;
+    height: 33px;
+    object-fit: contain;
+}
+
+.sair-gerenciar-clientes span {
+    font-size: 14px;
+}
+
+/* ÁREA PRINCIPAL */
+
+.principal-gerenciar-clientes {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 100vh;
+}
+
+/* CABEÇALHO */
+
+.topo-gerenciar-clientes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 60px;
+    padding: 10px 25px;
+    background: #fff;
+}
+
+.pesquisa-topo-clientes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 88%;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 7px;
+    background: #e8f1fa;
+}
+
+.pesquisa-topo-clientes img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.pesquisa-topo-clientes input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    font-size: 14px;
+}
+
+.pesquisa-topo-clientes input::placeholder {
+    color: #7d9bb8;
+}
+
+.usuario-topo-clientes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.avatar-gerenciar-clientes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid #1d2e68;
+    border-radius: 50%;
+    background: #dceaf7;
+    color: #1d2e68;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.dados-usuario-clientes {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #111;
+    font-size: 11px;
+}
+
+.dados-usuario-clientes strong {
+    font-size: 12px;
+}
+
+.dados-usuario-clientes span {
+    font-size: 10px;
+}
+
+/* CONTEÚDO */
+
+.conteudo-gerenciar-clientes {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 5px 24px 65px;
+}
+
+.conteudo-gerenciar-clientes h1 {
+    margin: 0 0 1px;
+    margin-top: 17px;
+    color: #123c68;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+/* FORMULÁRIO DE CADASTRO */
+
+.formulario-cliente {
+    width: 100%;
+    min-height: 160px;
+    padding: 2px 8px 10px;
+    border: 2px solid #123c68;
+    border-radius: 7px;
+    margin-top: 15px;
+}
+
+.formulario-cliente h2 {
+    margin: 0 0 10px;
+    color: #123c68;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.campos-cliente {
+    display: grid;
+    grid-template-columns: 1.1fr 0.8fr 1.3fr;
+    gap: 48px;
+    align-items: start;
+}
+
+.campo-cliente {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.campo-cliente label {
+    color: #111;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.campo-cliente input,
+.campo-cliente select {
+    width: 100%;
+    height: 36px;
+    padding: 0 7px;
+    border: 1px solid #777;
+    border-radius: 5px;
+    outline: none;
+    background: white;
+    color: #555;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.campo-cliente input:focus,
+.campo-cliente select:focus {
+    border-color: #1d2e68;
+}
+
+.campo-cliente select {
+    cursor: pointer;
+}
+
+.campo-cnpj small {
+    color: #999;
+    font-size: 10px;
+}
+
+/* SELECT COM SETA PERSONALIZADA */
+
+.select-com-seta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 36px;
+}
+
+.select-com-seta select {
+    display: block;
+    width: 100%;
+    height: 36px;
+    padding: 0 35px 0 10px;
+    border: 1px solid #777;
+    border-radius: 6px;
+    outline: none;
+    background-color: #fff;
+    color: #555;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+.select-com-seta select::-ms-expand {
+    display: none;
+}
+
+.select-com-seta select:focus {
+    border-color: #1d2e68;
+}
+
+.select-com-seta img {
+    position: absolute;
+    display: block;
+    width: 14px !important;
+    height: 14px !important;
+    max-width: 14px;
+    max-height: 14px;
+    right: 12px;
+    top: 50%;
+    object-fit: contain;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* RODAPÉ DO FORMULÁRIO */
+
+.rodape-formulario-cliente {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 36px;
+    margin-top: 10px;
+}
+
+/* MENSAGEM E BOTÃO VALIDAR CNPJ */
+
+.validacao-cnpj {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    min-width: 0;
+}
+
+.mensagem-cliente {
+    color: #d9534f;
+    font-size: 10px;
+}
+
+.mensagem-cliente.sucesso {
+    color: #23966b;
+}
+
+.botao-validar-cnpj {
+    flex-shrink: 0;
+    width: auto;
+    min-width: 105px;
+    height: 32px;
+    padding: 0 12px;
+    margin: 0;
+    border: none;
+    border-radius: 6px;
+    background: #1d2e68;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.botao-validar-cnpj:hover {
+    background: #293f89;
+}
+
+/* BOTÕES SALVAR E CANCELAR */
+
+.botoes-formulario-cliente {
+    display: flex;
+    gap: 7px;
+    margin-left: auto;
+}
+
+.botao-salvar-cliente,
+.botao-cancelar-cliente {
+    height: 36px;
+    width: 125px;
+    padding: 0 14px;
+    border: 1px solid #f28b25;
+    border-radius: 7px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.botao-salvar-cliente {
+    background: #1d2e68;
+    border: 1px solid #1d2e68;
+}
+
+.botao-salvar-cliente:hover {
+    background: #293f89;
+}
+
+.botao-cancelar-cliente {
+    background: #f28b25;
+}
+
+.botao-cancelar-cliente:hover {
+    background: #df7712;
+}
+
+/* EMPRESAS CADASTRADAS */
+
+.titulo-empresas-cadastradas {
+    margin: 5px 0 5px;
+    color: #123c68;
+    font-size: 21px;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.pesquisa-clientes {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    height: 30px;
+    margin-bottom: 20px;
+    padding: 0 9px;
+    border-radius: 7px;
+    background: #e8f1fa;
+}
+
+.pesquisa-clientes img {
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
+}
+
+.pesquisa-clientes input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    font-size: 14px;
+}
+
+.pesquisa-clientes input::placeholder {
+    color: #7d9bb8;
+}
+
+/* TABELA */
+
+.tabela-clientes {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabela-clientes table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #111;
+    font-size: 11px;
+}
+
+/* LARGURA DAS COLUNAS */
+
+.tabela-clientes th:nth-child(1),
+.tabela-clientes td:nth-child(1) {
+    width: 28%;
+}
+
+.tabela-clientes th:nth-child(2),
+.tabela-clientes td:nth-child(2) {
+    width: 20%;
+}
+
+.tabela-clientes th:nth-child(3),
+.tabela-clientes td:nth-child(3) {
+    width: 15%;
+}
+
+.tabela-clientes th:nth-child(4),
+.tabela-clientes td:nth-child(4) {
+    width: 17%;
+}
+
+.tabela-clientes th:nth-child(5),
+.tabela-clientes td:nth-child(5) {
+    width: 20%;
+}
+
+.tabela-clientes thead th {
+    height: 30px;
+    padding: 6px 5px;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    background: #e0effd;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tabela-clientes thead th:first-child {
+    border-left: 1px solid #333;
+    border-top-left-radius: 7px;
+}
+
+.tabela-clientes thead th:last-child {
+    border-right: 1px solid #333;
+    border-top-right-radius: 7px;
+    text-align: center;
+}
+
+.tabela-clientes tbody td {
+    height: 39px;
+    padding: 5px 5px;
+    border-bottom: 1px solid #777;
+    background: #f3f8fe;
+    font-size: 14px;
+    text-align: center;
+}
+
+.tabela-clientes tbody td:first-child {
+    border-left: 1px solid #777;
+}
+
+.tabela-clientes tbody td:last-child {
+    border-right: 1px solid #777;
+}
+
+.tabela-clientes tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 7px;
+}
+
+.tabela-clientes tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 7px;
+}
+
+/* STATUS */
+
+.status-cliente {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 27px;
+    margin: auto;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.status-ativo {
+    background: #b9ead9;
+    color: #54a98d;
+}
+
+.status-inativo {
+    background: #ffe0e0;
+    color: #e16b6b;
+}
+
+/* AÇÕES DA TABELA */
+
+.acoes-cliente {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.acoes-cliente button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 25px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.acoes-cliente img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.acoes-cliente button:hover {
+    opacity: 0.65;
+}
+
+.sem-clientes {
+    height: 55px !important;
+    text-align: center;
+    color: #777;
+}
+
+/* PAGINAÇÃO */
+
+.paginacao-clientes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 25px;
+}
+
+.paginacao-clientes button {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #777;
+    border-radius: 8px;
+    background: white;
+    color: #111;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.paginacao-clientes button.pagina-ativa {
+    border-color: #1d2e68;
+    background: #1d2e68;
+    color: white;
+}
+
+.paginacao-clientes button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 900px) {
+    .menu-gerenciar-clientes {
+        width: 180px;
+        min-width: 180px;
+        padding: 18px 12px;
+    }
+
+    .topo-gerenciar-clientes {
+        padding: 10px 18px;
+    }
+
+    .conteudo-gerenciar-clientes {
+        padding: 8px 18px 35px;
+    }
+
+    .campos-cliente {
+        gap: 15px;
+    }
+
+    .rodape-formulario-cliente {
+        margin-top: 10px;
+    }
+
+    .validacao-cnpj {
+        gap: 8px;
+    }
+
+    .botoes-formulario-cliente {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .pagina-gerenciar-clientes {
+        flex-direction: column;
+    }
+
+    .menu-gerenciar-clientes {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+        padding: 12px 18px;
+    }
+
+    .logo-gerenciar-clientes {
+        margin-bottom: 10px;
+    }
+
+    .logo-gerenciar-clientes img {
+        height: 45px;
+    }
+
+    .navegacao-gerenciar-clientes {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .item-menu-clientes {
+        gap: 5px;
+        margin-left: 0;
+        font-size: 10px;
+    }
+
+    .item-menu-clientes img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .sair-gerenciar-clientes {
+        margin-top: 10px;
+    }
+
+    .topo-gerenciar-clientes {
+        height: auto;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .pesquisa-topo-clientes {
+        width: 60%;
+    }
+
+    .conteudo-gerenciar-clientes {
+        padding: 15px 12px 25px;
+    }
+
+    .conteudo-gerenciar-clientes h1 {
+        font-size: 22px;
+        margin-bottom: 8px;
+    }
+
+    .formulario-cliente {
+        min-height: auto;
+        padding: 8px;
+    }
+
+    .campos-cliente {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .campo-cnpj small {
+        margin-top: 2px;
+    }
+
+    .rodape-formulario-cliente {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .validacao-cnpj {
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .mensagem-cliente {
+        max-width: 100%;
+    }
+
+    .botao-validar-cnpj {
+        min-width: 105px;
+    }
+
+    .botoes-formulario-cliente {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .botoes-formulario-cliente button {
+        flex: 1;
+    }
+
+    .titulo-empresas-cadastradas {
+        margin-top: 18px;
+        font-size: 19px;
+    }
+
+    .pesquisa-clientes {
+        margin-bottom: 15px;
+    }
+
+    .tabela-clientes table {
+        min-width: 650px;
+    }
+
+    .paginacao-clientes {
+        padding-top: 25px;
+    }
+}

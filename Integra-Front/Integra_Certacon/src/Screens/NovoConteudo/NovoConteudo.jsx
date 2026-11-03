@@ -1,6 +1,8 @@
 
 import { useRef, useState } from "react";
 import "./NovoConteudo.css";
+
+import LogoMobile from "../../assets/Icones/LogoMobile.png";
 import logoIntegra from "../../assets/Icones/LogoNome.png";
 import iconeCasa from "../../assets/Icones/CasaBranca.png";
 import iconeLivro from "../../assets/Icones/LivroBranco.png";
@@ -14,13 +16,13 @@ import iconeTresPontos from "../../assets/Icones/TresPontos.png";
 import iconeDocumento from "../../assets/Icones/documentoLaranja.png";
 import iconeExpandir from "../../assets/Icones/ExpandirText.png";
 import iconeUpload from "../../assets/Icones/UploadLaranja.png";
-import B_EstiloTexto from "../../assets/Icones/B_EstiloTexto.png"
-import I_EstiloTexto from "../../assets/Icones/I_EstiloTexto.png"
-import U_EstiloTexto from "../../assets/Icones/U_EstiloTexto.png"
-import TextosAlinhadosEsquerda from "../../assets/Icones/TextosAlinhadosEsquerda.png"
-import TextoAlinhadoDireita from "../../assets/Icones/TextoAlinhadoDireita.png"
-import TextoAlinhadoCentro from "../../assets/Icones/TextoAlinhadoCentro.png"
-import ExpandirCinza from "../../assets/Icones/ExpandirCinza.png"
+import B_EstiloTexto from "../../assets/Icones/B_EstiloTexto.png";
+import I_EstiloTexto from "../../assets/Icones/I_EstiloTexto.png";
+import U_EstiloTexto from "../../assets/Icones/U_EstiloTexto.png";
+import TextosAlinhadosEsquerda from "../../assets/Icones/TextosAlinhadosEsquerda.png";
+import TextoAlinhadoDireita from "../../assets/Icones/TextoAlinhadoDireita.png";
+import TextoAlinhadoCentro from "../../assets/Icones/TextoAlinhadoCentro.png";
+import ExpandirCinza from "../../assets/Icones/ExpandirCinza.png";
 
 function NovoConteudo() {
     const [titulo, setTitulo] = useState("");
@@ -49,9 +51,11 @@ function NovoConteudo() {
 
         if (!extensaoValida) {
             alert("Selecione um arquivo PDF, DOC ou DOCX.");
+
             if (arquivoRef.current) {
                 arquivoRef.current.value = "";
             }
+
             setArquivo(null);
             return;
         }
@@ -153,7 +157,9 @@ function NovoConteudo() {
                                     <select
                                         id="tema"
                                         value={tema}
-                                        onChange={(event) => setTema(event.target.value)}
+                                        onChange={(event) =>
+                                            setTema(event.target.value)
+                                        }
                                     >
                                         <option value="">Selecione um tema</option>
                                         <option value="Reforma Tributária">Reforma Tributária</option>
@@ -228,8 +234,10 @@ function NovoConteudo() {
                                                 aplicarFormatacao("justifyLeft")
                                             }
                                         >
-                                            <img src={TextosAlinhadosEsquerda} alt="" />
-
+                                            <img
+                                                src={TextosAlinhadosEsquerda}
+                                                alt=""
+                                            />
                                         </button>
 
                                         <button
@@ -242,7 +250,10 @@ function NovoConteudo() {
                                                 aplicarFormatacao("justifyCenter")
                                             }
                                         >
-                                            <img src={TextoAlinhadoCentro} alt="" />
+                                            <img
+                                                src={TextoAlinhadoCentro}
+                                                alt=""
+                                            />
                                         </button>
 
                                         <button
@@ -255,7 +266,10 @@ function NovoConteudo() {
                                                 aplicarFormatacao("justifyRight")
                                             }
                                         >
-                                            <img src={TextoAlinhadoDireita} alt="" />
+                                            <img
+                                                src={TextoAlinhadoDireita}
+                                                alt=""
+                                            />
                                         </button>
                                     </div>
 
@@ -339,7 +353,17 @@ function Sidebar() {
     return (
         <aside className="menu-novo-conteudo">
             <div className="logo-novo-conteudo">
-                <img src={logoIntegra} alt="" />
+                <img
+                    src={logoIntegra}
+                    alt="Integra"
+                    className="logo-desktop"
+                />
+
+                <img
+                    src={LogoMobile}
+                    alt="Integra"
+                    className="logo-mobile"
+                />
             </div>
 
             <nav className="navegacao-novo-conteudo">

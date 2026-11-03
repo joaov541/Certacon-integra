@@ -7,6 +7,10 @@ import iconeEscudo from "../../assets/Icones/EscudoLaranja.png";
 import iconeDocumento from "../../assets/Icones/documentoLaranja.png";
 import iconeGrupo from "../../assets/Icones/GrupoPessoasLaranja.png";
 
+import LogoMobile from "../../assets/Icones/LogoMobile.png";
+import EmailCinza from "../../assets/Icones/EmailCinza.png";
+import ChaveSenha from "../../assets/Icones/ChaveSenha.png";
+
 function Login() {
     const [cnpj, setCnpj] = useState("");
     const [senha, setSenha] = useState("");
@@ -32,7 +36,9 @@ function Login() {
 
     return (
         <main className="login">
+
             <section className="login-apresentacao">
+
                 <div className="marca-integra">
                     <img
                         src={logoIntegra}
@@ -55,6 +61,7 @@ function Login() {
                 </div>
 
                 <div className="vantagens">
+
                     <div className="vantagem">
                         <img src={iconeEscudo} alt="" />
                         <span>
@@ -81,45 +88,87 @@ function Login() {
                             por perfil
                         </span>
                     </div>
+
                 </div>
             </section>
 
             <section className="login-formulario">
+
                 <div className="formulario-conteudo">
+
                     <header className="formulario-cabecalho">
-                        <h2>Acesse sua conta</h2>
-                        <p>Digite suas credenciais para continuar</p>
-                    </header>
 
-                    <form onSubmit={entrar}>
-                        <div className="campo">
-                            <label htmlFor="cnpj">CNPJ *</label>
-
-                            <input
-                                id="cnpj"
-                                type="text"
-                                placeholder="Digite o CNPJ"
-                                value={cnpj}
-                                onChange={(event) =>
-                                    setCnpj(event.target.value)
-                                }
-                                autoComplete="username"
+                        <div className="marca-mobile">
+                            <img
+                                src={LogoMobile}
+                                alt="Integra"
+                                className="logo-mobile"
                             />
                         </div>
 
-                        <div className="campo campo-senha">
-                            <label htmlFor="senha">Senha *</label>
+                        <h2>Acesse sua conta</h2>
 
-                            <input
-                                id="senha"
-                                type="password"
-                                placeholder="Digite a senha"
-                                value={senha}
-                                onChange={(event) =>
-                                    setSenha(event.target.value)
-                                }
-                                autoComplete="current-password"
-                            />
+                        <p>Digite suas credenciais para continuar</p>
+
+                    </header>
+
+                    <form onSubmit={entrar}>
+
+                        <div className="campo">
+
+                            <label htmlFor="cnpj">
+                                Identificador: Email/CNPJ *
+                            </label>
+
+                            <div className="campo-input">
+
+                                <img
+                                    src={EmailCinza}
+                                    alt=""
+                                    className="campo-icone"
+                                />
+
+                                <input
+                                    id="cnpj"
+                                    type="text"
+                                    placeholder="Digite o Identificador"
+                                    value={cnpj}
+                                    onChange={(event) =>
+                                        setCnpj(event.target.value)
+                                    }
+                                    autoComplete="username"
+                                />
+
+                            </div>
+
+                        </div>
+
+                        <div className="campo campo-senha">
+
+                            <label htmlFor="senha">
+                                Senha *
+                            </label>
+
+                            <div className="campo-input">
+
+                                <img
+                                    src={ChaveSenha}
+                                    alt=""
+                                    className="campo-icone"
+                                />
+
+                                <input
+                                    id="senha"
+                                    type="password"
+                                    placeholder="Digite a senha"
+                                    value={senha}
+                                    onChange={(event) =>
+                                        setSenha(event.target.value)
+                                    }
+                                    autoComplete="current-password"
+                                />
+
+                            </div>
 
                             <button
                                 type="button"
@@ -128,6 +177,7 @@ function Login() {
                             >
                                 Esqueceu sua senha?
                             </button>
+
                         </div>
 
                         <button
@@ -136,6 +186,7 @@ function Login() {
                         >
                             Entrar
                         </button>
+
                     </form>
 
                     <div className="divisor">
@@ -151,8 +202,11 @@ function Login() {
                     >
                         Criar uma conta
                     </button>
+
                 </div>
+
             </section>
+
         </main>
     );
 }

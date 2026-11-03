@@ -1,22 +1,22 @@
-
 import "./Home.css";
 
 import logoIntegra from "../../assets/Icones/LogoNome.png";
 import iconeCasa from "../../assets/Icones/CasaBranca.png";
 import iconeLivro from "../../assets/Icones/LivroBranco.png";
 import iconeNotas from "../../assets/Icones/DoisDocumentosBranco.png";
-import iconeClientesBranco from "../../assets/Icones/GrupoPessoasBranco.png";
+import iconeClientesBranco from "../../assets/Icones/ADDProfileBranco.png";
 import iconePessoa from "../../assets/Icones/PessoaBranca.png";
 import iconeSair from "../../assets/Icones/SairBranco.png";
 import iconeLupa from "../../assets/Icones/LupaPesquisa.png";
 import PerfilLaranja from "../../assets/Icones/PerfilLaranja.png";
-import iconeTresPontos from "../../assets/Icones/TresPontos.png";
-import iconeDocumento from "../../assets/Icones/documentoLaranja.png";
-import iconeExpandir from "../../assets/Icones/ExpandirText.png";
-import iconeUpload from "../../assets/Icones/Upload.png";
-import iconeGrupo from "../../assets/Icones/GrupoPessoasLaranja.png";
+import iconeDocumento from "../../assets/Icones/ArquivoAcessoRapido.png";
+import iconeExpandir from "../../assets/Icones/SetaAcessoRapido.png";
+import iconeUpload from "../../assets/Icones/BaixarArqvAcssRapido.png";
+import iconeGrupo from "../../assets/Icones/PessoaAcessoRapido.png";
 import arquivoHome from "../../assets/Icones/ArquivoDashboard.png";
-import DoisDocumentos from "../../assets/Icones/DoisDocumentos.png"
+import DoisDocumentos from "../../assets/Icones/DoisDocumentos.png";
+import TimeAcessoRapido from "../../assets/Icones/TimeAcessoRapido.png";
+
 
 export default function Home() {
     return (
@@ -104,16 +104,6 @@ export default function Home() {
                             <p>Analista SPED</p>
                         </div>
 
-                        <button
-                            type="button"
-                            className="home-usuario-opcoes"
-                        >
-                            <img
-                                src={iconeTresPontos}
-                                alt="Mais opções"
-                            />
-                        </button>
-
                     </div>
 
                 </header>
@@ -171,7 +161,7 @@ export default function Home() {
                             </div>
 
                             <div className="home-card-info">
-                                <p>Atualizações das tabelas liquídadas</p>
+                                <p>Atualizações das tabelas liquidadas</p>
                                 <strong>115</strong>
                             </div>
 
@@ -216,7 +206,7 @@ export default function Home() {
 
                                 <div className="home-lista-texto">
                                     <h3>
-                                        Atualização de Tabelas Liquidas
+                                        Atualização de Tabelas Liquidadas
                                     </h3>
 
                                     <p>Publicado em 02/10/2026</p>
@@ -257,6 +247,33 @@ export default function Home() {
 
                         </section>
 
+                        <footer className="home-footer">
+                            <button type="button" className="home-footer-item home-footer-ativo">
+                                <img src={iconeCasa} alt="" />
+                                <span>Início</span>
+                            </button>
+
+                            <button type="button" className="home-footer-item">
+                                <img src={iconeLivro} alt="" />
+                                <span>Conteúdos</span>
+                            </button>
+
+                            <button type="button" className="home-footer-item">
+                                <img src={iconeNotas} alt="" />
+                                <span>Notas Fiscais</span>
+                            </button>
+
+                            <button type="button" className="home-footer-item">
+                                <img src={iconeClientesBranco} alt="" />
+                                <span>Clientes</span>
+                            </button>
+
+                            <button type="button" className="home-footer-item">
+                                <img src={iconePessoa} alt="" />
+                                <span>Usuários</span>
+                            </button>
+                        </footer>
+
                         {/* ACESSO RÁPIDO */}
                         <section className="home-acesso">
 
@@ -282,7 +299,7 @@ export default function Home() {
                                 type="button"
                                 className="home-acesso-botao"
                             >
-                                <img src={iconeDocumento} alt="" />
+                                <img src={iconeDocumento} alt="" className="docAcessoRapido" />
                                 <span>Consultar NF-e</span>
                             </button>
 
@@ -292,6 +309,15 @@ export default function Home() {
                             >
                                 <img src={iconeGrupo} alt="" />
                                 <span>Consultar clientes</span>
+                            </button>
+
+                            {/* NOVO QUADRO */}
+                            <button
+                                type="button"
+                                className="home-acesso-botao"
+                            >
+                                <img src={TimeAcessoRapido} alt="" />
+                                <span>Histórico de ações</span>
                             </button>
 
                         </section>

@@ -1,0 +1,117 @@
+/* FOOTER RESPONSIVO */
+
+.home-footer {
+    display: none;
+}
+
+/* TELAS MENORES */
+
+@media (max-width: 850px) {
+
+    /* ESCONDE O MENU LATERAL */
+
+    .home-menu {
+        display: none;
+    }
+
+    /* REMOVE O ESPAÇO DO MENU LATERAL */
+
+    .home-area {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .home-topo {
+        left: 0;
+        width: 100%;
+    }
+
+    .home-conteudo {
+        left: 0;
+        bottom: 75px;
+        padding: 20px 15px;
+    }
+
+    /* FOOTER */
+
+    .home-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 200;
+
+        width: 100%;
+        height: 75px;
+
+        padding: 5px 8px;
+
+        background: #1d2e68;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* ITENS DO FOOTER */
+
+    .home-footer-item {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+
+        min-width: 0;
+        height: 100%;
+
+        padding: 4px 2px;
+
+        border: none;
+        border-radius: 5px;
+
+        background: transparent;
+        color: #fff;
+
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 700;
+
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    /* ÍCONES */
+
+    .home-footer-item img {
+        display: block;
+
+        width: 35px;
+        height: 35px;
+
+        object-fit: contain;
+    }
+
+    /* TEXTO */
+
+    .home-footer-item span {
+        display: block;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* ITEM SELECIONADO */
+
+    .home-footer-item:hover,
+    .home-footer-ativo {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* FOCO PELO TECLADO */
+
+    .home-footer-item:focus-visible {
+        outline: 2px solid #ff8500;
+        outline-offset: -2px;
+    }
+}

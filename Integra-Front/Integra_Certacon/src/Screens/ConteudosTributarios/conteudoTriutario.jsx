@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import "./conteudoTributario.css";
 
@@ -12,8 +11,9 @@ import ExpandirText from "../../assets/Icones/ExpandirText.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
+import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png"
+import iconeConteudo from "../../assets/Icones/DoisDocumentos.png";
 
-// Conteúdos iniciais
 const dadosIniciais = [
   {
     id: 1,
@@ -58,46 +58,37 @@ function ConteudoTributario() {
   const [temaSelecionado, setTemaSelecionado] = useState("Todos");
   const [ordem, setOrdem] = useState("recentes");
 
-  // Filtrar conteúdos
-  let listaFiltrada = conteudos.filter((conteudo) => {
-    const titulo = conteudo.titulo.toLowerCase();
-    const tema = conteudo.tema.toLowerCase();
-    const texto = pesquisa.toLowerCase();
+  const listaFiltrada = conteudos
+    .filter((conteudo) => {
+      const texto = pesquisa.toLowerCase();
+      const encontrouTexto =
+        conteudo.titulo.toLowerCase().includes(texto) ||
+        conteudo.tema.toLowerCase().includes(texto);
 
-    const encontrouTexto =
-      titulo.includes(texto) || tema.includes(texto);
+      const encontrouTema =
+        temaSelecionado === "Todos" ||
+        conteudo.tema === temaSelecionado;
 
-    const encontrouTema =
-      temaSelecionado === "Todos" ||
-      conteudo.tema === temaSelecionado;
+      return encontrouTexto && encontrouTema;
+    })
+    .sort((a, b) => {
+      const dataA = a.data.split("/").reverse().join("");
+      const dataB = b.data.split("/").reverse().join("");
 
-    return encontrouTexto && encontrouTema;
-  });
+      return ordem === "recentes"
+        ? dataB.localeCompare(dataA)
+        : dataA.localeCompare(dataB);
+    });
 
-  // Ordenar pela data
-  listaFiltrada.sort((a, b) => {
-    const dataA = a.data.split("/").reverse().join("");
-    const dataB = b.data.split("/").reverse().join("");
-
-    if (ordem === "recentes") {
-      return dataB.localeCompare(dataA);
-    }
-
-    return dataA.localeCompare(dataB);
-  });
-
-  // Excluir conteúdo
   function excluirConteudo(id) {
     const confirmar = window.confirm(
       "Deseja realmente excluir este conteúdo?"
     );
 
     if (confirmar) {
-      const novaLista = conteudos.filter(
-        (conteudo) => conteudo.id !== id
+      setConteudos((atuais) =>
+        atuais.filter((conteudo) => conteudo.id !== id)
       );
-
-      setConteudos(novaLista);
     }
   }
 
@@ -106,10 +97,7 @@ function ConteudoTributario() {
       <Sidebar />
 
       <main className="principal-conteudos">
-        <Header
-          pesquisa={pesquisa}
-          setPesquisa={setPesquisa}
-        />
+        <Header pesquisa={pesquisa} setPesquisa={setPesquisa} />
 
         <section className="area-lista-conteudos">
           <div className="titulo-conteudos">
@@ -121,20 +109,23 @@ function ConteudoTributario() {
             </div>
 
             <button
+              type="button"
               className="adicionar-conteudo"
+              aria-label="Adicionar conteúdo"
               onClick={() =>
                 alert("Aqui você poderá abrir a tela de novo conteúdo.")
               }
             >
-              <span>+ Adicionar Conteúdo</span>
+              <span className="adicionar-conteudo-texto">
+                + Adicionar Conteúdo
+              </span>
+              <span className="adicionar-conteudo-mais">+</span>
             </button>
           </div>
 
-          {/* Pesquisa e filtros */}
           <div className="filtros-conteudos">
             <div className="pesquisa-lista-conteudos">
               <img src={LupaCinza} alt="" />
-
               <input
                 type="text"
                 placeholder="Buscar por título ou palavra-chave"
@@ -157,7 +148,6 @@ function ConteudoTributario() {
                 <option value="ICMS">ICMS</option>
                 <option value="PES/CONFINS">PES/CONFINS</option>
               </select>
-
               <img src={ExpandirText} alt="" />
             </div>
 
@@ -169,12 +159,10 @@ function ConteudoTributario() {
                 <option value="recentes">Mais recentes</option>
                 <option value="antigos">Mais antigos</option>
               </select>
-
               <img src={ExpandirText} alt="" />
             </div>
           </div>
 
-          {/* Tabela de conteúdos */}
           <div className="tabela-conteudos">
             <table>
               <thead>
@@ -191,21 +179,28 @@ function ConteudoTributario() {
                 {listaFiltrada.length > 0 ? (
                   listaFiltrada.map((conteudo) => (
                     <tr key={conteudo.id}>
-                      <td>{conteudo.titulo}</td>
+                      <td className="celula-titulo">
+                        <img
+                          src={iconeConteudo}
+                          alt=""
+                          className="icone-card-conteudo"
+                        />
+                        <strong>{conteudo.titulo}</strong>
+                      </td>
 
                       <td>
                         <span
-                          className={
+                          className={`etiqueta-tema ${
                             conteudo.tema === "SPED"
-                              ? "etiqueta-tema tema-sped"
+                              ? "tema-sped"
                               : conteudo.tema === "ICMS"
-                              ? "etiqueta-tema tema-icms"
-                              : conteudo.tema === "Notas Fiscais"
-                              ? "etiqueta-tema tema-notas-fiscais"
-                              : conteudo.tema === "Reforma Tributária"
-                              ? "etiqueta-tema tema-reforma-tributaria"
-                              : "etiqueta-tema tema-padrao"
-                          }
+                                ? "tema-icms"
+                                : conteudo.tema === "Notas Fiscais"
+                                  ? "tema-notas-fiscais"
+                                  : conteudo.tema === "Reforma Tributária"
+                                    ? "tema-reforma-tributaria"
+                                    : "tema-padrao"
+                          }`}
                         >
                           {conteudo.tema}
                         </span>
@@ -216,6 +211,7 @@ function ConteudoTributario() {
 
                       <td className="coluna-acoes">
                         <button
+                          type="button"
                           className="excluir-conteudo"
                           title="Excluir conteúdo"
                           onClick={() => excluirConteudo(conteudo.id)}
@@ -241,7 +237,6 @@ function ConteudoTributario() {
   );
 }
 
-// Menu lateral
 function Sidebar() {
   return (
     <aside className="menu-conteudos">
@@ -277,6 +272,7 @@ function Sidebar() {
       </nav>
 
       <button
+        type="button"
         className="sair-conteudos"
         onClick={() => alert("Configure aqui a saída da conta.")}
       >
@@ -287,30 +283,47 @@ function Sidebar() {
   );
 }
 
-// Cabeçalho superior
 function Header({ pesquisa, setPesquisa }) {
   return (
-    <header className="topo-conteudos">
-      <div className="pesquisa-topo-conteudos">
-        <img src={LupaCinza} alt="" />
-
-        <input
-          type="text"
-          placeholder="Buscar conteúdos, notas fiscais, etc..."
-          value={pesquisa}
-          onChange={(e) => setPesquisa(e.target.value)}
-        />
-      </div>
-
-      <div className="usuario-conteudos">
-        <div className="foto-usuario">JS</div>
-
-        <div className="dados-usuario">
-          <strong>João Silva</strong>
-          <span>Analista SPED</span>
+    <>
+      <header className="topo-conteudos">
+        <div className="pesquisa-topo-conteudos">
+          <img src={LupaCinza} alt="" />
+          <input
+            type="text"
+            placeholder="Buscar conteúdos, notas fiscais, etc..."
+            value={pesquisa}
+            onChange={(e) => setPesquisa(e.target.value)}
+          />
         </div>
-      </div>
-    </header>
+
+        <div className="usuario-conteudos">
+          <div className="foto-usuario">JS</div>
+          <div className="dados-usuario">
+            <strong>João Silva</strong>
+            <span>Analista SPED</span>
+          </div>
+        </div>
+      </header>
+
+      <header className="home-header-mobile">
+        <img
+          src={LogoNomeMobile}
+          alt="Integra"
+          className="home-logo-mobile"
+        />
+
+        <div className="home-busca-mobile">
+          <img src={LupaCinza} alt="" />
+          <input
+            type="text"
+            placeholder="Pesquisar..."
+            value={pesquisa}
+            onChange={(e) => setPesquisa(e.target.value)}
+          />
+        </div>
+      </header>
+    </>
   );
 }
 
