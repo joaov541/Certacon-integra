@@ -328,37 +328,6 @@
         }
       }
     },
-    "/api/Autenticacao/cadastrar": {
-      "post": {
-        "tags": [
-          "Autenticacao"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CadastroRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CadastroRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CadastroRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Autenticacao/login": {
       "post": {
         "tags": [
@@ -379,6 +348,37 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/CadastroClientes": {
+      "post": {
+        "tags": [
+          "CadastroClientes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioRequest"
               }
             }
           }
@@ -523,7 +523,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Usuarios/cadastrar-colaborador": {
       "post": {
         "tags": [
           "Usuarios"
@@ -688,36 +690,6 @@
         },
         "additionalProperties": false
       },
-      "CadastroRequest": {
-        "type": "object",
-        "properties": {
-          "nome": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "senha": {
-            "type": "string",
-            "nullable": true
-          },
-          "razaoSocial": {
-            "type": "string",
-            "nullable": true
-          },
-          "cnpj": {
-            "type": "string",
-            "nullable": true
-          },
-          "telefoneContato": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -839,6 +811,9 @@
     },
     {
       "name": "Autenticacao"
+    },
+    {
+      "name": "CadastroClientes"
     },
     {
       "name": "NotasFiscais"

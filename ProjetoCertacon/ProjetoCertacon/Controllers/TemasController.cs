@@ -18,6 +18,11 @@ namespace ProjetoCertacon.Controllers
             _context = context;
         }
 
+
+        /// <summary>
+        /// Lista todos os temas
+        /// </summary>
+        /// <returns>retorna status code 200</returns>
         [HttpGet]
         [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> GetTemas()

@@ -30,52 +30,11 @@ namespace ProjetoCertacon.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("cadastrar")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Cadastrar(CadastroRequest dados)
-        {
-            if (await _context.Usuarios.AnyAsync())
-                return BadRequest("O cadastro inicial já foi realizado.");
 
-            if (string.IsNullOrWhiteSpace(dados.Nome) ||
-                string.IsNullOrWhiteSpace(dados.Email) ||
-                string.IsNullOrWhiteSpace(dados.Senha))
-            {
-                return BadRequest("Preencha nome, e-mail e senha.");
-            }
-
-            if (dados.Senha.Length < 8)
-                return BadRequest("A senha deve ter pelo menos 8 caracteres.");
-
-            var email = dados.Email.Trim().ToLowerInvariant();
-
-            var usuario = new Usuario
-            {
-                UsuarioId = Guid.NewGuid(),
-                Nome = dados.Nome.Trim(),
-                Email = email,
-                Ativo = true,
-                RazaoSocial = dados.RazaoSocial,
-                Cnpj = dados.CNPJ,
-                TelefoneContato = dados.TelefoneContato,
-                DataCriacao = DateTime.UtcNow
-            };
-
-            usuario.SenhaHash = _passwordHasher.HashPassword(
-                usuario, dados.Senha);
-
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
-            {
-                mensagem = "Usuário cadastrado com sucesso.",
-                usuario.UsuarioId,
-                usuario.Nome,
-                usuario.Email
-            });
-        }
-
+        /// <summary>
+        /// Realiza o login do usuário e retorna o token JWT.
+        ///  code="200">Login realizado com sucesso.
+        /// </summary>
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest dados)

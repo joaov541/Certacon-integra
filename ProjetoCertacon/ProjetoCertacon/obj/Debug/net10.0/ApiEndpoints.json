@@ -195,22 +195,6 @@
   },
   {
     "ContainingType": "ProjetoCertacon.Controllers.AutenticacaoController",
-    "Method": "Cadastrar",
-    "RelativePath": "api/Autenticacao/cadastrar",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dados",
-        "Type": "ProjetoCertacon.Controllers.CadastroRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProjetoCertacon.Controllers.AutenticacaoController",
     "Method": "Login",
     "RelativePath": "api/Autenticacao/login",
     "HttpMethod": "POST",
@@ -220,6 +204,22 @@
       {
         "Name": "dados",
         "Type": "ProjetoCertacon.Controllers.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.CadastroClientesController",
+    "Method": "Cadastrar",
+    "RelativePath": "api/CadastroClientes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.UsuarioRequest",
         "IsRequired": true
       }
     ],
@@ -321,22 +321,6 @@
   },
   {
     "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
-    "Method": "Cadastrar",
-    "RelativePath": "api/Usuarios",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dados",
-        "Type": "ProjetoCertacon.Controllers.UsuarioRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
     "Method": "Editar",
     "RelativePath": "api/Usuarios/{id}",
     "HttpMethod": "PUT",
@@ -388,6 +372,22 @@
       {
         "Name": "dados",
         "Type": "ProjetoCertacon.Controllers.UsuarioStatusRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.UsuariosController",
+    "Method": "CadastrarColaborador",
+    "RelativePath": "api/Usuarios/cadastrar-colaborador",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.UsuarioRequest",
         "IsRequired": true
       }
     ],

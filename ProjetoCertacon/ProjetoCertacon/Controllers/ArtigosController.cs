@@ -24,6 +24,11 @@ namespace ProjetoCertacon.Controllers
             _auditoria = auditoria;
         }
 
+        /// <summary>
+        /// Lista os artigos publicados conforme a visibilidade do usuário.
+        /// </summary>
+        ///  <return> reotrna status code 200 Artigos listados com sucesso </return>
+
         [HttpGet]
         public async Task<IActionResult> GetArtigos()
         {
@@ -58,6 +63,11 @@ namespace ProjetoCertacon.Controllers
             return Ok(artigos);
         }
 
+
+        /// <summary>
+        /// Cria um artigo em estado de rascunho.
+        /// </summary>
+        ///  retorna status code 200 Artigo criado com sucesso.
         [HttpPost]
         [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> CriarArtigo(ArtigoRequest dados)
@@ -118,6 +128,11 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+
+        /// <summary>
+        /// Atualiza os dados de um artigo.
+        /// </summary>
+        ///  retorna status code 200 Artigo atualizado com sucesso.
         [HttpPut("{id:guid}")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> EditarArtigo(
@@ -198,6 +213,11 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+
+        /// <summary>
+        /// Arquiva um artigo.
+        /// </summary>
+        ///  retorna status code 200 Artigo arquivado com sucesso.
         [HttpDelete("{id:guid}")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> ExcluirArtigo(Guid id)
@@ -247,6 +267,11 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+
+        /// <summary>
+        /// Envia um artigo para revisão.
+        /// </summary>
+        /// reotrna status code 200 Artigo enviado para revisão.
         [HttpPost("{id:guid}/enviar-revisao")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> EnviarParaRevisao(Guid id)
@@ -285,6 +310,11 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+
+        /// <summary>
+        /// Lista os artigos que aguardam revisão.
+        /// </summary>
+        ///  retorna staus code 200 Artigos pendentes listados com sucesso.
         [HttpGet("pendentes-revisao")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal")]
         public async Task<IActionResult> GetArtigosPendentes()
@@ -306,6 +336,13 @@ namespace ProjetoCertacon.Controllers
             return Ok(artigos);
         }
 
+
+
+        /// <summary>
+        /// Aprova um artigo em revisão.
+        /// </summary>
+        /// retorna status code 200 Artigo aprovado com sucesso.
+        
         [HttpPost("{id:guid}/aprovar")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal")]
         public async Task<IActionResult> AprovarArtigo(
@@ -351,6 +388,11 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+
+        /// <summary>
+        /// Rejeita um artigo em revisão.
+        /// </summary>
+        ///  retorna status code 200 Artigo rejeitado com sucesso.
         [HttpPost("{id:guid}/rejeitar")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal")]
         public async Task<IActionResult> RejeitarArtigo(
@@ -396,6 +438,11 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+
+        /// <summary>
+        /// Solicita ajustes em um artigo em revisão.
+        /// </summary>
+        ///  retorna status code 200 Ajustes solicitados ao autor.
         [HttpPost("{id:guid}/solicitar-ajustes")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal")]
         public async Task<IActionResult> SolicitarAjustes(
@@ -444,6 +491,12 @@ namespace ProjetoCertacon.Controllers
             });
         }
 
+
+
+        /// <summary>
+        /// Consulta o histórico de revisão de um artigo.
+        /// </summary>
+        ///  retorna status code 200 Histórico consultado com sucesso.
         [HttpGet("{id:guid}/historico")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal")]
         public async Task<IActionResult> GetHistorico(Guid id)
@@ -473,6 +526,11 @@ namespace ProjetoCertacon.Controllers
             return Ok(historico);
         }
 
+
+        /// <summary>
+        /// Publica um artigo aprovado.
+        /// </summary>
+        ///  code="200">Artigo publicado com sucesso.
         [HttpPost("{id:guid}/publicar")]
         [Authorize(Roles = "Administrador,Coordenador Fiscal")]
         public async Task<IActionResult> PublicarArtigo(Guid id)

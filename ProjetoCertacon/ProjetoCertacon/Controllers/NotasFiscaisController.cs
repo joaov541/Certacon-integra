@@ -36,7 +36,10 @@ public class NotasFiscaisController : ControllerBase
     }
 
 
-
+    /// <summary>
+    /// Lista todas as notas ficais
+    /// </summary>
+    /// <returns>retorna codigo 200</returns>
     [HttpGet]
     public async Task<IActionResult> Listar()
     {
@@ -65,6 +68,11 @@ public class NotasFiscaisController : ControllerBase
         return Ok(notas);
     }
 
+
+    /// <summary>
+    /// LIsta um usuário específico através do seu id
+    /// </summary>
+    /// <returns>retorna codigo 200</returns>
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Consultar(Guid id)
     {
@@ -109,7 +117,10 @@ public class NotasFiscaisController : ControllerBase
         return Ok(nota);
     }
 
-
+    /// <summary>
+    /// Deleta uma nota fiscal
+    /// </summary>
+    /// <returns>retorna 204 no content</returns>
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> ExcluirNota(Guid id)
@@ -143,6 +154,10 @@ public class NotasFiscaisController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Remove o arquivo XML associado à nota, preservando o registro fiscal.
+    /// </summary>
+    /// <returns>retorna 204, no content</returns>
     [HttpDelete("{id:guid}/xml")]
     public async Task<IActionResult> ExcluirXml(Guid id)
     {
@@ -230,7 +245,10 @@ public class NotasFiscaisController : ControllerBase
         }
     }
 
-
+    /// <summary>
+    /// 	Envia um XML para processamento e importação
+    /// </summary>
+    /// <returns>retorna 201 created</returns>
     [HttpPost("upload")]
     [RequestSizeLimit(5_000_000)]
     public async Task<IActionResult> EnviarXml(

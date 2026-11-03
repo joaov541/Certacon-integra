@@ -18,6 +18,10 @@ public class AuditoriaController : ControllerBase
         _context = context;
     }
 
+    /// <summary>
+    /// Lista as alterações do sistema
+    /// </summary>
+    /// <returns>retorna code="200">Artigos listados com sucesso</returns>
     [HttpGet]
     public async Task<IActionResult> Listar()
     {

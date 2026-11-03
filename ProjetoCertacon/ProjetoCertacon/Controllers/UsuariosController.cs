@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjetoCertacon.Data;
 using ProjetoCertacon.Models;
 using System.Linq;
+using ProjetoCertacon.Services;
 
 namespace ProjetoCertacon.Controllers;
 
@@ -16,18 +17,46 @@ public class UsuariosController : ControllerBase
 {
     private readonly IntegraCertaconContext _context;
     private readonly IPasswordHasher<Usuario> _passwordHasher;
+    private readonly AuditoriaService _auditoria;
+
+
+    private async Task RegistrarAuditoria(
+    string acao,
+    Guid registroId,
+    string detalhes)
+    {
+        var usuarioId = User.FindFirst(
+            System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        Guid? id = Guid.TryParse(usuarioId, out var resultado)
+            ? resultado
+            : null;
+
+        await _auditoria.RegistrarAsync(
+            id,
+            acao,
+            "USUARIO",
+            registroId,
+            HttpContext.Connection.RemoteIpAddress?.ToString(),
+            detalhes);
+    }
 
     public UsuariosController(
-        IntegraCertaconContext context,
-        IPasswordHasher<Usuario> passwordHasher)
+     IntegraCertaconContext context,
+     IPasswordHasher<Usuario> passwordHasher,
+     AuditoriaService auditoria)
     {
         _context = context;
         _passwordHasher = passwordHasher;
+        _auditoria = auditoria;
     }
 
 
 
-    // Listar usuários
+    /// <summary>
+    /// Lista os usuários
+    /// </summary>
+    /// <returns>retorna status code 200</returns>
     [HttpGet]
     public async Task<IActionResult> Listar()
     {
@@ -53,11 +82,14 @@ public class UsuariosController : ControllerBase
         return Ok(usuarios);
     }
 
-
-
-    // Cadastrar usuário
-    [HttpPost]
-    public async Task<IActionResult> Cadastrar(UsuarioRequest dados)
+    
+    /// <summary>
+    /// Cadastra um colaborador
+    /// </summary>
+    /// <returns>Retorna status code 201</returns>
+    [HttpPost("cadastrar-colaborador")]
+    public async Task<IActionResult> CadastrarColaborador(
+        [FromBody] UsuarioRequest dados)
     {
         if (string.IsNullOrWhiteSpace(dados.Nome) ||
             string.IsNullOrWhiteSpace(dados.Email) ||
@@ -78,32 +110,14 @@ public class UsuariosController : ControllerBase
         if (perfil == null)
             return BadRequest("Perfil não encontrado ou inativo.");
 
-        var cnpj = new string((dados.Cnpj ?? "")
-            .Where(char.IsDigit).ToArray());
-
         if (perfil.Nome == "Cliente")
-        {
-            if (string.IsNullOrWhiteSpace(dados.RazaoSocial) ||
-                cnpj.Length != 14)
-            {
-                return BadRequest(
-                    "Informe a razão social e um CNPJ com 14 dígitos.");
-            }
-
-            if (await _context.Usuarios.AnyAsync(u => u.Cnpj == cnpj))
-                return BadRequest("Este CNPJ já está cadastrado.");
-        }
+            return BadRequest("Selecione um perfil interno.");
 
         var usuario = new Usuario
         {
             UsuarioId = Guid.NewGuid(),
             Nome = dados.Nome.Trim(),
             Email = email,
-            RazaoSocial = string.IsNullOrWhiteSpace(dados.RazaoSocial)
-                ? null : dados.RazaoSocial.Trim(),
-            Cnpj = string.IsNullOrWhiteSpace(cnpj) ? null : cnpj,
-            TelefoneContato = string.IsNullOrWhiteSpace(dados.TelefoneContato)
-                ? null : dados.TelefoneContato.Trim(),
             Ativo = true,
             DataCriacao = DateTime.Now
         };
@@ -123,20 +137,25 @@ public class UsuariosController : ControllerBase
 
         await _context.SaveChangesAsync();
 
+        await RegistrarAuditoria(
+            "USUARIO_CRIADO",
+            usuario.UsuarioId,
+            "Colaborador cadastrado: " + usuario.Email);
+
         return Ok(new
         {
-            mensagem = "Usuário cadastrado com sucesso.",
+            mensagem = "Colaborador cadastrado com sucesso.",
             usuario.UsuarioId,
             usuario.Nome,
             usuario.Email,
-            usuario.RazaoSocial,
-            usuario.Cnpj,
-            usuario.TelefoneContato,
             Perfil = perfil.Nome
         });
     }
 
-    // Editar usuário
+    /// <summary>
+    /// Edita um usuário
+    /// </summary>
+    /// <returns>retorna status code 200</returns>
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Editar(
         Guid id, UsuarioAtualizarRequest dados)
@@ -219,7 +238,10 @@ public class UsuariosController : ControllerBase
         });
     }
 
-    // Ativar ou desativar usuário
+    /// <summary>
+    /// Ativar ou desativar usuário
+    /// </summary>
+    /// <returns>Retorna status code 200</returns>
     [HttpPatch("{id:guid}/status")]
     public async Task<IActionResult> AlterarStatus(
         Guid id, UsuarioStatusRequest dados)
@@ -285,6 +307,8 @@ public class UsuarioAtualizarRequest
     public string? TelefoneContato { get; set; }
     public string? Perfil { get; set; }
 }
+
+
 
 public class UsuarioStatusRequest
 {

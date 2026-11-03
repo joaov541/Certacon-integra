@@ -971,3 +971,59 @@ SELECT Acao, COUNT(*) AS Quantidade
 FROM LOG_AUDITORIA
 GROUP BY Acao
 ORDER BY Acao;
+
+
+
+
+USE IntegraCertacon;
+GO
+
+SELECT TOP 20
+    LogAuditoria_Id,
+    Usuario_Id
+    Acao,
+    TabelaAfetada,
+    Registro_Id,
+    Detalhes,
+    DataHora
+FROM LOG_AUDITORIA
+ORDER BY DataHora DESC;
+
+
+
+SELECT
+    COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'LOG_AUDITORIA';
+
+
+
+SELECT
+    u.Usuario_Id,
+    u.Nome,
+    u.Email,
+    u.Cnpj,
+    COUNT(n.NotaFiscal_Id) AS QuantidadeNotas
+FROM USUARIO u
+INNER JOIN NOTA_FISCAL n
+    ON n.Usuario_Id = u.Usuario_Id
+GROUP BY
+    u.Usuario_Id,
+    u.Nome,
+    u.Email,
+    u.Cnpj
+ORDER BY QuantidadeNotas DESC;
+
+
+
+SELECT
+    NotaFiscal_Id,
+    Usuario_Id,
+    ChaveAcesso,
+    ValorTotal
+FROM NOTA_FISCAL
+WHERE Usuario_Id IN (
+    'D47E14EF-DF9E-4BFE-BB5D-48ED4FC9A5F4',
+    '2328D858-8D2D-4B0B-B538-6876C9E725D7'
+)
+ORDER BY Usuario_Id;
