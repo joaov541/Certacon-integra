@@ -3,6 +3,8 @@
     box-sizing: border-box;
 }
 
+/* PÁGINA */
+
 .xml-pagina {
     display: flex;
     width: 100%;
@@ -12,7 +14,7 @@
     font-family: Arial, sans-serif;
 }
 
-/* Menu lateral */
+/* MENU LATERAL */
 
 .xml-sidebar {
     display: flex;
@@ -22,12 +24,26 @@
     background: #1d2e68;
     color: #fff;
     width: 334px;
+    flex-shrink: 0;
 }
 
 .xml-logo {
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+}
+
+.xml-logo picture {
+    display: block;
+    width: 100%;
+}
+
+.xml-logo img {
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    height: 90px;
+    object-fit: contain;
 }
 
 .xml-menu {
@@ -99,7 +115,7 @@
     font-size: 14px;
 }
 
-/* Cabeçalho */
+/* CABEÇALHO */
 
 .xml-principal {
     display: flex;
@@ -185,7 +201,7 @@
     font-size: 18px;
 }
 
-/* Conteúdo principal */
+/* CONTEÚDO PRINCIPAL */
 
 .xml-conteudo {
     display: flex;
@@ -278,7 +294,6 @@
     font-size: 11px;
     margin-top: 10px;
     font-weight: bold;
-    
 }
 
 .xml-area-soltar.xml-arrastando {
@@ -292,7 +307,7 @@
     font-size: 12px;
 }
 
-/* Tabela de arquivos */
+/* LISTA DE ARQUIVOS */
 
 .xml-lista {
     width: 85%;
@@ -401,7 +416,7 @@
     text-align: center;
 }
 
-/* Botão inferior */
+/* BOTÃO INFERIOR */
 
 .xml-rodape {
     display: flex;
@@ -433,124 +448,170 @@
     cursor: not-allowed;
 }
 
-/* Responsividade */
-
-@media (max-width: 850px) {
-    .xml-sidebar {
-        flex-basis: 155px;
-        padding-right: 8px;
-        padding-left: 8px;
-    }
-
-    .xml-header {
-        padding-right: 16px;
-        padding-left: 16px;
-    }
-
-    .xml-conteudo {
-        padding-right: 18px;
-        padding-left: 18px;
-    }
-
-    .xml-area-superior {
-        padding-right: 0;
-    }
-
-    .xml-lista {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .xml-rodape {
-        padding-right: 0;
-    }
-}
+/* RESPONSIVIDADE MOBILE */
 
 @media (max-width: 600px) {
+
+    .xml-pagina,
+    .xml-principal {
+        min-height: 100vh;
+        background: #f3f6fc;
+    }
+
+    /* LOGO MOBILE */
+
     .xml-sidebar {
-        flex-basis: 60px;
-        align-items: center;
-        padding: 14px 5px;
+        position: absolute;
+        z-index: 2;
+        top: 18px;
+        left: 14px;
+        display: block;
+        width: auto;
+        min-height: 0;
+        padding: 0;
+        background: transparent;
+    }
+
+    .xml-logo {
+        margin: 0;
+    }
+
+    .xml-logo picture {
+        display: block;
+        width: 130px;
     }
 
     .xml-logo img {
-        height: 38px;
+        width: 130px;
+        height: 46px;
+        object-fit: contain;
+        object-position: left center;
     }
 
-    .xml-menu-item {
-        justify-content: center;
-        padding: 8px 4px;
-    }
-
-    .xml-menu-item img {
-        width: 23px;
-        height: 23px;
-    }
-
-    .xml-menu-item span,
-    .xml-menu-inferior button:not(.xml-sair) {
+    .xml-menu,
+    .xml-menu-inferior {
         display: none;
     }
 
-    .xml-menu-inferior .xml-sair {
-        justify-content: center;
-        padding: 8px 4px;
-    }
-
-    .xml-sair span {
-        display: none;
-    }
+    /* HEADER MOBILE */
 
     .xml-header {
         flex-wrap: wrap;
         gap: 12px;
-        padding: 12px;
-    }
-
-    .xml-busca {
-        flex-basis: 100%;
-        max-width: none;
+        min-height: 0;
+        padding: 28px 14px 0;
+        background: #f3f6fc;
     }
 
     .xml-usuario {
+        order: 1;
         margin-left: auto;
+        gap: 6px;
     }
 
+    .xml-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .xml-busca {
+        order: 2;
+        flex-basis: 100%;
+        width: 100%;
+        height: 34px;
+        max-width: none;
+        gap: 8px;
+        padding: 0 10px;
+        border: 1px solid #999;
+        background: #f8faff;
+    }
+
+    /* CONTEÚDO */
+
     .xml-conteudo {
-        padding: 22px 12px 16px;
+        flex: 1;
+        padding: 8px 14px 16px;
     }
 
     .xml-conteudo h1 {
-        font-size: 21px;
+        margin: 8px 0 10px;
+        color: #1d2e68;
+        font-size: 17px;
     }
 
     .xml-area-superior {
-        flex-direction: column;
-        align-items: stretch;
+        display: block;
     }
 
     .xml-botao-selecionar {
-        width: 100%;
-        max-width: 280px;
+        display: none;
     }
 
+    /* ÁREA DE ENVIO */
+
     .xml-area-soltar {
-        align-self: stretch;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        grid-template-areas:
+            "icone texto"
+            "regras regras";
+        align-items: center;
+        justify-items: start;
         width: 100%;
-        max-width: 280px;
-        min-height: 105px;
-        margin-top: 0;
+        max-width: none;
+        min-height: 102px;
+        margin: 0;
+        padding: 9px;
+        border: 2px solid #888;
+        border-radius: 5px;
+        background: #f8faff;
     }
+
+    .xml-area-soltar img {
+        grid-area: icone;
+        align-self: center;
+        width: 27px;
+        height: 27px;
+        margin: 0;
+    }
+
+    .xml-area-soltar strong {
+        grid-area: texto;
+        align-self: center;
+        margin: 0;
+        color: #111;
+        font-size: 13px;
+        font-weight: 400;
+    }
+
+    .xml-area-soltar span {
+        display: inline-block;
+        margin: 8px 4px 0 0;
+        font-size: 10px;
+        font-weight: 400;
+    }
+
+    /* LISTA DE ARQUIVOS */
 
     .xml-lista {
         width: 100%;
-        margin-top: 24px;
+        margin: 30px 0 0;
+    }
+
+    .xml-lista-titulo {
+        min-height: 29px;
+        padding: 6px 8px;
+        background: #cbd4f0;
+        font-size: 13px;
+        font-weight: 400;
+        text-align: left;
     }
 
     .xml-arquivo {
-        grid-template-columns: minmax(0, 1fr) 48px 65px 26px;
-        gap: 4px;
-        padding: 4px 5px;
+        grid-template-columns: minmax(0, 1fr) auto auto 25px;
+        gap: 5px;
+        min-height: 37px;
+        padding: 3px 6px;
     }
 
     .xml-arquivo-nome {
@@ -558,8 +619,8 @@
     }
 
     .xml-arquivo-nome img {
-        width: 19px;
-        height: 19px;
+        width: 17px;
+        height: 17px;
     }
 
     .xml-arquivo-nome span,
@@ -573,12 +634,28 @@
         font-size: 8px;
     }
 
-    .xml-botao-excluir img {
-        width: 19px;
-        height: 19px;
+    .xml-botao-excluir {
+        width: 24px;
+        height: 24px;
     }
 
+    .xml-botao-excluir img {
+        width: 21px;
+        height: 21px;
+    }
+
+    /* BOTÃO ENVIAR */
+
     .xml-rodape {
-        padding: 20px 0 0;
+        justify-content: center;
+        margin-top: auto;
+        padding: 24px 0 0;
+    }
+
+    .xml-botao-enviar {
+        width: 147px;
+        height: 35px;
+        font-size: 14px;
+        font-weight: bold;
     }
 }

@@ -587,4 +587,242 @@
   .paginacao-notas {
     margin-top: 35px;
   }
+
+  /* =====================================================
+   RESPONSIVIDADE COMPLETA - Notas Fiscais
+   Apague a parte de responsividade antiga do Notasfiscais.css
+   (do comentário "Responsividade" até o fim do arquivo)
+   e cole este arquivo inteiro no lugar.
+   ===================================================== */
+
+/* ---------- Já existiam (copiados sem alteração) ---------- */
+
+@media (max-width: 1200px) {
+  .filtros-notas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .filtro-periodo,
+  .filtro-cliente,
+  .filtro-status {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .botao-buscar-notas {
+    width: 100%;
+  }
+
+  .paginacao-notas {
+    margin-top: 70px;
+  }
+}
+
+@media (max-width: 650px) {
+  .pagina-notas {
+    flex-direction: column;
+  }
+
+  .menu-notas {
+    width: 100%;
+    min-height: auto;
+    padding: 12px;
+    border-right: none;
+    border-bottom: 2px solid #168bff;
+  }
+
+  .logo-notas {
+    justify-content: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .logo-notas img {
+    max-width: 165px;
+  }
+
+  .navegacao-notas {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .item-menu-notas {
+    gap: 6px;
+    margin-left: 0;
+    font-size: 11px;
+  }
+
+  .item-menu-notas img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sair-notas {
+    margin-top: 12px;
+  }
+
+  .topo-notas {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .pesquisa-topo-notas {
+    width: 100%;
+  }
+
+  .usuario-topo-notas {
+    margin-left: auto;
+  }
+
+  .conteudo-notas {
+    padding: 18px 12px;
+  }
+
+  .conteudo-notas h1 {
+    font-size: 22px;
+  }
+
+  .filtros-notas {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+
+  .filtro-periodo,
+  .filtro-cliente,
+  .filtro-status {
+    width: 100%;
+  }
+
+  .tabela-notas {
+    min-width: 750px;
+  }
+
+  .paginacao-notas {
+    margin-top: 35px;
+  }
+}
+
+/* ---------- Novos ---------- */
+
+/* Notebook pequeno e tablet deitado */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .menu-notas {
+    width: 250px;
+  }
+
+  .tabela-notas {
+    min-width: 750px;
+  }
+}
+
+/* Tablet em pé (651px a 900px):
+   o menu vira uma faixa no topo, igual ao do celular */
+@media (min-width: 651px) and (max-width: 900px) {
+  .pagina-notas {
+    flex-direction: column;
+  }
+
+  .menu-notas {
+    width: 100%;
+    min-height: auto;
+    padding: 12px 20px;
+    border-right: none;
+    border-bottom: 2px solid #168bff;
+  }
+
+  .logo-notas {
+    justify-content: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .logo-notas img {
+    max-width: 165px;
+  }
+
+  .navegacao-notas {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .item-menu-notas {
+    margin-left: 0;
+  }
+
+  .item-menu-notas img,
+  .sair-notas img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .sair-notas {
+    margin-top: 12px;
+    margin-left: 0;
+  }
+
+  .conteudo-notas {
+    padding: 18px 20px;
+  }
+
+  .tabela-notas {
+    min-width: 750px;
+  }
+}
+
+/* Celulares (até 650px): o "Sair" alinha com os outros itens */
+@media (max-width: 650px) {
+  .sair-notas {
+    margin-left: 0;
+  }
+}
+
+/* Celulares pequenos (até 480px) */
+@media (max-width: 480px) {
+  .topo-notas {
+    padding: 10px;
+  }
+
+  .navegacao-notas {
+    gap: 8px 12px;
+  }
+
+  .item-menu-notas span,
+  .sair-notas span {
+    font-size: 13px;
+  }
+
+  .filtro-periodo label,
+  .filtro-cliente label,
+  .filtro-status label {
+    font-size: 14px;
+  }
+
+  /* datas menores para as duas caberem lado a lado */
+  .campo-periodo {
+    padding: 0 4px;
+  }
+
+  .campo-data-notas input {
+    margin-left: 6px;
+    font-size: 14px;
+  }
+
+  .campo-data-notas img {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    margin-right: 4px;
+  }
+
+  /* se tiver muitas páginas, os botões quebram de linha */
+  .paginacao-notas {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
 }

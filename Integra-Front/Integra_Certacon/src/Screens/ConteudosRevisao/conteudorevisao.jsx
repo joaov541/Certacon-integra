@@ -12,6 +12,7 @@ import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import EditarQuadrado from "../../assets/Icones/EditarQuadrado.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
+import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 
 const dadosIniciais = [
     {
@@ -89,9 +90,17 @@ function ConteudoRevisao() {
     const [pesquisa, setPesquisa] = useState("");
 
     const contagens = {
-        Pendente: conteudos.filter((item) => item.status === "Pendente").length,
-        Aprovado: conteudos.filter((item) => item.status === "Aprovado").length,
-        Rejeitado: conteudos.filter((item) => item.status === "Rejeitado").length,
+        Pendente: conteudos.filter(
+            (item) => item.status === "Pendente"
+        ).length,
+
+        Aprovado: conteudos.filter(
+            (item) => item.status === "Aprovado"
+        ).length,
+
+        Rejeitado: conteudos.filter(
+            (item) => item.status === "Rejeitado"
+        ).length,
     };
 
     const listaFiltrada = conteudos.filter((item) => {
@@ -132,6 +141,7 @@ function ConteudoRevisao() {
             setConteudos((lista) =>
                 lista.filter((item) => item.id !== id)
             );
+
             setPagina(1);
         }
     }
@@ -150,9 +160,11 @@ function ConteudoRevisao() {
 
     return (
         <div className="revisao-pagina">
+
             <Sidebar />
 
             <main className="revisao-principal">
+
                 <Header
                     pesquisa={pesquisa}
                     setPesquisa={(valor) => {
@@ -162,71 +174,93 @@ function ConteudoRevisao() {
                 />
 
                 <section className="revisao-conteudo">
+
                     <h1 className="revisao-titulo">
                         Conteúdos para revisão
                     </h1>
 
+                    {/* ABAS */}
+
                     <div className="revisao-abas">
+
                         <button
-                            className={abaAtiva === "Pendente" ? "aba-revisao ativa" : "aba-revisao"}
+                            className={
+                                abaAtiva === "Pendente"
+                                    ? "aba-revisao ativa"
+                                    : "aba-revisao"
+                            }
                             onClick={() => mudarAba("Pendente")}
                         >
                             Pendentes ({contagens.Pendente})
                         </button>
 
                         <button
-                            className={abaAtiva === "Aprovado" ? "aba-revisao ativa" : "aba-revisao"}
+                            className={
+                                abaAtiva === "Aprovado"
+                                    ? "aba-revisao ativa"
+                                    : "aba-revisao"
+                            }
                             onClick={() => mudarAba("Aprovado")}
                         >
                             Aprovados ({contagens.Aprovado})
                         </button>
 
                         <button
-                            className={abaAtiva === "Rejeitado" ? "aba-revisao ativa" : "aba-revisao"}
+                            className={
+                                abaAtiva === "Rejeitado"
+                                    ? "aba-revisao ativa"
+                                    : "aba-revisao"
+                            }
                             onClick={() => mudarAba("Rejeitado")}
                         >
                             Rejeitados ({contagens.Rejeitado})
                         </button>
+
                     </div>
 
+                    {/* TABELA DESKTOP */}
+
                     <div className="revisao-tabela-container">
+
                         <table className="revisao-tabela">
+
                             <thead>
                                 <tr>
                                     <th>Título</th>
                                     <th>Tema</th>
                                     <th>Data de publicação</th>
                                     <th>Autor</th>
-                                    <th className="revisao-coluna-acoes">Ações</th>
+                                    <th className="revisao-coluna-acoes">
+                                        Ações
+                                    </th>
                                 </tr>
                             </thead>
 
                             <tbody>
+
                                 {listaPaginada.length > 0 ? (
-                                    listaPaginada.map((conteudo) => (
-                                        <tr key={conteudo.id}>
-                                            <td>{conteudo.titulo}</td>
+                                    listaPaginada.map((item) => (
+
+                                        <tr key={item.id}>
+
+                                            <td>{item.titulo}</td>
 
                                             <td>
-                                                <span
-                                                    className={`revisao-etiqueta tema-${conteudo.tema
-                                                        .toLowerCase()
-                                                        .replace(/\s+/g, "-")
-                                                        .replace(/[ãá]/g, "a")
-                                                        .replace(/[éê]/g, "e")}`}
-                                                >
-                                                    {conteudo.tema}
+                                                <span className="revisao-etiqueta">
+                                                    {item.tema}
                                                 </span>
                                             </td>
 
-                                            <td>{conteudo.data}</td>
-                                            <td>{conteudo.autor}</td>
+                                            <td>{item.data}</td>
+
+                                            <td>{item.autor}</td>
 
                                             <td className="revisao-coluna-acoes">
+
                                                 <button
                                                     className="revisao-acao editar"
                                                     title="Editar conteúdo"
-                                                    onClick={() => editarConteudo(conteudo)}
+                                                    onClick={() => editarConteudo(item)}
                                                 >
                                                     <img src={EditarQuadrado} alt="Editar" />
                                                 </button>
@@ -234,43 +268,126 @@ function ConteudoRevisao() {
                                                 <button
                                                     className="revisao-acao excluir"
                                                     title="Excluir conteúdo"
-                                                    onClick={() => excluirConteudo(conteudo.id)}
+                                                    onClick={() => excluirConteudo(item.id)}
                                                 >
                                                     <img src={Lixeira} alt="Excluir" />
                                                 </button>
 
                                                 {abaAtiva === "Pendente" && (
                                                     <div className="revisao-acoes-status">
+
                                                         <button
                                                             title="Aprovar conteúdo"
-                                                            onClick={() => alterarStatus(conteudo.id, "Aprovado")}
+                                                            onClick={() =>
+                                                                alterarStatus(item.id, "Aprovado")
+                                                            }
                                                         >
                                                             ✓
                                                         </button>
 
                                                         <button
                                                             title="Rejeitar conteúdo"
-                                                            onClick={() => alterarStatus(conteudo.id, "Rejeitado")}
+                                                            onClick={() =>
+                                                                alterarStatus(item.id, "Rejeitado")
+                                                            }
                                                         >
                                                             ×
                                                         </button>
+
                                                     </div>
                                                 )}
+
                                             </td>
+
                                         </tr>
+
                                     ))
                                 ) : (
+
                                     <tr>
                                         <td colSpan="5" className="revisao-vazio">
                                             Nenhum conteúdo encontrado.
                                         </td>
                                     </tr>
+
                                 )}
+
                             </tbody>
+
                         </table>
+
                     </div>
 
+                    {/* CARTÕES MOBILE */}
+
+                    <div className="revisao-cartoes">
+
+                        {listaPaginada.length > 0 ? (
+
+                            listaPaginada.map((item) => (
+
+                                <article className="revisao-cartao" key={item.id}>
+
+                                    <div className="cartao-campo cartao-titulo">
+                                        <strong>Título</strong>
+                                        <span>{item.titulo}</span>
+                                    </div>
+
+                                    <div className="cartao-campo cartao-data">
+                                        <strong>Data de publicação</strong>
+                                        <span>{item.data}</span>
+                                    </div>
+
+                                    <div className="cartao-campo cartao-tema">
+                                        <strong>Tema</strong>
+                                        <span className="revisao-etiqueta">
+                                            {item.tema}
+                                        </span>
+                                    </div>
+
+                                    <div className="cartao-campo cartao-autor">
+                                        <strong>Autor</strong>
+                                        <span>{item.autor}</span>
+                                    </div>
+
+                                    <div className="cartao-acoes">
+
+                                        <button
+                                            className="revisao-acao editar"
+                                            title="Editar conteúdo"
+                                            onClick={() => editarConteudo(item)}
+                                        >
+                                            <img src={EditarQuadrado} alt="Editar" />
+                                        </button>
+
+                                        <button
+                                            className="revisao-acao excluir"
+                                            title="Excluir conteúdo"
+                                            onClick={() => excluirConteudo(item.id)}
+                                        >
+                                            <img src={Lixeira} alt="Excluir" />
+                                        </button>
+
+                                    </div>
+
+                                </article>
+
+                            ))
+
+                        ) : (
+
+                            <p className="revisao-vazio-mobile">
+                                Nenhum conteúdo encontrado.
+                            </p>
+
+                        )}
+
+                    </div>
+
+                    {/* PAGINAÇÃO */}
+
                     <div className="revisao-paginacao">
+
                         <button
                             disabled={paginaAtual === 1}
                             onClick={() => setPagina(paginaAtual - 1)}
@@ -283,13 +400,19 @@ function ConteudoRevisao() {
                             { length: totalPaginas },
                             (_, indice) => indice + 1
                         ).map((numero) => (
+
                             <button
                                 key={numero}
-                                className={paginaAtual === numero ? "pagina-ativa" : ""}
+                                className={
+                                    paginaAtual === numero
+                                        ? "pagina-ativa"
+                                        : ""
+                                }
                                 onClick={() => setPagina(numero)}
                             >
                                 {numero}
                             </button>
+
                         ))}
 
                         <button
@@ -299,45 +422,69 @@ function ConteudoRevisao() {
                         >
                             {">"}
                         </button>
+
                     </div>
+
                 </section>
+
             </main>
+
         </div>
     );
 }
 
+/* MENU LATERAL E INFERIOR */
+
 function Sidebar() {
+    const telaSelecionada = "Conteúdos";
+
+    const itensMenu = [
+        { nome: "Início", icone: CasaBranca },
+        { nome: "Conteúdos", icone: LivroBranco },
+        { nome: "Notas Fiscais", icone: DoisDocumentosBranco },
+        { nome: "Clientes", icone: ADDProfileBranco },
+        { nome: "Usuários", icone: PessoaBranca },
+    ];
+
     return (
         <aside className="revisao-sidebar">
+
             <div className="revisao-logo">
                 <img src={LogoNome} alt="Integra" />
             </div>
 
             <nav className="revisao-menu">
-                <a href="#" className="revisao-menu-item">
-                    <img src={CasaBranca} alt="" />
-                    <span>Início</span>
-                </a>
 
-                <a href="#" className="revisao-menu-item revisao-menu-ativo">
-                    <img src={LivroBranco} alt="" />
-                    <span>Conteúdos</span>
-                </a>
+                {itensMenu.map((item) => {
 
-                <a href="#" className="revisao-menu-item">
-                    <img src={DoisDocumentosBranco} alt="" />
-                    <span>Notas Fiscais</span>
-                </a>
+                    const selecionado = telaSelecionada === item.nome;
 
-                <a href="#" className="revisao-menu-item">
-                    <img src={ADDProfileBranco} alt="" />
-                    <span>Clientes</span>
-                </a>
+                    return (
+                        <a
+                            href="#"
+                            key={item.nome}
+                            className={
+                                selecionado
+                                    ? "revisao-menu-item revisao-menu-ativo"
+                                    : "revisao-menu-item"
+                            }
+                            onClick={(e) => e.preventDefault()}
+                        >
+                            <img
+                                src={item.icone}
+                                alt=""
+                                className={
+                                    selecionado
+                                        ? "icone-menu-selecionado"
+                                        : ""
+                                }
+                            />
 
-                <a href="#" className="revisao-menu-item">
-                    <img src={PessoaBranca} alt="" />
-                    <span>Usuários</span>
-                </a>
+                            <span>{item.nome}</span>
+                        </a>
+                    );
+                })}
+
             </nav>
 
             <button
@@ -347,34 +494,94 @@ function Sidebar() {
                 <img src={SairBranco} alt="" />
                 <span>Sair</span>
             </button>
+
         </aside>
     );
 }
 
+/* CABEÇALHO */
+
 function Header({ pesquisa, setPesquisa }) {
     return (
-        <header className="revisao-header">
-            <div className="revisao-busca">
-                <img src={LupaCinza} alt="" />
-                <input
-                    type="text"
-                    placeholder="Buscar conteúdos, notas fiscais, etc..."
-                    value={pesquisa}
-                    onChange={(e) => setPesquisa(e.target.value)}
-                />
-            </div>
+        <>
 
-            <div className="revisao-usuario">
-                <div className="revisao-avatar">JS</div>
+            {/* HEADER MOBILE */}
 
-                <div className="revisao-dados-usuario">
-                    <strong>João Silva</strong>
-                    <span>Analista SPED</span>
+            <header className="revisao-header-mobile">
+
+                <div className="revisao-header-superior-mobile">
+
+                    <img
+                        src={LogoNomeMobile}
+                        alt="Integra"
+                        className="revisao-logo-mobile"
+                    />
+
+                    <div className="revisao-usuario-mobile">
+
+                        <div className="revisao-avatar-mobile">
+                            JS
+                        </div>
+
+                        <div className="revisao-dados-mobile">
+                            <strong>João Silva</strong>
+                            <span>Analista SPED</span>
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <span className="revisao-opcoes">•••</span>
-            </div>
-        </header>
+                <div className="revisao-busca-mobile">
+
+                    <img src={LupaCinza} alt="" />
+
+                    <input
+                        type="text"
+                        placeholder="Buscar conteúdos, notas fiscais, etc..."
+                        value={pesquisa}
+                        onChange={(e) => setPesquisa(e.target.value)}
+                    />
+
+                </div>
+
+            </header>
+
+            {/* HEADER DESKTOP */}
+
+            <header className="revisao-header">
+
+                <div className="revisao-busca">
+
+                    <img src={LupaCinza} alt="" />
+
+                    <input
+                        type="text"
+                        placeholder="Buscar conteúdos, notas fiscais, etc..."
+                        value={pesquisa}
+                        onChange={(e) => setPesquisa(e.target.value)}
+                    />
+
+                </div>
+
+                <div className="revisao-usuario">
+
+                    <div className="revisao-avatar">
+                        JS
+                    </div>
+
+                    <div className="revisao-dados-usuario">
+                        <strong>João Silva</strong>
+                        <span>Analista SPED</span>
+                    </div>
+
+                    <span className="revisao-opcoes">•••</span>
+
+                </div>
+
+            </header>
+
+        </>
     );
 }
 

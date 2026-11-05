@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import "./conteudoTributario.css";
 
@@ -11,41 +12,41 @@ import ExpandirText from "../../assets/Icones/ExpandirText.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
-import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png"
+import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import iconeConteudo from "../../assets/Icones/DoisDocumentos.png";
 
 const dadosIniciais = [
   {
     id: 1,
-    titulo: "Reforma Tributária",
+    titulo: "Reforma tributária",
     tema: "Reforma Tributária",
-    data: "12/04/2025",
-    autor: "Maria Oliveira",
+    data: "09/10/2026",
+    autor: "Maria de Oliveira",
   },
   {
     id: 2,
-    titulo: "SPED fiscal 2025",
+    titulo: "SPED Fiscal 2025",
     tema: "SPED",
-    data: "14/04/2025",
-    autor: "Carlos Mendes",
+    data: "12/09/2022",
+    autor: "João da Silva",
   },
   {
     id: 3,
-    titulo: "Notas Fiscais",
-    tema: "Notas Fiscais",
-    data: "26/04/2025",
-    autor: "Ana Costa",
+    titulo: "Atualização das Tabelas",
+    tema: "Reforma Tributária",
+    data: "08/08/2028",
+    autor: "Lívia Frete",
   },
   {
     id: 4,
-    titulo: "ICMS",
-    tema: "ICMS",
-    data: "27/04/2025",
-    autor: "Juliana Souza",
+    titulo: "Validação Chave Acesso",
+    tema: "Reforma Tributária",
+    data: "05/08/2020",
+    autor: "Hugo Xavier",
   },
   {
     id: 5,
-    titulo: "PES/CONFINS",
+    titulo: "PIS/Configurações",
     tema: "PES/CONFINS",
     data: "10/05/2025",
     autor: "Carlos Mendes",
@@ -61,6 +62,7 @@ function ConteudoTributario() {
   const listaFiltrada = conteudos
     .filter((conteudo) => {
       const texto = pesquisa.toLowerCase();
+
       const encontrouTexto =
         conteudo.titulo.toLowerCase().includes(texto) ||
         conteudo.tema.toLowerCase().includes(texto);
@@ -97,14 +99,18 @@ function ConteudoTributario() {
       <Sidebar />
 
       <main className="principal-conteudos">
-        <Header pesquisa={pesquisa} setPesquisa={setPesquisa} />
+        <Header
+          pesquisa={pesquisa}
+          setPesquisa={setPesquisa}
+        />
 
         <section className="area-lista-conteudos">
           <div className="titulo-conteudos">
             <div>
-              <h1>Conteúdos tributários</h1>
+              <h1>Conteúdos Tributários</h1>
+
               <p>
-                Explore nossos conteúdos por tema, mantenha-se atualizado
+                Explore conteúdos por tema, mantenha-se conectado
               </p>
             </div>
 
@@ -119,6 +125,7 @@ function ConteudoTributario() {
               <span className="adicionar-conteudo-texto">
                 + Adicionar Conteúdo
               </span>
+
               <span className="adicionar-conteudo-mais">+</span>
             </button>
           </div>
@@ -126,6 +133,7 @@ function ConteudoTributario() {
           <div className="filtros-conteudos">
             <div className="pesquisa-lista-conteudos">
               <img src={LupaCinza} alt="" />
+
               <input
                 type="text"
                 placeholder="Buscar por título ou palavra-chave"
@@ -148,6 +156,7 @@ function ConteudoTributario() {
                 <option value="ICMS">ICMS</option>
                 <option value="PES/CONFINS">PES/CONFINS</option>
               </select>
+
               <img src={ExpandirText} alt="" />
             </div>
 
@@ -159,6 +168,7 @@ function ConteudoTributario() {
                 <option value="recentes">Mais recentes</option>
                 <option value="antigos">Mais antigos</option>
               </select>
+
               <img src={ExpandirText} alt="" />
             </div>
           </div>
@@ -185,10 +195,11 @@ function ConteudoTributario() {
                           alt=""
                           className="icone-card-conteudo"
                         />
+
                         <strong>{conteudo.titulo}</strong>
                       </td>
 
-                      <td>
+                      <td className="celula-tema">
                         <span
                           className={`etiqueta-tema ${
                             conteudo.tema === "SPED"
@@ -206,8 +217,13 @@ function ConteudoTributario() {
                         </span>
                       </td>
 
-                      <td>{conteudo.data}</td>
-                      <td>{conteudo.autor}</td>
+                      <td className="celula-data">
+                        {conteudo.data}
+                      </td>
+
+                      <td className="celula-autor">
+                        {conteudo.autor}
+                      </td>
 
                       <td className="coluna-acoes">
                         <button
@@ -233,6 +249,8 @@ function ConteudoTributario() {
           </div>
         </section>
       </main>
+
+      <FooterMobile />
     </div>
   );
 }
@@ -286,9 +304,11 @@ function Sidebar() {
 function Header({ pesquisa, setPesquisa }) {
   return (
     <>
+      {/* Cabeçalho desktop */}
       <header className="topo-conteudos">
         <div className="pesquisa-topo-conteudos">
           <img src={LupaCinza} alt="" />
+
           <input
             type="text"
             placeholder="Buscar conteúdos, notas fiscais, etc..."
@@ -299,6 +319,7 @@ function Header({ pesquisa, setPesquisa }) {
 
         <div className="usuario-conteudos">
           <div className="foto-usuario">JS</div>
+
           <div className="dados-usuario">
             <strong>João Silva</strong>
             <span>Analista SPED</span>
@@ -306,24 +327,68 @@ function Header({ pesquisa, setPesquisa }) {
         </div>
       </header>
 
+      {/* Cabeçalho mobile */}
       <header className="home-header-mobile">
-        <img
-          src={LogoNomeMobile}
-          alt="Integra"
-          className="home-logo-mobile"
-        />
+        <div className="home-header-superior-mobile">
+          <img
+            src={LogoNomeMobile}
+            alt="Integra"
+            className="home-logo-mobile"
+          />
+
+          <div className="usuario-mobile">
+            <div className="foto-usuario-mobile">JS</div>
+
+            <div className="dados-usuario-mobile">
+              <strong>João Silva</strong>
+              <span>Analista SPED</span>
+            </div>
+          </div>
+        </div>
 
         <div className="home-busca-mobile">
           <img src={LupaCinza} alt="" />
+
           <input
             type="text"
-            placeholder="Pesquisar..."
+            placeholder="Buscar conteúdos, notas fiscais, etc..."
             value={pesquisa}
             onChange={(e) => setPesquisa(e.target.value)}
           />
         </div>
       </header>
     </>
+  );
+}
+
+function FooterMobile() {
+  return (
+    <footer className="footer-conteudos-mobile">
+      <a href="#" className="item-footer-mobile">
+        <img src={CasaBranca} alt="" />
+        <span>Início</span>
+      </a>
+
+      <a href="#" className="item-footer-mobile footer-ativo">
+        <img src={LivroBranco} alt="" />
+        <span>Conteúdos</span>
+      </a>
+
+      <a href="#" className="item-footer-mobile">
+        <img src={DoisDocumentosBranco} alt="" />
+        <span>Notas Fiscais</span>
+      </a>
+
+      <a href="#" className="item-footer-mobile">
+        <img src={ADDProfileBranco} alt="" />
+        <span>Clientes</span>
+      </a>
+
+      <a href="#" className="item-footer-mobile">
+        <img src={PessoaBranca} alt="" />
+        <span>Usuários</span>
+      </a>
+    </footer>
   );
 }
 

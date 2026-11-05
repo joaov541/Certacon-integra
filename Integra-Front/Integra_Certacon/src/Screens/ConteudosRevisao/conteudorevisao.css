@@ -1,5 +1,7 @@
 
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -12,16 +14,17 @@
     font-family: Arial, sans-serif;
 }
 
-/* Menu lateral */
+/* MENU LATERAL */
 
 .revisao-sidebar {
     display: flex;
     flex-direction: column;
+    width: 334px;
     min-height: 100vh;
     padding: 20px 15px 24px;
     background: #1d2e68;
     color: #fff;
-    width: 334px;
+    flex-shrink: 0;
 }
 
 .revisao-logo {
@@ -29,6 +32,13 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 24px;
+}
+
+.revisao-logo img {
+    width: 100%;
+    max-width: 280px;
+    height: 90px;
+    object-fit: contain;
 }
 
 .revisao-menu {
@@ -42,13 +52,13 @@
     align-items: center;
     gap: 10px;
     min-height: 40px;
+    margin-left: 20px;
     padding: 8px 10px;
     border-radius: 5px;
     color: #fff;
     font-size: 11px;
     text-decoration: none;
     transition: background 0.2s;
-    margin-left: 20px;
 }
 
 .revisao-menu-item:hover,
@@ -71,13 +81,13 @@
     align-items: center;
     gap: 10px;
     margin-top: auto;
+    margin-left: 20px;
     padding: 8px 10px;
     border: none;
     background: transparent;
     color: #fff;
-    font-size: 11px;
+    font-size: 14px;
     cursor: pointer;
-    margin-left: 20px;
 }
 
 .revisao-sair img {
@@ -86,11 +96,7 @@
     object-fit: contain;
 }
 
-.revisao-sair span {
-    font-size: 14px;
-}
-
-/* Conteúdo principal */
+/* CONTEÚDO PRINCIPAL */
 
 .revisao-principal {
     display: flex;
@@ -99,7 +105,7 @@
     min-width: 0;
 }
 
-/* Cabeçalho */
+/* HEADER DESKTOP */
 
 .revisao-header {
     display: flex;
@@ -186,7 +192,13 @@
     font-size: 12px;
 }
 
-/* Área de revisão */
+/* HEADER MOBILE */
+
+.revisao-header-mobile {
+    display: none;
+}
+
+/* ÁREA DE REVISÃO */
 
 .revisao-conteudo {
     display: flex;
@@ -202,7 +214,7 @@
     font-weight: 700;
 }
 
-/* Abas */
+/* ABAS */
 
 .revisao-abas {
     display: grid;
@@ -235,7 +247,7 @@
     color: #4479b1;
 }
 
-/* Tabela */
+/* TABELA DESKTOP */
 
 .revisao-tabela-container {
     width: 100%;
@@ -302,7 +314,7 @@
     text-align: center !important;
 }
 
-/* Etiquetas centralizadas */
+/* ETIQUETAS */
 
 .revisao-etiqueta {
     display: block;
@@ -319,37 +331,7 @@
     white-space: nowrap;
 }
 
-.tema-sped {
-    background: #e3f2fc;
-    color: #2f69a5;
-}
-
-.tema-icms {
-    background: #fdebef;
-    color: #d8677e;
-}
-
-.tema-notas-fiscais {
-    background: #e6f2fb;
-    color: #2f69a5;
-}
-
-.tema-reforma-tributaria {
-    background: #e4f2fb;
-    color: #2f69a5;
-}
-
-.tema-pes-confins {
-    background: #e0f4f4;
-    color: #67aeb4;
-}
-
-.tema-padrao {
-    background: #e4f2fb;
-    color: #6198d2;
-}
-
-/* Botões de ação */
+/* AÇÕES */
 
 .revisao-acao {
     display: inline-flex;
@@ -397,7 +379,17 @@
     text-align: center !important;
 }
 
-/* Paginação */
+/* CARTÕES */
+
+.revisao-cartoes {
+    display: none;
+}
+
+.revisao-vazio-mobile {
+    display: none;
+}
+
+/* PAGINAÇÃO */
 
 .revisao-paginacao {
     display: flex;
@@ -438,28 +430,54 @@
     cursor: not-allowed;
 }
 
-/* Responsividade */
+/* TABLETS */
 
-@media (max-width: 900px) {
+@media (min-width: 601px) and (max-width: 900px) {
+
     .revisao-sidebar {
-        flex-basis: 155px;
-        padding-right: 10px;
-        padding-left: 10px;
+        width: 200px;
+        padding: 20px 10px;
+    }
+
+    .revisao-logo img {
+        height: 75px;
+    }
+
+    .revisao-menu-item {
+        gap: 8px;
+        margin-left: 0;
+        padding: 8px 5px;
+    }
+
+    .revisao-menu-item img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .revisao-menu-item span {
+        font-size: 12px;
+    }
+
+    .revisao-sair {
+        margin-left: 0;
     }
 
     .revisao-header {
-        padding-right: 18px;
-        padding-left: 18px;
+        gap: 12px;
+        padding: 12px 15px;
+    }
+
+    .revisao-busca {
+        max-width: 60%;
     }
 
     .revisao-conteudo {
-        padding-right: 15px;
-        padding-left: 15px;
+        padding: 22px 15px;
     }
 
     .revisao-titulo {
         margin-left: 10px;
-        font-size: 22px;
+        font-size: 21px;
     }
 
     .aba-revisao {
@@ -468,87 +486,448 @@
     }
 
     .revisao-tabela-container {
-        padding: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .revisao-sidebar {
-        flex-basis: 65px;
-        align-items: center;
-        padding: 15px 6px;
-    }
-
-    .revisao-logo img {
-        height: 40px;
-    }
-
-    .revisao-menu-item {
-        justify-content: center;
-        padding: 8px 5px;
-    }
-
-    .revisao-menu-item img {
-        width: 23px;
-        height: 23px;
-    }
-
-    .revisao-menu-item span,
-    .revisao-sair span {
-        display: none;
-    }
-
-    .revisao-sair {
-        justify-content: center;
-        padding: 8px 5px;
-    }
-
-    .revisao-header {
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 12px;
-    }
-
-    .revisao-busca {
-        flex-basis: 100%;
-        max-width: none;
-    }
-
-    .revisao-usuario {
-        margin-left: auto;
-    }
-
-    .revisao-conteudo {
-        padding: 20px 10px;
-    }
-
-    .revisao-titulo {
-        margin: 0 0 20px;
-        font-size: 20px;
-    }
-
-    .revisao-abas {
-        gap: 3px;
-        margin-bottom: 22px;
-    }
-
-    .aba-revisao {
-        width: 100%;
-        padding: 9px 3px;
-        font-size: 12px;
+        padding: 0 5px;
     }
 
     .revisao-tabela {
-        min-width: 700px;
+        min-width: 650px;
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 600px) {
+
+    .revisao-pagina {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+        background: #f3f6fc;
+        overflow-x: hidden;
     }
 
+    .revisao-principal {
+        width: 100%;
+        min-width: 0;
+        padding-bottom: 70px;
+        background: #f3f6fc;
+    }
+
+    /* MENU INFERIOR */
+
+    .revisao-sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 65px;
+        min-height: 65px;
+        padding: 5px;
+        background: #1d2e68;
+    }
+
+    .revisao-logo {
+        display: none;
+    }
+
+    .revisao-menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        gap: 0;
+    }
+
+    .revisao-menu-item {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        min-height: 50px;
+        margin: 0;
+        padding: 5px 2px;
+        border-radius: 5px;
+    }
+
+    .revisao-menu-item img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .revisao-menu-item span {
+        display: block;
+        font-size: 9px;
+    }
+
+    .revisao-sair {
+        display: none;
+    }
+
+    /* DESTAQUE LARANJA SOMENTE NO MOBILE */
+
+    .revisao-menu-item.revisao-menu-ativo {
+        background: transparent;
+    }
+
+    .revisao-menu-item.revisao-menu-ativo img {
+        filter: brightness(0) saturate(100%)
+            invert(55%) sepia(98%) saturate(1500%)
+            hue-rotate(359deg) brightness(102%) contrast(105%);
+    }
+
+    .revisao-menu-item.revisao-menu-ativo span {
+        color: #ff8500;
+        font-weight: bold;
+    }
+
+    /* HEADER MOBILE */
+
+    .revisao-header {
+        display: none;
+    }
+
+    .revisao-header-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        min-height: 94px;
+        padding: 10px 17px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
+    }
+
+    .revisao-header-superior-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .revisao-logo-mobile {
+        display: block;
+        flex-shrink: 0;
+        width: 145px;
+        max-width: 45%;
+        max-height: 48px;
+        object-fit: contain;
+        object-position: left center;
+    }
+
+    /* PERFIL DO USUÁRIO */
+
+    .revisao-usuario-mobile {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        min-width: 0;
+    }
+
+    .revisao-avatar-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #1d2e68;
+        color: #fff;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .revisao-dados-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+
+    .revisao-dados-mobile strong {
+        color: #252a33;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .revisao-dados-mobile span {
+        color: #888;
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+    /* PESQUISA MOBILE */
+
+    .revisao-busca-mobile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        height: 32px;
+        padding: 0 12px;
+        border: 1px solid #a8a8a8;
+        border-radius: 6px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .revisao-busca-mobile img {
+        display: block;
+        flex-shrink: 0;
+        width: 19px;
+        height: 19px;
+        object-fit: contain;
+    }
+
+    .revisao-busca-mobile input {
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #333;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+    }
+
+    .revisao-busca-mobile input::placeholder {
+        color: #888;
+    }
+
+    /* CONTEÚDO */
+
+    .revisao-conteudo {
+        width: 100%;
+        padding: 14px 15px 25px;
+        background: #f3f6fc;
+    }
+
+    .revisao-titulo {
+        margin: 0 0 26px;
+        color: #1d2e68;
+        font-size: 20px;
+    }
+
+    /* ABAS */
+
+    .revisao-abas {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        margin-bottom: 24px;
+        padding-bottom: 9px;
+        border-bottom: 1px solid #333;
+    }
+
+    .aba-revisao {
+        justify-self: stretch;
+        min-width: 0;
+        padding: 9px 3px;
+        border-radius: 5px 5px 0 0;
+        color: #6685ad;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .aba-revisao.ativa {
+        background: #91b8e3;
+        color: #fff;
+    }
+
+    /* ESCONDE TABELA */
+
+    .revisao-tabela-container {
+        display: none;
+    }
+
+    /* CARTÕES MOBILE */
+
+    .revisao-cartoes {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .revisao-cartao {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) auto;
+        grid-template-areas:
+            "titulo data acoes"
+            "tema autor acoes";
+        gap: 4px 8px;
+        padding: 8px;
+        border: 1px solid #c4cbd4;
+        border-radius: 9px;
+        background: #f3f6fc;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .cartao-campo {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+        font-size: 12px;
+    }
+
+    .cartao-campo strong {
+        width: fit-content;
+        border-bottom: 1px solid #111;
+        color: #111;
+        font-size: 16px;
+    }
+
+    .cartao-campo > span:not(.revisao-etiqueta) {
+        overflow-wrap: anywhere;
+    }
+
+    .cartao-titulo {
+        grid-area: titulo;
+    }
+
+    .cartao-data {
+        grid-area: data;
+        align-items: center;
+    }
+
+    .cartao-tema {
+        grid-area: tema;
+    }
+
+    .cartao-autor {
+        grid-area: autor;
+    }
+
+    .cartao-tema .revisao-etiqueta {
+        width: fit-content;
+        margin: 0;
+    }
+
+    .revisao-etiqueta {
+        max-width: 100%;
+        font-size: 11px;
+    }
+
+    .cartao-acoes {
+        display: flex;
+        grid-area: acoes;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .cartao-acoes .revisao-acao {
+        width: 34px;
+        height: 34px;
+    }
+
+    .cartao-acoes .revisao-acao img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .revisao-vazio-mobile {
+        display: block;
+        padding: 20px 5px;
+        color: #777;
+        text-align: center;
+    }
+
+    /* PAGINAÇÃO */
+
     .revisao-paginacao {
+        justify-content: flex-end;
         gap: 6px;
-        padding-top: 25px;
+        margin-top: 18px;
+        padding: 25px 5px 0;
     }
 
     .revisao-paginacao button {
-        width: 29px;
-        height: 29px;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        font-size: 12px;
+    }
+
+    .revisao-paginacao button.pagina-ativa {
+        border-color: #2d4699;
+        background: #2d4699;
+    }
+}
+
+/* CELULARES MUITO ESTREITOS */
+
+@media (max-width: 350px) {
+
+    .revisao-header-mobile {
+        padding: 9px 12px;
+    }
+
+    .revisao-logo-mobile {
+        width: 125px;
+    }
+
+    .revisao-usuario-mobile {
+        gap: 5px;
+    }
+
+    .revisao-avatar-mobile {
+        width: 34px;
+        height: 34px;
+    }
+
+    .revisao-dados-mobile strong {
+        font-size: 10px;
+    }
+
+    .revisao-dados-mobile span {
+        font-size: 8px;
+    }
+
+    .revisao-conteudo {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .revisao-titulo {
+        font-size: 18px;
+    }
+
+    .aba-revisao {
+        font-size: 11px;
+    }
+
+    .revisao-cartao {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+        gap: 5px;
+        padding: 7px;
+    }
+
+    .cartao-campo strong {
+        font-size: 14px;
+    }
+
+    .cartao-campo {
+        font-size: 10px;
+    }
+
+    .cartao-acoes .revisao-acao {
+        width: 27px;
+        height: 27px;
+    }
+
+    .cartao-acoes .revisao-acao img {
+        width: 24px;
+        height: 24px;
     }
 }

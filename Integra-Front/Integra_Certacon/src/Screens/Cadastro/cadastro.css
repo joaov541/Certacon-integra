@@ -1,3 +1,4 @@
+
 * {
     box-sizing: border-box;
 }
@@ -582,47 +583,68 @@
 /* Responsividade para celulares */
 
 @media (max-width: 650px) {
+
+    /* Estrutura principal */
+
     .cadastro {
+        display: flex;
         flex-direction: column;
+        width: 100%;
+        height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
     }
 
-    /* painel azul vira só a marca no topo */
+    /* Remove completamente o painel azul */
+
     .cadastro-apresentacao {
-        flex: none;
-        min-height: auto;
-        padding: 16px 20px;
-        box-shadow: none;
-    }
-
-    .cadastro-marca {
-        justify-content: center;
-        margin-bottom: 0;
-    }
-
-    .cadastro-logo {
-        width: 50px;
-        height: 50px;
-        margin-top: 0;
-    }
-
-    .cadastro-marca-texto h2 {
-        font-size: 20px;
-    }
-
-    .cadastro-marca-texto p,
-    .cadastro-texto,
-    .cadastro-vantagens {
         display: none;
     }
 
-    /* formulário */
+    /* Área do formulário com rolagem */
+
     .cadastro-area {
-        min-height: auto;
-        padding: 14px;
+        display: block;
+        width: 100%;
+        height: 100dvh;
+        min-height: 0;
+        padding: 60px 14px 14px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
+    /* Já tem uma conta? e botão Entrar fixos */
+
+    .cadastro-topo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        min-height: 50px;
+        margin: 0;
+        padding: 0 20px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 14px;
+        background: #f2f4f7;
+        z-index: 10;
+    }
+
+    .cadastro-botao-entrar {
+        padding: 5px 12px;
+        font-size: 13px;
+    }
+
+    /* Cartão do formulário */
+
     .cadastro-cartao {
+        width: 100%;
+        flex: none;
+        min-width: 0;
         padding: 18px 14px;
+        margin-bottom: 10px;
     }
 
     .cadastro-cabecalho {
@@ -633,6 +655,8 @@
         font-size: 28px;
     }
 
+    /* Campos em uma coluna */
+
     .cadastro-grade {
         grid-template-columns: 1fr;
         row-gap: 18px;
@@ -641,6 +665,8 @@
     .cadastro-campo-largo {
         grid-column: auto;
     }
+
+    /* Botão de verificar CNPJ */
 
     .cadastro-botao-verificar {
         width: 100%;

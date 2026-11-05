@@ -15,13 +15,16 @@
     color: #111;
 }
 
-/* MENU LATERAL */
+/* =====================================
+   MENU LATERAL
+===================================== */
 
 .menu-novo-conteudo {
     display: flex;
     flex-direction: column;
+    flex: 0 0 334px;
     width: 334px;
-    min-width: 214px;
+    min-width: 334px;
     min-height: 100vh;
     padding: 25px 20px;
     background: var(--azul-integra);
@@ -48,17 +51,6 @@
     display: none;
 }
 
-.simbolo-logo {
-    color: var(--laranja-integra);
-    font-size: 38px;
-    line-height: 1;
-}
-
-.logo-novo-conteudo span {
-    font-size: 27px;
-    letter-spacing: 1px;
-}
-
 .navegacao-novo-conteudo {
     display: flex;
     flex-direction: column;
@@ -80,12 +72,6 @@
     width: 35px;
     height: 35px;
     object-fit: contain;
-}
-
-.item-menu-novo span {
-    width: 23px;
-    font-size: 22px;
-    text-align: center;
 }
 
 .item-menu-novo:hover,
@@ -114,7 +100,9 @@
     object-fit: contain;
 }
 
-/* ÁREA PRINCIPAL */
+/* =====================================
+   ÁREA PRINCIPAL
+===================================== */
 
 .principal-novo-conteudo {
     display: flex;
@@ -123,38 +111,68 @@
     min-width: 0;
 }
 
-/* CABEÇALHO */
+/* =====================================
+   CONTROLE DOS HEADERS
+===================================== */
+
+.header-desktop {
+    display: block;
+    width: 100%;
+}
+
+.header-mobile {
+    display: none;
+    width: 100%;
+}
+
+/* =====================================
+   HEADER DESKTOP
+===================================== */
 
 .topo-novo-conteudo {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 25px;
+
+    width: 100%;
     min-height: 89px;
+    flex-shrink: 0;
     padding: 15px 25px;
+
     background: #fff;
 }
 
 .pesquisa-topo-novo {
-    display: flex;
+     display: flex;
     align-items: center;
+    gap: 14px;
+
     flex: 1;
-    gap: 12px;
-    max-width: 700px;
-    height: 41px;
-    padding: 0 14px;
-    border-radius: 7px;
-    background: #f3f6fc;
+    min-width: 0;
+    max-width: 950px;
+    height: 37px;
+
+    padding: 0 24px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    background: #f4f7fb;
 }
 
-.pesquisa-topo-novo span {
-    color: #777;
-    font-size: 24px;
+.icone-lupa-header {
+    display: block;
+    flex-shrink: 0;
+    width: 23px;
+    height: 23px;
+    object-fit: contain;
 }
 
 .pesquisa-topo-novo input {
     width: 100%;
     min-width: 0;
+    height: 100%;
     border: none;
     outline: none;
     background: transparent;
@@ -172,6 +190,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     width: 42px;
     height: 42px;
     border-radius: 50%;
@@ -197,25 +216,25 @@
     font-size: 11px;
 }
 
-.opcoes-usuario-novo {
-    color: #777;
-    font-size: 20px;
-}
-
-/* CONTEÚDO DA PÁGINA */
+/* =====================================
+   CONTEÚDO DA PÁGINA
+===================================== */
 
 .area-novo-conteudo {
     flex: 1;
+    min-width: 0;
     padding: 40px 35px;
 }
 
 .area-novo-conteudo h1 {
     margin: 0 0 30px;
     font-size: 27px;
-    color: #1d2e68;
+    color: var(--azul-integra);
 }
 
-/* FORMULÁRIO */
+/* =====================================
+   FORMULÁRIO
+===================================== */
 
 .formulario-conteudo {
     display: grid;
@@ -240,7 +259,7 @@
 .campo-conteudo label {
     font-size: 14px;
     font-weight: 600;
-    color: #1d2e68;
+    color: var(--azul-integra);
 }
 
 /* CAMPOS DE TEXTO */
@@ -263,7 +282,9 @@
     border-color: var(--azul-integra);
 }
 
-/* CAMPO TEMA */
+/* =====================================
+   CAMPO TEMA
+===================================== */
 
 .select-tema-container {
     position: relative;
@@ -285,14 +306,14 @@
     right: 12px;
     width: 18px;
     height: 18px;
-    margin: 0;
-    padding: 0;
     object-fit: contain;
     transform: translateY(-50%);
     pointer-events: none;
 }
 
-/* EDITOR DE TEXTO */
+/* =====================================
+   EDITOR DE TEXTO
+===================================== */
 
 .editor-conteudo {
     width: 100%;
@@ -352,7 +373,9 @@
     pointer-events: none;
 }
 
-/* ENVIO DE ARQUIVO */
+/* =====================================
+   ENVIO DE ARQUIVO
+===================================== */
 
 .area-arquivo {
     min-width: 0;
@@ -394,7 +417,7 @@
 }
 
 .caixa-upload > span {
-    color: #1d2e68;
+    color: var(--azul-integra);
     font-size: 12px;
 }
 
@@ -403,7 +426,7 @@
     flex-direction: column;
     gap: 7px;
     margin-top: 22px;
-    color: #1d2e68;
+    color: var(--azul-integra);
     font-size: 11px;
 }
 
@@ -419,7 +442,9 @@
     display: none;
 }
 
-/* BOTÕES */
+/* =====================================
+   BOTÕES
+===================================== */
 
 .botoes-conteudo {
     display: flex;
@@ -445,7 +470,7 @@
 
 .botao-cancelar:hover {
     background: #c02626;
-    color: #fafbff;
+    color: #fff;
 }
 
 .botao-rascunho {
@@ -459,9 +484,9 @@
     background: #e87500;
 }
 
-/* =========================================
+/* =====================================
    TABLETS
-========================================= */
+===================================== */
 
 @media (min-width: 561px) and (max-width: 900px) {
 
@@ -496,16 +521,11 @@
         height: 29px;
     }
 
-    .item-menu-novo span {
-        width: 20px;
-        font-size: 18px;
-    }
-
     .sair-novo-conteudo {
         font-size: 12px;
     }
 
-    /* HEADER */
+    /* HEADER DESKTOP */
 
     .topo-novo-conteudo {
         min-height: 75px;
@@ -544,8 +564,6 @@
         margin-bottom: 25px;
         font-size: 25px;
     }
-
-    /* FORMULÁRIO */
 
     .formulario-conteudo {
         grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.8fr);
@@ -598,7 +616,9 @@
     }
 }
 
-/* TABLETS MENORES */
+/* =====================================
+   TABLETS MENORES
+===================================== */
 
 @media (min-width: 561px) and (max-width: 700px) {
 
@@ -637,9 +657,40 @@
     }
 }
 
-/* =========================================
+/* =====================================
+   HEADER MOBILE
+   MESMO PADRÃO DA TELA CONTEÚDOS
+===================================== */
+
+@media (max-width: 850px) {
+
+    .header-desktop {
+        display: none;
+    }
+
+    .header-mobile {
+        display: block;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .menu-novo-conteudo {
+        display: none;
+    }
+
+    .principal-novo-conteudo {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .pagina-novo-conteudo {
+        width: 100%;
+    }
+}
+
+/* =====================================
    CELULARES
-========================================= */
+===================================== */
 
 @media (max-width: 560px) {
 
@@ -652,106 +703,12 @@
         overflow-x: hidden;
     }
 
-    /* MENU / LOGO */
-
-    .menu-novo-conteudo {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        width: 100%;
-        min-width: 0;
-        min-height: 75px;
-        padding: 8px 15px;
-        background: #f3f6fc;
-        color: #1d2e68;
-    }
-
-    .logo-novo-conteudo {
-        justify-content: flex-start;
-        width: 100%;
-        margin: 0;
-    }
-
-    .logo-novo-conteudo .logo-desktop {
-        display: none;
-    }
-
-    .logo-novo-conteudo .logo-mobile {
-        display: block;
-        width: 150px;
-        max-width: 60%;
-        height: 58px;
-        object-fit: contain;
-        object-position: left center;
-    }
-
-    .navegacao-novo-conteudo,
-    .sair-novo-conteudo {
-        display: none;
-    }
-
-    /* ÁREA PRINCIPAL */
-
     .principal-novo-conteudo {
-        width: 100%;
-        min-width: 0;
-        min-height: auto;
-    }
-
-    /* HEADER */
-
-    .topo-novo-conteudo {
         display: flex;
         flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-        gap: 12px;
         width: 100%;
-        min-height: auto;
-        padding: 5px 15px 12px;
-        background: #f3f6fc;
-    }
-
-    .usuario-novo-conteudo {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 7px;
-        width: 100%;
-    }
-
-    .foto-usuario-novo {
-        width: 34px;
-        height: 34px;
-        font-size: 11px;
-    }
-
-    .dados-usuario-novo strong {
-        font-size: 11px;
-    }
-
-    .dados-usuario-novo span {
-        font-size: 9px;
-    }
-
-    .opcoes-usuario-novo {
-        font-size: 17px;
-    }
-
-    .pesquisa-topo-novo {
-        width: 100%;
-        max-width: none;
-        height: 36px;
-        margin: 0;
-    }
-
-    .pesquisa-topo-novo span {
-        font-size: 19px;
-    }
-
-    .pesquisa-topo-novo input {
-        font-size: 11px;
+        min-width: 0;
+        min-height: 100vh;
     }
 
     /* CONTEÚDO */
@@ -898,18 +855,11 @@
     }
 }
 
-/* CELULARES MUITO ESTREITOS */
+/* =====================================
+   CELULARES MUITO ESTREITOS
+===================================== */
 
-@media (max-width: 350px) {
-
-    .menu-novo-conteudo {
-        padding: 8px 12px;
-    }
-
-    .logo-novo-conteudo .logo-mobile {
-        width: 135px;
-        height: 52px;
-    }
+@media (max-width: 380px) {
 
     .area-novo-conteudo {
         padding: 15px 12px 20px;

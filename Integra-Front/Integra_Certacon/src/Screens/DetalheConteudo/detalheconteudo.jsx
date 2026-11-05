@@ -1,8 +1,8 @@
 
 import "./detalheconteudo.css";
 
-import LogoImagem from "../../assets/Icones/LogoImagem.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
+import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
@@ -12,12 +12,10 @@ import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
 import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 
-import calendario from "../../assets/Icones/calendario.png";
 import Pessoa from "../../assets/Icones/Pessoa.png";
 import TresPontos from "../../assets/Icones/TresPontos.png";
-import EscudoLaranja from "../../assets/Icones/EscudoLaranja.png";
-import Relogio from "../../assets/Icones/Relogio.png"
-import ArquivoDetalhe from "../../assets/Icones/ArquivoDetalhe.png"
+import Relogio from "../../assets/Icones/Relogio.png";
+import ArquivoDetalhe from "../../assets/Icones/ArquivoDetalhe.png";
 
 function DetalheRevisao() {
   const menuItems = [
@@ -30,7 +28,10 @@ function DetalheRevisao() {
 
   return (
     <div className="pagina-revisao">
+
+      {/* MENU LATERAL */}
       <aside className="menu-lateral">
+
         <div className="logo">
           <img src={LogoNome} alt="INTEGRA" />
         </div>
@@ -58,12 +59,56 @@ function DetalheRevisao() {
           <img src={SairBranco} alt="" />
           <span>Sair</span>
         </button>
+
       </aside>
 
       <main className="conteudo-principal">
+
+        {/* HEADER MOBILE */}
+        <header className="cabecalho-mobile">
+
+          <div className="cabecalho-superior-mobile">
+
+            <img
+              src={LogoNomeMobile}
+              alt="Integra"
+              className="logo-mobile-detalhe"
+            />
+
+            <div className="perfil-usuario-mobile">
+
+              <div className="foto-perfil-mobile">
+                JS
+              </div>
+
+              <div className="dados-usuario-mobile">
+                <strong>João Silva</strong>
+                <span>Analista SPED</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="pesquisa-mobile-detalhe">
+
+            <img src={LupaCinza} alt="" />
+
+            <input
+              type="text"
+              placeholder="Buscar conteúdos, notas fiscais, etc..."
+            />
+
+          </div>
+
+        </header>
+
+        {/* HEADER DESKTOP */}
         <header className="cabecalho">
+
           <div className="pesquisa">
             <img src={LupaCinza} alt="" />
+
             <input
               type="text"
               placeholder="Buscar conteúdos, notas fiscais, etc..."
@@ -71,6 +116,7 @@ function DetalheRevisao() {
           </div>
 
           <div className="perfil-usuario">
+
             <div className="foto-perfil">JS</div>
 
             <div className="dados-usuario">
@@ -85,10 +131,14 @@ function DetalheRevisao() {
             >
               <img src={TresPontos} alt="" />
             </button>
+
           </div>
+
         </header>
 
+        {/* CONTEÚDO */}
         <section className="detalhe-revisao">
+
           <button
             className="botao-voltar"
             onClick={() => window.history.back()}
@@ -98,7 +148,9 @@ function DetalheRevisao() {
           </button>
 
           <div className="area-artigo">
+
             <article className="artigo">
+
               <h1>
                 Reforma Tributária: Novas Regras do IBS e CBS
               </h1>
@@ -108,6 +160,7 @@ function DetalheRevisao() {
               </span>
 
               <div className="informacoes-artigo">
+
                 <span>
                   <img src={Relogio} alt="" />
                   Publicado em 09/10/2026
@@ -121,9 +174,11 @@ function DetalheRevisao() {
                 <span className="versao-artigo">
                   ⓧ Versão 1.0
                 </span>
+
               </div>
 
               <div className="texto-artigo">
+
                 <p>
                   A Reforma Tributária do consumo no Brasil foi
                   oficializada pela Emenda Constitucional nº 132/2023
@@ -133,6 +188,7 @@ function DetalheRevisao() {
                 </p>
 
                 <ul>
+
                   <li>
                     CBS (Contribuição sobre Bens e Serviços):
                     imposto de competência federal que substitui PIS,
@@ -150,10 +206,13 @@ function DetalheRevisao() {
                     pecado", incide sobre bens e serviços prejudiciais
                     à saúde ou ao meio ambiente.
                   </li>
+
                 </ul>
+
               </div>
 
               <div className="topicos-artigo">
+
                 <h2>Tópicos abordados</h2>
 
                 <ul>
@@ -161,13 +220,18 @@ function DetalheRevisao() {
                   <li>Cronograma de implementação</li>
                   <li>Principais impactos para as empresas</li>
                 </ul>
+
               </div>
+
             </article>
 
+            {/* DOCUMENTOS */}
             <aside className="area-documentos">
+
               <h2>Documentos</h2>
 
               <div className="documento">
+
                 <img
                   src={ArquivoDetalhe}
                   alt="Documento PDF"
@@ -177,6 +241,7 @@ function DetalheRevisao() {
                   <strong>reforma_Tributária.pdf</strong>
                   <span>2,4mb</span>
                 </div>
+
               </div>
 
               <button
@@ -187,10 +252,15 @@ function DetalheRevisao() {
               >
                 Baixar
               </button>
+
             </aside>
+
           </div>
+
         </section>
+
       </main>
+
     </div>
   );
 }

@@ -1,3 +1,4 @@
+
 import "./Home.css";
 
 import logoIntegra from "../../assets/Icones/LogoNome.png";
@@ -9,6 +10,7 @@ import iconePessoa from "../../assets/Icones/PessoaBranca.png";
 import iconeSair from "../../assets/Icones/SairBranco.png";
 import iconeLupa from "../../assets/Icones/LupaPesquisa.png";
 import PerfilLaranja from "../../assets/Icones/PerfilLaranja.png";
+
 import iconeDocumento from "../../assets/Icones/ArquivoAcessoRapido.png";
 import iconeExpandir from "../../assets/Icones/SetaAcessoRapido.png";
 import iconeUpload from "../../assets/Icones/BaixarArqvAcssRapido.png";
@@ -17,6 +19,12 @@ import arquivoHome from "../../assets/Icones/ArquivoDashboard.png";
 import DoisDocumentos from "../../assets/Icones/DoisDocumentos.png";
 import TimeAcessoRapido from "../../assets/Icones/TimeAcessoRapido.png";
 
+// Ícones exclusivos do tablet e mobile
+import AddClienteMobile from "../../assets/Icones/AddClienteMobile.png";
+import NovoConteudoMobile from "../../assets/Icones/NovoConteudoMobile.png";
+import HistoricoMobile from "../../assets/Icones/HistoricoMobile.png";
+import ConsultarNFEmobile from "../../assets/Icones/ConsultarNFEmobile.png";
+import EnviarXMLMobile from "../../assets/Icones/EnviarXMLMobile.png";
 
 export default function Home() {
     return (
@@ -144,12 +152,12 @@ export default function Home() {
                             </div>
 
                             <div className="home-card-info">
-                                <p>Notas fiscais</p>
-                                <strong>100</strong>
+                                <p>Notas Fiscais</p>
+                                <strong>1248</strong>
                             </div>
 
-                            <span className="home-card-crescimento">
-                                ↑ 24%
+                            <span className="home-card-crescimento home-card-ativas">
+                                Ativas
                             </span>
 
                         </div>
@@ -161,12 +169,12 @@ export default function Home() {
                             </div>
 
                             <div className="home-card-info">
-                                <p>Atualizações das tabelas liquidadas</p>
-                                <strong>115</strong>
+                                <p>Conteúdos</p>
+                                <strong>128</strong>
                             </div>
 
-                            <span className="home-card-crescimento">
-                                ↑ 15%
+                            <span className="home-card-crescimento home-card-atencao">
+                                Atenção
                             </span>
 
                         </div>
@@ -176,6 +184,7 @@ export default function Home() {
                     {/* LISTA E ACESSO RÁPIDO */}
                     <div className="home-baixo">
 
+                        {/* ÚLTIMAS ATUALIZAÇÕES */}
                         <section className="home-lista">
 
                             <div className="home-lista-item">
@@ -247,8 +256,13 @@ export default function Home() {
 
                         </section>
 
+                        {/* FOOTER MOBILE */}
                         <footer className="home-footer">
-                            <button type="button" className="home-footer-item home-footer-ativo">
+
+                            <button
+                                type="button"
+                                className="home-footer-item home-footer-ativo"
+                            >
                                 <img src={iconeCasa} alt="" />
                                 <span>Início</span>
                             </button>
@@ -272,6 +286,7 @@ export default function Home() {
                                 <img src={iconePessoa} alt="" />
                                 <span>Usuários</span>
                             </button>
+
                         </footer>
 
                         {/* ACESSO RÁPIDO */}
@@ -283,7 +298,16 @@ export default function Home() {
                                 type="button"
                                 className="home-acesso-botao"
                             >
-                                <img src={iconeExpandir} alt="" />
+                                <img
+                                    src={iconeExpandir}
+                                    alt=""
+                                    className="home-acesso-icone-desktop"
+                                />
+                                <img
+                                    src={NovoConteudoMobile}
+                                    alt=""
+                                    className="home-acesso-icone-mobile"
+                                />
                                 <span>Novo conteúdo</span>
                             </button>
 
@@ -291,7 +315,16 @@ export default function Home() {
                                 type="button"
                                 className="home-acesso-botao"
                             >
-                                <img src={iconeUpload} alt="" />
+                                <img
+                                    src={iconeUpload}
+                                    alt=""
+                                    className="home-acesso-icone-desktop"
+                                />
+                                <img
+                                    src={EnviarXMLMobile}
+                                    alt=""
+                                    className="home-acesso-icone-mobile"
+                                />
                                 <span>Enviar XML</span>
                             </button>
 
@@ -299,7 +332,16 @@ export default function Home() {
                                 type="button"
                                 className="home-acesso-botao"
                             >
-                                <img src={iconeDocumento} alt="" className="docAcessoRapido" />
+                                <img
+                                    src={iconeDocumento}
+                                    alt=""
+                                    className="home-acesso-icone-desktop docAcessoRapido"
+                                />
+                                <img
+                                    src={ConsultarNFEmobile}
+                                    alt=""
+                                    className="home-acesso-icone-mobile"
+                                />
                                 <span>Consultar NF-e</span>
                             </button>
 
@@ -307,16 +349,33 @@ export default function Home() {
                                 type="button"
                                 className="home-acesso-botao"
                             >
-                                <img src={iconeGrupo} alt="" />
+                                <img
+                                    src={iconeGrupo}
+                                    alt=""
+                                    className="home-acesso-icone-desktop"
+                                />
+                                <img
+                                    src={AddClienteMobile}
+                                    alt=""
+                                    className="home-acesso-icone-mobile"
+                                />
                                 <span>Consultar clientes</span>
                             </button>
 
-                            {/* NOVO QUADRO */}
                             <button
                                 type="button"
                                 className="home-acesso-botao"
                             >
-                                <img src={TimeAcessoRapido} alt="" />
+                                <img
+                                    src={TimeAcessoRapido}
+                                    alt=""
+                                    className="home-acesso-icone-desktop"
+                                />
+                                <img
+                                    src={HistoricoMobile}
+                                    alt=""
+                                    className="home-acesso-icone-mobile"
+                                />
                                 <span>Histórico de ações</span>
                             </button>
 

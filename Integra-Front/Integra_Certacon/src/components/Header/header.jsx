@@ -1,25 +1,49 @@
-import LogoNomeMobile from "../../assets/LogoNomeMobile.png";
-import LupaCinza from "../../assets/Icones/LupaCinza.png";
 
-{/* HEADER MOBILE */}
+import LogoIntegra from "../../assets/Icones/LogoNomeMobile.png";
+import LupaPesquisa from "../../assets/Icones/LupaPesquisa.png";
+import "./header.css";
 
-<header className="home-header-mobile">
+function Header() {
+  return (
+    <header className="integra-header">
 
-    <img
-        src={LogoNomeMobile}
-        alt="Integra"
-        className="home-logo-mobile"
-    />
+      <div className="header-superior">
 
-    <div className="home-busca-mobile">
-
-        <img src={LupaCinza} alt="" />
-
-        <input
-            type="text"
-            placeholder="Pesquisar..."
+        <img
+          src={LogoIntegra}
+          alt="Integra"
+          className="header-logo"
         />
 
-    </div>
+        <div className="header-usuario">
 
-</header>
+          <div className="header-foto">
+            JS
+          </div>
+
+          <div className="header-dados">
+            <strong>João Silva</strong>
+            <span>Analista SPED</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div className="header-pesquisa">
+
+        <img src={LupaPesquisa} alt="" />
+
+        <input
+          type="search"
+          placeholder="Buscar conteúdos, notas fiscais, etc..."
+          aria-label="Buscar conteúdos"
+        />
+
+      </div>
+
+    </header>
+  );
+}
+
+export default Header;

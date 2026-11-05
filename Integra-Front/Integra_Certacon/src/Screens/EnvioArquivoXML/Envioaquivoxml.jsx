@@ -11,10 +11,10 @@ import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
+import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import ArquivoDashboard from "../../assets/Icones/ArquivoDashboard.png";
 import Upload from "../../assets/Icones/UploadBranco.png";
 import UploadPreto from "../../assets/Icones/Upload.png";
-
 
 const arquivosIniciais = [
     { id: 1, nome: "nfe_123456.xml", tamanho: "2.4MB", status: "Validado" },
@@ -69,7 +69,9 @@ export default function EnvioArquivoXML() {
     }
 
     function excluirArquivo(id) {
-        setArquivos((atual) => atual.filter((arquivo) => arquivo.id !== id));
+        setArquivos((atual) =>
+            atual.filter((arquivo) => arquivo.id !== id)
+        );
     }
 
     function enviarArquivos() {
@@ -91,12 +93,15 @@ export default function EnvioArquivoXML() {
 
     return (
         <div className="xml-pagina">
+
             <Sidebar />
 
             <main className="xml-principal">
+
                 <Header />
 
                 <section className="xml-conteudo">
+
                     <h1>Enviar arquivo XML</h1>
 
                     <input
@@ -109,6 +114,7 @@ export default function EnvioArquivoXML() {
                     />
 
                     <div className="xml-area-superior">
+
                         <button
                             className="xml-botao-selecionar"
                             onClick={() => inputRef.current?.click()}
@@ -139,10 +145,13 @@ export default function EnvioArquivoXML() {
                             }}
                         >
                             <strong>Ou solte seu documento aqui</strong>
+
                             <img src={UploadPreto} alt="" />
+
                             <span>Tamanho Máximo de 10MB</span>
                             <span>Formato: XML</span>
                         </div>
+
                     </div>
 
                     {mensagem && (
@@ -152,15 +161,20 @@ export default function EnvioArquivoXML() {
                     )}
 
                     <div className="xml-lista">
+
                         <div className="xml-lista-titulo">
                             Arquivos Enviados
                         </div>
 
                         {arquivos.length ? (
+
                             arquivos.map((arquivo) => (
+
                                 <div className="xml-arquivo" key={arquivo.id}>
+
                                     <div className="xml-arquivo-nome">
                                         <img src={ArquivoDashboard} alt="" />
+
                                         <span title={arquivo.nome}>
                                             {arquivo.nome}
                                         </span>
@@ -187,16 +201,23 @@ export default function EnvioArquivoXML() {
                                     >
                                         <img src={Lixeira} alt="Excluir" />
                                     </button>
+
                                 </div>
+
                             ))
+
                         ) : (
+
                             <p className="xml-lista-vazia">
                                 Nenhum arquivo adicionado.
                             </p>
+
                         )}
+
                     </div>
 
                     <div className="xml-rodape">
+
                         <button
                             className="xml-botao-enviar"
                             onClick={enviarArquivos}
@@ -206,21 +227,38 @@ export default function EnvioArquivoXML() {
                         >
                             Enviar
                         </button>
+
                     </div>
+
                 </section>
+
             </main>
+
         </div>
     );
 }
 
+/* MENU LATERAL */
+
 function Sidebar() {
     return (
         <aside className="xml-sidebar">
+
             <div className="xml-logo">
-                <img src={LogoNome} alt="Integra" />
+
+                <picture>
+                    <source
+                        media="(max-width: 600px)"
+                        srcSet={LogoNomeMobile}
+                    />
+
+                    <img src={LogoNome} alt="Integra" />
+                </picture>
+
             </div>
 
             <nav className="xml-menu">
+
                 <a href="#" className="xml-menu-item">
                     <img src={CasaBranca} alt="" />
                     <span>Início</span>
@@ -245,6 +283,7 @@ function Sidebar() {
                     <img src={PessoaBranca} alt="" />
                     <span>Usuários</span>
                 </a>
+
             </nav>
 
             <div className="xml-menu-inferior">
@@ -256,34 +295,49 @@ function Sidebar() {
                     <img src={SairBranco} alt="" />
                     <span>Sair</span>
                 </button>
+
             </div>
+
         </aside>
     );
 }
+
+/* CABEÇALHO */
 
 function Header() {
     const [pesquisa, setPesquisa] = useState("");
 
     return (
         <header className="xml-header">
+
             <div className="xml-busca">
+
                 <img src={LupaCinza} alt="" />
+
                 <input
                     type="text"
                     placeholder="Buscar conteúdos, notas fiscais, etc..."
                     value={pesquisa}
                     onChange={(e) => setPesquisa(e.target.value)}
                 />
+
             </div>
 
             <div className="xml-usuario">
-                <div className="xml-avatar">JS</div>
+
+                <div className="xml-avatar">
+                    JS
+                </div>
+
                 <div className="xml-dados-usuario">
                     <strong>João Silva</strong>
                     <span>Analista SPED</span>
                 </div>
+
                 <span className="xml-tres-pontos">···</span>
+
             </div>
+
         </header>
     );
 }
