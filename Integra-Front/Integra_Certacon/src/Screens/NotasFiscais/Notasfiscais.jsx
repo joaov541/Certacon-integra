@@ -1,3 +1,4 @@
+  
 import { useState } from "react";
 import "./Notasfiscais.css";
 
@@ -10,7 +11,10 @@ import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
+import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import Calendario from "../../assets/Icones/calendario.png";
+
+import { Link, NavLink } from "react-router-dom";
 
 const notasIniciais = [
   {
@@ -125,20 +129,30 @@ function NotasFiscais() {
 
   return (
     <div className="pagina-notas">
+
       <Sidebar />
 
       <main className="principal-notas">
-        <Header pesquisa={pesquisa} setPesquisa={setPesquisa} />
+
+        <Header
+          pesquisa={pesquisa}
+          setPesquisa={setPesquisa}
+        />
 
         <section className="conteudo-notas">
+
           <h1>Notas Fiscais</h1>
 
           <div className="filtros-notas">
+
             <div className="filtro-periodo">
+
               <label>Período</label>
 
               <div className="campo-periodo">
+
                 <div className="campo-data-notas">
+
                   <input
                     type="date"
                     value={dataInicio}
@@ -152,11 +166,13 @@ function NotasFiscais() {
                       e.currentTarget.previousElementSibling.showPicker?.()
                     }
                   />
+
                 </div>
 
                 <span>-</span>
 
                 <div className="campo-data-notas">
+
                   <input
                     type="date"
                     value={dataFim}
@@ -170,11 +186,15 @@ function NotasFiscais() {
                       e.currentTarget.previousElementSibling.showPicker?.()
                     }
                   />
+
                 </div>
+
               </div>
+
             </div>
 
             <div className="filtro-cliente">
+
               <label>Cliente</label>
 
               <select
@@ -189,9 +209,11 @@ function NotasFiscais() {
                 <option value="Cliente LDTA">Cliente LDTA</option>
                 <option value="Empresa XYZ">Empresa XYZ</option>
               </select>
+
             </div>
 
             <div className="filtro-status">
+
               <label>Status</label>
 
               <select
@@ -206,18 +228,17 @@ function NotasFiscais() {
                 <option value="Cancelada">Cancelada</option>
                 <option value="Pendente">Pendente</option>
               </select>
+
             </div>
 
-            <button
-              className="botao-buscar-notas"
-              onClick={buscarNotas}
-            >
-              Buscar
-            </button>
+            
+
           </div>
 
           <div className="tabela-notas-container">
+
             <table className="tabela-notas">
+
               <thead>
                 <tr>
                   <th>Chave de acesso</th>
@@ -230,29 +251,40 @@ function NotasFiscais() {
               </thead>
 
               <tbody>
+
                 {notasPagina.length > 0 ? (
+
                   notasPagina.map((nota) => (
+
                     <tr key={nota.id}>
-                      <td className="chave-nota">{nota.chave}</td>
+
+                      <td className="chave-nota">
+                        {nota.chave}
+                      </td>
+
                       <td>{nota.emissao}</td>
+
                       <td>{nota.cliente}</td>
+
                       <td>{nota.valor}</td>
 
                       <td>
+
                         <span
-                          className={`status-nota ${
-                            nota.status === "Autenticada"
+                          className={`status-nota ${nota.status === "Autenticada"
                               ? "status-autenticada"
                               : nota.status === "Cancelada"
-                              ? "status-cancelada"
-                              : "status-pendente"
-                          }`}
+                                ? "status-cancelada"
+                                : "status-pendente"
+                            }`}
                         >
                           {nota.status}
                         </span>
+
                       </td>
 
                       <td>
+
                         <button
                           className="botao-excluir-nota"
                           title="Excluir nota fiscal"
@@ -260,21 +292,31 @@ function NotasFiscais() {
                         >
                           <img src={Lixeira} alt="Excluir" />
                         </button>
+
                       </td>
+
                     </tr>
+
                   ))
+
                 ) : (
+
                   <tr>
                     <td colSpan="6" className="nenhuma-nota">
                       Nenhuma nota fiscal encontrada.
                     </td>
                   </tr>
+
                 )}
+
               </tbody>
+
             </table>
+
           </div>
 
           <div className="paginacao-notas">
+
             <button
               disabled={pagina === 1}
               onClick={() => setPagina(pagina - 1)}
@@ -286,6 +328,7 @@ function NotasFiscais() {
               { length: totalPaginas },
               (_, i) => i + 1
             ).map((numero) => (
+
               <button
                 key={numero}
                 className={pagina === numero ? "pagina-ativa" : ""}
@@ -293,6 +336,7 @@ function NotasFiscais() {
               >
                 {numero}
               </button>
+
             ))}
 
             <button
@@ -301,9 +345,13 @@ function NotasFiscais() {
             >
               &gt;
             </button>
+
           </div>
+
         </section>
+
       </main>
+
     </div>
   );
 }
@@ -311,38 +359,50 @@ function NotasFiscais() {
 function Sidebar() {
   return (
     <aside className="menu-notas">
+
       <div className="logo-notas">
-        <img src={LogoNome} alt="Integra" />
+
+        <picture>
+          <source
+            media="(max-width: 650px)"
+            srcSet={LogoNomeMobile}
+          />
+
+          <img src={LogoNome} alt="Integra" />
+        </picture>
+
       </div>
 
       <nav className="navegacao-notas">
-        <a href="#" className="item-menu-notas">
+
+        <Link to="/home" className="item-menu-notas">
           <img src={CasaBranca} alt="" />
           <span>Início</span>
-        </a>
+        </Link>
 
-        <a href="#" className="item-menu-notas">
+        <Link to="/conteudos" className="item-menu-notas">
           <img src={LivroBranco} alt="" />
           <span>Conteúdos</span>
-        </a>
+        </Link>
 
-        <a
-          href="#"
+        <Link
+          to="/notas-fiscais"
           className="item-menu-notas menu-notas-ativo"
         >
           <img src={DoisDocumentosBranco} alt="" />
           <span>Notas Fiscais</span>
-        </a>
+        </Link>
 
-        <a href="#" className="item-menu-notas">
+        <Link to="/clientes" className="item-menu-notas">
           <img src={ADDProfileBranco} alt="" />
           <span>Clientes</span>
-        </a>
+        </Link>
 
-        <a href="#" className="item-menu-notas">
+        <Link to="/usuario" className="item-menu-notas">
           <img src={PessoaBranca} alt="" />
           <span>Usuários</span>
-        </a>
+        </Link>
+
       </nav>
 
       <button
@@ -352,6 +412,7 @@ function Sidebar() {
         <img src={SairBranco} alt="" />
         <span>Sair</span>
       </button>
+
     </aside>
   );
 }
@@ -359,7 +420,9 @@ function Sidebar() {
 function Header({ pesquisa, setPesquisa }) {
   return (
     <header className="topo-notas">
+
       <div className="pesquisa-topo-notas">
+
         <img src={LupaCinza} alt="" />
 
         <input
@@ -368,18 +431,26 @@ function Header({ pesquisa, setPesquisa }) {
           value={pesquisa}
           onChange={(e) => setPesquisa(e.target.value)}
         />
+
       </div>
 
       <div className="usuario-topo-notas">
-        <div className="foto-usuario-notas">JS</div>
+
+        <NavLink
+          to="/perfil"
+          className="foto-usuario-notas"
+          title="Acessar meu perfil"
+        >
+          JS
+        </NavLink>
 
         <div>
           <strong>João Silva</strong>
           <span>Analista SPED</span>
         </div>
 
-        <span className="tres-pontos-notas">•••</span>
       </div>
+
     </header>
   );
 }

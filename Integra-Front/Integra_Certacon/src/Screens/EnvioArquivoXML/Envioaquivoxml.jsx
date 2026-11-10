@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import "./Envioarquivoxml.css";
 
+import { NavLink, useNavigate } from "react-router-dom";
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
 import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
@@ -30,6 +31,8 @@ export default function EnvioArquivoXML() {
     const [arrastando, setArrastando] = useState(false);
     const [mensagem, setMensagem] = useState("");
     const inputRef = useRef(null);
+    const navigate = useNavigate();
+
 
     function selecionarArquivos(lista) {
         setMensagem("");
@@ -102,8 +105,18 @@ export default function EnvioArquivoXML() {
 
                 <section className="xml-conteudo">
 
+                    <button
+        type="button"
+        className="xml-botao-voltar"
+        onClick={() => navigate(-1)}
+        title="Voltar"
+    >
+       ← voltar 
+    </button>
+
                     <h1>Enviar arquivo XML</h1>
 
+                        
                     <input
                         ref={inputRef}
                         className="xml-input-arquivo"
@@ -334,7 +347,6 @@ function Header() {
                     <span>Analista SPED</span>
                 </div>
 
-                <span className="xml-tres-pontos">···</span>
 
             </div>
 

@@ -2,6 +2,13 @@
 import { useRef, useState } from "react";
 import "./NovoConteudo.css";
 
+import Casa from "../../assets/Icones/Casa.png";
+import LivroBranco from "../../assets/Icones/LivroBranco.png";
+import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
+import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
+import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
+
+import { NavLink, useNavigate } from "react-router-dom";
 import HeaderMobile from "../../components/Header/header";
 
 import LogoMobile from "../../assets/Icones/LogoMobile.png";
@@ -28,6 +35,8 @@ import TextoAlinhadoCentro from "../../assets/Icones/TextoAlinhadoCentro.png";
 import ExpandirCinza from "../../assets/Icones/ExpandirCinza.png";
 
 function NovoConteudo() {
+  const navigate = useNavigate();
+
   const [titulo, setTitulo] = useState("");
   const [tema, setTema] = useState("");
   const [conteudo, setConteudo] = useState("");
@@ -140,7 +149,7 @@ function NovoConteudo() {
 
           <h1>Novo Conteúdo</h1>
 
-          <div className="formulario-conteudo">
+          <div className="formulario-conteudo1">
 
             <div className="formulario-esquerda">
 
@@ -319,7 +328,17 @@ function NovoConteudo() {
 
           </div>
 
+          {/* BOTÕES */}
+
           <div className="botoes-conteudo">
+
+            <button
+              type="button"
+              className="botao-voltar1"
+              onClick={() => navigate(-1)}
+            >
+              Voltar
+            </button>
 
             <button
               type="button"
@@ -371,9 +390,13 @@ function HeaderDesktop() {
 
       <div className="usuario-novo-conteudo">
 
-        <div className="foto-usuario-novo">
+        <NavLink
+          to="/perfil"
+          className="foto-usuario-novo"
+          title="Acessar meu perfil"
+        >
           JS
-        </div>
+        </NavLink>
 
         <div className="dados-usuario-novo">
           <strong>João Silva</strong>
@@ -389,6 +412,8 @@ function HeaderDesktop() {
 /* SIDEBAR */
 
 function Sidebar() {
+  const navigate = useNavigate();
+
   return (
     <aside className="menu-novo-conteudo">
 
@@ -410,37 +435,64 @@ function Sidebar() {
 
       <nav className="navegacao-novo-conteudo">
 
-        <a href="#" className="item-menu-novo">
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            isActive ? "item-menu-novo menu-ativo-novo" : "item-menu-novo"
+          }
+        >
           <img src={iconeCasa} alt="" />
           Início
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-novo menu-ativo-novo">
+        <NavLink
+          to="/conteudos"
+          className={({ isActive }) =>
+            isActive || window.location.pathname.startsWith("/conteudos")
+              ? "item-menu-novo menu-ativo-novo"
+              : "item-menu-novo"
+          }
+        >
           <img src={iconeLivro} alt="" />
           Conteúdos
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-novo">
+        <NavLink
+          to="/notas-fiscais"
+          className={({ isActive }) =>
+            isActive ? "item-menu-novo menu-ativo-novo" : "item-menu-novo"
+          }
+        >
           <img src={iconeNotas} alt="" />
           Notas Fiscais
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-novo">
+        <NavLink
+          to="/clientes"
+          className={({ isActive }) =>
+            isActive ? "item-menu-novo menu-ativo-novo" : "item-menu-novo"
+          }
+        >
           <img src={iconeClientesBranco} alt="" />
           Clientes
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-novo">
+        <NavLink
+          to="/usuario"
+          className={({ isActive }) =>
+            isActive ? "item-menu-novo menu-ativo-novo" : "item-menu-novo"
+          }
+        >
           <img src={iconePessoa} alt="" />
           Usuários
-        </a>
+        </NavLink>
 
       </nav>
 
       <button
         type="button"
         className="sair-novo-conteudo"
-        onClick={() => alert("Configure aqui a saída da conta.")}
+        onClick={() => navigate("/login")}
       >
         <img src={iconeSair} alt="" />
         Sair

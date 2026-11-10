@@ -3,8 +3,10 @@
     box-sizing: border-box;
 }
 
+/* HEADER */
+
 .integra-header {
-    display: flex;
+        display: none;
     flex-direction: column;
     width: 100%;
     gap: 35px;
@@ -15,7 +17,7 @@
 
 /* PRIMEIRA LINHA */
 
-.header-superior {
+.integra-header .header-superior {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -23,7 +25,7 @@
     gap: 15px;
 }
 
-.header-logo {
+.integra-header .header-logo {
     display: block;
     width: 290px;
     max-width: 55%;
@@ -34,13 +36,13 @@
 
 /* USUÁRIO */
 
-.header-usuario {
+.integra-header .header-usuario {
     display: flex;
     align-items: center;
     gap: 13px;
 }
 
-.header-foto {
+.integra-header .header-foto {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,28 +54,29 @@
     color: #fff;
     font-size: 20px;
     font-weight: bold;
+    text-decoration: none;
 }
 
-.header-dados {
+.integra-header .header-dados {
     display: flex;
     flex-direction: column;
     gap: 3px;
     white-space: nowrap;
 }
 
-.header-dados strong {
+.integra-header .header-dados strong {
     color: #111;
     font-size: 22px;
 }
 
-.header-dados span {
+.integra-header .header-dados span {
     color: #888;
     font-size: 18px;
 }
 
 /* PESQUISA */
 
-.header-pesquisa {
+.integra-header .header-pesquisa {
     display: flex;
     align-items: center;
     width: 100%;
@@ -86,14 +89,14 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
-.header-pesquisa img {
+.integra-header .header-pesquisa img {
     width: 28px;
     height: 28px;
     flex-shrink: 0;
     object-fit: contain;
 }
 
-.header-pesquisa input {
+.integra-header .header-pesquisa input {
     width: 100%;
     min-width: 0;
     height: 100%;
@@ -105,7 +108,7 @@
     font-size: 18px;
 }
 
-.header-pesquisa input::placeholder {
+.integra-header .header-pesquisa input::placeholder {
     color: #929292;
 }
 
@@ -116,31 +119,32 @@
     .integra-header {
         gap: 25px;
         padding: 20px 22px 10px;
+         display: flex;
     }
 
-    .header-logo {
+    .integra-header .header-logo {
         width: 230px;
         height: 85px;
     }
 
-    .header-foto {
+    .integra-header .header-foto {
         width: 60px;
         height: 60px;
     }
 
-    .header-dados strong {
+    .integra-header .header-dados strong {
         font-size: 17px;
     }
 
-    .header-dados span {
+    .integra-header .header-dados span {
         font-size: 14px;
     }
 
-    .header-pesquisa {
+    .integra-header .header-pesquisa {
         height: 48px;
     }
 
-    .header-pesquisa input {
+    .integra-header .header-pesquisa input {
         font-size: 15px;
     }
 }
@@ -150,51 +154,52 @@
 @media (max-width: 560px) {
 
     .integra-header {
+        display: flex;
         gap: 3px;
         padding: 20px 25px 10px;
     }
 
-    .header-superior {
+    .integra-header .header-superior {
         min-height: 115px;
     }
 
-    .header-logo {
+    .integra-header .header-logo {
         width: 290px;
         max-width: 57%;
         height: 105px;
     }
 
-    .header-usuario {
+    .integra-header .header-usuario {
         gap: 2px;
     }
 
-    .header-foto {
+    .integra-header .header-foto {
         width: 65px;
         height: 65px;
         font-size: 16px;
     }
 
-    .header-dados strong {
+    .integra-header .header-dados strong {
         font-size: 17px;
     }
 
-    .header-dados span {
+    .integra-header .header-dados span {
         font-size: 14px;
     }
 
-    .header-pesquisa {
+    .integra-header .header-pesquisa {
         height: 53px;
         gap: 12px;
         padding: 0 15px;
         border-radius: 10px;
     }
 
-    .header-pesquisa img {
+    .integra-header .header-pesquisa img {
         width: 27px;
         height: 27px;
     }
 
-    .header-pesquisa input {
+    .integra-header .header-pesquisa input {
         font-size: 17px;
     }
 }
@@ -208,25 +213,29 @@
         gap: 2px;
     }
 
-    .header-logo {
+    .integra-header .header-logo {
         max-width: 52%;
     }
 
-    .header-foto {
+    .integra-header .header-foto {
         width: 48px;
         height: 48px;
         font-size: 13px;
     }
 
-    .header-dados strong {
+    .integra-header .header-dados strong {
         font-size: 14px;
     }
 
-    .header-dados span {
+    .integra-header .header-dados span {
         font-size: 11px;
     }
 
-    .header-pesquisa input {
+    .integra-header .header-pesquisa input {
         font-size: 14px;
+    }
+
+    .integra-header .header-dados {
+        display: none;
     }
 }

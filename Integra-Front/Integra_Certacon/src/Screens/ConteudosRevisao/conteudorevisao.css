@@ -19,7 +19,7 @@
 .revisao-sidebar {
     display: flex;
     flex-direction: column;
-    width: 334px;
+    width: 250px;
     min-height: 100vh;
     padding: 20px 15px 24px;
     background: #1d2e68;
@@ -103,6 +103,46 @@
     flex: 1;
     flex-direction: column;
     min-width: 0;
+}
+
+/* HEADER OFICIAL */
+
+.revisao-principal .integra-header {
+    gap: 20px;
+    padding: 15px 30px 20px;
+}
+
+.revisao-principal .header-logo {
+    width: 220px;
+    height: 75px;
+}
+
+.revisao-principal .header-foto {
+    width: 55px;
+    height: 55px;
+    font-size: 15px;
+}
+
+.revisao-principal .header-dados strong {
+    font-size: 15px;
+}
+
+.revisao-principal .header-dados span {
+    font-size: 12px;
+}
+
+.revisao-principal .header-pesquisa {
+    height: 40px;
+    padding: 0 15px;
+}
+
+.revisao-principal .header-pesquisa img {
+    width: 20px;
+    height: 20px;
+}
+
+.revisao-principal .header-pesquisa input {
+    font-size: 13px;
 }
 
 /* HEADER DESKTOP */
@@ -196,6 +236,23 @@
 
 .revisao-header-mobile {
     display: none;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    min-height: 0;
+    padding: 10px 17px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
+}
+
+.revisao-logo-mobile {
+    display: block;
+    flex-shrink: 0;
+    width: 175px;
+    max-width: 48%;
+    max-height: 55px;
+    object-fit: contain;
+    object-position: left center;
 }
 
 /* ÁREA DE REVISÃO */
@@ -204,14 +261,16 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 28px 25px 30px;
+    width: 100%;
+    min-height: calc(100vh - 160px);
+    padding: 25px 30px 20px;
+    background: #f3f6fc;
 }
 
 .revisao-titulo {
-    margin: 0 0 20px 28px;
-    color: #122750;
-    font-size: 24px;
-    font-weight: 700;
+    margin: 0 0 26px;
+    color: #1d2e68;
+    font-size: 23px;
 }
 
 /* ABAS */
@@ -589,18 +648,20 @@
         font-weight: bold;
     }
 
-    /* HEADER MOBILE */
+    /* HEADER DESKTOP */
 
     .revisao-header {
         display: none;
     }
 
+    /* HEADER MOBILE PERSONALIZADO */
+
     .revisao-header-mobile {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 6px;
         width: 100%;
-        min-height: 94px;
+        min-height: 0;
         padding: 10px 17px;
         background: #fff;
         box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
@@ -705,6 +766,41 @@
         color: #888;
     }
 
+    /* CORREÇÃO DO HEADER OFICIAL COMPARTILHADO */
+
+    .revisao-principal .integra-header {
+        gap: 3px;
+        min-height: 0;
+        padding: 10px 17px;
+    }
+
+    .revisao-principal .header-superior {
+        min-height: 0;
+        height: auto;
+        gap: 10px;
+    }
+
+    .revisao-principal .header-logo {
+        width: 145px;
+        max-width: 45%;
+        height: 48px;
+    }
+
+    .revisao-principal .header-pesquisa {
+        height: 32px;
+        margin-top: 0;
+        padding: 0 12px;
+    }
+
+    .revisao-principal .header-pesquisa img {
+        width: 19px;
+        height: 19px;
+    }
+
+    .revisao-principal .header-pesquisa input {
+        font-size: 12px;
+    }
+
     /* CONTEÚDO */
 
     .revisao-conteudo {
@@ -760,12 +856,14 @@
     }
 
     .revisao-cartao {
+        position: relative;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) auto;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
         grid-template-areas:
             "titulo data acoes"
             "tema autor acoes";
         gap: 4px 8px;
+        min-height: 114px;
         padding: 8px;
         border: 1px solid #c4cbd4;
         border-radius: 9px;
@@ -799,6 +897,10 @@
     .cartao-data {
         grid-area: data;
         align-items: center;
+    }
+
+    .cartao-data strong {
+        white-space: nowrap;
     }
 
     .cartao-tema {

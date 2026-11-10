@@ -1,6 +1,8 @@
 
 import "./Home.css";
 
+import { NavLink, useNavigate } from "react-router-dom";
+
 import logoIntegra from "../../assets/Icones/LogoNome.png";
 import iconeCasa from "../../assets/Icones/CasaBranca.png";
 import iconeLivro from "../../assets/Icones/LivroBranco.png";
@@ -8,8 +10,7 @@ import iconeNotas from "../../assets/Icones/DoisDocumentosBranco.png";
 import iconeClientesBranco from "../../assets/Icones/ADDProfileBranco.png";
 import iconePessoa from "../../assets/Icones/PessoaBranca.png";
 import iconeSair from "../../assets/Icones/SairBranco.png";
-import iconeLupa from "../../assets/Icones/LupaPesquisa.png";
-import PerfilLaranja from "../../assets/Icones/PerfilLaranja.png";
+import iconeLupa from "../../assets/Icones/LupaCinza.png";
 
 import iconeDocumento from "../../assets/Icones/ArquivoAcessoRapido.png";
 import iconeExpandir from "../../assets/Icones/SetaAcessoRapido.png";
@@ -19,7 +20,7 @@ import arquivoHome from "../../assets/Icones/ArquivoDashboard.png";
 import DoisDocumentos from "../../assets/Icones/DoisDocumentos.png";
 import TimeAcessoRapido from "../../assets/Icones/TimeAcessoRapido.png";
 
-// Ícones exclusivos do tablet e mobile
+// Ícones do tablet e mobile
 import AddClienteMobile from "../../assets/Icones/AddClienteMobile.png";
 import NovoConteudoMobile from "../../assets/Icones/NovoConteudoMobile.png";
 import HistoricoMobile from "../../assets/Icones/HistoricoMobile.png";
@@ -27,6 +28,13 @@ import ConsultarNFEmobile from "../../assets/Icones/ConsultarNFEmobile.png";
 import EnviarXMLMobile from "../../assets/Icones/EnviarXMLMobile.png";
 
 export default function Home() {
+
+    const navigate = useNavigate();
+
+    function sairSistema() {
+        navigate("/login");
+    }
+
     return (
         <main className="home">
 
@@ -43,39 +51,72 @@ export default function Home() {
 
                 <nav className="home-menu-lista">
 
-                    <button
-                        type="button"
-                        className="home-menu-item home-menu-item-ativo"
+                    <NavLink
+                        to="/home"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "home-menu-item home-menu-item-ativo"
+                                : "home-menu-item"
+                        }
                     >
                         <img src={iconeCasa} alt="" />
                         <span>Início</span>
-                    </button>
+                    </NavLink>
 
-                    <button type="button" className="home-menu-item">
+                    <NavLink
+                        to="/conteudos"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "home-menu-item home-menu-item-ativo"
+                                : "home-menu-item"
+                        }
+                    >
                         <img src={iconeLivro} alt="" />
                         <span>Conteúdos</span>
-                    </button>
+                    </NavLink>
 
-                    <button type="button" className="home-menu-item">
+                    <NavLink
+                        to="/notas-fiscais"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "home-menu-item home-menu-item-ativo"
+                                : "home-menu-item"
+                        }
+                    >
                         <img src={iconeNotas} alt="" />
                         <span>Notas Fiscais</span>
-                    </button>
+                    </NavLink>
 
-                    <button type="button" className="home-menu-item">
+                    <NavLink
+                        to="/clientes"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "home-menu-item home-menu-item-ativo"
+                                : "home-menu-item"
+                        }
+                    >
                         <img src={iconeClientesBranco} alt="" />
                         <span>Clientes</span>
-                    </button>
+                    </NavLink>
 
-                    <button type="button" className="home-menu-item">
+                    <NavLink
+                        to="/usuario"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "home-menu-item home-menu-item-ativo"
+                                : "home-menu-item"
+                        }
+                    >
                         <img src={iconePessoa} alt="" />
                         <span>Usuários</span>
-                    </button>
+                    </NavLink>
 
                 </nav>
 
                 <button
                     type="button"
                     className="home-menu-item home-menu-sair"
+                    onClick={sairSistema}
                 >
                     <img src={iconeSair} alt="" />
                     <span>Sair</span>
@@ -98,20 +139,23 @@ export default function Home() {
                         />
                     </div>
 
+                    {/* INFORMAÇÕES DO USUÁRIO */}
                     <div className="home-usuario">
 
-                        <div className="home-usuario-foto">
-                            <img
-                                src={PerfilLaranja}
-                                alt="Foto do usuário"
-                            />
-                        </div>
+                        <NavLink
+                            to="/perfil"
+                            className="home-usuario-foto"
+                            title="Acessar meu perfil"
+                        >
+                            JS
+                        </NavLink>
 
                         <div className="home-usuario-info">
-                            <h3>João Silva</h3>
-                            <p>Analista SPED</p>
+                            <strong>João Silva</strong>
+                            <span>Analista SPED</span>
                         </div>
 
+                        
                     </div>
 
                 </header>
@@ -128,7 +172,16 @@ export default function Home() {
                     {/* CARDS DE RESUMO */}
                     <div className="home-resumo">
 
-                        <div className="home-card">
+                        <div
+                            className="home-card"
+                            role="link"
+                            tabIndex={0}
+                            onClick={() => navigate("/conteudos")}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") navigate("/conteudos");
+                            }}
+                            style={{ cursor: "pointer" }}
+                        >
 
                             <div className="home-card-icone">
                                 <img src={arquivoHome} alt="" />
@@ -145,7 +198,16 @@ export default function Home() {
 
                         </div>
 
-                        <div className="home-card">
+                        <div
+                            className="home-card"
+                            role="link"
+                            tabIndex={0}
+                            onClick={() => navigate("/notas-fiscais")}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") navigate("/notas-fiscais");
+                            }}
+                            style={{ cursor: "pointer" }}
+                        >
 
                             <div className="home-card-icone">
                                 <img src={arquivoHome} alt="" />
@@ -162,7 +224,16 @@ export default function Home() {
 
                         </div>
 
-                        <div className="home-card">
+                        <div
+                            className="home-card"
+                            role="link"
+                            tabIndex={0}
+                            onClick={() => navigate("/conteudos")}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") navigate("/conteudos");
+                            }}
+                            style={{ cursor: "pointer" }}
+                        >
 
                             <div className="home-card-icone">
                                 <img src={arquivoHome} alt="" />
@@ -187,7 +258,11 @@ export default function Home() {
                         {/* ÚLTIMAS ATUALIZAÇÕES */}
                         <section className="home-lista">
 
-                            <div className="home-lista-item">
+                            <div
+                                className="home-lista-item"
+                                onClick={() => navigate("/conteudos/detalhes")}
+                                style={{ cursor: "pointer" }}
+                            >
 
                                 <div className="home-lista-icone home-lista-icone-verde">
                                     <img src={DoisDocumentos} alt="" />
@@ -207,7 +282,11 @@ export default function Home() {
 
                             </div>
 
-                            <div className="home-lista-item">
+                            <div
+                                className="home-lista-item"
+                                onClick={() => navigate("/conteudos/detalhes")}
+                                style={{ cursor: "pointer" }}
+                            >
 
                                 <div className="home-lista-icone home-lista-icone-vermelho">
                                     <img src={DoisDocumentos} alt="" />
@@ -227,7 +306,11 @@ export default function Home() {
 
                             </div>
 
-                            <div className="home-lista-item">
+                            <div
+                                className="home-lista-item"
+                                onClick={() => navigate("/conteudos/detalhes")}
+                                style={{ cursor: "pointer" }}
+                            >
 
                                 <div className="home-lista-icone home-lista-icone-azul">
                                     <img src={DoisDocumentos} alt="" />
@@ -250,6 +333,7 @@ export default function Home() {
                             <button
                                 type="button"
                                 className="home-ver-todos"
+                                onClick={() => navigate("/conteudos")}
                             >
                                 Ver todos →
                             </button>
@@ -259,33 +343,65 @@ export default function Home() {
                         {/* FOOTER MOBILE */}
                         <footer className="home-footer">
 
-                            <button
-                                type="button"
-                                className="home-footer-item home-footer-ativo"
+                            <NavLink
+                                to="/home"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "home-footer-item home-footer-ativo"
+                                        : "home-footer-item"
+                                }
                             >
                                 <img src={iconeCasa} alt="" />
                                 <span>Início</span>
-                            </button>
+                            </NavLink>
 
-                            <button type="button" className="home-footer-item">
+                            <NavLink
+                                to="/conteudos"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "home-footer-item home-footer-ativo"
+                                        : "home-footer-item"
+                                }
+                            >
                                 <img src={iconeLivro} alt="" />
                                 <span>Conteúdos</span>
-                            </button>
+                            </NavLink>
 
-                            <button type="button" className="home-footer-item">
+                            <NavLink
+                                to="/notas-fiscais"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "home-footer-item home-footer-ativo"
+                                        : "home-footer-item"
+                                }
+                            >
                                 <img src={iconeNotas} alt="" />
                                 <span>Notas Fiscais</span>
-                            </button>
+                            </NavLink>
 
-                            <button type="button" className="home-footer-item">
+                            <NavLink
+                                to="/clientes"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "home-footer-item home-footer-ativo"
+                                        : "home-footer-item"
+                                }
+                            >
                                 <img src={iconeClientesBranco} alt="" />
                                 <span>Clientes</span>
-                            </button>
+                            </NavLink>
 
-                            <button type="button" className="home-footer-item">
+                            <NavLink
+                                to="/usuario"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "home-footer-item home-footer-ativo"
+                                        : "home-footer-item"
+                                }
+                            >
                                 <img src={iconePessoa} alt="" />
                                 <span>Usuários</span>
-                            </button>
+                            </NavLink>
 
                         </footer>
 
@@ -297,85 +413,123 @@ export default function Home() {
                             <button
                                 type="button"
                                 className="home-acesso-botao"
+                                onClick={() => navigate("/conteudos/novo")}
                             >
                                 <img
                                     src={iconeExpandir}
                                     alt=""
                                     className="home-acesso-icone-desktop"
                                 />
+
                                 <img
                                     src={NovoConteudoMobile}
                                     alt=""
                                     className="home-acesso-icone-mobile"
                                 />
+
                                 <span>Novo conteúdo</span>
+
+                                
                             </button>
+
+                                    <button
+    type="button"
+    className="home-acesso-botao"
+    onClick={() => navigate("/conteudos/revisao")}
+>
+    <img
+        src={iconeDocumento}
+        alt=""
+        className="home-acesso-icone-desktop"
+    />
+
+    <img
+        src={NovoConteudoMobile}
+        alt=""
+        className="home-acesso-icone-mobile"
+    />
+
+    <span>Conteúdos em revisão</span>
+</button>
+
 
                             <button
                                 type="button"
                                 className="home-acesso-botao"
+                                onClick={() => navigate("/enviar-xml")}
                             >
                                 <img
                                     src={iconeUpload}
                                     alt=""
                                     className="home-acesso-icone-desktop"
                                 />
+
                                 <img
                                     src={EnviarXMLMobile}
                                     alt=""
                                     className="home-acesso-icone-mobile"
                                 />
+
                                 <span>Enviar XML</span>
                             </button>
 
                             <button
                                 type="button"
                                 className="home-acesso-botao"
+                                onClick={() => navigate("/notas-fiscais")}
                             >
                                 <img
                                     src={iconeDocumento}
                                     alt=""
                                     className="home-acesso-icone-desktop docAcessoRapido"
                                 />
+
                                 <img
                                     src={ConsultarNFEmobile}
                                     alt=""
                                     className="home-acesso-icone-mobile"
                                 />
+
                                 <span>Consultar NF-e</span>
                             </button>
 
                             <button
                                 type="button"
                                 className="home-acesso-botao"
+                                onClick={() => navigate("/clientes")}
                             >
                                 <img
                                     src={iconeGrupo}
                                     alt=""
                                     className="home-acesso-icone-desktop"
                                 />
+
                                 <img
                                     src={AddClienteMobile}
                                     alt=""
                                     className="home-acesso-icone-mobile"
                                 />
+
                                 <span>Consultar clientes</span>
                             </button>
 
                             <button
                                 type="button"
                                 className="home-acesso-botao"
+                                onClick={() => navigate("/historico")}
                             >
                                 <img
                                     src={TimeAcessoRapido}
                                     alt=""
                                     className="home-acesso-icone-desktop"
                                 />
+
                                 <img
                                     src={HistoricoMobile}
                                     alt=""
                                     className="home-acesso-icone-mobile"
                                 />
+
                                 <span>Histórico de ações</span>
                             </button>
 
@@ -389,4 +543,4 @@ export default function Home() {
 
         </main>
     );
-}
+}   

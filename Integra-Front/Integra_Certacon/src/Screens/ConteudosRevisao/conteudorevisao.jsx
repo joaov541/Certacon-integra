@@ -2,17 +2,19 @@
 import { useState } from "react";
 import "./conteudorevisao.css";
 
+import { NavLink, useNavigate } from "react-router-dom";
+
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
 import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
 import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
 import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import EditarQuadrado from "../../assets/Icones/EditarQuadrado.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
-import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
+
+import Header from "../../components/Header/header";
 
 const dadosIniciais = [
     {
@@ -165,13 +167,7 @@ function ConteudoRevisao() {
 
             <main className="revisao-principal">
 
-                <Header
-                    pesquisa={pesquisa}
-                    setPesquisa={(valor) => {
-                        setPesquisa(valor);
-                        setPagina(1);
-                    }}
-                />
+                <Header />
 
                 <section className="revisao-conteudo">
 
@@ -433,17 +429,17 @@ function ConteudoRevisao() {
     );
 }
 
-/* MENU LATERAL E INFERIOR */
+/* MENU LATERAL */
 
 function Sidebar() {
-    const telaSelecionada = "Conteúdos";
+    const navigate = useNavigate();
 
     const itensMenu = [
-        { nome: "Início", icone: CasaBranca },
-        { nome: "Conteúdos", icone: LivroBranco },
-        { nome: "Notas Fiscais", icone: DoisDocumentosBranco },
-        { nome: "Clientes", icone: ADDProfileBranco },
-        { nome: "Usuários", icone: PessoaBranca },
+        { nome: "Início", icone: CasaBranca, caminho: "/home" },
+        { nome: "Conteúdos", icone: LivroBranco, caminho: "/conteudos" },
+        { nome: "Notas Fiscais", icone: DoisDocumentosBranco, caminho: "/notas-fiscais" },
+        { nome: "Clientes", icone: ADDProfileBranco, caminho: "/clientes" },
+        { nome: "Usuários", icone: PessoaBranca, caminho: "/usuario" },
     ];
 
     return (
@@ -455,133 +451,44 @@ function Sidebar() {
 
             <nav className="revisao-menu">
 
-                {itensMenu.map((item) => {
-
-                    const selecionado = telaSelecionada === item.nome;
-
-                    return (
-                        <a
-                            href="#"
-                            key={item.nome}
-                            className={
-                                selecionado
+                {itensMenu.map((item) => (
+                    <NavLink
+                        to={item.caminho}
+                        key={item.nome}
+                        className={({ isActive }) =>
+                            item.nome === "Conteúdos" &&
+                                window.location.pathname.startsWith("/conteudos")
+                                ? "revisao-menu-item revisao-menu-ativo"
+                                : isActive
                                     ? "revisao-menu-item revisao-menu-ativo"
                                     : "revisao-menu-item"
+                        }
+                    >
+                        <img
+                            src={item.icone}
+                            alt=""
+                            className={
+                                item.nome === "Conteúdos"
+                                    ? "icone-menu-selecionado"
+                                    : ""
                             }
-                            onClick={(e) => e.preventDefault()}
-                        >
-                            <img
-                                src={item.icone}
-                                alt=""
-                                className={
-                                    selecionado
-                                        ? "icone-menu-selecionado"
-                                        : ""
-                                }
-                            />
+                        />
 
-                            <span>{item.nome}</span>
-                        </a>
-                    );
-                })}
+                        <span>{item.nome}</span>
+                    </NavLink>
+                ))}
 
             </nav>
 
             <button
                 className="revisao-sair"
-                onClick={() => alert("Configure aqui a saída da conta.")}
+                onClick={() => navigate("/login")}
             >
                 <img src={SairBranco} alt="" />
                 <span>Sair</span>
             </button>
 
         </aside>
-    );
-}
-
-/* CABEÇALHO */
-
-function Header({ pesquisa, setPesquisa }) {
-    return (
-        <>
-
-            {/* HEADER MOBILE */}
-
-            <header className="revisao-header-mobile">
-
-                <div className="revisao-header-superior-mobile">
-
-                    <img
-                        src={LogoNomeMobile}
-                        alt="Integra"
-                        className="revisao-logo-mobile"
-                    />
-
-                    <div className="revisao-usuario-mobile">
-
-                        <div className="revisao-avatar-mobile">
-                            JS
-                        </div>
-
-                        <div className="revisao-dados-mobile">
-                            <strong>João Silva</strong>
-                            <span>Analista SPED</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div className="revisao-busca-mobile">
-
-                    <img src={LupaCinza} alt="" />
-
-                    <input
-                        type="text"
-                        placeholder="Buscar conteúdos, notas fiscais, etc..."
-                        value={pesquisa}
-                        onChange={(e) => setPesquisa(e.target.value)}
-                    />
-
-                </div>
-
-            </header>
-
-            {/* HEADER DESKTOP */}
-
-            <header className="revisao-header">
-
-                <div className="revisao-busca">
-
-                    <img src={LupaCinza} alt="" />
-
-                    <input
-                        type="text"
-                        placeholder="Buscar conteúdos, notas fiscais, etc..."
-                        value={pesquisa}
-                        onChange={(e) => setPesquisa(e.target.value)}
-                    />
-
-                </div>
-
-                <div className="revisao-usuario">
-
-                    <div className="revisao-avatar">
-                        JS
-                    </div>
-
-                    <div className="revisao-dados-usuario">
-                        <strong>João Silva</strong>
-                        <span>Analista SPED</span>
-                    </div>
-
-                    <span className="revisao-opcoes">•••</span>
-
-                </div>
-
-            </header>
-
-        </>
     );
 }
 

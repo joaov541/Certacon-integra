@@ -1,0 +1,103 @@
+
+.integra-header-desktop {
+    display: flex;
+    width: 100%;
+    padding: 25px 34px 10px;
+    background: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.integra-header-desktop .header-desktop-superior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 25px;
+}
+
+/* BARRA DE PESQUISA */
+
+.integra-header-desktop .header-desktop-pesquisa {
+    display: flex;
+    align-items: center;
+    width: 85%;
+    height: 38px;
+    gap: 12px;
+    padding: 0 18px;
+    border: 1.5px solid #888;
+    border-radius: 10px;
+    background: transparent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    background-color: #f3f6fc;
+}
+
+.integra-header-desktop .header-desktop-pesquisa img {
+    width: px;
+    height: 23px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.integra-header-desktop .header-desktop-pesquisa input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+}
+
+.integra-header-desktop .header-desktop-pesquisa input::placeholder {
+    color: #929292;
+}
+
+/* USUÁRIO */
+
+.integra-header-desktop .header-desktop-usuario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.integra-header-desktop .header-desktop-foto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #1d2e68;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.integra-header-desktop .header-desktop-dados {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    white-space: nowrap;
+}
+
+.integra-header-desktop .header-desktop-dados strong {
+    color: #111;
+    font-size: 18px;
+}
+
+.integra-header-desktop .header-desktop-dados span {
+    color: #888;
+    font-size: 14px;
+}
+
+/* TABLET E CELULAR */
+
+@media (max-width: 900px) {
+    .integra-header-desktop {
+        display: none;
+    }
+}

@@ -3,6 +3,7 @@ import "./detalheconteudo.css";
 
 import LogoNome from "../../assets/Icones/LogoNome.png";
 import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
@@ -18,12 +19,25 @@ import Relogio from "../../assets/Icones/Relogio.png";
 import ArquivoDetalhe from "../../assets/Icones/ArquivoDetalhe.png";
 
 function DetalheRevisao() {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const artigo = location.state?.conteudo || {
+    titulo: "Reforma Tributária: Novas Regras do IBS e CBS",
+    tema: "Reforma Tributária",
+    data: "09/10/2026",
+    autor: "Maria de Oliveira"
+  };
+
+
   const menuItems = [
-    { label: "Início", icon: CasaBranca },
-    { label: "Conteúdos", icon: LivroBranco, active: true },
-    { label: "Notas Fiscais", icon: DoisDocumentosBranco },
-    { label: "Clientes", icon: ADDProfileBranco },
-    { label: "Usuários", icon: PessoaBranca },
+    { label: "Início", icon: CasaBranca, path: "/home" },
+    { label: "Conteúdos", icon: LivroBranco, path: "/conteudos" },
+    { label: "Notas Fiscais", icon: DoisDocumentosBranco, path: "/notas-fiscais" },
+    { label: "Clientes", icon: ADDProfileBranco, path: "/clientes" },
+    { label: "Usuários", icon: PessoaBranca, path: "/usuario" },
+
   ];
 
   return (
@@ -38,23 +52,27 @@ function DetalheRevisao() {
 
         <nav className="opcoes-menu">
           {menuItems.map((item) => (
-            <a
+            <NavLink
               key={item.label}
-              href="#"
-              className={item.active ? "menu-ativo" : ""}
-              onClick={(e) => {
-                if (item.active) e.preventDefault();
-              }}
+              to={item.path}
+              className={({ isActive }) =>
+                item.label === "Conteúdos" &&
+                  window.location.pathname.startsWith("/conteudos")
+                  ? "menu-ativo"
+                  : isActive
+                    ? "menu-ativo"
+                    : ""
+              }
             >
               <img src={item.icon} alt="" />
               <span>{item.label}</span>
-            </a>
+            </NavLink>
           ))}
         </nav>
 
         <button
           className="botao-sair"
-          onClick={() => alert("Saindo do sistema...")}
+          onClick={() => navigate("/login")}
         >
           <img src={SairBranco} alt="" />
           <span>Sair</span>
@@ -141,7 +159,7 @@ function DetalheRevisao() {
 
           <button
             className="botao-voltar"
-            onClick={() => window.history.back()}
+            onClick={() => navigate("/conteudos")}
           >
             <span className="seta-voltar">←</span>
             <span>Voltar</span>
@@ -150,79 +168,47 @@ function DetalheRevisao() {
           <div className="area-artigo">
 
             <article className="artigo">
+              <article className="artigo">
 
-              <h1>
-                Reforma Tributária: Novas Regras do IBS e CBS
-              </h1>
+                <h1>{artigo.titulo}</h1>
 
-              <span className="categoria-artigo">
-                Reforma Tributária
-              </span>
-
-              <div className="informacoes-artigo">
-
-                <span>
-                  <img src={Relogio} alt="" />
-                  Publicado em 09/10/2026
+                <span className="categoria-artigo">
+                  {artigo.tema}
                 </span>
 
-                <span>
-                  <img src={Pessoa} alt="" />
-                  Por Maria de Oliveira
-                </span>
+                <div className="informacoes-artigo">
 
-                <span className="versao-artigo">
-                  ⓧ Versão 1.0
-                </span>
+                  <span>
+                    <img src={Relogio} alt="" />
+                    Publicado em {artigo.data}
+                  </span>
 
-              </div>
+                  <span>
+                    <img src={Pessoa} alt="" />
+                    Por {artigo.autor}
+                  </span>
 
-              <div className="texto-artigo">
+                  <span className="versao-artigo">
+                    ⓧ Versão 1.0
+                  </span>
 
-                <p>
-                  A Reforma Tributária do consumo no Brasil foi
-                  oficializada pela Emenda Constitucional nº 132/2023
-                  e tem como objetivo simplificar o sistema de
-                  impostos do país, acabando com a cumulatividade
-                  (efeito cascata) e reduzindo a burocracia.
-                </p>
+                </div>
 
-                <ul>
+                <div className="texto-artigo">
+                  <p>{artigo.conteudo}</p>
+                </div>
 
-                  <li>
-                    CBS (Contribuição sobre Bens e Serviços):
-                    imposto de competência federal que substitui PIS,
-                    Cofins e IPI.
-                  </li>
+                <div className="topicos-artigo">
+                  <h2>Tópicos abordados</h2>
 
-                  <li>
-                    IBS (Imposto sobre Bens e Serviços): imposto
-                    compartilhado entre estados e municípios que
-                    substitui o ICMS e o ISS.
-                  </li>
+                  <ul>
+                    {artigo.topicos?.map((topico, index) => (
+                      <li key={index}>{topico}</li>
+                    ))}
+                  </ul>
+                </div>
 
-                  <li>
-                    IS (Imposto Seletivo): conhecido como "imposto do
-                    pecado", incide sobre bens e serviços prejudiciais
-                    à saúde ou ao meio ambiente.
-                  </li>
-
-                </ul>
-
-              </div>
-
-              <div className="topicos-artigo">
-
-                <h2>Tópicos abordados</h2>
-
-                <ul>
-                  <li>O que muda com IBS e a CBS</li>
-                  <li>Cronograma de implementação</li>
-                  <li>Principais impactos para as empresas</li>
-                </ul>
-
-              </div>
-
+              </article>
             </article>
 
             {/* DOCUMENTOS */}

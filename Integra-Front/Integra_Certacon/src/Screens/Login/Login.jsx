@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 import logoIntegra from "../../assets/Icones/LogoNome.png";
@@ -12,30 +13,30 @@ import EmailCinza from "../../assets/Icones/EmailCinza.png";
 import ChaveSenha from "../../assets/Icones/ChaveSenha.png";
 
 function Login() {
+    const navigate = useNavigate();
+
     const [cnpj, setCnpj] = useState("");
     const [senha, setSenha] = useState("");
 
     function entrar(event) {
         event.preventDefault();
 
-        if (!cnpj.trim() || !senha.trim()) {
-            alert("Preencha o CNPJ e a senha para continuar.");
-            return;
-        }
-
-        alert("Login preenchido! A autenticação será conectada à API.");
+        // Login provisório: entra diretamente na próxima tela
+        navigate("/home");
     }
 
     function recuperarSenha() {
-        alert("A recuperação de senha estará disponível em breve.");
+        alert("Recuperação de senha em breve.");
     }
 
     function criarConta() {
-        alert("A criação de conta estará disponível em breve.");
+        navigate("/cadastro");
     }
 
     return (
         <main className="login">
+
+            {/* LADO ESQUERDO */}
 
             <section className="login-apresentacao">
 
@@ -48,16 +49,19 @@ function Login() {
                 </div>
 
                 <div className="texto-apresentacao">
+
                     <h1>
-                        Bem-vindo(a) ao
+                        Bem Vindo(a) ao
                         <span>Integra 2026</span>
                     </h1>
 
                     <p>
-                        Acesse o sistema e tenha em mãos os conteúdos
-                        tributários, notas fiscais e todas as informações
-                        que você precisa, de forma segura e organizada.
+                        Acesse o sistema e tenha em mãos os
+                        conteúdos tributários, notas fiscais e todas
+                        as informações que você precisa, de forma
+                        segura e organizada.
                     </p>
+
                 </div>
 
                 <div className="vantagens">
@@ -90,34 +94,47 @@ function Login() {
                     </div>
 
                 </div>
+
             </section>
+
+            {/* LADO DIREITO */}
 
             <section className="login-formulario">
 
                 <div className="formulario-conteudo">
 
-                    <header className="formulario-cabecalho">
+                    {/* LOGO MOBILE */}
 
-                        <div className="marca-mobile">
-                            <img
-                                src={LogoMobile}
-                                alt="Integra"
-                                className="logo-mobile"
-                            />
-                        </div>
+                    <div className="marca-mobile">
+                        <img
+                            src={LogoMobile}
+                            alt="Integra"
+                            className="logo-mobile"
+                        />
+                    </div>
+
+                    {/* CABEÇALHO */}
+
+                    <header className="formulario-cabecalho">
 
                         <h2>Acesse sua conta</h2>
 
-                        <p>Digite suas credenciais para continuar</p>
+                        <p>
+                            Digite suas credenciais para continuar
+                        </p>
 
                     </header>
 
+                    {/* FORMULÁRIO */}
+
                     <form onSubmit={entrar}>
+
+                        {/* IDENTIFICADOR */}
 
                         <div className="campo">
 
                             <label htmlFor="cnpj">
-                                Identificador: Email/CNPJ *
+                                Identificador: Email/CNPJ
                             </label>
 
                             <div className="campo-input">
@@ -131,7 +148,7 @@ function Login() {
                                 <input
                                     id="cnpj"
                                     type="text"
-                                    placeholder="Digite o Identificador"
+                                    placeholder="Digite o identificador"
                                     value={cnpj}
                                     onChange={(event) =>
                                         setCnpj(event.target.value)
@@ -142,6 +159,8 @@ function Login() {
                             </div>
 
                         </div>
+
+                        {/* SENHA */}
 
                         <div className="campo campo-senha">
 
@@ -180,6 +199,8 @@ function Login() {
 
                         </div>
 
+                        {/* ENTRAR */}
+
                         <button
                             type="submit"
                             className="botao-entrar"
@@ -189,11 +210,15 @@ function Login() {
 
                     </form>
 
+                    {/* DIVISOR */}
+
                     <div className="divisor">
                         <span></span>
                         <small>ou</small>
                         <span></span>
                     </div>
+
+                    {/* CRIAR CONTA */}
 
                     <button
                         type="button"

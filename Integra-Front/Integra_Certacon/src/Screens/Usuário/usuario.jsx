@@ -1,13 +1,16 @@
-
 import { useState } from "react";
 import "./usuario.css";
+
+import Header from "../../components/Header/header";
+import HeaderDesktop from "../../components/Header/headerDesktop";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
 import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
 import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
 import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import LupaCinza from "../../assets/Icones/LupaCinza.png";
+
 import LogoNome from "../../assets/Icones/LogoNome.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import EditarQuadrado from "../../assets/Icones/EditarQuadrado.png";
@@ -57,6 +60,8 @@ const dadosIniciais = [
 ];
 
 function Usuario() {
+  const navigate = useNavigate();
+
   const [usuarios, setUsuarios] = useState(dadosIniciais);
   const [pesquisa, setPesquisa] = useState("");
   const [pagina, setPagina] = useState(1);
@@ -82,6 +87,7 @@ function Usuario() {
   });
 
   const usuariosPorPagina = 5;
+
   const totalPaginas = Math.max(
     1,
     Math.ceil(usuariosFiltrados.length / usuariosPorPagina)
@@ -133,10 +139,10 @@ function Usuario() {
         lista.map((usuario) =>
           usuario.id === idEditando
             ? {
-                ...usuario,
-                ...formulario,
-                cliente: formulario.cliente.trim() || "—",
-              }
+              ...usuario,
+              ...formulario,
+              cliente: formulario.cliente.trim() || "—",
+            }
             : usuario
         )
       );
@@ -148,7 +154,10 @@ function Usuario() {
       };
 
       setUsuarios((lista) => [...lista, novoUsuario]);
-      setPagina(Math.ceil((usuarios.length + 1) / usuariosPorPagina));
+
+      setPagina(
+        Math.ceil((usuarios.length + 1) / usuariosPorPagina)
+      );
     }
 
     setModalAberto(false);
@@ -160,7 +169,10 @@ function Usuario() {
     );
 
     if (confirmar) {
-      const novaLista = usuarios.filter((usuario) => usuario.id !== id);
+      const novaLista = usuarios.filter(
+        (usuario) => usuario.id !== id
+      );
+
       setUsuarios(novaLista);
 
       const quantidadeRestante = usuariosFiltrados.length - 1;
@@ -177,45 +189,23 @@ function Usuario() {
   return (
     <div className="pagina-usuarios">
       <Sidebar />
-
       <main className="principal-usuarios">
-        <header className="topo-usuarios">
-          <div className="pesquisa-usuarios">
-            <img src={LupaCinza} alt="" />
+        <HeaderDesktop />
+        <Header />
 
-            <input
-              type="text"
-              placeholder="Buscar ações..."
-              value={pesquisa}
-              onChange={(e) => {
-                setPesquisa(e.target.value);
-                setPagina(1);
-              }}
-            />
-          </div>
-
-          <div className="usuario-logado">
-            <div className="avatar-administrador">JS</div>
-
-            <div className="dados-administrador">
-              <strong>João Silva</strong>
-              <span>Administrador</span>
-            </div>
-
-            <span className="tres-pontos">•••</span>
-          </div>
-        </header>
 
         <section className="conteudo-usuarios">
           <div className="cabecalho-usuarios">
             <h1>Usuários</h1>
 
+            {/*
             <button
               className="botao-novo-usuario"
               onClick={abrirCadastro}
             >
               + Novo Usuário
             </button>
+            */}
           </div>
 
           <div className="tabela-usuarios">
@@ -236,7 +226,9 @@ function Usuario() {
                   usuariosExibidos.map((usuario) => (
                     <tr key={usuario.id}>
                       <td>{usuario.nome}</td>
+
                       <td>{usuario.email}</td>
+
                       <td>{usuario.perfil}</td>
 
                       <td className="cliente-cnpj">
@@ -245,11 +237,10 @@ function Usuario() {
 
                       <td>
                         <span
-                          className={`status-usuario ${
-                            usuario.status === "ativo"
+                          className={`status-usuario ${usuario.status === "ativo"
                               ? "status-ativo"
                               : "status-desativado"
-                          }`}
+                            }`}
                         >
                           {usuario.status}
                         </span>
@@ -287,7 +278,9 @@ function Usuario() {
             {Array.from({ length: totalPaginas }, (_, index) => (
               <button
                 key={index + 1}
-                className={pagina === index + 1 ? "pagina-ativa" : ""}
+                className={
+                  pagina === index + 1 ? "pagina-ativa" : ""
+                }
                 onClick={() => setPagina(index + 1)}
               >
                 {index + 1}
@@ -299,7 +292,10 @@ function Usuario() {
 
       {modalAberto && (
         <div className="fundo-modal-usuario">
-          <form className="modal-usuario" onSubmit={salvarUsuario}>
+          <form
+            className="modal-usuario"
+            onSubmit={salvarUsuario}
+          >
             <h2>
               {idEditando ? "Editar usuário" : "Novo usuário"}
             </h2>
@@ -381,7 +377,10 @@ function Usuario() {
                 Cancelar
               </button>
 
-              <button type="submit" className="botao-salvar-usuario">
+              <button
+                type="submit"
+                className="botao-salvar-usuario"
+              >
                 Salvar
               </button>
             </div>
@@ -393,42 +392,80 @@ function Usuario() {
 }
 
 function Sidebar() {
+  const navigate = useNavigate();
+
   return (
-    <aside className="menu-usuarios">
-      <div className="logo-usuarios">
+     <aside className="menu-usuarios">
+
+      <div className="logo-menu-usuarios">
         <img src={LogoNome} alt="Integra" />
       </div>
 
       <nav className="navegacao-usuarios">
-        <a href="#" className="item-menu-usuario">
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            isActive
+              ? "item-menu-usuario menu-usuario-ativo"
+              : "item-menu-usuario"
+          }
+        >
           <img src={CasaBranca} alt="" />
           <span>Início</span>
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-usuario">
+        <NavLink
+          to="/conteudos"
+          className={({ isActive }) =>
+            isActive
+              ? "item-menu-usuario menu-usuario-ativo"
+              : "item-menu-usuario"
+          }
+        >
           <img src={LivroBranco} alt="" />
           <span>Conteúdos</span>
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-usuario">
+        <NavLink
+          to="/notas-fiscais"
+          className={({ isActive }) =>
+            isActive
+              ? "item-menu-usuario menu-usuario-ativo"
+              : "item-menu-usuario"
+          }
+        >
           <img src={DoisDocumentosBranco} alt="" />
           <span>Notas Fiscais</span>
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-usuario">
+        <NavLink
+          to="/clientes"
+          className={({ isActive }) =>
+            isActive
+              ? "item-menu-usuario menu-usuario-ativo"
+              : "item-menu-usuario"
+          }
+        >
           <img src={ADDProfileBranco} alt="" />
           <span>Clientes</span>
-        </a>
+        </NavLink>
 
-        <a href="#" className="item-menu-usuario menu-usuario-ativo">
+        <NavLink
+          to="/usuario"
+          className={({ isActive }) =>
+            isActive
+              ? "item-menu-usuario menu-usuario-ativo"
+              : "item-menu-usuario"
+          }
+        >
           <img src={PessoaBranca} alt="" />
           <span>Usuários</span>
-        </a>
+        </NavLink>
       </nav>
 
       <button
         className="sair-usuarios"
-        onClick={() => alert("Configure aqui a saída da conta.")}
+        onClick={() => navigate("/login")}
       >
         <img src={SairBranco} alt="" />
         <span>Sair</span>

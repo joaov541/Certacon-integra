@@ -150,8 +150,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background-color: #dce7f7;
   color: #1d306c;
@@ -166,12 +166,12 @@
 }
 
 .dados-usuario strong {
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .dados-usuario span {
   color: #777f8f;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .botao-perfil-opcoes {
@@ -203,14 +203,20 @@
 .botao-voltar {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 28px;
+  padding: 0;
   border: none;
-  background: none;
+  background: transparent;
   color: #4b91dc;
   cursor: pointer;
+  font-family: Arial, sans-serif;
   font-size: 14px;
   font-weight: bold;
+}
+
+.botao-voltar:hover {
+  color: #1d306c;
 }
 
 .seta-voltar {
@@ -376,10 +382,12 @@
   padding: 9px 15px;
   border: 1px solid #7181b1;
   background-color: transparent;
-  color: #111111;
+  color: white;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+  background-color: orange;
+  border-radius: 8px;
 }
 
 .botao-baixar:hover {

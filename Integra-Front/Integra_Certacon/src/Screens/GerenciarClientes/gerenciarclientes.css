@@ -11,6 +11,107 @@
     font-family: Arial, sans-serif;
 }
 
+/* CARDS MOBILE - ESCONDIDOS NO DESKTOP */
+
+.clientes-cards-mobile {
+    display: none;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .tabela-clientes {
+        display: none;
+    }
+
+    .clientes-cards-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .card-cliente {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        min-height: 76px;
+        padding: 12px;
+        background: #f8faff;
+        border: 1px solid #d5dce8;
+        border-radius: 10px;
+        box-shadow: 0 2px 3px #00000020;
+    }
+
+    .dados-card-cliente {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .dados-card-cliente strong {
+        font-size: 13px;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .dados-card-cliente > span:not(.validacao-card) {
+        font-size: 12px;
+        color: #777;
+    }
+
+    .validacao-card {
+        width: fit-content;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 10px;
+    }
+
+    .cnpj-valido {
+        background: #bcebdc;
+        color: #286b58;
+    }
+
+    .cnpj-invalido {
+        background: #f3b5b5;
+        color: #9b3030;
+    }
+
+    .acoes-card-cliente {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .acoes-card-cliente button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+    }
+
+    .acoes-card-cliente img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+    }
+
+    .sem-clientes-mobile {
+        padding: 15px;
+        text-align: center;
+        color: #777;
+        font-size: 13px;
+    }
+}
+
 /* MENU LATERAL */
 
 .menu-gerenciar-clientes {
@@ -200,6 +301,44 @@
     font-size: 27px;
     font-weight: 600;
 }
+/* TÍTULO E BOTÃO CRIAR CLIENTE */
+
+.titulo-gerenciar-clientes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+}
+
+.titulo-gerenciar-clientes h1 {
+    margin: 17px 0 1px;
+    color: #123c68;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.botao-criar-cliente {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    height: 38px;
+    padding: 0 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 7px;
+    background: #1d2e68;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.botao-criar-cliente:hover {
+    background: #293f89;
+}
 
 /* FORMULÁRIO DE CADASTRO */
 
@@ -207,14 +346,14 @@
     width: 100%;
     min-height: 160px;
     padding: 2px 8px 10px;
-    border: 2px solid #123c68;
+
     border-radius: 7px;
     margin-top: 15px;
 }
 
 .formulario-cliente h2 {
     margin: 0 0 10px;
-    color: #123c68;
+    color: #123c68; /*cadastrar cliente*/
     font-size: 21px;
     font-weight: bold;
 }
@@ -252,10 +391,7 @@
     font-size: 14px;
 }
 
-.campo-cliente input:focus,
-.campo-cliente select:focus {
-    border-color: #1d2e68;
-}
+
 
 .campo-cliente select {
     cursor: pointer;
@@ -298,9 +434,6 @@
     display: none;
 }
 
-.select-com-seta select:focus {
-    border-color: #1d2e68;
-}
 
 .select-com-seta img {
     position: absolute;
@@ -327,8 +460,6 @@
     min-height: 36px;
     margin-top: 10px;
 }
-
-/* MENSAGEM E BOTÃO VALIDAR CNPJ */
 
 .validacao-cnpj {
     display: flex;
@@ -409,7 +540,7 @@
 
 .titulo-empresas-cadastradas {
     margin: 5px 0 5px;
-    color: #123c68;
+    color: #123c68f5;
     font-size: 21px;
     font-weight: 600;
     margin-top: 15px;
@@ -628,80 +759,107 @@
     cursor: not-allowed;
 }
 
-/* RESPONSIVIDADE */
+/* TABLETS */
 
-@media (max-width: 900px) {
+@media (min-width: 601px) and (max-width: 1024px) {
+
     .menu-gerenciar-clientes {
         width: 180px;
         min-width: 180px;
-        padding: 18px 12px;
-    }
-
-    .topo-gerenciar-clientes {
-        padding: 10px 18px;
-    }
-
-    .conteudo-gerenciar-clientes {
-        padding: 8px 18px 35px;
-    }
-
-    .campos-cliente {
-        gap: 15px;
-    }
-
-    .rodape-formulario-cliente {
-        margin-top: 10px;
-    }
-
-    .validacao-cnpj {
-        gap: 8px;
-    }
-
-    .botoes-formulario-cliente {
-        margin-left: auto;
-    }
-}
-
-@media (max-width: 600px) {
-    .pagina-gerenciar-clientes {
-        flex-direction: column;
-    }
-
-    .menu-gerenciar-clientes {
-        width: 100%;
-        min-width: 0;
-        min-height: auto;
-        padding: 12px 18px;
-    }
-
-    .logo-gerenciar-clientes {
-        margin-bottom: 10px;
+        padding: 18px 10px;
     }
 
     .logo-gerenciar-clientes img {
-        height: 45px;
-    }
-
-    .navegacao-gerenciar-clientes {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
+        max-width: 100%;
+        height: auto;
     }
 
     .item-menu-clientes {
-        gap: 5px;
         margin-left: 0;
-        font-size: 10px;
+        gap: 8px;
+        padding: 9px 5px;
     }
 
     .item-menu-clientes img {
-        width: 20px;
-        height: 20px;
+        width: 28px;
+        height: 28px;
     }
 
-    .sair-gerenciar-clientes {
-        margin-top: 10px;
+    .topo-gerenciar-clientes {
+        padding: 10px 15px;
     }
+
+    .pesquisa-topo-clientes {
+        width: 75%;
+    }
+
+    .conteudo-gerenciar-clientes {
+        padding: 8px 15px 35px;
+    }
+
+    .conteudo-gerenciar-clientes h1 {
+        font-size: 24px;
+    }
+
+    .campos-cliente {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .campo-razao-social {
+        grid-column: 1 / -1;
+    }
+
+    .rodape-formulario-cliente {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .botoes-formulario-cliente {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-end;
+    }
+
+    .tabela-clientes {
+        overflow-x: auto;
+    }
+
+    .tabela-clientes table {
+        min-width: 550px;
+    }
+
+    .tabela-clientes thead th {
+        font-size: 12px;
+    }
+
+    .tabela-clientes tbody td {
+        font-size: 12px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    /* OCULTA O MENU AZUL */
+
+    .menu-gerenciar-clientes {
+        display: none;
+    }
+
+    .pagina-gerenciar-clientes {
+        flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    .principal-gerenciar-clientes {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* CABEÇALHO */
 
     .topo-gerenciar-clientes {
         height: auto;
@@ -711,25 +869,46 @@
 
     .pesquisa-topo-clientes {
         width: 60%;
+        min-width: 0;
     }
 
+    .usuario-topo-clientes {
+        flex-shrink: 0;
+    }
+
+    /* CONTEÚDO */
+
     .conteudo-gerenciar-clientes {
+        width: 100%;
         padding: 15px 12px 25px;
     }
 
     .conteudo-gerenciar-clientes h1 {
         font-size: 22px;
+        margin-top: 10px;
         margin-bottom: 8px;
     }
 
+    /* FORMULÁRIO */
+
     .formulario-cliente {
+        width: 100%;
         min-height: auto;
         padding: 8px;
+    }
+
+    .formulario-cliente h2 {
+        font-size: 19px;
     }
 
     .campos-cliente {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+
+    .campo-cliente input,
+    .campo-cliente select {
+        width: 100%;
     }
 
     .campo-cnpj small {
@@ -757,13 +936,17 @@
     }
 
     .botoes-formulario-cliente {
+        display: flex;
         width: 100%;
         margin-left: 0;
     }
 
     .botoes-formulario-cliente button {
         flex: 1;
+        width: auto;
     }
+
+    /* EMPRESAS CADASTRADAS */
 
     .titulo-empresas-cadastradas {
         margin-top: 18px;
@@ -774,11 +957,378 @@
         margin-bottom: 15px;
     }
 
+    /* TABELA */
+
+    .tabela-clientes {
+        width: 100%;
+        overflow-x: auto;
+    }
+
     .tabela-clientes table {
         min-width: 650px;
     }
 
     .paginacao-clientes {
         padding-top: 25px;
+    }
+}
+
+/* HEADER OFICIAL */
+
+.principal-gerenciar-clientes .integra-header {
+    gap: 18px;
+    padding: 15px 25px 10px;
+    background: #fff;
+}
+
+.principal-gerenciar-clientes .header-logo {
+    width: 220px;
+    height: 75px;
+    object-fit: contain;
+}
+
+.principal-gerenciar-clientes .header-foto {
+    width: 55px;
+    height: 55px;
+}
+
+.principal-gerenciar-clientes .header-dados strong {
+    font-size: 15px;
+}
+
+.principal-gerenciar-clientes .header-dados span {
+    font-size: 12px;
+}
+
+.principal-gerenciar-clientes .header-pesquisa {
+    height: 40px;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    /* HEADER */
+
+    .principal-gerenciar-clientes .integra-header {
+        padding: 12px 15px 8px;
+        gap: 10px;
+    }
+
+    .principal-gerenciar-clientes .header-superior {
+        min-height: 45px;
+    }
+
+    .principal-gerenciar-clientes .header-logo {
+        width: 145px;
+        height: 55px;
+    }
+
+    .principal-gerenciar-clientes .header-foto {
+        width: 42px;
+        height: 42px;
+    }
+
+    .principal-gerenciar-clientes .header-dados strong {
+        font-size: 11px;
+    }
+
+    .principal-gerenciar-clientes .header-dados span {
+        font-size: 9px;
+    }
+
+    .principal-gerenciar-clientes .header-pesquisa {
+        height: 36px;
+        padding: 0 12px;
+    }
+
+    .principal-gerenciar-clientes .header-pesquisa img {
+        width: 19px;
+        height: 19px;
+    }
+
+    .principal-gerenciar-clientes .header-pesquisa input {
+        font-size: 12px;
+    }
+
+    /* MENU INFERIOR */
+
+    .menu-gerenciar-clientes {
+        display: flex;
+        position: fixed;
+        z-index: 1000;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        min-width: 0;
+        height: 65px;
+        min-height: 65px;
+        padding: 5px 2px;
+        background: #1d2e68;
+    }
+
+    .logo-gerenciar-clientes,
+    .sair-gerenciar-clientes {
+        display: none;
+    }
+
+    .navegacao-gerenciar-clientes {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        gap: 0;
+    }
+
+    .item-menu-clientes {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2px;
+        height: 100%;
+        margin: 0;
+        padding: 2px 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .item-menu-clientes img {
+        width: 27px;
+        height: 27px;
+    }
+
+    .item-menu-clientes span {
+        font-size: 9px;
+        text-align: center;
+    }
+
+    .item-menu-clientes.ativo {
+        background: transparent;
+        color: #ff8500;
+    }
+
+    /* ÁREA PRINCIPAL */
+
+    .principal-gerenciar-clientes {
+        padding-bottom: 65px;
+    }
+
+    .conteudo-gerenciar-clientes {
+        padding: 5px 14px 25px;
+    }
+
+    .conteudo-gerenciar-clientes h1 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-size: 20px;
+    }
+
+    /* FORMULÁRIO */
+
+    .formulario-cliente {
+        margin-top: 5px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .formulario-cliente h2 {
+        margin-bottom: 7px;
+        font-size: 13px;
+    }
+
+    .campos-cliente {
+        gap: 10px;
+    }
+
+    .campo-cliente label {
+        font-size: 12px;
+    }
+
+    .campo-cliente input,
+    .campo-cliente select {
+        height: 27px;
+        font-size: 12px;
+    }
+
+    .campo-cnpj small {
+        font-size: 10px;
+    }
+
+    .rodape-formulario-cliente {
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .validacao-cnpj {
+        gap: 7px;
+    }
+
+    .botao-validar-cnpj {
+        height: 28px;
+        min-width: 100px;
+        font-size: 10px;
+    }
+
+    .botoes-formulario-cliente button {
+        height: 29px;
+        font-size: 11px;
+    }
+
+    /* EMPRESAS CADASTRADAS */
+
+    .titulo-empresas-cadastradas {
+        margin-top: 12px;
+        margin-bottom: 8px;
+        font-size: 19px;
+    }
+
+    .pesquisa-clientes {
+        height: 39px;
+        margin-bottom: 12px;
+        padding: 0 12px;
+        border: 1px solid #d5dce8;
+        border-radius: 9px;
+        box-shadow: 0 2px 3px #00000020;
+    }
+
+    .pesquisa-clientes img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .pesquisa-clientes input {
+        font-size: 12px;
+    }
+
+    /* TABELA DESKTOP OCULTA */
+
+    .tabela-clientes {
+        display: none;
+    }
+
+    /* CARDS MOBILE */
+
+    .clientes-cards-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .card-cliente {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        min-height: 76px;
+        padding: 10px;
+        background: #f8faff;
+        border: 1px solid #d5dce8;
+        border-radius: 10px;
+        box-shadow: 0 2px 3px #00000020;
+    }
+
+    .dados-card-cliente {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .dados-card-cliente strong {
+        overflow: hidden;
+        color: #222;
+        font-size: 13px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .dados-card-cliente > span:not(.validacao-card) {
+        color: #777;
+        font-size: 12px;
+    }
+
+    .validacao-card {
+        width: fit-content;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 10px;
+    }
+
+    .cnpj-valido {
+        background: #bcebdc;
+        color: #286b58;
+    }
+
+    .cnpj-invalido {
+        background: #f3b5b5;
+        color: #9b3030;
+    }
+
+    .acoes-card-cliente {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .acoes-card-cliente button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .acoes-card-cliente img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+    }
+
+    .sem-clientes-mobile {
+        padding: 15px;
+        color: #777;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    /* PAGINAÇÃO */
+
+    .paginacao-clientes {
+        margin-top: 15px;
+        padding-top: 5px;
+    }
+}
+/* HEADER DESKTOP E MOBILE */
+
+/* DESKTOP */
+@media (min-width: 901px) {
+    .principal-gerenciar-clientes > .integra-header {
+        display: none;
+    }
+
+    .principal-gerenciar-clientes > .integra-header-desktop {
+        display: flex;
+    }
+}
+
+/* TABLET E MOBILE */
+@media (max-width: 900px) {
+    .principal-gerenciar-clientes > .integra-header-desktop {
+        display: none;
+    }
+
+    .principal-gerenciar-clientes > .integra-header {
+        display: flex;
     }
 }

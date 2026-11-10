@@ -2,6 +2,7 @@
 import LogoIntegra from "../../assets/Icones/LogoNomeMobile.png";
 import LupaPesquisa from "../../assets/Icones/LupaPesquisa.png";
 import "./header.css";
+import { NavLink } from "react-router-dom";
 
 function Header() {
   return (
@@ -17,9 +18,13 @@ function Header() {
 
         <div className="header-usuario">
 
-          <div className="header-foto">
+          <NavLink
+            to="/perfil"
+            className="header-foto"
+            title="Acessar meu perfil"
+          >
             JS
-          </div>
+          </NavLink>
 
           <div className="header-dados">
             <strong>João Silva</strong>

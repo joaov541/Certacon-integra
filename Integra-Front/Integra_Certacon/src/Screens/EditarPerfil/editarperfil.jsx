@@ -2,6 +2,7 @@
 import { useState } from "react";
 import "./editarperfil.css";
 
+import { NavLink, useNavigate } from "react-router-dom";
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
 import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
@@ -16,18 +17,20 @@ import Telefone from "../../assets/Icones/Telefone.png";
 import CidadeEmpresa from "../../assets/Icones/CidadeEmpresa.png";
 import Pessoa from "../../assets/Icones/Pessoa.png";
 
-import ChaveSenha from "../../assets/Icones/ChaveSenha.png"
-import TelefonePerfil from "../../assets/Icones/TelefonePerfil.png"
-import SairCinza from "../../assets/Icones/SairCinza.png"
-import EmailPerfil from "../../assets/Icones/EmailPerfil.png"
-import EscudoCinzaPerfil from "../../assets/Icones/EscudoCinzaPerfil.png"
-import EmpresaPerfil from "../../assets/Icones/EmpresaPerfil.png"
-import FusoHorario from "../../assets/Icones/FusoHorario.png"
-import Idioma from "../../assets/Icones/Idioma.png"
-import PredioPerfil from "../../assets/Icones/PredioPerfil.png"
+import ChaveSenha from "../../assets/Icones/ChaveSenha.png";
+import TelefonePerfil from "../../assets/Icones/TelefonePerfil.png";
+import SairCinza from "../../assets/Icones/SairCinza.png";
+import EmailPerfil from "../../assets/Icones/EmailPerfil.png";
+import EscudoCinzaPerfil from "../../assets/Icones/EscudoCinzaPerfil.png";
+import EmpresaPerfil from "../../assets/Icones/EmpresaPerfil.png";
+import FusoHorario from "../../assets/Icones/FusoHorario.png";
+import Idioma from "../../assets/Icones/Idioma.png";
+import PredioPerfil from "../../assets/Icones/PredioPerfil.png";
+import Header from "../../components/Header/header";
 
 function EditarPerfil() {
     const [modoEdicao, setModoEdicao] = useState(false);
+    const navigate = useNavigate();
 
     const [perfil, setPerfil] = useState({
         nome: "João Silva",
@@ -68,6 +71,11 @@ function EditarPerfil() {
 
                 <section className="conteudo-perfil">
 
+                    {/* BOTÃO VOLTAR - SOMENTE MOBILE */}
+                    <NavLink to="/home" className="voltar-perfil">
+                        ← Voltar
+                    </NavLink>
+
                     <h1>Meu Perfil</h1>
 
                     <div className="area-perfil">
@@ -75,7 +83,7 @@ function EditarPerfil() {
                         {/* CARTÃO PRINCIPAL */}
                         <div className="cartao-perfil">
 
-                            <div className="foto-perfil">
+                            <div className="foto-perfil1">
                                 <img src={Pessoa} alt="Foto do usuário" />
                             </div>
 
@@ -279,7 +287,7 @@ function EditarPerfil() {
 
                                 <div className="configuracao-item">
                                     <span className="icone-configuracao">
-                                    <img src={FusoHorario} alt="" />
+                                        <img src={FusoHorario} alt="" />
                                     </span>
 
                                     <div>
@@ -303,83 +311,51 @@ function EditarPerfil() {
 }
 
 function Sidebar() {
+    const navigate = useNavigate();
+
     return (
         <aside className="menu-perfil">
 
-            <div className="logo-perfil">
-                <img src={LogoNome} alt="Integra" />
-            </div>
+         
 
             <nav className="navegacao-perfil">
 
-                <a href="#" className="item-menu-perfil">
+                <NavLink to="/home" className="item-menu-perfil">
                     <img src={CasaBranca} alt="" />
                     <span>Início</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-perfil">
+                <NavLink to="/conteudos" className="item-menu-perfil">
                     <img src={LivroBranco} alt="" />
                     <span>Conteúdos</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-perfil">
+                <NavLink to="/notas-fiscais" className="item-menu-perfil">
                     <img src={DoisDocumentosBranco} alt="" />
                     <span>Notas Fiscais</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-perfil">
+                <NavLink to="/clientes" className="item-menu-perfil">
                     <img src={ADDProfileBranco} alt="" />
                     <span>Clientes</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-perfil">
+                <NavLink to="/usuario" className="item-menu-perfil">
                     <img src={PessoaBranca} alt="" />
                     <span>Usuários</span>
-                </a>
+                </NavLink>
 
             </nav>
 
             <button
                 className="sair-perfil"
-                onClick={() => alert("Configure aqui a saída da conta.")}
+                onClick={() => navigate("/login")}
             >
                 <img src={SairBranco} alt="" />
                 <span>Sair</span>
             </button>
 
         </aside>
-    );
-}
-
-function Header({ pesquisa, setPesquisa }) {
-    return (
-        <header className="topo-perfil">
-
-            <div className="pesquisa-topo-perfil">
-                <img src={LupaCinza} alt="" />
-
-                <input
-                    type="text"
-                    placeholder="Buscar ações..."
-                    value={pesquisa}
-                    onChange={(e) => setPesquisa(e.target.value)}
-                />
-            </div>
-
-            <div className="usuario-topo-perfil">
-
-                <div className="avatar-topo-perfil">
-                    JS
-                </div>
-
-                <div className="dados-usuario-perfil">
-                    <strong>João Silva</strong>
-                    <span>Administrador</span>
-                </div>
-
-            </div>
-
-        </header>
     );
 }
 

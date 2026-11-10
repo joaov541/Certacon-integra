@@ -1,8 +1,3 @@
-
-* {
-  box-sizing: border-box;
-}
-
 .pagina-notas {
   display: flex;
   min-height: 100vh;
@@ -32,9 +27,9 @@
   margin-bottom: 28px;
 }
 
-.logo-notas img {
-  max-width: 100%;
-  object-fit: contain;
+
+.logo-notas span {
+  font-size: 14px;
 }
 
 .navegacao-notas {
@@ -101,6 +96,34 @@
   font-size: 14px;
 }
 
+
+/* PADRÃO DO MENU DESKTOP — IGUAL ÀS TELAS INÍCIO E CONTEÚDOS */
+.menu-notas {
+  flex: 0 0 334px;
+  width: 334px;
+  min-width: 334px;
+  padding: 25px 20px;
+  border-right: none;
+}
+.logo-notas { margin-bottom: 35px; }
+.navegacao-notas { gap: 25px; }
+.item-menu-notas {
+  gap: 13px;
+  padding: 9px 8px;
+  border-radius: 5px;
+  font-size: 15px;
+  margin-left: 20px;
+}
+.item-menu-notas:hover,
+.item-menu-notas.menu-notas-ativo {
+  background: rgba(255, 255, 255, 0.12);
+}
+.sair-notas {
+  gap: 12px;
+  padding: 8px 10px;
+  font-size: 11px;
+}
+
 /* Área principal */
 .principal-notas {
   flex: 1;
@@ -122,7 +145,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  width: min(100%, 665px);
+  width: min(100%, 950px);
   height: 39px;
   padding: 0 12px;
   border-radius: 6px;
@@ -171,13 +194,13 @@
 }
 
 .usuario-topo-notas strong {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .usuario-topo-notas div:nth-child(2) span {
   margin-top: 3px;
   color: #777777;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .tres-pontos-notas {
@@ -195,8 +218,8 @@
   margin: 0 0 5px;
   color: #12375f;
   font-size: 30px;
-  font-weight:bold;
-  
+  font-weight: bold;
+
 }
 
 /* Filtros superiores */
@@ -291,7 +314,7 @@
   margin-right: 10px;
 }
 
-.campo-periodo > span {
+.campo-periodo>span {
   flex-shrink: 0;
   margin: 0;
   color: #777777;
@@ -479,122 +502,6 @@
 }
 
 /* Responsividade */
-@media (max-width: 1200px) {
-  .filtros-notas {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 12px;
-    margin-bottom: 40px;
-  }
-
-  .filtro-periodo,
-  .filtro-cliente,
-  .filtro-status {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .botao-buscar-notas {
-    width: 100%;
-  }
-
-  .paginacao-notas {
-    margin-top: 70px;
-  }
-}
-
-@media (max-width: 650px) {
-  .pagina-notas {
-    flex-direction: column;
-  }
-
-  .menu-notas {
-    width: 100%;
-    min-height: auto;
-    padding: 12px;
-    border-right: none;
-    border-bottom: 2px solid #168bff;
-  }
-
-  .logo-notas {
-    justify-content: flex-start;
-    margin-bottom: 15px;
-  }
-
-  .logo-notas img {
-    max-width: 165px;
-  }
-
-  .navegacao-notas {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .item-menu-notas {
-    gap: 6px;
-    margin-left: 0;
-    font-size: 11px;
-  }
-
-  .item-menu-notas img {
-    width: 20px;
-    height: 20px;
-  }
-
-  .sair-notas {
-    margin-top: 12px;
-  }
-
-  .topo-notas {
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 12px;
-  }
-
-  .pesquisa-topo-notas {
-    width: 100%;
-  }
-
-  .usuario-topo-notas {
-    margin-left: auto;
-  }
-
-  .conteudo-notas {
-    padding: 18px 12px;
-  }
-
-  .conteudo-notas h1 {
-    font-size: 22px;
-  }
-
-  .filtros-notas {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-    margin-bottom: 30px;
-  }
-
-  .filtro-periodo,
-  .filtro-cliente,
-  .filtro-status {
-    width: 100%;
-  }
-
-  .tabela-notas {
-    min-width: 750px;
-  }
-
-  .paginacao-notas {
-    margin-top: 35px;
-  }
-
-  /* =====================================================
-   RESPONSIVIDADE COMPLETA - Notas Fiscais
-   Apague a parte de responsividade antiga do Notasfiscais.css
-   (do comentário "Responsividade" até o fim do arquivo)
-   e cole este arquivo inteiro no lugar.
-   ===================================================== */
-
 /* ---------- Já existiam (copiados sem alteração) ---------- */
 
 @media (max-width: 1200px) {
@@ -709,7 +616,9 @@
 
 /* ---------- Novos ---------- */
 
-/* Notebook pequeno e tablet deitado */
+/* Notebook pequeno e tablet deitado (901px a 1100px):
+   menu mais estreito para sobrar espaço, e a tabela
+   rola para o lado em vez de espremer as colunas */
 @media (min-width: 901px) and (max-width: 1100px) {
   .menu-notas {
     width: 250px;
@@ -825,4 +734,461 @@
     justify-content: center;
   }
 }
+
+/* =====================================================
+   LAYOUT DO CELULAR (até 650px), igual ao protótipo
+   ===================================================== */
+
+@media (max-width: 650px) {
+  /* ---------- Página ---------- */
+
+  .pagina-notas,
+  .principal-notas {
+    background: #f4f7fc;
+  }
+
+  .pagina-notas {
+    position: relative;
+  }
+
+  /* ---------- Menu: o logo vai para o topo e os links viram a barra de baixo ---------- */
+
+  /* o menu deixa de ser uma caixa, assim o logo e os links ficam soltos na página */
+  .menu-notas {
+    display: contents;
+  }
+
+  .logo-notas {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    z-index: 5;
+    margin: 0;
+  }
+
+  .logo-notas img {
+    width: 190px;
+    max-width: 190px;
+    height: auto;
+  }
+
+  /* se o seu LogoNome.png tiver o texto branco, ele some no fundo claro.
+     Use a versão colorida do logo ou tire os comentários destas linhas:
+  .logo-notas {
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #1d2e68;
+  }
+  */
+
+  .navegacao-notas {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    gap: 0;
+    padding: 8px 4px 10px;
+    background: #1d2e68;
+  }
+
+  .item-menu-notas {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    margin: 0;
+    padding: 2px 0;
+    text-align: center;
+  }
+
+  .item-menu-notas:hover,
+  .item-menu-notas.menu-notas-ativo {
+    background: transparent;
+  }
+
+  .item-menu-notas img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .item-menu-notas span {
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* página atual em laranja (o filtro pinta o ícone branco de laranja) */
+  .item-menu-notas.menu-notas-ativo span {
+    color: #f38f2c;
+  }
+
+  .item-menu-notas.menu-notas-ativo img {
+    filter: brightness(0) invert(51%) sepia(97%) saturate(2061%) hue-rotate(347deg) brightness(127%) contrast(91%);
+  }
+
+  /* o protótipo do celular não tem "Sair" */
+  .sair-notas {
+    display: none;
+  }
+
+  /* ---------- Topo: logo à esquerda, usuário à direita, busca embaixo ---------- */
+
+  .topo-notas {
+    align-items: center;
+    gap: 14px;
+    min-height: 0;
+    padding: 14px 16px 6px;
+    border-bottom: none;
+    background: transparent;
+  }
+
+  .usuario-topo-notas {
+    order: -1;
+    margin-left: auto;
+    gap: 10px;
+  }
+
+  .foto-usuario-notas {
+    width: 52px;
+    height: 52px;
+  }
+
+  .usuario-topo-notas strong {
+    font-size: 15px;
+  }
+
+  .usuario-topo-notas div:nth-child(2) span {
+    font-size: 12px;
+  }
+
+  .usuario-topo-notas .tres-pontos-notas {
+    display: none;
+  }
+
+  .pesquisa-topo-notas {
+    height: 42px;
+    border: 1px solid #555555;
+    background: #ffffff;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* ---------- Conteúdo ---------- */
+
+  .conteudo-notas {
+    padding: 8px 16px 100px;
+  }
+
+  .conteudo-notas h1 {
+    color: #1d2e68;
+    font-size: 24px;
+  }
+
+  /* filtros: período em cima, cliente e status lado a lado, botão à direita */
+  .filtros-notas {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .filtro-periodo {
+    grid-column: 1 / -1;
+  }
+
+  .botao-buscar-notas {
+    grid-column: 2;
+    height: 52px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* ---------- Tabela vira uma lista de cards ---------- */
+
+  .tabela-notas-container {
+    overflow-x: visible;
+  }
+
+  .tabela-notas,
+  .tabela-notas tbody {
+    display: block;
+    min-width: 0;
+  }
+
+  .tabela-notas thead {
+    display: none;
+  }
+
+  .tabela-notas tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "chave cliente status"
+      "emissao valor acoes";
+    gap: 14px 8px;
+    margin-bottom: 14px;
+    padding: 14px 12px;
+    border: 1px solid #cfd3da;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  /* tira o visual de tabela de cada célula */
+  .pagina-notas .tabela-notas tbody tr td:nth-child(n) {
+    display: block;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    text-align: left;
+  }
+
+  /* posição de cada informação dentro do card */
+  .tabela-notas td:nth-child(1) {
+    grid-area: chave;
+  }
+
+  .tabela-notas td:nth-child(2) {
+    grid-area: emissao;
+    font-size: 14px;
+  }
+
+  .tabela-notas td:nth-child(3) {
+    grid-area: cliente;
+    font-size: 13px;
+  }
+
+  .tabela-notas td:nth-child(4) {
+    grid-area: valor;
+    font-size: 13px;
+  }
+
+  .tabela-notas td:nth-child(5) {
+    grid-area: status;
+    justify-self: end;
+    align-self: start;
+  }
+
+  .tabela-notas td:nth-child(6) {
+    grid-area: acoes;
+    justify-self: end;
+    align-self: end;
+  }
+
+  .tabela-notas .chave-nota {
+    font-size: 11px;
+  }
+
+  /* títulos de cada informação (antes eram o cabeçalho da tabela) */
+  .tabela-notas td:nth-child(1)::before {
+    content: "Chave de acesso";
+  }
+
+  .tabela-notas td:nth-child(2)::before {
+    content: "Emissão";
+  }
+
+  .tabela-notas td:nth-child(3)::before {
+    content: "Cliente";
+  }
+
+  .tabela-notas td:nth-child(4)::before {
+    content: "Valor";
+  }
+
+  .tabela-notas td:nth-child(-n + 4)::before {
+    display: block;
+    margin-bottom: 2px;
+    color: #1d2e68;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  /* mensagem "Nenhuma nota fiscal encontrada" ocupa o card inteiro, sem título */
+  .tabela-notas td.nenhuma-nota::before {
+    content: none;
+  }
+
+  .tabela-notas tbody tr td.nenhuma-nota {
+    grid-area: auto;
+    grid-column: 1 / -1;
+  }
+
+  /* ---------- Paginação: 1 2 3 > no canto direito ---------- */
+
+  .paginacao-notas {
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  .paginacao-notas button:first-child {
+    display: none;
+  }
+}
+
+/* Celulares bem pequenos: logo um pouco menor para não bater no usuário */
+@media (max-width: 400px) {
+  .logo-notas img {
+    width: 150px;
+    max-width: 150px;
+  }
+}
+
+/* =====================================================
+   TABLET (651px a 1024px): o menu vai para a barra de baixo,
+   igual ao celular. Só o notebook fica com o menu do lado.
+   ===================================================== */
+@media (min-width: 651px) and (max-width: 1024px) {
+  .pagina-notas {
+    position: relative;
+  }
+
+  .menu-notas {
+    display: contents;
+  }
+
+  .logo-notas {
+    position: absolute;
+    top: 12px;
+    left: 24px;
+    z-index: 5;
+    margin: 0;
+  }
+
+  .logo-notas img {
+    width: 180px;
+    max-width: 180px;
+    height: auto;
+  }
+
+  .navegacao-notas {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    gap: 0;
+    padding: 8px 4px 10px;
+    background: #1d2e68;
+  }
+
+  .item-menu-notas {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    margin: 0;
+    padding: 2px 0;
+    text-align: center;
+  }
+
+  .item-menu-notas:hover,
+  .item-menu-notas.menu-notas-ativo {
+    background: transparent;
+  }
+
+  .item-menu-notas img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .item-menu-notas span {
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* página atual em laranja */
+  .item-menu-notas.menu-notas-ativo span {
+    color: #f38f2c;
+  }
+
+  .item-menu-notas.menu-notas-ativo img {
+    filter: brightness(0) invert(51%) sepia(97%) saturate(2061%) hue-rotate(347deg) brightness(127%) contrast(91%);
+  }
+
+  .sair-notas {
+    display: none;
+  }
+
+  /* o topo deixa espaço para o logo à esquerda */
+  .topo-notas {
+    padding-left: 230px;
+  }
+
+  /* espaço para o conteúdo não ficar atrás da barra de baixo */
+  .conteudo-notas {
+    padding-bottom: 100px;
+  }
+}
+
+/* =====================================================
+   CELULAR: topo em duas linhas
+   (logo e bolinha do perfil em cima, busca embaixo)
+   ===================================================== */
+@media (max-width: 650px) {
+  .topo-notas {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "espaco perfil"
+      "busca busca";
+    row-gap: 14px;
+    align-items: center;
+  }
+
+  /* a bolinha do perfil vai para o lado direito */
+  .usuario-topo-notas {
+    grid-area: perfil;
+    justify-self: end;
+    min-height: 52px;
+    margin-left: 0;
+  }
+
+  /* a busca fica sozinha na linha de baixo */
+  .pesquisa-topo-notas {
+    grid-area: busca;
+    width: 100%;
+  }
+}
+
+/* telas muito estreitas: só a bolinha do perfil, para não bater no logo */
+@media (max-width: 340px) {
+  .usuario-topo-notas div:nth-child(2) {
+    display: none;
+  }
+}
+* {
+    box-sizing: border-box;
+}
+
+/* HEADER DESKTOP E MOBILE */
+
+/* DESKTOP */
+@media (min-width: 901px) {
+    .principal-notas > .integra-header {
+        display: none;
+    }
+
+    .principal-notas > .integra-header-desktop {
+        display: flex;
+    }
+}
+
+/* TABLET E MOBILE */
+@media (max-width: 900px) {
+    .principal-notas > .integra-header-desktop {
+        display: none;
+    }
+
+    .principal-notas > .integra-header {
+        display: flex;
+    }
 }

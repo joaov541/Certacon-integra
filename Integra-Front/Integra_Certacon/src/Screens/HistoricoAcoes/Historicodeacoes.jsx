@@ -1,5 +1,8 @@
+
 import { useState } from "react";
 import "./Historicodeacoes.css";
+
+import { NavLink } from "react-router-dom";
 
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
@@ -9,6 +12,7 @@ import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
 import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
+import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import Calendario from "../../assets/Icones/calendario.png";
 import ExpandirText from "../../assets/Icones/ExpandirText.png";
 
@@ -113,15 +117,22 @@ function Historicodeacoes() {
 
     return (
         <div className="pagina-historico">
+
             <Sidebar />
 
             <main className="principal-historico">
+
                 <Header
                     pesquisa={pesquisa}
                     setPesquisa={setPesquisa}
                 />
 
                 <section className="conteudo-historico">
+
+                    <NavLink to="/home" className="voltar-historico">
+                        ← Voltar
+                    </NavLink>
+
                     <h1>Histórico de ações</h1>
 
                     <div className="filtros-historico">
@@ -131,6 +142,7 @@ function Historicodeacoes() {
                             <label>Período</label>
 
                             <div className="campos-periodo">
+
                                 <div className="campo-data">
                                     <input
                                         type="date"
@@ -156,6 +168,7 @@ function Historicodeacoes() {
 
                                     <img src={Calendario} alt="Calendário" />
                                 </div>
+
                             </div>
                         </div>
 
@@ -172,10 +185,7 @@ function Historicodeacoes() {
                                     }}
                                 >
                                     {usuarios.map((usuario) => (
-                                        <option
-                                            key={usuario}
-                                            value={usuario}
-                                        >
+                                        <option key={usuario} value={usuario}>
                                             {usuario}
                                         </option>
                                     ))}
@@ -201,10 +211,7 @@ function Historicodeacoes() {
                                     }}
                                 >
                                     {tipos.map((tipo) => (
-                                        <option
-                                            key={tipo}
-                                            value={tipo}
-                                        >
+                                        <option key={tipo} value={tipo}>
                                             {tipo}
                                         </option>
                                     ))}
@@ -229,7 +236,9 @@ function Historicodeacoes() {
 
                     {/* TABELA */}
                     <div className="tabela-historico">
+
                         <table>
+
                             <thead>
                                 <tr>
                                     <th>Data e hora</th>
@@ -240,9 +249,11 @@ function Historicodeacoes() {
                             </thead>
 
                             <tbody>
+
                                 {acoesExibidas.length > 0 ? (
                                     acoesExibidas.map((item) => (
                                         <tr key={item.id}>
+
                                             <td>
                                                 {item.data} {item.hora}
                                             </td>
@@ -252,6 +263,7 @@ function Historicodeacoes() {
                                             <td>{item.acao}</td>
 
                                             <td>{item.descricao}</td>
+
                                         </tr>
                                     ))
                                 ) : (
@@ -264,12 +276,16 @@ function Historicodeacoes() {
                                         </td>
                                     </tr>
                                 )}
+
                             </tbody>
+
                         </table>
+
                     </div>
 
                     {/* PAGINAÇÃO */}
                     <div className="paginacao-historico">
+
                         <button
                             onClick={() => setPaginaAtual(1)}
                             className={
@@ -302,10 +318,13 @@ function Historicodeacoes() {
                         >
                             3
                         </button>
+
                     </div>
 
                 </section>
+
             </main>
+
         </div>
     );
 }
@@ -316,45 +335,54 @@ function Sidebar() {
         <aside className="menu-historico">
 
             <div className="logo-historico">
-                <img src={LogoNome} alt="Integra" />
+
+                <img
+                    src={LogoNome}
+                    alt="Integra"
+                    className="logo-desktop-historico"
+                />
+
+                <img
+                    src={LogoNomeMobile}
+                    alt="Integra"
+                    className="logo-mobile-historico"
+                />
+
             </div>
 
             <nav className="navegacao-historico">
 
-                <a href="#" className="item-menu-historico">
+                <NavLink to="/home" className="item-menu-historico">
                     <img src={CasaBranca} alt="" />
                     <span>Início</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-historico">
+                <NavLink to="/conteudos" className="item-menu-historico">
                     <img src={LivroBranco} alt="" />
                     <span>Conteúdos</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-historico">
+                <NavLink to="/notas-fiscais" className="item-menu-historico">
                     <img src={DoisDocumentosBranco} alt="" />
                     <span>Notas Fiscais</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-historico">
+                <NavLink to="/clientes" className="item-menu-historico">
                     <img src={ADDProfileBranco} alt="" />
                     <span>Clientes</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="item-menu-historico">
+                <NavLink to="/usuario" className="item-menu-historico">
                     <img src={PessoaBranca} alt="" />
                     <span>Usuários</span>
-                </a>
+                </NavLink>
 
             </nav>
 
-            <button
-                className="sair-historico"
-                onClick={() => alert("Configure aqui a saída da conta.")}
-            >
+            <NavLink to="/login" className="sair-historico">
                 <img src={SairBranco} alt="" />
                 <span>Sair</span>
-            </button>
+            </NavLink>
 
         </aside>
     );
@@ -366,16 +394,16 @@ function Header({ pesquisa, setPesquisa }) {
         <header className="topo-historico">
 
             <div className="pesquisa-topo-historico">
+
                 <img src={LupaCinza} alt="" />
 
                 <input
                     type="text"
                     placeholder="Buscar ações..."
                     value={pesquisa}
-                    onChange={(e) => {
-                        setPesquisa(e.target.value);
-                    }}
+                    onChange={(e) => setPesquisa(e.target.value)}
                 />
+
             </div>
 
             <div className="usuario-topo-historico">
