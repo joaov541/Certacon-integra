@@ -250,17 +250,6 @@ function GerenciarClientes() {
 
                        
 
-                        <button
-                            type="button"
-                            className="botao-criar-cliente"
-                            onClick={() => {
-                                limparFormulario();
-                                setMostrarFormulario(true);
-                            }}
-                        >
-                            + Criar cliente
-                        </button>
-
                     </div>
                     {/* FORMULÁRIO DE CADASTRO */}
                     <form

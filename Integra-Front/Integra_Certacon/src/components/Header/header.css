@@ -6,11 +6,11 @@
 /* HEADER */
 
 .integra-header {
-        display: none;
+    display: none;
     flex-direction: column;
     width: 100%;
-    gap: 35px;
-    padding: 25px 34px 10px;
+    gap: 20px;
+    padding: 18px 34px 10px;
     background: #f3f6fc;
     font-family: Arial, sans-serif;
 }
@@ -40,6 +40,7 @@
     display: flex;
     align-items: center;
     gap: 13px;
+    flex-shrink: 0;
 }
 
 .integra-header .header-foto {
@@ -114,34 +115,26 @@
 
 /* TABLETS */
 
-@media (min-width: 561px) and (max-width: 900px) {
+@media (min-width: 561px) and (max-width: 850px) {
 
     .integra-header {
-        gap: 25px;
-        padding: 20px 22px 10px;
-         display: flex;
+        display: flex;
+        gap: 15px;
+        padding: 12px 22px 8px;
     }
 
     .integra-header .header-logo {
-        width: 230px;
-        height: 85px;
+        width: 210px;
+        height: 70px;
     }
 
     .integra-header .header-foto {
-        width: 60px;
-        height: 60px;
-    }
-
-    .integra-header .header-dados strong {
-        font-size: 17px;
-    }
-
-    .integra-header .header-dados span {
-        font-size: 14px;
+        width: 55px;
+        height: 55px;
     }
 
     .integra-header .header-pesquisa {
-        height: 48px;
+        height: 45px;
     }
 
     .integra-header .header-pesquisa input {
@@ -155,18 +148,18 @@
 
     .integra-header {
         display: flex;
-        gap: 3px;
-        padding: 20px 25px 10px;
+        gap: 8px;
+        padding: 10px 20px 8px;
     }
 
     .integra-header .header-superior {
-        min-height: 115px;
+        min-height: 65px;
     }
 
     .integra-header .header-logo {
-        width: 290px;
+        width: 190px;
         max-width: 57%;
-        height: 105px;
+        height: 65px;
     }
 
     .integra-header .header-usuario {
@@ -174,33 +167,25 @@
     }
 
     .integra-header .header-foto {
-        width: 65px;
-        height: 65px;
-        font-size: 16px;
-    }
-
-    .integra-header .header-dados strong {
-        font-size: 17px;
-    }
-
-    .integra-header .header-dados span {
-        font-size: 14px;
+        width: 48px;
+        height: 48px;
+        font-size: 15px;
     }
 
     .integra-header .header-pesquisa {
-        height: 53px;
-        gap: 12px;
-        padding: 0 15px;
-        border-radius: 10px;
+        height: 44px;
+        gap: 10px;
+        padding: 0 13px;
+        border-radius: 9px;
     }
 
     .integra-header .header-pesquisa img {
-        width: 27px;
-        height: 27px;
+        width: 23px;
+        height: 23px;
     }
 
     .integra-header .header-pesquisa input {
-        font-size: 17px;
+        font-size: 15px;
     }
 }
 
@@ -209,33 +194,53 @@
 @media (max-width: 380px) {
 
     .integra-header {
-        padding: 15px 15px 10px;
-        gap: 2px;
+        padding: 8px 15px 7px;
+        gap: 6px;
+    }
+
+    .integra-header .header-superior {
+        min-height: 58px;
     }
 
     .integra-header .header-logo {
         max-width: 52%;
+        height: 58px;
     }
 
     .integra-header .header-foto {
-        width: 48px;
-        height: 48px;
+        width: 43px;
+        height: 43px;
         font-size: 13px;
     }
 
-    .integra-header .header-dados strong {
-        font-size: 14px;
-    }
-
-    .integra-header .header-dados span {
-        font-size: 11px;
+    .integra-header .header-pesquisa {
+        height: 42px;
     }
 
     .integra-header .header-pesquisa input {
         font-size: 14px;
     }
+}
+
+/* FOTO DE PERFIL EM TABLETS E CELULARES */
+
+@media (max-width: 850px) {
+
+    .integra-header .header-usuario {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        gap: 0;
+    }
+
+    .integra-header .header-foto {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
 
     .integra-header .header-dados {
-        display: none;
+        display: none !important;
     }
 }

@@ -16,42 +16,45 @@
 }
 
 /* =========================================
-   MENU LATERAL
+   MENU LATERAL DESKTOP
 ========================================= */
 
 .menu-historico {
     display: flex;
+    flex: 0 0 334px;
     flex-direction: column;
     width: 334px;
-    min-width: 214px;
-    min-height: 100vh;
-    padding: 25px 18px;
+    min-width: 334px;
+    height: 100vh;
+    padding: 25px 20px;
     background: #1d2e68;
     color: white;
 }
 
 .logo-historico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    margin-bottom: 28px;
+    margin-bottom: 35px;
 }
 
-.logo-historico img {
-    max-width: 100%;
+.logo-desktop-historico {
+    display: block;
+    width: 100%;
+    max-width: 300px;
     height: auto;
     object-fit: contain;
-    object-position: left center;
 }
 
-/* LOGOS */
-
 .logo-mobile-historico {
-    display: none;
+    display: none !important;
 }
 
 .navegacao-historico {
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 25px;
 }
 
 .item-menu-historico {
@@ -60,19 +63,22 @@
     gap: 13px;
     margin-left: 20px;
     padding: 9px 8px;
+    border: none;
     border-radius: 5px;
+    background: transparent;
     color: #fff;
-    font-size: 15px;
+    font-size: 14px;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: background 0.2s ease;
 }
 
 .item-menu-historico:hover {
     background: rgba(255, 255, 255, 0.12);
-    opacity: 0.75;
 }
 
 .item-menu-historico img {
+    display: block;
+    flex-shrink: 0;
     width: 33px;
     height: 33px;
     object-fit: contain;
@@ -85,21 +91,21 @@
 .sair-historico {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 13px;
     margin-top: auto;
     margin-left: 20px;
-    padding: 10px 4px;
+    padding: 10px 8px;
     border: none;
     background: transparent;
     color: white;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     text-decoration: none;
 }
 
 .sair-historico img {
-    width: 33px;
-    height: 33px;
+    width: 26px;
+    height: 26px;
     object-fit: contain;
 }
 
@@ -120,31 +126,37 @@
 }
 
 /* =========================================
-   CABEÇALHO
+   HEADER - PADRÃO DA TELA DE REVISÃO
 ========================================= */
 
 .topo-historico {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
     width: 100%;
-    height: 62px;
-    padding: 10px 38px;
-    background: #f3f7fd;
+    min-height: 76px;
+    flex-shrink: 0;
+    padding: 14px 30px;
+    border-bottom: 10px solid #f3f6fc;
+    background: #fff;
 }
 
 .pesquisa-topo-historico {
     display: flex;
     align-items: center;
-    gap: 12px;
-    width: 87%;
+    gap: 15px;
+    width: 100%;
+    max-width: 555px;
     height: 37px;
-    padding: 0 12px;
-    border-radius: 7px;
-    background: #e8f1fa;
+    padding: 0 15px;
+    border-radius: 6px;
+    background: #f3f6fc;
 }
 
 .pesquisa-topo-historico img {
+    display: block;
+    flex-shrink: 0;
     width: 20px;
     height: 20px;
     object-fit: contain;
@@ -153,33 +165,35 @@
 .pesquisa-topo-historico input {
     width: 100%;
     min-width: 0;
+    height: 100%;
     border: none;
     outline: none;
     background: transparent;
     color: #333;
-    font-size: 14px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
 }
 
 .pesquisa-topo-historico input::placeholder {
-    color: #7d9bb8;
+    color: #777;
 }
 
 .usuario-topo-historico {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 .avatar-historico {
     display: flex;
-    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 35px;
-    height: 35px;
-    border: 1px solid #1d2e68;
+    width: 38px;
+    height: 38px;
+    border: none;
     border-radius: 50%;
-    background: #dceaf7;
+    background: #dce6f0;
     color: #1d2e68;
     font-size: 12px;
     font-weight: bold;
@@ -188,17 +202,18 @@
 .dados-usuario-historico {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    color: #111;
-    font-size: 12px;
+    gap: 3px;
+    color: #252a33;
+    white-space: nowrap;
 }
 
 .dados-usuario-historico strong {
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .dados-usuario-historico span {
-    font-size: 11px;
+    color: #777;
+    font-size: 10px;
 }
 
 /* =========================================
@@ -211,14 +226,20 @@
     flex: 1;
     flex-direction: column;
     min-width: 0;
-    padding: 10px 38px 65px;
+    padding: 40px 35px;
 }
 
 .conteudo-historico h1 {
-    margin: 0 0 48px;
-    color: #123c68;
-    font-size: 37px;
+    margin: 0 0 35px;
+    color: #1d2e68;
+    font-size: 27px;
     font-weight: 600;
+}
+
+/* BOTÃO VOLTAR - ESCONDIDO NO DESKTOP */
+
+.voltar-historico {
+    display: none;
 }
 
 /* =========================================
@@ -236,27 +257,28 @@
 .campo-filtro {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 12px;
     min-width: 0;
 }
 
 .campo-filtro label {
-    color: #111;
-    font-size: 20px;
+    color: #1d2e68;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .campo-filtro input,
 .campo-filtro select {
     width: 100%;
-    height: 32px;
+    height: 44px;
     padding: 0 10px;
-    border: 2px solid #53658d;
+    border: 1px solid #999;
     border-radius: 8px;
     outline: none;
-    background: #f3f7fd;
+    background: #fff;
     color: #111;
     font-family: Arial, sans-serif;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 /* SELECT PERSONALIZADO */
@@ -265,17 +287,17 @@
     position: relative;
     display: block;
     width: 100%;
-    height: 32px;
+    height: 44px;
 }
 
 .select-personalizado select {
     display: block;
     width: 100%;
-    height: 32px;
+    height: 44px;
     padding: 0 35px 0 10px;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     background-image: none !important;
     cursor: pointer;
 }
@@ -288,9 +310,8 @@
     position: absolute;
     top: 50%;
     right: 12px;
-    left: auto;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     transform: translateY(-50%);
     object-fit: contain;
     pointer-events: none;
@@ -299,29 +320,29 @@
 /* LARGURAS DOS FILTROS */
 
 .periodo-filtro {
-    width: 196px;
+    width: 240px;
 }
 
 .usuario-filtro {
-    width: 152px;
+    width: 190px;
 }
 
 .tipo-filtro {
-    width: 200px;
+    width: 220px;
 }
 
 /* BOTÃO BUSCAR */
 
 .botao-buscar-historico {
     width: 104px;
-    height: 32px;
+    height: 44px;
     border: none;
     border-radius: 8px;
     background: #1d2e68;
     color: white;
     font-size: 14px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: background 0.2s;
 }
 
 .botao-buscar-historico:hover {
@@ -349,21 +370,21 @@
 
 .campo-data input {
     width: 100%;
-    height: 32px;
+    height: 44px;
     padding: 0 25px 0 7px;
-    border: 2px solid #53658d;
+    border: 1px solid #999;
     border-radius: 8px;
-    background: #f3f7fd;
+    background: #fff;
     color: #111;
     font-family: Arial, sans-serif;
-    font-size: 10px;
+    font-size: 11px;
 }
 
 .campo-data img {
     position: absolute;
     right: 6px;
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     object-fit: contain;
     pointer-events: none;
 }
@@ -387,7 +408,7 @@
 
 .tabela-historico {
     width: 100%;
-    overflow-x: auto;
+    min-width: 0;
 }
 
 .tabela-historico table {
@@ -399,14 +420,15 @@
 }
 
 .tabela-historico thead th {
-    height: 33px;
+    height: 40px;
     padding: 7px 12px;
     border-top: 1px solid #333;
     border-bottom: 1px solid #333;
     background: #e8f2fc;
     text-align: left;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
+    color: #1d2e68;
 }
 
 .tabela-historico thead th:first-child {
@@ -420,10 +442,11 @@
 }
 
 .tabela-historico tbody td {
-    height: 33px;
+    height: 40px;
     padding: 7px 12px;
     border-bottom: 1px solid #333;
     background: #f3f7fd;
+    overflow-wrap: anywhere;
 }
 
 .tabela-historico tbody td:first-child {
@@ -482,10 +505,11 @@
     cursor: not-allowed;
 }
 
-/* ELEMENTOS QUE NÃO EXISTEM NO JSX */
+/* =========================================
+   ELEMENTOS AUXILIARES
+========================================= */
 
 .logo-topo-historico,
-.voltar-historico,
 .periodo-mobile-historico,
 .cards-historico,
 .proxima-historico {
@@ -493,85 +517,131 @@
 }
 
 /* =========================================
-   TABLET (651px a 1024px)
+   TABLET
+   701PX ATÉ 1200PX
 ========================================= */
 
-@media (min-width: 651px) and (max-width: 1024px) {
+@media (min-width: 701px) and (max-width: 1200px) {
+
+    /* MENU LATERAL */
 
     .menu-historico {
-        display: contents;
+        display: flex;
+        flex: 0 0 210px;
+        width: 210px;
+        min-width: 210px;
+        height: 100vh;
+        padding: 20px 10px;
     }
 
     .logo-historico {
-        position: absolute;
-        top: 12px;
-        left: 24px;
-        z-index: 5;
-        width: auto;
-        margin: 0;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
     }
-
-    .logo-historico img {
-        width: 180px;
-        max-width: 180px;
-        height: auto;
-    }
-
-    /* TROCA DA LOGO BRANCA PELA AZUL */
 
     .logo-desktop-historico {
-        display: none;
+        display: block !important;
+        width: 100%;
+        max-width: 190px;
+        height: auto;
     }
 
-    .logo-historico .logo-mobile-historico {
-        display: block;
-        width: 180px;
-        max-width: 180px;
-        height: auto;
-        object-fit: contain;
+    .logo-mobile-historico {
+        display: none !important;
     }
 
     .navegacao-historico {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .item-menu-historico {
+        gap: 9px;
+        margin-left: 4px;
+        padding: 8px 5px;
+        font-size: 13px;
+    }
+
+    .item-menu-historico img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .item-menu-historico span {
+        font-size: 13px;
     }
 
     .sair-historico {
-        display: none;
+        display: flex;
+        gap: 9px;
+        margin-left: 4px;
     }
 
-    /* CABEÇALHO */
+    /* HEADER TABLET */
 
     .topo-historico {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 16px;
-        height: auto;
-        min-height: 62px;
-        padding: 12px 24px 12px 230px;
+        width: 100%;
+        min-height: 76px;
+        padding: 14px 20px;
+        border-bottom: 10px solid #f3f6fc;
     }
 
     .pesquisa-topo-historico {
-        width: 100%;
+        flex: 1;
+        width: auto;
+        max-width: 555px;
         min-width: 0;
+        height: 37px;
     }
 
     .usuario-topo-historico {
-        flex-shrink: 0;
+        gap: 8px;
+    }
+
+    .avatar-historico {
+        width: 38px;
+        height: 38px;
+    }
+
+    .dados-usuario-historico strong {
+        font-size: 11px;
+    }
+
+    .dados-usuario-historico span {
+        font-size: 10px;
     }
 
     /* CONTEÚDO */
 
     .conteudo-historico {
-        padding: 25px 24px 65px;
+        padding: 30px 24px 65px;
+    }
+
+    .voltar-historico {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 7px;
+        width: fit-content;
+        margin-bottom: 15px;
+        color: #1d2e68;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
     }
 
     .conteudo-historico h1 {
         margin-bottom: 30px;
-        font-size: 32px;
+        font-size: 27px;
     }
 
-    /* FILTROS EM DUAS COLUNAS */
+    /* FILTROS */
 
     .filtros-historico {
         display: grid;
@@ -591,34 +661,38 @@
     }
 
     .campo-filtro label {
-        font-size: 17px;
+        font-size: 14px;
     }
 
     .campo-filtro input,
     .campo-filtro select,
     .select-personalizado,
-    .select-personalizado select {
-        height: 36px;
-    }
-
+    .select-personalizado select,
     .campo-data input {
-        height: 36px;
-        font-size: 11px;
+        height: 40px;
     }
 
     .botao-buscar-historico {
         width: 100%;
-        height: 36px;
+        height: 40px;
     }
 
     /* TABELA */
 
     .tabela-historico {
-        overflow-x: auto;
+        width: 100%;
+        overflow: hidden;
     }
 
     .tabela-historico table {
-        min-width: 600px;
+        table-layout: fixed;
+    }
+
+    .tabela-historico th,
+    .tabela-historico td {
+        padding: 7px 8px;
+        font-size: 12px;
+        overflow-wrap: anywhere;
     }
 
     /* PAGINAÇÃO */
@@ -629,19 +703,89 @@
 }
 
 /* =========================================
-   CELULAR (ATÉ 650px)
+   MENU INFERIOR MOBILE
+   ATÉ 700PX
 ========================================= */
 
-@media (max-width: 650px) {
-
-    /* ESTRUTURA GERAL */
+@media (max-width: 700px) {
 
     .pagina-historico {
+        display: flex;
         flex-direction: column;
+        width: 100%;
         min-height: 100vh;
     }
 
     .menu-historico {
+        display: flex;
+        flex: 0 0 0;
+        flex-direction: column;
+        width: 0;
+        min-width: 0;
+        height: 0;
+        min-height: 0;
+        padding: 0;
+        overflow: visible;
+        background: transparent;
+    }
+
+    .logo-historico {
+        display: none !important;
+    }
+
+    .navegacao-historico {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 200;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        height: 64px;
+        gap: 0;
+        padding: 5px 3px;
+        background: #1d2e68;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.10);
+    }
+
+    .item-menu-historico {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        height: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 2px 0;
+        border-radius: 0;
+        background: transparent;
+        color: #fff;
+        font-size: 9px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .item-menu-historico img {
+        display: block;
+        flex-shrink: 0;
+        width: 25px;
+        height: 25px;
+        object-fit: contain;
+    }
+
+    .item-menu-historico span {
+        font-size: 9px;
+    }
+
+    .item-menu-historico:hover {
+        background: transparent;
+    }
+
+    .sair-historico {
         display: none;
     }
 
@@ -651,7 +795,7 @@
         min-height: 100vh;
     }
 
-    /* CABEÇALHO */
+    /* HEADER MOBILE */
 
     .topo-historico {
         display: grid;
@@ -659,14 +803,16 @@
         grid-template-areas:
             "logo perfil"
             "busca busca";
-        row-gap: 14px;
+        row-gap: 6px;
         align-items: center;
         width: 100%;
         height: auto;
-        padding: 18px 16px 12px;
+        min-height: 0;
+        padding: 10px 17px;
+        border: none;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
     }
-
-    /* LOGO MOBILE */
 
     .topo-historico::before {
         content: "";
@@ -679,8 +825,6 @@
         background-repeat: no-repeat;
         background-size: contain;
     }
-
-    /* PERFIL */
 
     .usuario-topo-historico {
         grid-area: perfil;
@@ -703,11 +847,10 @@
         font-size: 10px;
     }
 
-    /* PESQUISA */
-
     .pesquisa-topo-historico {
         grid-area: busca;
         width: 100%;
+        max-width: none;
         height: 38px;
         padding: 0 10px;
         border: 1px solid #b8c1ce;
@@ -727,10 +870,8 @@
     /* CONTEÚDO */
 
     .conteudo-historico {
-        padding: 8px 16px 25px;
+        padding: 18px 16px 85px;
     }
-
-    /* BOTÃO VOLTAR */
 
     .voltar-historico {
         display: inline-flex;
@@ -743,10 +884,6 @@
         font-size: 14px;
         font-weight: 600;
         text-decoration: none;
-    }
-
-    .voltar-historico:hover {
-        color: #f38f2c;
     }
 
     .conteudo-historico h1 {
@@ -779,7 +916,7 @@
     }
 
     .campo-filtro label {
-        color: #111;
+        color: #1d2e68;
         font-size: 16px;
         font-weight: 600;
     }
@@ -839,10 +976,6 @@
         height: 14px;
     }
 
-    .campos-periodo span {
-        font-size: 12px;
-    }
-
     /* BOTÃO BUSCAR */
 
     .botao-buscar-historico {
@@ -857,7 +990,7 @@
         box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25);
     }
 
-    /* TABELA TRANSFORMADA EM CARDS */
+    /* TABELA EM CARDS */
 
     .tabela-historico {
         display: block;
@@ -913,15 +1046,11 @@
         font-size: 12px;
     }
 
-    /* DATA E HORA */
-
     .tabela-historico tbody td:nth-child(1) {
         grid-area: data;
         color: #7d8998;
         font-size: 12px;
     }
-
-    /* USUÁRIO */
 
     .tabela-historico tbody td:nth-child(2) {
         grid-area: usuario;
@@ -938,8 +1067,6 @@
         font-weight: normal;
     }
 
-    /* AÇÃO */
-
     .tabela-historico tbody td:nth-child(3) {
         grid-area: acao;
         justify-self: end;
@@ -951,8 +1078,6 @@
         text-align: center;
         font-size: 10px;
     }
-
-    /* DESCRIÇÃO */
 
     .tabela-historico tbody td:nth-child(4) {
         grid-area: descricao;
@@ -968,8 +1093,6 @@
         color: #aeb7c3;
         font-size: 10px;
     }
-
-    /* MENSAGEM SEM RESULTADOS */
 
     .tabela-historico tbody tr:has(.sem-acoes) {
         display: block;
@@ -1050,5 +1173,18 @@
 
     .dados-usuario-historico {
         display: none;
+    }
+
+    .navegacao-historico {
+        height: 62px;
+    }
+
+    .item-menu-historico img {
+        width: 23px;
+        height: 23px;
+    }
+
+    .item-menu-historico span {
+        font-size: 8px;
     }
 }

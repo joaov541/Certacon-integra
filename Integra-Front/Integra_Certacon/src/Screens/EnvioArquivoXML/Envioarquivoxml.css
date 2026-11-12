@@ -9,7 +9,9 @@
     display: flex;
     width: 100%;
     min-height: 100vh;
-    background: #fff;
+    height: auto;
+    overflow: visible;
+    background: #f3f6fc;
     color: #171717;
     font-family: Arial, sans-serif;
 }
@@ -19,58 +21,52 @@
 .xml-sidebar {
     display: flex;
     flex-direction: column;
+    flex: 0 0 334px;
+    width: 334px;
+    min-width: 334px;
     min-height: 100vh;
-    padding: 20px 15px 24px;
+    padding: 25px 20px;
     background: #1d2e68;
     color: #fff;
-    width: 334px;
-    flex-shrink: 0;
 }
 
 .xml-logo {
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
-}
-
-.xml-logo picture {
-    display: block;
-    width: 100%;
+    justify-content: center;
+    margin-bottom: 35px;
+    white-space: nowrap;
 }
 
 .xml-logo img {
     display: block;
-    width: 100%;
-    max-width: 280px;
-    height: 90px;
+    max-width: 100%;
+    height: auto;
     object-fit: contain;
 }
 
 .xml-menu {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 25px;
 }
 
 .xml-menu-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    min-height: 40px;
-    padding: 8px 10px;
+    gap: 13px;
+    margin-left: 20px;
+    padding: 9px 8px;
     border-radius: 5px;
     color: #fff;
-    font-size: 11px;
+    font-size: 15px;
     text-decoration: none;
-    margin-left: 20px;
-}
-
-.xml-menu-item:hover,
-.xml-menu-ativo {
-    background: rgba(255, 255, 255, 0.1);
+    transition: background 0.2s;
 }
 
 .xml-menu-item img {
+    display: block;
+    flex-shrink: 0;
     width: 33px;
     height: 33px;
     object-fit: contain;
@@ -78,6 +74,11 @@
 
 .xml-menu-item span {
     font-size: 14px;
+}
+
+.xml-menu-item:hover,
+.xml-menu-item.xml-menu-ativo {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .xml-menu-inferior {
@@ -88,12 +89,12 @@
 }
 
 .xml-menu-inferior button {
-    padding: 8px 10px;
+    padding: 8px;
     border: none;
     background: transparent;
     color: #fff;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 14px;
     text-align: left;
     cursor: pointer;
 }
@@ -101,11 +102,13 @@
 .xml-menu-inferior .xml-sair {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 13px;
     margin-left: 20px;
 }
 
 .xml-sair img {
+    display: block;
+    flex-shrink: 0;
     width: 33px;
     height: 33px;
     object-fit: contain;
@@ -115,122 +118,52 @@
     font-size: 14px;
 }
 
-/* CABEÇALHO */
+/* ÁREA PRINCIPAL */
 
 .xml-principal {
     display: flex;
     flex: 1;
     flex-direction: column;
     min-width: 0;
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
 }
 
-.xml-header {
+/* HEADERS COMPARTILHADOS */
+
+.xml-principal > .integra-header {
+    display: none;
+}
+
+.xml-principal > .integra-header-desktop {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 25px;
-    min-height: 76px;
-    padding: 14px 28px;
-    background: #fff;
-}
-
-.xml-busca {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    height: 38px;
-    padding: 0 15px;
-    border-radius: 6px;
-    background: #f3f6fc;
-}
-
-.xml-busca img {
-    width: 21px;
-    height: 21px;
-    object-fit: contain;
-}
-
-.xml-busca input {
-    width: 100%;
-    min-width: 0;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 11px;
-}
-
-.xml-usuario {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    position: relative;
     flex-shrink: 0;
-}
-
-.xml-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 39px;
-    height: 39px;
-    border-radius: 50%;
-    background: #e0e9f4;
-    color: #1d2e68;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.xml-dados-usuario {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.xml-dados-usuario strong {
-    font-size: 11px;
-}
-
-.xml-dados-usuario span {
-    color: #777;
-    font-size: 10px;
-}
-
-.xml-tres-pontos {
-    color: #777;
-    font-size: 18px;
+    width: 100%;
+    background: #fff;
+    z-index: 100;
 }
 
 /* CONTEÚDO PRINCIPAL */
-.xml-botao-voltar {
-    display: block;
-    align-self: flex-start;
-    width: fit-content;
 
-    margin: -12px 0 15px;
-    padding: 0;
-
-    border: none;
-    background: transparent;
-    color: #4a8bd8;
-
-    font-family: inherit;
-    font-size: 17px;
-    font-weight: 700;
-    margin-top: 10px;
-
-    cursor: pointer;
-}
-
-.xml-botao-voltar:hover {
-    color: #1d2e68;
-}
 .xml-conteudo {
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 34px 30px 20px;
+    min-height: 0;
+    overflow-y: visible;
+    overflow-x: hidden;
+    padding: 34px 30px 35px;
 }
+
+/* BOTÃO VOLTAR - ESCONDIDO NO DESKTOP */
+
+.xml-botao-voltar {
+    display: none;
+}
+
+/* TÍTULO */
 
 .xml-conteudo h1 {
     margin: 0 0 25px;
@@ -239,9 +172,13 @@
     font-weight: 600;
 }
 
+/* INPUT DE ARQUIVO */
+
 .xml-input-arquivo {
     display: none;
 }
+
+/* ÁREA SUPERIOR DE ENVIO */
 
 .xml-area-superior {
     display: flex;
@@ -251,6 +188,8 @@
     width: 100%;
     padding-right: 65px;
 }
+
+/* BOTÃO SELECIONAR */
 
 .xml-botao-selecionar {
     display: flex;
@@ -279,6 +218,8 @@
     object-fit: contain;
 }
 
+/* ÁREA DE ARRASTAR ARQUIVOS */
+
 .xml-area-soltar {
     display: flex;
     flex-direction: column;
@@ -299,8 +240,8 @@
     margin-bottom: 12px;
     color: #1d2e68;
     font-size: 14px;
-    text-align: center;
     font-weight: bold;
+    text-align: center;
 }
 
 .xml-area-soltar img {
@@ -312,9 +253,9 @@
 }
 
 .xml-area-soltar span {
+    margin-top: 10px;
     color: #444;
     font-size: 11px;
-    margin-top: 10px;
     font-weight: bold;
 }
 
@@ -322,6 +263,8 @@
     border-color: #1d2e68;
     background: #dcecff;
 }
+
+/* MENSAGEM */
 
 .xml-mensagem {
     margin: 12px 0 0;
@@ -334,10 +277,10 @@
 .xml-lista {
     width: 85%;
     max-width: none;
-    margin: 37px auto 0;
+    margin: 37px auto 25px;
+    overflow: visible;
     border: 1px solid #aaa;
     border-radius: 6px;
-    overflow: hidden;
 }
 
 .xml-lista-titulo {
@@ -351,6 +294,8 @@
     font-weight: bold;
     text-align: center;
 }
+
+/* LINHAS DOS ARQUIVOS */
 
 .xml-arquivo {
     display: grid;
@@ -395,6 +340,8 @@
     text-align: center;
 }
 
+/* STATUS */
+
 .xml-status {
     justify-self: center;
     min-width: 61px;
@@ -412,6 +359,8 @@
 .xml-status-pendente {
     background: #ffc38b;
 }
+
+/* EXCLUIR ARQUIVO */
 
 .xml-botao-excluir {
     display: flex;
@@ -444,7 +393,7 @@
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    margin-top: auto;
+    margin-top: 20px;
     padding: 10px 75px 0 0;
 }
 
@@ -470,62 +419,79 @@
     cursor: not-allowed;
 }
 
+/* FOOTER MOBILE */
+
+.footer-conteudos-mobile {
+    display: none;
+}
 
 /* =========================================
-   RESPONSIVIDADE TABLET
+   TABLETS
 ========================================= */
 
-@media (min-width: 601px) and (max-width: 1024px) {
-
-    .xml-pagina {
-        width: 100%;
-        min-height: 100vh;
-    }
+@media (min-width: 701px) and (max-width: 1200px) {
 
     .xml-sidebar {
-        width: 30%;
+        flex: 0 0 210px;
+        width: 210px;
         min-width: 210px;
-        max-width: 300px;
-        padding: 20px 12px;
+        padding: 20px 10px;
+    }
+
+    .xml-logo {
+        margin-bottom: 25px;
     }
 
     .xml-logo img {
-        max-width: 100%;
+        max-width: 190px;
+        max-height: 75px;
+    }
+
+    .xml-menu {
+        gap: 16px;
     }
 
     .xml-menu-item {
-        margin-left: 0;
+        gap: 9px;
+        margin-left: 4px;
+        padding: 8px 5px;
+    }
+
+    .xml-menu-item img {
+        width: 28px;
+        height: 28px;
     }
 
     .xml-menu-item span {
         font-size: 13px;
     }
 
-    .xml-header {
-        gap: 12px;
-        padding: 14px 20px;
+    .xml-sair {
+        margin-left: 4px !important;
     }
 
-    .xml-busca {
-        gap: 8px;
-        padding: 0 10px;
+    .xml-principal > .integra-header-desktop {
+        display: flex !important;
+        position: relative;
+        width: 100%;
+        min-height: 90px;
+        flex-shrink: 0;
+        padding: 15px 22px;
+        background: #fff;
+        z-index: 180;
     }
 
-    .xml-usuario {
-        gap: 6px;
-    }
-
-    .xml-dados-usuario strong {
-        font-size: 10px;
+    .xml-principal > .integra-header {
+        display: none !important;
     }
 
     .xml-conteudo {
-        padding: 28px 24px 20px;
+        padding: 28px 24px 30px;
     }
 
     .xml-conteudo h1 {
-        font-size: 22px;
         margin-bottom: 25px;
+        font-size: 22px;
     }
 
     /* ÁREA DE ENVIO */
@@ -547,27 +513,23 @@
     }
 
     .xml-area-soltar {
+        align-items: center;
+        justify-content: center;
         width: 230px;
         max-width: 100%;
         min-height: 142px;
         margin: 0;
-        align-items: center;
-        justify-content: center;
         padding: 12px;
     }
 
-    .xml-area-soltar strong {
-        align-self: center;
-        text-align: center;
-    }
-
-    .xml-area-soltar img {
-        align-self: center;
-    }
-
+    .xml-area-soltar strong,
+    .xml-area-soltar img,
     .xml-area-soltar span {
         align-self: center;
         text-align: center;
+    }
+
+    .xml-area-soltar span {
         margin-top: 7px;
     }
 
@@ -575,7 +537,7 @@
 
     .xml-lista {
         width: 100%;
-        margin: 30px auto 0;
+        margin: 30px auto 25px;
     }
 
     .xml-arquivo {
@@ -603,101 +565,165 @@
     }
 }
 
-
 /* =========================================
-   RESPONSIVIDADE CELULAR
+   DESKTOP
 ========================================= */
 
-@media (max-width: 600px) {
+@media (min-width: 701px) {
 
-    .xml-pagina,
     .xml-principal {
+        padding-top: 0;
+    }
+
+    .xml-principal > .integra-header {
+        display: none !important;
+    }
+
+    .xml-principal > .integra-header-desktop {
+        display: flex !important;
+    }
+
+    .xml-botao-voltar {
+        display: none !important;
+    }
+
+    .footer-conteudos-mobile {
+        display: none !important;
+    }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .xml-pagina {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
         min-height: 100vh;
+        height: auto;
+        overflow: visible;
         background: #f3f6fc;
     }
 
-    /* LOGO MOBILE */
+    /* ESCONDE MENU LATERAL */
 
     .xml-sidebar {
-        position: absolute;
-        z-index: 2;
-        top: 18px;
-        left: 14px;
-        display: block;
-        width: auto;
-        min-height: 0;
-        padding: 0;
-        background: transparent;
+        display: none !important;
     }
 
-    .xml-logo {
-        margin: 0;
-    }
+    /* ÁREA PRINCIPAL */
 
-    .xml-logo picture {
-        display: block;
-        width: 130px;
-    }
-
-    .xml-logo img {
-        width: 130px;
-        height: 46px;
-        object-fit: contain;
-        object-position: left center;
-    }
-
-    .xml-menu,
-    .xml-menu-inferior {
-        display: none;
-    }
-
-    /* HEADER MOBILE */
-
-    .xml-header {
-        flex-wrap: wrap;
-        gap: 12px;
-        min-height: 0;
-        padding: 28px 14px 0;
+    .xml-principal {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+        min-height: 100vh;
+        height: auto;
+        overflow: visible;
+        padding-top: 0;
+        padding-bottom: 64px;
         background: #f3f6fc;
     }
 
-    .xml-usuario {
-        order: 1;
-        margin-left: auto;
-        gap: 6px;
+    /* HEADER MOBILE OFICIAL */
+
+    .xml-principal > .integra-header-desktop {
+        display: none !important;
     }
 
-    .xml-avatar {
-        width: 36px;
-        height: 36px;
-    }
-
-    .xml-busca {
-        order: 2;
-        flex-basis: 100%;
+    .xml-principal > .integra-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        display: flex !important;
         width: 100%;
-        height: 38px;
-        max-width: none;
-        gap: 8px;
-        padding: 0 10px;
-        border: 1px solid #999;
-        background: #f8faff;
+        padding: 12px 15px 8px;
+        gap: 10px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
+    }
+
+    .xml-principal .header-superior {
+        min-height: 45px;
+    }
+
+    .xml-principal .header-logo {
+        width: 145px;
+        height: 55px;
+        object-fit: contain;
+    }
+
+    .xml-principal .header-foto {
+        width: 42px;
+        height: 42px;
+    }
+
+    .xml-principal .header-dados {
+        display: none !important;
+    }
+
+    .xml-principal .header-pesquisa {
+        height: 36px;
+        padding: 0 12px;
+    }
+
+    .xml-principal .header-pesquisa img {
+        width: 19px;
+        height: 19px;
+    }
+
+    .xml-principal .header-pesquisa input {
+        font-size: 12px;
     }
 
     /* CONTEÚDO */
 
     .xml-conteudo {
         flex: 1;
-        padding: 8px 14px 16px;
+        min-height: auto;
+        height: auto;
+        padding: 12px 14px 30px;
+        margin-top: 112px;
+        overflow: visible;
     }
+
+    /* BOTÃO VOLTAR - SOMENTE MOBILE */
+
+    .xml-botao-voltar {
+        display: block;
+        align-self: flex-start;
+        width: fit-content;
+        margin: 0 0 12px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: #4a8bd8;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .xml-botao-voltar:hover {
+        color: #1d2e68;
+    }
+
+    /* TÍTULO */
 
     .xml-conteudo h1 {
-        margin: 8px 0 15px;
+        margin: 5px 0 18px;
         color: #1d2e68;
-        font-size: 17px;
+        font-size: 20px;
+        line-height: 1.2;
     }
 
-    /* ÁREA SUPERIOR CENTRALIZADA */
+    /* ÁREA SUPERIOR */
 
     .xml-area-superior {
         display: flex;
@@ -719,25 +745,20 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-
         width: 100%;
         max-width: 310px;
         min-height: 145px;
-
         margin: 0 auto;
         padding: 13px 12px;
-
         border: 2px solid #888;
         border-radius: 6px;
         background: #f8faff;
-
         text-align: center;
     }
 
     .xml-area-soltar strong {
         align-self: center;
         margin: 0 0 10px;
-
         color: #111;
         font-size: 13px;
         font-weight: 500;
@@ -755,10 +776,8 @@
     .xml-area-soltar span {
         display: block;
         align-self: center;
-
         margin: 3px 0;
         color: #444;
-
         font-size: 11px;
         font-weight: 400;
         text-align: center;
@@ -772,6 +791,7 @@
     /* MENSAGEM */
 
     .xml-mensagem {
+        margin: 12px 0 0;
         text-align: center;
     }
 
@@ -779,7 +799,9 @@
 
     .xml-lista {
         width: 100%;
-        margin: 25px 0 0;
+        margin: 25px 0 20px;
+        overflow: visible;
+        border-radius: 6px;
     }
 
     .xml-lista-titulo {
@@ -832,8 +854,8 @@
 
     .xml-rodape {
         justify-content: center;
-        margin-top: auto;
-        padding: 24px 0 0;
+        margin-top: 10px;
+        padding: 15px 0 0;
     }
 
     .xml-botao-enviar {
@@ -841,5 +863,158 @@
         height: 38px;
         font-size: 14px;
         font-weight: bold;
+    }
+
+    /* FOOTER MOBILE */
+
+    .footer-conteudos-mobile {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        height: 64px;
+        padding: 5px 3px;
+        background: #1d2e68;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.10);
+    }
+
+    .item-footer-mobile {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        height: 100%;
+        min-width: 0;
+        color: #fff;
+        font-size: 9px;
+        text-decoration: none;
+    }
+
+    .item-footer-mobile img {
+        display: block;
+        width: 27px;
+        height: 27px;
+        object-fit: contain;
+    }
+
+    .item-footer-mobile span {
+        white-space: nowrap;
+        font-size: 9px;
+    }
+
+    .item-footer-mobile.footer-ativo {
+        color: #ff8500;
+        font-weight: 700;
+    }
+
+    .item-footer-mobile.footer-ativo img {
+        filter: brightness(0) saturate(100%) invert(56%) sepia(96%) saturate(1600%) hue-rotate(359deg) brightness(102%);
+    }
+}
+
+/* =========================================
+   CELULARES MENORES
+========================================= */
+
+@media (max-width: 380px) {
+
+    .xml-conteudo {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .xml-principal > .integra-header {
+        padding: 9px 12px;
+    }
+
+    .xml-principal .header-logo {
+        width: 125px;
+    }
+
+    .xml-principal .header-foto {
+        width: 34px;
+        height: 34px;
+    }
+
+    .xml-conteudo h1 {
+        font-size: 18px;
+    }
+
+    .xml-area-soltar {
+        min-height: 135px;
+    }
+
+    .xml-arquivo {
+        grid-template-columns: minmax(0, 1fr) auto auto 22px;
+        gap: 3px;
+        padding: 3px 4px;
+    }
+
+    .xml-arquivo-nome {
+        gap: 3px;
+    }
+
+    .xml-arquivo-nome span,
+    .xml-arquivo-tamanho {
+        font-size: 9px;
+    }
+
+    .xml-status {
+        padding: 3px 4px;
+        font-size: 7px;
+    }
+
+    .xml-botao-excluir {
+        width: 22px;
+        height: 22px;
+    }
+
+    .xml-botao-excluir img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .footer-conteudos-mobile {
+        height: 64px;
+    }
+
+    .item-footer-mobile img {
+        width: 23px;
+        height: 23px;
+    }
+
+    .item-footer-mobile span {
+        font-size: 8px;
+    }
+}
+
+/* =========================================
+   TABLETS MENORES
+========================================= */
+
+@media (min-width: 701px) and (max-width: 900px) {
+
+    .xml-conteudo {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .xml-area-superior {
+        gap: 18px;
+    }
+
+    .xml-lista {
+        width: 100%;
+    }
+
+    .xml-arquivo {
+        grid-template-columns: minmax(0, 1fr) 65px 75px 30px;
+        gap: 5px;
     }
 }

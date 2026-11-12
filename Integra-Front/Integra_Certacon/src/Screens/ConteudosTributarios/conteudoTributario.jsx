@@ -13,8 +13,11 @@ import ExpandirText from "../../assets/Icones/ExpandirText.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
-import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import iconeConteudo from "../../assets/Icones/DoisDocumentos.png";
+
+import Header from "../../components/Header/header";
+import HeaderDesktop from "../../components/Header/headerDesktop";
+
 const dadosIniciais = [
     {
         id: 1,
@@ -60,6 +63,7 @@ const dadosIniciais = [
 
 function ConteudoTributario() {
     const navigate = useNavigate();
+
     const [conteudos, setConteudos] = useState(dadosIniciais);
     const [pesquisa, setPesquisa] = useState("");
     const [temaSelecionado, setTemaSelecionado] = useState("Todos");
@@ -107,6 +111,15 @@ function ConteudoTributario() {
 
             <main className="principal-conteudos">
 
+                {/* HEADER DESKTOP */}
+
+                <HeaderDesktop
+                    pesquisa={pesquisa}
+                    setPesquisa={setPesquisa}
+                />
+
+                {/* HEADER RESPONSIVO */}
+
                 <Header
                     pesquisa={pesquisa}
                     setPesquisa={setPesquisa}
@@ -127,7 +140,7 @@ function ConteudoTributario() {
                         <button
                             type="button"
                             className="adicionar-conteudo"
-                            onClick={() => window.location.href = "/conteudos/novo"}
+                            onClick={() => navigate("/conteudos/novo")}
                         >
                             <span className="adicionar-conteudo-texto">
                                 + Adicionar Conteúdo
@@ -139,9 +152,11 @@ function ConteudoTributario() {
                     </div>
 
                     {/* FILTROS */}
+
                     <div className="filtros-conteudos">
 
                         <div className="pesquisa-lista-conteudos">
+
                             <img src={LupaCinza} alt="" />
 
                             <input
@@ -150,6 +165,7 @@ function ConteudoTributario() {
                                 value={pesquisa}
                                 onChange={(e) => setPesquisa(e.target.value)}
                             />
+
                         </div>
 
                         <div className="seletor-conteudos">
@@ -167,6 +183,7 @@ function ConteudoTributario() {
                             </select>
 
                             <img src={ExpandirText} alt="" />
+
                         </div>
 
                         <div className="seletor-conteudos">
@@ -180,11 +197,13 @@ function ConteudoTributario() {
                             </select>
 
                             <img src={ExpandirText} alt="" />
+
                         </div>
 
                     </div>
 
                     {/* TABELA DE CONTEÚDOS */}
+
                     <div className="tabela-conteudos">
 
                         <table>
@@ -230,16 +249,17 @@ function ConteudoTributario() {
                                             <td className="celula-tema">
 
                                                 <span
-                                                    className={`etiqueta-tema ${conteudo.tema === "SPED"
-                                                        ? "tema-sped"
-                                                        : conteudo.tema === "ICMS"
-                                                            ? "tema-icms"
-                                                            : conteudo.tema === "Notas Fiscais"
-                                                                ? "tema-notas-fiscais"
-                                                                : conteudo.tema === "Reforma Tributária"
-                                                                    ? "tema-reforma-tributaria"
-                                                                    : "tema-padrao"
-                                                        }`}
+                                                    className={`etiqueta-tema ${
+                                                        conteudo.tema === "SPED"
+                                                            ? "tema-sped"
+                                                            : conteudo.tema === "ICMS"
+                                                                ? "tema-icms"
+                                                                : conteudo.tema === "Notas Fiscais"
+                                                                    ? "tema-notas-fiscais"
+                                                                    : conteudo.tema === "Reforma Tributária"
+                                                                        ? "tema-reforma-tributaria"
+                                                                        : "tema-padrao"
+                                                    }`}
                                                 >
                                                     {conteudo.tema}
                                                 </span>
@@ -302,6 +322,7 @@ function ConteudoTributario() {
 
 
 // MENU LATERAL
+
 function Sidebar() {
 
     const navigate = useNavigate();
@@ -386,95 +407,8 @@ function Sidebar() {
 }
 
 
-// CABEÇALHO
-function Header({ pesquisa, setPesquisa }) {
-
-    return (
-
-        <>
-            {/* CABEÇALHO DESKTOP */}
-            <header className="topo-conteudos">
-
-                <div className="pesquisa-topo-conteudos">
-                    <img src={LupaCinza} alt="" />
-
-                    <input
-                        type="text"
-                        placeholder="Buscar conteúdos, notas fiscais, etc..."
-                        value={pesquisa}
-                        onChange={(e) => setPesquisa(e.target.value)}
-                    />
-                </div>
-
-                <div className="usuario-conteudos">
-
-                    <NavLink
-                        to="/perfil"
-                        className="foto-usuario"
-                        title="Acessar meu perfil"
-                    >
-                        JS
-                    </NavLink>
-
-                    <div className="dados-usuario">
-                        <strong>João Silva</strong>
-                        <span>Analista SPED</span>
-                    </div>
-
-                </div>
-            </header>
-
-            {/* CABEÇALHO MOBILE */}
-            <header className="home-header-mobile">
-
-                <div className="home-header-superior-mobile">
-
-                    <img
-                        src={LogoNomeMobile}
-                        alt="Integra"
-                        className="home-logo-mobile"
-                    />
-
-                    <div className="usuario-mobile">
-
-                        <NavLink
-                            to="/perfil"
-                            className="foto-usuario-mobile"
-                            title="Acessar meu perfil"
-                        >
-                            JS
-                        </NavLink>
-
-                        <div className="dados-usuario-mobile">
-                            <strong>João Silva</strong>
-                            <span>Analista SPED</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div className="home-busca-mobile">
-
-                    <img src={LupaCinza} alt="" />
-
-                    <input
-                        type="text"
-                        placeholder="Buscar conteúdos, notas fiscais, etc..."
-                        value={pesquisa}
-                        onChange={(e) => setPesquisa(e.target.value)}
-                    />
-
-                </div>
-
-            </header>
-        </>
-
-    );
-}
-
-
 // MENU MOBILE
+
 function FooterMobile() {
 
     return (

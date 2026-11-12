@@ -408,9 +408,14 @@ function Header({ pesquisa, setPesquisa }) {
 
             <div className="usuario-topo-historico">
 
-                <div className="avatar-historico">
+                {/* BOLINHA DO PERFIL CLICÁVEL */}
+                <NavLink
+                    to="/perfil"
+                    className="avatar-historico"
+                    aria-label="Ir para o perfil"
+                >
                     JS
-                </div>
+                </NavLink>
 
                 <div className="dados-usuario-historico">
                     <strong>João Silva</strong>

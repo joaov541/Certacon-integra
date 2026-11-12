@@ -1,4 +1,4 @@
-  
+
 import { useState } from "react";
 import "./Notasfiscais.css";
 
@@ -7,14 +7,16 @@ import LivroBranco from "../../assets/Icones/LivroBranco.png";
 import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
 import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
 import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
 import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import Calendario from "../../assets/Icones/calendario.png";
 
-import { Link, NavLink } from "react-router-dom";
+import Header from "../../components/Header/header";
+import HeaderDesktop from "../../components/Header/headerDesktop";
+
+import { Link } from "react-router-dom";
 
 const notasIniciais = [
   {
@@ -134,6 +136,15 @@ function NotasFiscais() {
 
       <main className="principal-notas">
 
+        {/* HEADER DESKTOP */}
+
+        <HeaderDesktop
+          pesquisa={pesquisa}
+          setPesquisa={setPesquisa}
+        />
+
+        {/* HEADER RESPONSIVO */}
+
         <Header
           pesquisa={pesquisa}
           setPesquisa={setPesquisa}
@@ -231,8 +242,6 @@ function NotasFiscais() {
 
             </div>
 
-            
-
           </div>
 
           <div className="tabela-notas-container">
@@ -271,12 +280,13 @@ function NotasFiscais() {
                       <td>
 
                         <span
-                          className={`status-nota ${nota.status === "Autenticada"
+                          className={`status-nota ${
+                            nota.status === "Autenticada"
                               ? "status-autenticada"
                               : nota.status === "Cancelada"
                                 ? "status-cancelada"
                                 : "status-pendente"
-                            }`}
+                          }`}
                         >
                           {nota.status}
                         </span>
@@ -414,44 +424,6 @@ function Sidebar() {
       </button>
 
     </aside>
-  );
-}
-
-function Header({ pesquisa, setPesquisa }) {
-  return (
-    <header className="topo-notas">
-
-      <div className="pesquisa-topo-notas">
-
-        <img src={LupaCinza} alt="" />
-
-        <input
-          type="text"
-          placeholder="Buscar conteúdos, notas fiscais, etc..."
-          value={pesquisa}
-          onChange={(e) => setPesquisa(e.target.value)}
-        />
-
-      </div>
-
-      <div className="usuario-topo-notas">
-
-        <NavLink
-          to="/perfil"
-          className="foto-usuario-notas"
-          title="Acessar meu perfil"
-        >
-          JS
-        </NavLink>
-
-        <div>
-          <strong>João Silva</strong>
-          <span>Analista SPED</span>
-        </div>
-
-      </div>
-
-    </header>
   );
 }
 

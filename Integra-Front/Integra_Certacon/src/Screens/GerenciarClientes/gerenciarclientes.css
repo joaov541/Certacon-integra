@@ -1,115 +1,21 @@
-
 * {
     box-sizing: border-box;
 }
+
+/* CONFIGURAÇÕES GERAIS */
 
 .pagina-gerenciar-clientes {
     display: flex;
     width: 100%;
     min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
     background: #fff;
     font-family: Arial, sans-serif;
 }
 
-/* CARDS MOBILE - ESCONDIDOS NO DESKTOP */
-
 .clientes-cards-mobile {
     display: none;
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .tabela-clientes {
-        display: none;
-    }
-
-    .clientes-cards-mobile {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        width: 100%;
-    }
-
-    .card-cliente {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        width: 100%;
-        min-height: 76px;
-        padding: 12px;
-        background: #f8faff;
-        border: 1px solid #d5dce8;
-        border-radius: 10px;
-        box-shadow: 0 2px 3px #00000020;
-    }
-
-    .dados-card-cliente {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        min-width: 0;
-    }
-
-    .dados-card-cliente strong {
-        font-size: 13px;
-        font-weight: 600;
-        color: #222;
-    }
-
-    .dados-card-cliente > span:not(.validacao-card) {
-        font-size: 12px;
-        color: #777;
-    }
-
-    .validacao-card {
-        width: fit-content;
-        padding: 3px 12px;
-        border-radius: 20px;
-        font-size: 10px;
-    }
-
-    .cnpj-valido {
-        background: #bcebdc;
-        color: #286b58;
-    }
-
-    .cnpj-invalido {
-        background: #f3b5b5;
-        color: #9b3030;
-    }
-
-    .acoes-card-cliente {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-shrink: 0;
-    }
-
-    .acoes-card-cliente button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-    }
-
-    .acoes-card-cliente img {
-        width: 20px;
-        height: 20px;
-        object-fit: contain;
-    }
-
-    .sem-clientes-mobile {
-        padding: 15px;
-        text-align: center;
-        color: #777;
-        font-size: 13px;
-    }
 }
 
 /* MENU LATERAL */
@@ -117,52 +23,53 @@
 .menu-gerenciar-clientes {
     display: flex;
     flex-direction: column;
-    width: 20%;
+    flex: 0 0 334px;
+    width: 334px;
     min-width: 334px;
-    min-height: 100vh;
-    padding: 20px 15px;
+    height: 100vh;
+    padding: 25px 20px;
     background: #1d2e68;
-    color: white;
+    color: #fff;
 }
 
 .logo-gerenciar-clientes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    margin-bottom: 25px;
+    margin-bottom: 35px;
+    white-space: nowrap;
 }
 
 .logo-gerenciar-clientes img {
+    display: block;
+    max-width: 100%;
+    height: auto;
     object-fit: contain;
-    object-position: left center;
 }
 
 .navegacao-gerenciar-clientes {
     display: flex;
     flex-direction: column;
-    gap: 17px;
+    gap: 25px;
 }
 
 .item-menu-clientes {
     display: flex;
     align-items: center;
     gap: 13px;
+    margin-left: 20px;
     padding: 9px 8px;
     border-radius: 5px;
     color: #fff;
     font-size: 15px;
     text-decoration: none;
     transition: background 0.2s;
-    margin-left: 20px;
-}
-
-.item-menu-clientes:hover {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-.item-menu-clientes.ativo {
-    background: rgba(255, 255, 255, 0.12);
 }
 
 .item-menu-clientes img {
+    display: block;
+    flex-shrink: 0;
     width: 33px;
     height: 33px;
     object-fit: contain;
@@ -172,28 +79,33 @@
     font-size: 14px;
 }
 
+.item-menu-clientes:hover,
+.item-menu-clientes.ativo {
+    background: rgba(255, 255, 255, 0.12);
+}
+
 .sair-gerenciar-clientes {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 13px;
     margin-top: auto;
     margin-left: 20px;
-    padding: 8px;
+    padding: 10px 8px;
     border: none;
     background: transparent;
-    color: white;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    text-align: left;
     cursor: pointer;
-    font-size: 12px;
 }
 
 .sair-gerenciar-clientes img {
+    display: block;
+    flex-shrink: 0;
     width: 33px;
     height: 33px;
     object-fit: contain;
-}
-
-.sair-gerenciar-clientes span {
-    font-size: 14px;
 }
 
 /* ÁREA PRINCIPAL */
@@ -203,15 +115,18 @@
     flex: 1;
     flex-direction: column;
     min-width: 0;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f4f7fb;
 }
 
-/* CABEÇALHO */
+/* HEADER ANTIGO */
 
 .topo-gerenciar-clientes {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
     width: 100%;
     height: 60px;
     padding: 10px 25px;
@@ -284,6 +199,47 @@
     font-size: 10px;
 }
 
+/* HEADER OFICIAL */
+
+.principal-gerenciar-clientes .integra-header {
+    position: relative;
+    z-index: 100;
+    flex-shrink: 0;
+    gap: 18px;
+    padding: 15px 25px 10px;
+    background: #fff;
+}
+
+.principal-gerenciar-clientes .integra-header-desktop {
+    position: relative;
+    z-index: 100;
+    flex-shrink: 0;
+    background: #fff;
+}
+
+.principal-gerenciar-clientes .header-logo {
+    width: 220px;
+    height: 75px;
+    object-fit: contain;
+}
+
+.principal-gerenciar-clientes .header-foto {
+    width: 55px;
+    height: 55px;
+}
+
+.principal-gerenciar-clientes .header-dados strong {
+    font-size: 15px;
+}
+
+.principal-gerenciar-clientes .header-dados span {
+    font-size: 12px;
+}
+
+.principal-gerenciar-clientes .header-pesquisa {
+    height: 40px;
+}
+
 /* CONTEÚDO */
 
 .conteudo-gerenciar-clientes {
@@ -291,7 +247,11 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 5px 24px 65px;
+    min-height: 0;
+    min-width: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px 24px 35px;
 }
 
 .conteudo-gerenciar-clientes h1 {
@@ -301,7 +261,8 @@
     font-size: 27px;
     font-weight: 600;
 }
-/* TÍTULO E BOTÃO CRIAR CLIENTE */
+
+/* TÍTULO E BOTÃO */
 
 .titulo-gerenciar-clientes {
     display: flex;
@@ -329,7 +290,7 @@
     border: none;
     border-radius: 7px;
     background: #1d2e68;
-    color: white;
+    color: #fff;
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
@@ -340,20 +301,20 @@
     background: #293f89;
 }
 
-/* FORMULÁRIO DE CADASTRO */
+/* FORMULÁRIO */
 
 .formulario-cliente {
     width: 100%;
     min-height: 160px;
     padding: 2px 8px 10px;
-
     border-radius: 7px;
     margin-top: 15px;
+    border: 1px solid #777;
 }
 
 .formulario-cliente h2 {
     margin: 0 0 10px;
-    color: #123c68; /*cadastrar cliente*/
+    color: #123c68;
     font-size: 21px;
     font-weight: bold;
 }
@@ -385,13 +346,11 @@
     border: 1px solid #777;
     border-radius: 5px;
     outline: none;
-    background: white;
+    background: #fff;
     color: #555;
     font-family: Arial, sans-serif;
     font-size: 14px;
 }
-
-
 
 .campo-cliente select {
     cursor: pointer;
@@ -402,7 +361,7 @@
     font-size: 10px;
 }
 
-/* SELECT COM SETA PERSONALIZADA */
+/* SELECT COM SETA */
 
 .select-com-seta {
     position: relative;
@@ -433,7 +392,6 @@
 .select-com-seta select::-ms-expand {
     display: none;
 }
-
 
 .select-com-seta img {
     position: absolute;
@@ -488,7 +446,7 @@
     border: none;
     border-radius: 6px;
     background: #1d2e68;
-    color: white;
+    color: #fff;
     font-size: 12px;
     cursor: pointer;
     transition: background 0.2s;
@@ -508,12 +466,12 @@
 
 .botao-salvar-cliente,
 .botao-cancelar-cliente {
-    height: 36px;
     width: 125px;
+    height: 36px;
     padding: 0 14px;
     border: 1px solid #f28b25;
     border-radius: 7px;
-    color: white;
+    color: #fff;
     font-size: 14px;
     cursor: pointer;
     transition: 0.2s;
@@ -539,16 +497,17 @@
 /* EMPRESAS CADASTRADAS */
 
 .titulo-empresas-cadastradas {
-    margin: 5px 0 5px;
-    color: #123c68f5;
+    flex-shrink: 0;
+    margin: 15px 0 5px;
+    color: #123c68;
     font-size: 21px;
     font-weight: 600;
-    margin-top: 15px;
 }
 
 .pesquisa-clientes {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
     gap: 13px;
     width: 100%;
     height: 30px;
@@ -580,12 +539,19 @@
 /* TABELA */
 
 .tabela-clientes {
+    display: block;
+    flex: 0 0 auto;
     width: 100%;
+    height: auto;
+    max-height: none;
+    min-height: 0;
     overflow-x: auto;
+    overflow-y: visible;
 }
 
 .tabela-clientes table {
     width: 100%;
+    height: auto;
     table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
@@ -621,7 +587,7 @@
 }
 
 .tabela-clientes thead th {
-    height: 30px;
+    height: 35px;
     padding: 6px 5px;
     border-top: 1px solid #333;
     border-bottom: 1px solid #333;
@@ -629,6 +595,7 @@
     text-align: center;
     font-size: 14px;
     font-weight: bold;
+    color: #1d2e68;
 }
 
 .tabela-clientes thead th:first-child {
@@ -644,7 +611,7 @@
 
 .tabela-clientes tbody td {
     height: 39px;
-    padding: 5px 5px;
+    padding: 5px;
     border-bottom: 1px solid #777;
     background: #f3f8fe;
     font-size: 14px;
@@ -727,14 +694,97 @@
     color: #777;
 }
 
+/* CARDS MOBILE */
+
+.card-cliente {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-height: 76px;
+    padding: 12px;
+    background: #f8faff;
+    border: 1px solid #d5dce8;
+    border-radius: 10px;
+    box-shadow: 0 2px 3px #00000020;
+}
+
+.dados-card-cliente {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.dados-card-cliente strong {
+    color: #222;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dados-card-cliente > span:not(.validacao-card) {
+    color: #777;
+    font-size: 12px;
+}
+
+.validacao-card {
+    width: fit-content;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+}
+
+.cnpj-valido {
+    background: #bcebdc;
+    color: #286b58;
+}
+
+.cnpj-invalido {
+    background: #f3b5b5;
+    color: #9b3030;
+}
+
+.acoes-card-cliente {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.acoes-card-cliente button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.acoes-card-cliente img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.sem-clientes-mobile {
+    padding: 15px;
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+}
+
 /* PAGINAÇÃO */
 
 .paginacao-clientes {
     display: flex;
+    flex-shrink: 0;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: auto;
-    padding-top: 25px;
+    margin-top: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .paginacao-clientes button {
@@ -742,7 +792,7 @@
     height: 34px;
     border: 1px solid #777;
     border-radius: 8px;
-    background: white;
+    background: #fff;
     color: #111;
     font-size: 12px;
     cursor: pointer;
@@ -751,7 +801,7 @@
 .paginacao-clientes button.pagina-ativa {
     border-color: #1d2e68;
     background: #1d2e68;
-    color: white;
+    color: #fff;
 }
 
 .paginacao-clientes button:disabled {
@@ -761,28 +811,45 @@
 
 /* TABLETS */
 
-@media (min-width: 601px) and (max-width: 1024px) {
+@media (min-width: 701px) and (max-width: 1200px) {
 
     .menu-gerenciar-clientes {
-        width: 180px;
-        min-width: 180px;
-        padding: 18px 10px;
+        flex: 0 0 210px;
+        width: 210px;
+        min-width: 210px;
+        padding: 20px 10px;
+    }
+
+    .logo-gerenciar-clientes {
+        margin-bottom: 25px;
     }
 
     .logo-gerenciar-clientes img {
-        max-width: 100%;
+        max-width: 190px;
         height: auto;
     }
 
+    .navegacao-gerenciar-clientes {
+        gap: 16px;
+    }
+
     .item-menu-clientes {
-        margin-left: 0;
-        gap: 8px;
-        padding: 9px 5px;
+        margin-left: 4px;
+        gap: 9px;
+        padding: 8px 5px;
     }
 
     .item-menu-clientes img {
         width: 28px;
         height: 28px;
+    }
+
+    .item-menu-clientes span {
+        font-size: 13px;
+    }
+
+    .sair-gerenciar-clientes {
+        margin-left: 4px;
     }
 
     .topo-gerenciar-clientes {
@@ -794,11 +861,11 @@
     }
 
     .conteudo-gerenciar-clientes {
-        padding: 8px 15px 35px;
+        padding: 25px 22px 35px;
     }
 
     .conteudo-gerenciar-clientes h1 {
-        font-size: 24px;
+        font-size: 27px;
     }
 
     .campos-cliente {
@@ -823,196 +890,38 @@
 
     .tabela-clientes {
         overflow-x: auto;
+        overflow-y: visible;
     }
 
     .tabela-clientes table {
         min-width: 550px;
     }
 
-    .tabela-clientes thead th {
-        font-size: 12px;
-    }
-
+    .tabela-clientes thead th,
     .tabela-clientes tbody td {
         font-size: 12px;
     }
 }
 
-/* MOBILE */
+/* HEADER MOBILE E TABLET */
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 
-    /* OCULTA O MENU AZUL */
-
-    .menu-gerenciar-clientes {
+    .principal-gerenciar-clientes > .integra-header-desktop {
         display: none;
     }
 
-    .pagina-gerenciar-clientes {
-        flex-direction: column;
-        width: 100%;
-        min-height: 100vh;
-    }
-
-    .principal-gerenciar-clientes {
-        width: 100%;
-        min-width: 0;
-    }
-
-    /* CABEÇALHO */
-
-    .topo-gerenciar-clientes {
-        height: auto;
-        gap: 10px;
-        padding: 12px;
-    }
-
-    .pesquisa-topo-clientes {
-        width: 60%;
-        min-width: 0;
-    }
-
-    .usuario-topo-clientes {
-        flex-shrink: 0;
-    }
-
-    /* CONTEÚDO */
-
-    .conteudo-gerenciar-clientes {
-        width: 100%;
-        padding: 15px 12px 25px;
-    }
-
-    .conteudo-gerenciar-clientes h1 {
-        font-size: 22px;
-        margin-top: 10px;
-        margin-bottom: 8px;
-    }
-
-    /* FORMULÁRIO */
-
-    .formulario-cliente {
-        width: 100%;
-        min-height: auto;
-        padding: 8px;
-    }
-
-    .formulario-cliente h2 {
-        font-size: 19px;
-    }
-
-    .campos-cliente {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .campo-cliente input,
-    .campo-cliente select {
-        width: 100%;
-    }
-
-    .campo-cnpj small {
-        margin-top: 2px;
-    }
-
-    .rodape-formulario-cliente {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-        margin-top: 12px;
-    }
-
-    .validacao-cnpj {
-        justify-content: flex-start;
-        gap: 10px;
-    }
-
-    .mensagem-cliente {
-        max-width: 100%;
-    }
-
-    .botao-validar-cnpj {
-        min-width: 105px;
-    }
-
-    .botoes-formulario-cliente {
+    .principal-gerenciar-clientes > .integra-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
         display: flex;
         width: 100%;
-        margin-left: 0;
-    }
-
-    .botoes-formulario-cliente button {
-        flex: 1;
-        width: auto;
-    }
-
-    /* EMPRESAS CADASTRADAS */
-
-    .titulo-empresas-cadastradas {
-        margin-top: 18px;
-        font-size: 19px;
-    }
-
-    .pesquisa-clientes {
-        margin-bottom: 15px;
-    }
-
-    /* TABELA */
-
-    .tabela-clientes {
-        width: 100%;
-        overflow-x: auto;
-    }
-
-    .tabela-clientes table {
-        min-width: 650px;
-    }
-
-    .paginacao-clientes {
-        padding-top: 25px;
-    }
-}
-
-/* HEADER OFICIAL */
-
-.principal-gerenciar-clientes .integra-header {
-    gap: 18px;
-    padding: 15px 25px 10px;
-    background: #fff;
-}
-
-.principal-gerenciar-clientes .header-logo {
-    width: 220px;
-    height: 75px;
-    object-fit: contain;
-}
-
-.principal-gerenciar-clientes .header-foto {
-    width: 55px;
-    height: 55px;
-}
-
-.principal-gerenciar-clientes .header-dados strong {
-    font-size: 15px;
-}
-
-.principal-gerenciar-clientes .header-dados span {
-    font-size: 12px;
-}
-
-.principal-gerenciar-clientes .header-pesquisa {
-    height: 40px;
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    /* HEADER */
-
-    .principal-gerenciar-clientes .integra-header {
         padding: 12px 15px 8px;
         gap: 10px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
     }
 
     .principal-gerenciar-clientes .header-superior {
@@ -1051,18 +960,60 @@
         font-size: 12px;
     }
 
+    .principal-gerenciar-clientes .header-dados {
+        display: none !important;
+    }
+
+    .principal-gerenciar-clientes {
+        padding-top: 94px;
+    }
+}
+
+/* DESKTOP */
+
+@media (min-width: 701px) {
+
+    .principal-gerenciar-clientes > .integra-header {
+        display: none;
+    }
+
+    .principal-gerenciar-clientes > .integra-header-desktop {
+        display: flex;
+        position: relative;
+        flex-shrink: 0;
+        width: 100%;
+        background: #fff;
+    }
+
+    .principal-gerenciar-clientes {
+        padding-top: 0;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .pagina-gerenciar-clientes {
+        flex-direction: column;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+    }
+
     /* MENU INFERIOR */
 
     .menu-gerenciar-clientes {
-        display: flex;
         position: fixed;
         z-index: 1000;
         bottom: 0;
         left: 0;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         min-width: 0;
-        height: 65px;
-        min-height: 65px;
+        height: 64px;
+        min-height: 64px;
         padding: 5px 2px;
         background: #1d2e68;
     }
@@ -1111,13 +1062,27 @@
         color: #ff8500;
     }
 
+    .item-menu-clientes.ativo img {
+        filter: brightness(0) saturate(100%) invert(56%) sepia(96%) saturate(1600%) hue-rotate(359deg) brightness(102%);
+    }
+
     /* ÁREA PRINCIPAL */
 
     .principal-gerenciar-clientes {
-        padding-bottom: 65px;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        min-height: 0;
+        padding-top: 0;
+        padding-bottom: 64px;
     }
 
+    /* CONTEÚDO */
+
     .conteudo-gerenciar-clientes {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
         padding: 5px 14px 25px;
     }
 
@@ -1127,13 +1092,35 @@
         font-size: 20px;
     }
 
+    /* TÍTULO */
+
+    .titulo-gerenciar-clientes {
+        gap: 8px;
+    }
+
+    .titulo-gerenciar-clientes h1 {
+        margin: 5px 0;
+        font-size: 20px;
+    }
+
+    .botao-criar-cliente {
+        min-width: 105px;
+        height: 32px;
+        padding: 0 8px;
+        margin-top: 5px;
+        font-size: 10px;
+    }
+
     /* FORMULÁRIO */
 
     .formulario-cliente {
+        width: 100%;
+        min-height: auto;
         margin-top: 5px;
         padding: 10px;
         border: 1px solid #ddd;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        border-radius: 7px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .formulario-cliente h2 {
@@ -1142,6 +1129,7 @@
     }
 
     .campos-cliente {
+        grid-template-columns: 1fr;
         gap: 10px;
     }
 
@@ -1151,21 +1139,41 @@
 
     .campo-cliente input,
     .campo-cliente select {
+        width: 100%;
+        height: 27px;
+        font-size: 12px;
+    }
+
+    .select-com-seta {
+        height: 27px;
+    }
+
+    .select-com-seta select {
         height: 27px;
         font-size: 12px;
     }
 
     .campo-cnpj small {
+        margin-top: 2px;
         font-size: 10px;
     }
 
+    /* VALIDAÇÃO */
+
     .rodape-formulario-cliente {
+        flex-direction: column;
+        align-items: stretch;
         gap: 8px;
         margin-top: 8px;
     }
 
     .validacao-cnpj {
+        justify-content: flex-start;
         gap: 7px;
+    }
+
+    .mensagem-cliente {
+        max-width: 100%;
     }
 
     .botao-validar-cnpj {
@@ -1174,7 +1182,17 @@
         font-size: 10px;
     }
 
+    /* BOTÕES */
+
+    .botoes-formulario-cliente {
+        display: flex;
+        width: 100%;
+        margin-left: 0;
+    }
+
     .botoes-formulario-cliente button {
+        flex: 1;
+        width: auto;
         height: 29px;
         font-size: 11px;
     }
@@ -1205,13 +1223,13 @@
         font-size: 12px;
     }
 
-    /* TABELA DESKTOP OCULTA */
+    /* ESCONDE TABELA */
 
     .tabela-clientes {
         display: none;
     }
 
-    /* CARDS MOBILE */
+    /* EXIBE CARDS */
 
     .clientes-cards-mobile {
         display: flex;
@@ -1309,26 +1327,214 @@
         padding-top: 5px;
     }
 }
-/* HEADER DESKTOP E MOBILE */
 
-/* DESKTOP */
-@media (min-width: 901px) {
-    .principal-gerenciar-clientes > .integra-header {
-        display: none;
+/* CELULARES MENORES */
+
+@media (max-width: 380px) {
+
+    .principal-gerenciar-clientes .integra-header {
+        padding: 9px 12px;
     }
 
-    .principal-gerenciar-clientes > .integra-header-desktop {
-        display: flex;
+    .principal-gerenciar-clientes .header-logo {
+        width: 125px;
+    }
+
+    .principal-gerenciar-clientes .header-foto {
+        width: 34px;
+        height: 34px;
+    }
+
+    .conteudo-gerenciar-clientes {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .titulo-gerenciar-clientes h1 {
+        font-size: 18px;
+    }
+
+    .titulo-empresas-cadastradas {
+        font-size: 17px;
+    }
+
+    .item-menu-clientes img {
+        width: 23px;
+        height: 23px;
+    }
+
+    .item-menu-clientes span {
+        font-size: 8px;
     }
 }
 
-/* TABLET E MOBILE */
-@media (max-width: 900px) {
-    .principal-gerenciar-clientes > .integra-header-desktop {
-        display: none;
+/* =========================================
+   CORREÇÃO DO LAYOUT - GERENCIAR CLIENTES
+   ========================================= */
+
+@media (min-width: 701px) and (max-width: 1200px) {
+
+    /* CONTEÚDO PRINCIPAL */
+
+    .conteudo-gerenciar-clientes {
+        padding: 25px 22px 30px;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
-    .principal-gerenciar-clientes > .integra-header {
+    /* TÍTULO */
+
+    .conteudo-gerenciar-clientes > h1 {
+        margin-top: 5px;
+        margin-bottom: 20px;
+        font-size: 27px;
+    }
+
+    /* FORMULÁRIO */
+
+    .formulario-cliente {
         display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: auto;
+        padding: 5px 10px 10px;
+        margin-top: 0;
+        overflow: visible;
+    }
+
+    .formulario-cliente h2 {
+        margin-bottom: 12px;
+        font-size: 21px;
+    }
+
+    /* TRÊS COLUNAS NA MESMA LINHA */
+
+    .campos-cliente {
+        display: grid;
+        grid-template-columns: 1.1fr 0.8fr 1.3fr;
+        align-items: start;
+        gap: 18px;
+        width: 100%;
+    }
+
+    .campo-razao-social {
+        grid-column: auto;
+    }
+
+    .campo-cliente {
+        min-width: 0;
+    }
+
+    .campo-cliente input,
+    .campo-cliente select,
+    .select-com-seta {
+        width: 100%;
+    }
+
+    /* RODAPÉ DO FORMULÁRIO */
+
+    .rodape-formulario-cliente {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .validacao-cnpj {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .botoes-formulario-cliente {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-left: auto;
+    }
+
+    .botao-salvar-cliente,
+    .botao-cancelar-cliente {
+        width: 125px;
+        height: 36px;
+    }
+
+    /* EMPRESAS CADASTRADAS */
+
+    .titulo-empresas-cadastradas {
+        position: relative;
+        margin-top: 18px;
+        margin-bottom: 8px;
+        font-size: 21px;
+    }
+
+    .pesquisa-clientes {
+        margin-bottom: 18px;
+    }
+
+    /* TABELA */
+
+    .tabela-clientes {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+    }
+
+    .tabela-clientes table {
+        width: 100%;
+        min-width: 550px;
+    }
+}
+
+/* TELAS UM POUCO MENORES */
+
+@media (min-width: 701px) and (max-width: 900px) {
+
+    .conteudo-gerenciar-clientes {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .campos-cliente {
+        gap: 10px;
+    }
+
+    .campo-cliente label {
+        font-size: 12px;
+    }
+
+    .campo-cliente input,
+    .campo-cliente select {
+        font-size: 12px;
+    }
+
+    .botoes-formulario-cliente button {
+        width: 105px;
+        font-size: 12px;
+    }
+
+    .validacao-cnpj {
+        gap: 5px;
+    }
+}
+
+/* =========================================
+   AJUSTE DE ESPAÇAMENTO ABAIXO DO HEADER
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .principal-gerenciar-clientes {
+        padding-top: 112px !important;
+    }
+
+    .conteudo-gerenciar-clientes {
+        padding-top: 12px;
     }
 }

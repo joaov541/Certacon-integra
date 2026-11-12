@@ -1,1194 +1,1263 @@
-.pagina-notas {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  background: #ffffff;
-  color: #111111;
-  font-family: Arial, sans-serif;
+
+* {
+    box-sizing: border-box;
 }
 
-/* Menu lateral */
+.pagina-notas {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+    background: #f4f7fb;
+    color: #111;
+    font-family: Arial, sans-serif;
+}
+
+/* =========================================
+   MENU LATERAL
+========================================= */
+
 .menu-notas {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  width: 334px;
-  min-height: 100vh;
-  padding: 25px 15px;
-  background: #1d2e68;
-  border-right: 2px solid #168bff;
-  color: white;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 334px;
+    width: 334px;
+    min-width: 334px;
+    min-height: 100vh;
+    padding: 25px 20px;
+    background: #1d2e68;
+    color: #fff;
 }
 
 .logo-notas {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 35px;
 }
 
-
-.logo-notas span {
-  font-size: 14px;
+.logo-notas img {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    object-fit: contain;
 }
 
 .navegacao-notas {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
 .item-menu-notas {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 25px;
-  margin-left: 20px;
-  padding: 5px 8px;
-  border-radius: 6px;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 12px;
-  transition: background 0.2s;
-}
-
-.item-menu-notas:hover,
-.item-menu-notas.menu-notas-ativo {
-  background: rgba(255, 255, 255, 0.09);
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: auto;
+    margin-left: 20px;
+    padding: 9px 8px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+    transition: background 0.2s;
 }
 
 .item-menu-notas img {
-  width: 33px;
-  height: 33px;
-  object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    width: 33px;
+    height: 33px;
+    object-fit: contain;
 }
 
 .item-menu-notas span {
-  font-size: 14px;
+    font-size: 14px;
 }
 
-.menu-notas-ativo {
-  font-weight: 600;
+.item-menu-notas:hover,
+.item-menu-notas.menu-notas-ativo {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .sair-notas {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: auto;
-  margin-left: 20px;
-  padding: 10px 8px;
-  border: none;
-  background: transparent;
-  color: white;
-  font-size: 12px;
-  cursor: pointer;
-  text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-top: auto;
+    margin-left: 20px;
+    padding: 10px 8px;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
 }
 
 .sair-notas img {
-  width: 33px;
-  height: 33px;
-  object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    width: 33px;
+    height: 33px;
+    object-fit: contain;
 }
 
 .sair-notas span {
-  font-size: 14px;
+    font-size: 14px;
 }
 
+/* =========================================
+   ÁREA PRINCIPAL
+========================================= */
 
-/* PADRÃO DO MENU DESKTOP — IGUAL ÀS TELAS INÍCIO E CONTEÚDOS */
-.menu-notas {
-  flex: 0 0 334px;
-  width: 334px;
-  min-width: 334px;
-  padding: 25px 20px;
-  border-right: none;
-}
-.logo-notas { margin-bottom: 35px; }
-.navegacao-notas { gap: 25px; }
-.item-menu-notas {
-  gap: 13px;
-  padding: 9px 8px;
-  border-radius: 5px;
-  font-size: 15px;
-  margin-left: 20px;
-}
-.item-menu-notas:hover,
-.item-menu-notas.menu-notas-ativo {
-  background: rgba(255, 255, 255, 0.12);
-}
-.sair-notas {
-  gap: 12px;
-  padding: 8px 10px;
-  font-size: 11px;
-}
-
-/* Área principal */
 .principal-notas {
-  flex: 1;
-  min-width: 0;
-  background: #ffffff;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #f4f7fb;
 }
+
+/* HEADER DESKTOP */
 
 .topo-notas {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 25px;
-  min-height: 76px;
-  padding: 15px 25px;
-  border-bottom: 10px solid #f4f7fc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    min-height: 76px;
+    flex-shrink: 0;
+    padding: 15px 25px;
+    border-bottom: 10px solid #f4f7fc;
+    background: #fff;
 }
 
 .pesquisa-topo-notas {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  width: min(100%, 950px);
-  height: 39px;
-  padding: 0 12px;
-  border-radius: 6px;
-  background: #f1f5fb;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: min(100%, 950px);
+    height: 39px;
+    padding: 0 12px;
+    border-radius: 6px;
+    background: #f1f5fb;
 }
 
 .pesquisa-topo-notas img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
 }
 
 .pesquisa-topo-notas input {
-  width: 100%;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #333333;
-  font-size: 12px;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    font-size: 12px;
 }
 
 .usuario-topo-notas {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
 }
 
 .foto-usuario-notas {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #1d2e68;
-  color: white;
-  font-size: 13px;
-  font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1d2e68;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 .usuario-topo-notas strong,
 .usuario-topo-notas span {
-  display: block;
+    display: block;
 }
 
 .usuario-topo-notas strong {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .usuario-topo-notas div:nth-child(2) span {
-  margin-top: 3px;
-  color: #777777;
-  font-size: 12px;
+    margin-top: 3px;
+    color: #777;
+    font-size: 12px;
 }
 
 .tres-pontos-notas {
-  align-self: flex-start;
-  color: #777777;
-  font-size: 16px;
+    align-self: flex-start;
+    color: #777;
+    font-size: 16px;
 }
 
-/* Conteúdo */
+/* HEADER COMPARTILHADO */
+
+.principal-notas > .integra-header {
+    display: none;
+}
+
+.principal-notas > .integra-header-desktop {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+    width: 100%;
+    background: #fff;
+    z-index: 100;
+}
+
+/* =========================================
+   CONTEÚDO
+========================================= */
+
 .conteudo-notas {
-  padding: 16px 16px 20px;
+    flex: 1;
+    min-height: 0;
+    padding: 25px 25px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f4f7fb;
 }
 
 .conteudo-notas h1 {
-  margin: 0 0 5px;
-  color: #12375f;
-  font-size: 30px;
-  font-weight: bold;
-
+    margin: 0 0 22px;
+    color: #1d2e68;
+    font-size: 30px;
+    font-weight: bold;
 }
 
-/* Filtros superiores */
+/* =========================================
+   FILTROS SUPERIORES
+========================================= */
+
 .filtros-notas {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 64px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 40px;
 }
 
 .filtro-periodo,
 .filtro-cliente,
 .filtro-status {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  gap: 2px;
-  flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 4px;
+    flex-shrink: 1;
 }
 
 .filtro-periodo {
-  width: 330px;
+    width: 330px;
 }
 
 .filtro-cliente {
-  width: 340px;
+    width: 340px;
 }
 
 .filtro-status {
-  width: 220px;
+    width: 220px;
 }
 
 .filtro-periodo label,
 .filtro-cliente label,
 .filtro-status label {
-  padding-left: 5px;
-  color: #858585;
-  font-size: 16px;
+    padding-left: 5px;
+    color: #858585;
+    font-size: 14px;
 }
 
-/* Período: aproxima as duas datas e os calendários */
+/* PERÍODO */
+
 .campo-periodo {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 2px;
-  width: 100%;
-  height: 46px;
-  padding: 0 6px;
-  border: 1px solid #888888;
-  border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+    width: 100%;
+    height: 46px;
+    padding: 0 6px;
+    border: 1px solid #888;
+    border-radius: 12px;
+    background: #fff;
 }
 
 .campo-data-notas {
-  display: flex;
-  align-items: center;
-  flex: 1 1 0;
-  gap: 1px;
-  min-width: 0;
+    display: flex;
+    align-items: center;
+    flex: 1 1 0;
+    gap: 1px;
+    min-width: 0;
 }
 
 .campo-data-notas input {
-  display: block;
-  flex: 1 1 0;
-  width: 0;
-  min-width: 0;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #777777;
-  font-family: Arial, sans-serif;
-  font-size: 17px;
-  margin-left: 20px;
+    display: block;
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    margin-left: 10px;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #777;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
 }
 
-/* Esconde o calendário nativo para usar a imagem personalizada */
 .campo-data-notas input::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
+    display: none;
+    -webkit-appearance: none;
 }
 
 .campo-data-notas img {
-  display: block;
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-  object-fit: contain;
-  cursor: pointer;
-  margin-right: 10px;
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    margin-right: 7px;
+    object-fit: contain;
+    cursor: pointer;
 }
 
-.campo-periodo>span {
-  flex-shrink: 0;
-  margin: 0;
-  color: #777777;
-  font-size: 13px;
+.campo-periodo > span {
+    flex-shrink: 0;
+    margin: 0;
+    color: #777;
+    font-size: 13px;
 }
 
-/* Cliente e status */
+/* CLIENTE E STATUS */
+
 .filtro-cliente select,
 .filtro-status select {
-  width: 100%;
-  height: 46px;
-  padding: 0 12px;
-  border: 1px solid #888888;
-  border-radius: 12px;
-  outline: none;
-  background-color: #ffffff;
-  color: #777777;
-  font-size: 15px;
+    width: 100%;
+    height: 46px;
+    padding: 0 12px;
+    border: 1px solid #888;
+    border-radius: 12px;
+    outline: none;
+    background-color: #fff;
+    color: #777;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
 }
 
+.filtro-cliente select:focus,
+.filtro-status select:focus,
+.campo-periodo:focus-within {
+    border-color: #1d2e68;
+}
+
+/* BOTÃO BUSCAR */
+
 .botao-buscar-notas {
-  width: 150px;
-  height: 46px;
-  flex-shrink: 0;
-  border: none;
-  border-radius: 12px;
-  background: #1d2e68;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.2s;
+    width: 150px;
+    height: 46px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 12px;
+    background: #1d2e68;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .botao-buscar-notas:hover {
-  background: #293f88;
+    background: #293f88;
 }
 
-/* Tabela */
+/* =========================================
+   TABELA
+========================================= */
+
 .tabela-notas-container {
-  width: 100%;
-  overflow-x: auto;
+    width: 100%;
+    overflow-x: auto;
 }
 
 .tabela-notas {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  table-layout: auto;
-  font-size: 14px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: auto;
+    font-size: 14px;
 }
 
 .tabela-notas thead th {
-  padding: 7px 10px;
-  border-top: 1px solid #777777;
-  border-bottom: 1px solid #777777;
-  background: #eaf4ff;
-  color: #222222;
-  font-weight: 700;
-  text-align: center;
-  white-space: nowrap;
+    padding: 9px 10px;
+    border-top: 1px solid #777;
+    border-bottom: 1px solid #777;
+    background: #eaf4ff;
+    color: #1d2e68;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .tabela-notas thead th:first-child {
-  border-left: 1px solid #777777;
-  border-radius: 8px 0 0 0;
-  text-align: left;
+    border-left: 1px solid #777;
+    border-radius: 8px 0 0 0;
+    text-align: left;
 }
 
 .tabela-notas thead th:last-child {
-  border-right: 1px solid #777777;
-  border-radius: 0 8px 0 0;
+    border-right: 1px solid #777;
+    border-radius: 0 8px 0 0;
 }
 
 .tabela-notas tbody td {
-  padding: 6px 10px;
-  border-bottom: 1px solid #888888;
-  background: #f0f6fd;
-  text-align: center;
-  vertical-align: middle;
+    padding: 9px 10px;
+    border-bottom: 1px solid #888;
+    background: #f0f6fd;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .tabela-notas tbody td:first-child {
-  border-left: 1px solid #888888;
-  text-align: left;
+    border-left: 1px solid #888;
+    text-align: left;
 }
 
 .tabela-notas tbody td:last-child {
-  border-right: 1px solid #888888;
+    border-right: 1px solid #888;
 }
 
 .tabela-notas tbody tr:last-child td:first-child {
-  border-radius: 0 0 0 8px;
+    border-radius: 0 0 0 8px;
 }
 
 .tabela-notas tbody tr:last-child td:last-child {
-  border-radius: 0 0 8px 0;
+    border-radius: 0 0 8px 0;
 }
 
 .tabela-notas tbody tr:hover td {
-  background: #e7f0fc;
+    background: #e7f0fc;
 }
 
 .chave-nota {
-  max-width: 270px;
-  overflow-wrap: anywhere;
-  line-height: 1.25;
+    max-width: 270px;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
 }
 
 .status-nota {
-  display: inline-block;
-  min-width: 78px;
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-size: 10px;
-  white-space: nowrap;
+    display: inline-block;
+    min-width: 78px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    white-space: nowrap;
 }
 
 .status-autenticada {
-  background: #c0eddf;
-  color: #263b36;
+    background: #c0eddf;
+    color: #263b36;
 }
 
 .status-cancelada {
-  background: #ffe4e7;
-  color: #663b40;
+    background: #ffe4e7;
+    color: #663b40;
 }
 
 .status-pendente {
-  background: #ffd09e;
-  color: #4a3420;
+    background: #ffd09e;
+    color: #4a3420;
 }
 
 .botao-excluir-nota {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
 }
 
 .botao-excluir-nota img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 .nenhuma-nota {
-  padding: 25px !important;
-  color: #777777;
-  text-align: center !important;
+    padding: 25px !important;
+    color: #777;
+    text-align: center !important;
 }
 
-/* Paginação */
+/* =========================================
+   PAGINAÇÃO
+========================================= */
+
 .paginacao-notas {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 5px;
-  margin-top: 140px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 35px;
+    padding-bottom: 10px;
 }
 
 .paginacao-notas button {
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  border: 1px solid #888888;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #333333;
-  font-size: 14px;
-  cursor: pointer;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .paginacao-notas button.pagina-ativa {
-  border-color: #1d2e68;
-  background: #1d2e68;
-  color: white;
+    border-color: #1d2e68;
+    background: #1d2e68;
+    color: #fff;
 }
 
 .paginacao-notas button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
-/* Responsividade */
-/* ---------- Já existiam (copiados sem alteração) ---------- */
-
-@media (max-width: 1200px) {
-  .filtros-notas {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 12px;
-    margin-bottom: 40px;
-  }
-
-  .filtro-periodo,
-  .filtro-cliente,
-  .filtro-status {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .botao-buscar-notas {
-    width: 100%;
-  }
-
-  .paginacao-notas {
-    margin-top: 70px;
-  }
-}
-
-@media (max-width: 650px) {
-  .pagina-notas {
-    flex-direction: column;
-  }
-
-  .menu-notas {
-    width: 100%;
-    min-height: auto;
-    padding: 12px;
-    border-right: none;
-    border-bottom: 2px solid #168bff;
-  }
-
-  .logo-notas {
-    justify-content: flex-start;
-    margin-bottom: 15px;
-  }
-
-  .logo-notas img {
-    max-width: 165px;
-  }
-
-  .navegacao-notas {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .item-menu-notas {
-    gap: 6px;
-    margin-left: 0;
-    font-size: 11px;
-  }
-
-  .item-menu-notas img {
-    width: 20px;
-    height: 20px;
-  }
-
-  .sair-notas {
-    margin-top: 12px;
-  }
-
-  .topo-notas {
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 12px;
-  }
-
-  .pesquisa-topo-notas {
-    width: 100%;
-  }
-
-  .usuario-topo-notas {
-    margin-left: auto;
-  }
-
-  .conteudo-notas {
-    padding: 18px 12px;
-  }
-
-  .conteudo-notas h1 {
-    font-size: 22px;
-  }
-
-  .filtros-notas {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-    margin-bottom: 30px;
-  }
-
-  .filtro-periodo,
-  .filtro-cliente,
-  .filtro-status {
-    width: 100%;
-  }
-
-  .tabela-notas {
-    min-width: 750px;
-  }
-
-  .paginacao-notas {
-    margin-top: 35px;
-  }
-}
-
-/* ---------- Novos ---------- */
-
-/* Notebook pequeno e tablet deitado (901px a 1100px):
-   menu mais estreito para sobrar espaço, e a tabela
-   rola para o lado em vez de espremer as colunas */
-@media (min-width: 901px) and (max-width: 1100px) {
-  .menu-notas {
-    width: 250px;
-  }
-
-  .tabela-notas {
-    min-width: 750px;
-  }
-}
-
-/* Tablet em pé (651px a 900px):
-   o menu vira uma faixa no topo, igual ao do celular */
-@media (min-width: 651px) and (max-width: 900px) {
-  .pagina-notas {
-    flex-direction: column;
-  }
-
-  .menu-notas {
-    width: 100%;
-    min-height: auto;
-    padding: 12px 20px;
-    border-right: none;
-    border-bottom: 2px solid #168bff;
-  }
-
-  .logo-notas {
-    justify-content: flex-start;
-    margin-bottom: 15px;
-  }
-
-  .logo-notas img {
-    max-width: 165px;
-  }
-
-  .navegacao-notas {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .item-menu-notas {
-    margin-left: 0;
-  }
-
-  .item-menu-notas img,
-  .sair-notas img {
-    width: 24px;
-    height: 24px;
-  }
-
-  .sair-notas {
-    margin-top: 12px;
-    margin-left: 0;
-  }
-
-  .conteudo-notas {
-    padding: 18px 20px;
-  }
-
-  .tabela-notas {
-    min-width: 750px;
-  }
-}
-
-/* Celulares (até 650px): o "Sair" alinha com os outros itens */
-@media (max-width: 650px) {
-  .sair-notas {
-    margin-left: 0;
-  }
-}
-
-/* Celulares pequenos (até 480px) */
-@media (max-width: 480px) {
-  .topo-notas {
-    padding: 10px;
-  }
-
-  .navegacao-notas {
-    gap: 8px 12px;
-  }
-
-  .item-menu-notas span,
-  .sair-notas span {
-    font-size: 13px;
-  }
-
-  .filtro-periodo label,
-  .filtro-cliente label,
-  .filtro-status label {
-    font-size: 14px;
-  }
-
-  /* datas menores para as duas caberem lado a lado */
-  .campo-periodo {
-    padding: 0 4px;
-  }
-
-  .campo-data-notas input {
-    margin-left: 6px;
-    font-size: 14px;
-  }
-
-  .campo-data-notas img {
-    width: 16px;
-    height: 16px;
-    flex: 0 0 16px;
-    margin-right: 4px;
-  }
-
-  /* se tiver muitas páginas, os botões quebram de linha */
-  .paginacao-notas {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-/* =====================================================
-   LAYOUT DO CELULAR (até 650px), igual ao protótipo
-   ===================================================== */
-
-@media (max-width: 650px) {
-  /* ---------- Página ---------- */
-
-  .pagina-notas,
-  .principal-notas {
-    background: #f4f7fc;
-  }
-
-  .pagina-notas {
-    position: relative;
-  }
-
-  /* ---------- Menu: o logo vai para o topo e os links viram a barra de baixo ---------- */
-
-  /* o menu deixa de ser uma caixa, assim o logo e os links ficam soltos na página */
-  .menu-notas {
-    display: contents;
-  }
-
-  .logo-notas {
-    position: absolute;
-    top: 14px;
-    left: 16px;
-    z-index: 5;
-    margin: 0;
-  }
-
-  .logo-notas img {
-    width: 190px;
-    max-width: 190px;
-    height: auto;
-  }
-
-  /* se o seu LogoNome.png tiver o texto branco, ele some no fundo claro.
-     Use a versão colorida do logo ou tire os comentários destas linhas:
-  .logo-notas {
-    padding: 6px 10px;
-    border-radius: 8px;
-    background: #1d2e68;
-  }
-  */
-
-  .navegacao-notas {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 30;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-around;
-    gap: 0;
-    padding: 8px 4px 10px;
-    background: #1d2e68;
-  }
-
-  .item-menu-notas {
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    gap: 3px;
-    min-width: 0;
-    margin: 0;
-    padding: 2px 0;
-    text-align: center;
-  }
-
-  .item-menu-notas:hover,
-  .item-menu-notas.menu-notas-ativo {
-    background: transparent;
-  }
-
-  .item-menu-notas img {
-    width: 36px;
-    height: 36px;
-  }
-
-  .item-menu-notas span {
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  /* página atual em laranja (o filtro pinta o ícone branco de laranja) */
-  .item-menu-notas.menu-notas-ativo span {
-    color: #f38f2c;
-  }
-
-  .item-menu-notas.menu-notas-ativo img {
-    filter: brightness(0) invert(51%) sepia(97%) saturate(2061%) hue-rotate(347deg) brightness(127%) contrast(91%);
-  }
-
-  /* o protótipo do celular não tem "Sair" */
-  .sair-notas {
-    display: none;
-  }
-
-  /* ---------- Topo: logo à esquerda, usuário à direita, busca embaixo ---------- */
-
-  .topo-notas {
-    align-items: center;
-    gap: 14px;
-    min-height: 0;
-    padding: 14px 16px 6px;
-    border-bottom: none;
-    background: transparent;
-  }
-
-  .usuario-topo-notas {
-    order: -1;
-    margin-left: auto;
-    gap: 10px;
-  }
-
-  .foto-usuario-notas {
-    width: 52px;
-    height: 52px;
-  }
-
-  .usuario-topo-notas strong {
-    font-size: 15px;
-  }
-
-  .usuario-topo-notas div:nth-child(2) span {
-    font-size: 12px;
-  }
-
-  .usuario-topo-notas .tres-pontos-notas {
-    display: none;
-  }
-
-  .pesquisa-topo-notas {
-    height: 42px;
-    border: 1px solid #555555;
-    background: #ffffff;
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  /* ---------- Conteúdo ---------- */
-
-  .conteudo-notas {
-    padding: 8px 16px 100px;
-  }
-
-  .conteudo-notas h1 {
-    color: #1d2e68;
-    font-size: 24px;
-  }
-
-  /* filtros: período em cima, cliente e status lado a lado, botão à direita */
-  .filtros-notas {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .filtro-periodo {
-    grid-column: 1 / -1;
-  }
-
-  .botao-buscar-notas {
-    grid-column: 2;
-    height: 52px;
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  /* ---------- Tabela vira uma lista de cards ---------- */
-
-  .tabela-notas-container {
-    overflow-x: visible;
-  }
-
-  .tabela-notas,
-  .tabela-notas tbody {
-    display: block;
-    min-width: 0;
-  }
-
-  .tabela-notas thead {
-    display: none;
-  }
-
-  .tabela-notas tbody tr {
-    display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
-    grid-template-areas:
-      "chave cliente status"
-      "emissao valor acoes";
-    gap: 14px 8px;
-    margin-bottom: 14px;
-    padding: 14px 12px;
-    border: 1px solid #cfd3da;
-    border-radius: 10px;
-    background: #ffffff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
-  }
-
-  /* tira o visual de tabela de cada célula */
-  .pagina-notas .tabela-notas tbody tr td:nth-child(n) {
-    display: block;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    text-align: left;
-  }
-
-  /* posição de cada informação dentro do card */
-  .tabela-notas td:nth-child(1) {
-    grid-area: chave;
-  }
-
-  .tabela-notas td:nth-child(2) {
-    grid-area: emissao;
-    font-size: 14px;
-  }
-
-  .tabela-notas td:nth-child(3) {
-    grid-area: cliente;
-    font-size: 13px;
-  }
-
-  .tabela-notas td:nth-child(4) {
-    grid-area: valor;
-    font-size: 13px;
-  }
-
-  .tabela-notas td:nth-child(5) {
-    grid-area: status;
-    justify-self: end;
-    align-self: start;
-  }
-
-  .tabela-notas td:nth-child(6) {
-    grid-area: acoes;
-    justify-self: end;
-    align-self: end;
-  }
-
-  .tabela-notas .chave-nota {
-    font-size: 11px;
-  }
-
-  /* títulos de cada informação (antes eram o cabeçalho da tabela) */
-  .tabela-notas td:nth-child(1)::before {
-    content: "Chave de acesso";
-  }
-
-  .tabela-notas td:nth-child(2)::before {
-    content: "Emissão";
-  }
-
-  .tabela-notas td:nth-child(3)::before {
-    content: "Cliente";
-  }
-
-  .tabela-notas td:nth-child(4)::before {
-    content: "Valor";
-  }
-
-  .tabela-notas td:nth-child(-n + 4)::before {
-    display: block;
-    margin-bottom: 2px;
-    color: #1d2e68;
-    font-size: 15px;
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  /* mensagem "Nenhuma nota fiscal encontrada" ocupa o card inteiro, sem título */
-  .tabela-notas td.nenhuma-nota::before {
-    content: none;
-  }
-
-  .tabela-notas tbody tr td.nenhuma-nota {
-    grid-area: auto;
-    grid-column: 1 / -1;
-  }
-
-  /* ---------- Paginação: 1 2 3 > no canto direito ---------- */
-
-  .paginacao-notas {
-    justify-content: flex-end;
-    margin-top: 24px;
-  }
-
-  .paginacao-notas button:first-child {
-    display: none;
-  }
-}
-
-/* Celulares bem pequenos: logo um pouco menor para não bater no usuário */
-@media (max-width: 400px) {
-  .logo-notas img {
-    width: 150px;
-    max-width: 150px;
-  }
-}
-
-/* =====================================================
-   TABLET (651px a 1024px): o menu vai para a barra de baixo,
-   igual ao celular. Só o notebook fica com o menu do lado.
-   ===================================================== */
-@media (min-width: 651px) and (max-width: 1024px) {
-  .pagina-notas {
-    position: relative;
-  }
-
-  .menu-notas {
-    display: contents;
-  }
-
-  .logo-notas {
-    position: absolute;
-    top: 12px;
-    left: 24px;
-    z-index: 5;
-    margin: 0;
-  }
-
-  .logo-notas img {
-    width: 180px;
-    max-width: 180px;
-    height: auto;
-  }
-
-  .navegacao-notas {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 5;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-around;
-    gap: 0;
-    padding: 8px 4px 10px;
-    background: #1d2e68;
-  }
-
-  .item-menu-notas {
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    gap: 3px;
-    min-width: 0;
-    margin: 0;
-    padding: 2px 0;
-    text-align: center;
-  }
-
-  .item-menu-notas:hover,
-  .item-menu-notas.menu-notas-ativo {
-    background: transparent;
-  }
-
-  .item-menu-notas img {
-    width: 36px;
-    height: 36px;
-  }
-
-  .item-menu-notas span {
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  /* página atual em laranja */
-  .item-menu-notas.menu-notas-ativo span {
-    color: #f38f2c;
-  }
-
-  .item-menu-notas.menu-notas-ativo img {
-    filter: brightness(0) invert(51%) sepia(97%) saturate(2061%) hue-rotate(347deg) brightness(127%) contrast(91%);
-  }
-
-  .sair-notas {
-    display: none;
-  }
-
-  /* o topo deixa espaço para o logo à esquerda */
-  .topo-notas {
-    padding-left: 230px;
-  }
-
-  /* espaço para o conteúdo não ficar atrás da barra de baixo */
-  .conteudo-notas {
-    padding-bottom: 100px;
-  }
-}
-
-/* =====================================================
-   CELULAR: topo em duas linhas
-   (logo e bolinha do perfil em cima, busca embaixo)
-   ===================================================== */
-@media (max-width: 650px) {
-  .topo-notas {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "espaco perfil"
-      "busca busca";
-    row-gap: 14px;
-    align-items: center;
-  }
-
-  /* a bolinha do perfil vai para o lado direito */
-  .usuario-topo-notas {
-    grid-area: perfil;
-    justify-self: end;
-    min-height: 52px;
-    margin-left: 0;
-  }
-
-  /* a busca fica sozinha na linha de baixo */
-  .pesquisa-topo-notas {
-    grid-area: busca;
-    width: 100%;
-  }
-}
-
-/* telas muito estreitas: só a bolinha do perfil, para não bater no logo */
-@media (max-width: 340px) {
-  .usuario-topo-notas div:nth-child(2) {
-    display: none;
-  }
-}
-* {
-    box-sizing: border-box;
-}
-
-/* HEADER DESKTOP E MOBILE */
-
-/* DESKTOP */
-@media (min-width: 901px) {
-    .principal-notas > .integra-header {
-        display: none;
+/* =========================================
+   TABLETS
+   701PX ATÉ 1200PX
+========================================= */
+
+@media (min-width: 701px) and (max-width: 1200px) {
+
+    .pagina-notas {
+        height: 100vh;
+        min-height: 0;
+        overflow: hidden;
     }
 
-    .principal-notas > .integra-header-desktop {
-        display: flex;
-    }
-}
+    /* MENU */
 
-/* TABLET E MOBILE */
-@media (max-width: 900px) {
+    .menu-notas {
+        flex: 0 0 210px;
+        width: 210px;
+        min-width: 210px;
+        height: 100vh;
+        min-height: 0;
+        padding: 20px 10px;
+    }
+
+    .logo-notas {
+        margin-bottom: 25px;
+    }
+
+    .logo-notas img {
+        max-width: 190px;
+        max-height: 75px;
+    }
+
+    .navegacao-notas {
+        gap: 16px;
+    }
+
+    .item-menu-notas {
+        gap: 9px;
+        margin-left: 4px;
+        padding: 8px 5px;
+    }
+
+    .item-menu-notas img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .item-menu-notas span {
+        font-size: 13px;
+    }
+
+    .sair-notas {
+        margin-left: 4px;
+    }
+
+    /* PRINCIPAL */
+
+    .principal-notas {
+        flex: 1;
+        width: auto;
+        min-width: 0;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .topo-notas {
+        display: none !important;
+    }
+
+    /* HEADER */
+
     .principal-notas > .integra-header-desktop {
-        display: none;
+        display: flex !important;
+        position: relative;
+        width: 100%;
+        min-height: 90px;
+        flex-shrink: 0;
+        padding: 15px 22px;
+        background: #fff;
     }
 
     .principal-notas > .integra-header {
+        display: none !important;
+    }
+
+    /* CONTEÚDO */
+
+    .conteudo-notas {
+        flex: 1;
+        min-height: 0;
+        padding: 25px 22px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .conteudo-notas h1 {
+        margin-bottom: 22px;
+        font-size: 27px;
+    }
+
+    /* FILTROS */
+
+    .filtros-notas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: end;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .filtro-periodo,
+    .filtro-cliente,
+    .filtro-status {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .filtro-periodo label,
+    .filtro-cliente label,
+    .filtro-status label {
+        font-size: 13px;
+    }
+
+    .campo-periodo,
+    .filtro-cliente select,
+    .filtro-status select {
+        height: 42px;
+    }
+
+    .campo-data-notas input {
+        margin-left: 8px;
+        font-size: 13px;
+    }
+
+    .botao-buscar-notas {
+        width: 100%;
+        height: 42px;
+        font-size: 14px;
+    }
+
+    /* TABELA */
+
+    .tabela-notas-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .tabela-notas {
+        min-width: 750px;
+        font-size: 12px;
+    }
+
+    .tabela-notas thead th,
+    .tabela-notas tbody td {
+        padding: 7px 6px;
+    }
+
+    /* PAGINAÇÃO */
+
+    .paginacao-notas {
+        margin-top: 25px;
+    }
+}
+
+/* =========================================
+   MOBILE
+   ATÉ 700PX
+========================================= */
+
+@media (max-width: 700px) {
+
+    .pagina-notas {
         display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .menu-notas {
+        display: contents;
+    }
+
+    .logo-notas,
+    .sair-notas,
+    .topo-notas {
+        display: none !important;
+    }
+
+    .principal-notas {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    /* HEADER MOBILE */
+
+    .principal-notas > .integra-header-desktop {
+        display: none !important;
+    }
+
+    .principal-notas > .integra-header {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        padding: 12px 15px 8px;
+        gap: 10px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
+    }
+
+    .principal-notas .header-superior {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 45px;
+        gap: 10px;
+    }
+
+    .principal-notas .header-logo {
+        display: flex !important;
+        align-items: center;
+        flex-shrink: 0;
+        width: 145px;
+        height: 55px;
+    }
+
+    .principal-notas .header-logo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .principal-notas .header-foto {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .principal-notas .header-dados {
+        display: none !important;
+    }
+
+    .principal-notas .header-pesquisa {
+        display: flex !important;
+        align-items: center;
+        position: relative !important;
+        width: 100%;
+        height: 36px;
+        padding: 0 12px;
+        gap: 8px;
+        border: 1px solid #777;
+        border-radius: 7px;
+        background: #fff;
+    }
+
+    .principal-notas .header-pesquisa img {
+        width: 19px;
+        height: 19px;
+    }
+
+    .principal-notas .header-pesquisa input {
+        width: 100%;
+        min-width: 0;
+        font-size: 12px;
+    }
+
+    /* CONTEÚDO MOBILE */
+
+    .conteudo-notas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 64px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        padding: 122px 14px 20px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: #f4f7fb;
+    }
+
+    .conteudo-notas h1 {
+        flex-shrink: 0;
+        margin: 0 0 18px;
+        color: #1d2e68;
+        font-size: 23px;
+        margin-top: 15px;
+    }
+
+    /* FILTROS */
+
+    .filtros-notas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: end;
+        flex-shrink: 0;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .filtro-periodo {
+        grid-column: 1 / -1;
+    }
+
+    .filtro-periodo,
+    .filtro-cliente,
+    .filtro-status {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .filtro-periodo label,
+    .filtro-cliente label,
+    .filtro-status label {
+        padding-left: 4px;
+        font-size: 12px;
+    }
+
+    .campo-periodo {
+        height: 40px;
+        padding: 0 6px;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    .campo-data-notas input {
+        margin-left: 7px;
+        font-size: 13px;
+    }
+
+    .campo-data-notas img {
+        width: 16px;
+        height: 16px;
+        flex-basis: 16px;
+        margin-right: 5px;
+    }
+
+    .campo-periodo > span {
+        font-size: 11px;
+    }
+
+    .filtro-cliente select,
+    .filtro-status select {
+        height: 40px;
+        padding: 0 8px;
+        border-radius: 8px;
+        font-size: 12px;
+    }
+
+    .botao-buscar-notas {
+        grid-column: 2;
+        width: 100%;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    /* TABELA EM CARDS */
+
+    .tabela-notas-container {
+        flex-shrink: 0;
+        width: 100%;
+        overflow: visible;
+    }
+
+    .tabela-notas,
+    .tabela-notas tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .tabela-notas thead {
+        display: none;
+    }
+
+    .tabela-notas tbody tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+        grid-template-areas:
+            "chave cliente status"
+            "emissao valor acoes";
+        align-items: start;
+        gap: 13px 8px;
+        width: 100%;
+        margin-bottom: 14px;
+        padding: 13px 11px;
+        border: 1px solid #cfd3da;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.10);
+        color: #1d2e68;
+    }
+
+    .pagina-notas .tabela-notas tbody tr td:nth-child(n) {
+        display: block;
+        min-width: 0;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        text-align: left;
+        overflow-wrap: anywhere;
+       
+    }
+
+    /* POSIÇÃO DAS COLUNAS */
+
+    .tabela-notas td:nth-child(1) {
+        grid-area: chave;
+    }
+
+    .tabela-notas td:nth-child(2) {
+        grid-area: emissao;
+    }
+
+    .tabela-notas td:nth-child(3) {
+        grid-area: cliente;
+    }
+
+    .tabela-notas td:nth-child(4) {
+        grid-area: valor;
+    }
+
+    .tabela-notas td:nth-child(5) {
+        grid-area: status;
+        justify-self: end;
+        align-self: start;
+    }
+
+    .tabela-notas td:nth-child(6) {
+        grid-area: acoes;
+        justify-self: end;
+        align-self: end;
+    }
+
+    /* IDENTIFICAÇÃO DOS CAMPOS */
+
+    .tabela-notas td:nth-child(1)::before {
+        content: "Chave de acesso";
+    }
+
+    .tabela-notas td:nth-child(2)::before {
+        content: "Emissão";
+    }
+
+    .tabela-notas td:nth-child(3)::before {
+        content: "Cliente";
+    }
+
+    .tabela-notas td:nth-child(4)::before {
+        content: "Valor";
+    }
+
+    .tabela-notas td:nth-child(-n + 4)::before {
+        display: block;
+        margin-bottom: 4px;
+        color: #1d2e68;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .tabela-notas .chave-nota {
+        max-width: 100%;
+        font-size: 10px;
+        line-height: 1.3;
+    }
+
+    .tabela-notas td:nth-child(2),
+    .tabela-notas td:nth-child(3),
+    .tabela-notas td:nth-child(4) {
+        font-size: 12px;
+    }
+
+    .status-nota {
+        min-width: 0;
+        padding: 4px 7px;
+        font-size: 9px;
+    }
+
+    .botao-excluir-nota img {
+        width: 22px;
+        height: 22px;
+    }
+
+    /* MENSAGEM SEM NOTAS */
+
+    .tabela-notas tbody tr:has(.nenhuma-nota) {
+        display: block;
+        padding: 20px 10px;
+    }
+
+    .tabela-notas tbody tr td.nenhuma-nota {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .tabela-notas td.nenhuma-nota::before {
+        content: none;
+    }
+
+    /* PAGINAÇÃO */
+
+    .paginacao-notas {
+        flex-shrink: 0;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 7px;
+        margin-top: auto;
+        padding-top: 20px;
+        padding-bottom: 8px;
+    }
+
+    .paginacao-notas button {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 8px;
+        border-radius: 8px;
+        font-size: 12px;
+    }
+
+    /* MENU INFERIOR */
+
+    .navegacao-notas {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        height: 64px;
+        gap: 0;
+        margin: 0;
+        padding: 5px 3px;
+        background: #1d2e68;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.10);
+    }
+
+    .item-menu-notas {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        height: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 2px 0;
+        border-radius: 0;
+        color: #fff;
+        font-size: 9px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .item-menu-notas img {
+        display: block;
+        width: 25px;
+        height: 25px;
+        object-fit: contain;
+    }
+
+    .item-menu-notas span {
+        font-size: 9px;
+        font-weight: 400;
+        white-space: nowrap;
+    }
+
+    .item-menu-notas:hover,
+    .item-menu-notas.menu-notas-ativo {
+        background: transparent;
+    }
+
+    .item-menu-notas.menu-notas-ativo,
+    .item-menu-notas.menu-notas-ativo span {
+        color: #ff8500;
+        font-weight: 700;
+    }
+
+    .item-menu-notas.menu-notas-ativo img {
+        filter: brightness(0) saturate(100%) invert(56%) sepia(96%) saturate(1600%) hue-rotate(359deg) brightness(102%);
+    }
+}
+
+/* =========================================
+   CELULARES PEQUENOS
+   ATÉ 380PX
+========================================= */
+
+@media (max-width: 380px) {
+
+    .principal-notas > .integra-header {
+        padding: 9px 12px 8px;
+    }
+
+    .principal-notas .header-logo {
+        width: 125px;
+    }
+
+    .principal-notas .header-foto {
+        width: 34px;
+        height: 34px;
+    }
+
+    .conteudo-notas {
+        bottom: 62px;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .conteudo-notas h1 {
+        font-size: 21px;
+    }
+
+    .filtros-notas {
+        gap: 8px;
+    }
+
+    .campo-periodo {
+        padding: 0 4px;
+    }
+
+    .campo-data-notas input {
+        margin-left: 5px;
+        font-size: 12px;
+    }
+
+    .campo-data-notas img {
+        width: 15px;
+        height: 15px;
+        flex-basis: 15px;
+        margin-right: 3px;
+    }
+
+    .filtro-cliente select,
+    .filtro-status select {
+        padding: 0 6px;
+        font-size: 11px;
+    }
+
+    .tabela-notas tbody tr {
+        gap: 10px 6px;
+        padding: 11px 9px;
+    }
+
+    .tabela-notas .chave-nota {
+        font-size: 9px;
+    }
+
+    .tabela-notas td:nth-child(2),
+    .tabela-notas td:nth-child(3),
+    .tabela-notas td:nth-child(4) {
+        font-size: 11px;
+    }
+
+    .tabela-notas td:nth-child(-n + 4)::before {
+        font-size: 10px;
+    }
+
+    .navegacao-notas {
+        height: 62px;
+    }
+
+    .item-menu-notas img {
+        width: 23px;
+        height: 23px;
+    }
+
+    .item-menu-notas span {
+        font-size: 8px; 
+    }
+
+    .paginacao-notas {
+        gap: 5px;
+    }
+
+    .paginacao-notas button {
+        min-width: 30px;
+        height: 30px;
+        padding: 0 6px;
+        font-size: 11px;
     }
 }

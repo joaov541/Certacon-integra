@@ -3,19 +3,21 @@ import { useRef, useState } from "react";
 import "./Envioarquivoxml.css";
 
 import { NavLink, useNavigate } from "react-router-dom";
+
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
 import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
 import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
 import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
-import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import ArquivoDashboard from "../../assets/Icones/ArquivoDashboard.png";
 import Upload from "../../assets/Icones/UploadBranco.png";
 import UploadPreto from "../../assets/Icones/Upload.png";
+
+import Header from "../../components/Header/header";
+import HeaderDesktop from "../../components/Header/headerDesktop";
 
 const arquivosIniciais = [
     { id: 1, nome: "nfe_123456.xml", tamanho: "2.4MB", status: "Validado" },
@@ -30,9 +32,10 @@ export default function EnvioArquivoXML() {
     const [arquivos, setArquivos] = useState(arquivosIniciais);
     const [arrastando, setArrastando] = useState(false);
     const [mensagem, setMensagem] = useState("");
+    const [pesquisa, setPesquisa] = useState("");
+
     const inputRef = useRef(null);
     const navigate = useNavigate();
-
 
     function selecionarArquivos(lista) {
         setMensagem("");
@@ -101,34 +104,46 @@ export default function EnvioArquivoXML() {
 
             <main className="xml-principal">
 
-                <Header />
+                {/* HEADER DESKTOP */}
+                <HeaderDesktop
+                    pesquisa={pesquisa}
+                    setPesquisa={setPesquisa}
+                />
+
+                {/* HEADER RESPONSIVO */}
+                <Header
+                    pesquisa={pesquisa}
+                    setPesquisa={setPesquisa}
+                />
 
                 <section className="xml-conteudo">
 
                     <button
-        type="button"
-        className="xml-botao-voltar"
-        onClick={() => navigate(-1)}
-        title="Voltar"
-    >
-       ← voltar 
-    </button>
+                        type="button"
+                        className="xml-botao-voltar"
+                        onClick={() => navigate(-1)}
+                        title="Voltar"
+                    >
+                        ← voltar
+                    </button>
 
                     <h1>Enviar arquivo XML</h1>
 
-                        
                     <input
                         ref={inputRef}
                         className="xml-input-arquivo"
                         type="file"
                         accept=".xml,application/xml,text/xml"
                         multiple
-                        onChange={(e) => selecionarArquivos(e.target.files)}
+                        onChange={(e) =>
+                            selecionarArquivos(e.target.files)
+                        }
                     />
 
                     <div className="xml-area-superior">
 
                         <button
+                            type="button"
                             className="xml-botao-selecionar"
                             onClick={() => inputRef.current?.click()}
                         >
@@ -137,7 +152,9 @@ export default function EnvioArquivoXML() {
                         </button>
 
                         <div
-                            className={`xml-area-soltar ${arrastando ? "xml-arrastando" : ""}`}
+                            className={`xml-area-soltar ${
+                                arrastando ? "xml-arrastando" : ""
+                            }`}
                             onDragOver={(e) => {
                                 e.preventDefault();
                                 setArrastando(true);
@@ -153,6 +170,7 @@ export default function EnvioArquivoXML() {
                             tabIndex={0}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
                                     inputRef.current?.click();
                                 }
                             }}
@@ -183,7 +201,10 @@ export default function EnvioArquivoXML() {
 
                             arquivos.map((arquivo) => (
 
-                                <div className="xml-arquivo" key={arquivo.id}>
+                                <div
+                                    className="xml-arquivo"
+                                    key={arquivo.id}
+                                >
 
                                     <div className="xml-arquivo-nome">
                                         <img src={ArquivoDashboard} alt="" />
@@ -208,9 +229,12 @@ export default function EnvioArquivoXML() {
                                     </span>
 
                                     <button
+                                        type="button"
                                         className="xml-botao-excluir"
                                         title="Excluir arquivo"
-                                        onClick={() => excluirArquivo(arquivo.id)}
+                                        onClick={() =>
+                                            excluirArquivo(arquivo.id)
+                                        }
                                     >
                                         <img src={Lixeira} alt="Excluir" />
                                     </button>
@@ -232,11 +256,15 @@ export default function EnvioArquivoXML() {
                     <div className="xml-rodape">
 
                         <button
+                            type="button"
                             className="xml-botao-enviar"
                             onClick={enviarArquivos}
-                            disabled={!arquivos.some(
-                                (arquivo) => arquivo.status === "Pendente"
-                            )}
+                            disabled={
+                                !arquivos.some(
+                                    (arquivo) =>
+                                        arquivo.status === "Pendente"
+                                )
+                            }
                         >
                             Enviar
                         </button>
@@ -246,6 +274,8 @@ export default function EnvioArquivoXML() {
                 </section>
 
             </main>
+
+            <FooterMobile />
 
         </div>
     );
@@ -258,52 +288,51 @@ function Sidebar() {
         <aside className="xml-sidebar">
 
             <div className="xml-logo">
-
-                <picture>
-                    <source
-                        media="(max-width: 600px)"
-                        srcSet={LogoNomeMobile}
-                    />
-
-                    <img src={LogoNome} alt="Integra" />
-                </picture>
-
+                <img src={LogoNome} alt="Integra" />
             </div>
 
             <nav className="xml-menu">
 
-                <a href="#" className="xml-menu-item">
+                <NavLink to="/home" className="xml-menu-item">
                     <img src={CasaBranca} alt="" />
                     <span>Início</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="xml-menu-item">
+                <NavLink to="/conteudos" className="xml-menu-item">
                     <img src={LivroBranco} alt="" />
                     <span>Conteúdos</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="xml-menu-item xml-menu-ativo">
+                <NavLink
+                    to="/notas-fiscais"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "xml-menu-item xml-menu-ativo"
+                            : "xml-menu-item"
+                    }
+                >
                     <img src={DoisDocumentosBranco} alt="" />
                     <span>Notas Fiscais</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="xml-menu-item">
+                <NavLink to="/clientes" className="xml-menu-item">
                     <img src={ADDProfileBranco} alt="" />
                     <span>Clientes</span>
-                </a>
+                </NavLink>
 
-                <a href="#" className="xml-menu-item">
+                <NavLink to="/usuario" className="xml-menu-item">
                     <img src={PessoaBranca} alt="" />
                     <span>Usuários</span>
-                </a>
+                </NavLink>
 
             </nav>
 
             <div className="xml-menu-inferior">
 
                 <button
+                    type="button"
                     className="xml-sair"
-                    onClick={() => alert("Configure aqui a saída da conta.")}
+                    onClick={() => window.location.href = "/login"}
                 >
                     <img src={SairBranco} alt="" />
                     <span>Sair</span>
@@ -315,41 +344,72 @@ function Sidebar() {
     );
 }
 
-/* CABEÇALHO */
+/* MENU MOBILE */
 
-function Header() {
-    const [pesquisa, setPesquisa] = useState("");
-
+function FooterMobile() {
     return (
-        <header className="xml-header">
+        <footer className="footer-conteudos-mobile">
 
-            <div className="xml-busca">
+            <NavLink
+                to="/home"
+                className={({ isActive }) =>
+                    isActive
+                        ? "item-footer-mobile footer-ativo"
+                        : "item-footer-mobile"
+                }
+            >
+                <img src={CasaBranca} alt="" />
+                <span>Início</span>
+            </NavLink>
 
-                <img src={LupaCinza} alt="" />
+            <NavLink
+                to="/conteudos"
+                className={({ isActive }) =>
+                    isActive
+                        ? "item-footer-mobile footer-ativo"
+                        : "item-footer-mobile"
+                }
+            >
+                <img src={LivroBranco} alt="" />
+                <span>Conteúdos</span>
+            </NavLink>
 
-                <input
-                    type="text"
-                    placeholder="Buscar conteúdos, notas fiscais, etc..."
-                    value={pesquisa}
-                    onChange={(e) => setPesquisa(e.target.value)}
-                />
+            <NavLink
+                to="/notas-fiscais"
+                className={({ isActive }) =>
+                    isActive
+                        ? "item-footer-mobile footer-ativo"
+                        : "item-footer-mobile"
+                }
+            >
+                <img src={DoisDocumentosBranco} alt="" />
+                <span>Notas Fiscais</span>
+            </NavLink>
 
-            </div>
+            <NavLink
+                to="/clientes"
+                className={({ isActive }) =>
+                    isActive
+                        ? "item-footer-mobile footer-ativo"
+                        : "item-footer-mobile"
+                }
+            >
+                <img src={ADDProfileBranco} alt="" />
+                <span>Clientes</span>
+            </NavLink>
 
-            <div className="xml-usuario">
+            <NavLink
+                to="/usuario"
+                className={({ isActive }) =>
+                    isActive
+                        ? "item-footer-mobile footer-ativo"
+                        : "item-footer-mobile"
+                }
+            >
+                <img src={PessoaBranca} alt="" />
+                <span>Usuários</span>
+            </NavLink>
 
-                <div className="xml-avatar">
-                    JS
-                </div>
-
-                <div className="xml-dados-usuario">
-                    <strong>João Silva</strong>
-                    <span>Analista SPED</span>
-                </div>
-
-
-            </div>
-
-        </header>
+        </footer>
     );
 }

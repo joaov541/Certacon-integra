@@ -1,7 +1,10 @@
-
+import { useState } from "react";
 import "./Home.css";
 
 import { NavLink, useNavigate } from "react-router-dom";
+
+import Header from "../../components/Header/header";
+import HeaderDesktop from "../../components/Header/headerDesktop";
 
 import logoIntegra from "../../assets/Icones/LogoNome.png";
 import iconeCasa from "../../assets/Icones/CasaBranca.png";
@@ -10,7 +13,6 @@ import iconeNotas from "../../assets/Icones/DoisDocumentosBranco.png";
 import iconeClientesBranco from "../../assets/Icones/ADDProfileBranco.png";
 import iconePessoa from "../../assets/Icones/PessoaBranca.png";
 import iconeSair from "../../assets/Icones/SairBranco.png";
-import iconeLupa from "../../assets/Icones/LupaCinza.png";
 
 import iconeDocumento from "../../assets/Icones/ArquivoAcessoRapido.png";
 import iconeExpandir from "../../assets/Icones/SetaAcessoRapido.png";
@@ -28,8 +30,9 @@ import ConsultarNFEmobile from "../../assets/Icones/ConsultarNFEmobile.png";
 import EnviarXMLMobile from "../../assets/Icones/EnviarXMLMobile.png";
 
 export default function Home() {
-
     const navigate = useNavigate();
+
+    const [pesquisa, setPesquisa] = useState("");
 
     function sairSistema() {
         navigate("/login");
@@ -45,7 +48,7 @@ export default function Home() {
                     <img
                         src={logoIntegra}
                         alt="Integra"
-                        className="home-logo"
+                        className="home-logo1"
                     />
                 </div>
 
@@ -127,38 +130,16 @@ export default function Home() {
             {/* ÁREA PRINCIPAL */}
             <section className="home-area">
 
-                {/* CABEÇALHO */}
-                <header className="home-topo">
+                {/* CABEÇALHOS COMPARTILHADOS */}
+                <HeaderDesktop
+                    pesquisa={pesquisa}
+                    setPesquisa={setPesquisa}
+                />
 
-                    <div className="home-busca">
-                        <img src={iconeLupa} alt="" />
-
-                        <input
-                            type="text"
-                            placeholder="Buscar conteúdos, notas fiscais, etc..."
-                        />
-                    </div>
-
-                    {/* INFORMAÇÕES DO USUÁRIO */}
-                    <div className="home-usuario">
-
-                        <NavLink
-                            to="/perfil"
-                            className="home-usuario-foto"
-                            title="Acessar meu perfil"
-                        >
-                            JS
-                        </NavLink>
-
-                        <div className="home-usuario-info">
-                            <strong>João Silva</strong>
-                            <span>Analista SPED</span>
-                        </div>
-
-                        
-                    </div>
-
-                </header>
+                <Header
+                    pesquisa={pesquisa}
+                    setPesquisa={setPesquisa}
+                />
 
                 {/* CONTEÚDO DA PÁGINA */}
                 <div className="home-conteudo">
@@ -182,7 +163,6 @@ export default function Home() {
                             }}
                             style={{ cursor: "pointer" }}
                         >
-
                             <div className="home-card-icone">
                                 <img src={arquivoHome} alt="" />
                             </div>
@@ -195,7 +175,6 @@ export default function Home() {
                             <span className="home-card-crescimento">
                                 ↑ 12%
                             </span>
-
                         </div>
 
                         <div
@@ -208,7 +187,6 @@ export default function Home() {
                             }}
                             style={{ cursor: "pointer" }}
                         >
-
                             <div className="home-card-icone">
                                 <img src={arquivoHome} alt="" />
                             </div>
@@ -221,7 +199,6 @@ export default function Home() {
                             <span className="home-card-crescimento home-card-ativas">
                                 Ativas
                             </span>
-
                         </div>
 
                         <div
@@ -234,7 +211,6 @@ export default function Home() {
                             }}
                             style={{ cursor: "pointer" }}
                         >
-
                             <div className="home-card-icone">
                                 <img src={arquivoHome} alt="" />
                             </div>
@@ -247,7 +223,6 @@ export default function Home() {
                             <span className="home-card-crescimento home-card-atencao">
                                 Atenção
                             </span>
-
                         </div>
 
                     </div>
@@ -263,7 +238,6 @@ export default function Home() {
                                 onClick={() => navigate("/conteudos/detalhes")}
                                 style={{ cursor: "pointer" }}
                             >
-
                                 <div className="home-lista-icone home-lista-icone-verde">
                                     <img src={DoisDocumentos} alt="" />
                                 </div>
@@ -279,7 +253,6 @@ export default function Home() {
                                 <span className="home-tag home-tag-verde">
                                     Reforma tributária
                                 </span>
-
                             </div>
 
                             <div
@@ -287,7 +260,6 @@ export default function Home() {
                                 onClick={() => navigate("/conteudos/detalhes")}
                                 style={{ cursor: "pointer" }}
                             >
-
                                 <div className="home-lista-icone home-lista-icone-vermelho">
                                     <img src={DoisDocumentos} alt="" />
                                 </div>
@@ -303,7 +275,6 @@ export default function Home() {
                                 <span className="home-tag home-tag-roxo">
                                     Reforma Tributária
                                 </span>
-
                             </div>
 
                             <div
@@ -311,7 +282,6 @@ export default function Home() {
                                 onClick={() => navigate("/conteudos/detalhes")}
                                 style={{ cursor: "pointer" }}
                             >
-
                                 <div className="home-lista-icone home-lista-icone-azul">
                                     <img src={DoisDocumentos} alt="" />
                                 </div>
@@ -327,7 +297,6 @@ export default function Home() {
                                 <span className="home-tag home-tag-roxo">
                                     SPED
                                 </span>
-
                             </div>
 
                             <button
@@ -428,30 +397,27 @@ export default function Home() {
                                 />
 
                                 <span>Novo conteúdo</span>
-
-                                
                             </button>
 
-                                    <button
-    type="button"
-    className="home-acesso-botao"
-    onClick={() => navigate("/conteudos/revisao")}
->
-    <img
-        src={iconeDocumento}
-        alt=""
-        className="home-acesso-icone-desktop"
-    />
+                            <button
+                                type="button"
+                                className="home-acesso-botao"
+                                onClick={() => navigate("/conteudos/revisao")}
+                            >
+                                <img
+                                    src={iconeDocumento}
+                                    alt=""
+                                    className="home-acesso-icone-desktop"
+                                />
 
-    <img
-        src={NovoConteudoMobile}
-        alt=""
-        className="home-acesso-icone-mobile"
-    />
+                                <img
+                                    src={NovoConteudoMobile}
+                                    alt=""
+                                    className="home-acesso-icone-mobile"
+                                />
 
-    <span>Conteúdos em revisão</span>
-</button>
-
+                                <span>Conteúdos em revisão</span>
+                            </button>
 
                             <button
                                 type="button"
@@ -543,4 +509,4 @@ export default function Home() {
 
         </main>
     );
-}   
+}

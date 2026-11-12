@@ -66,8 +66,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     flex-shrink: 0;
     border-radius: 50%;
     background: #1d2e68;
@@ -86,12 +86,12 @@
 
 .integra-header-desktop .header-desktop-dados strong {
     color: #111;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .integra-header-desktop .header-desktop-dados span {
     color: #888;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 /* TABLET E CELULAR */
