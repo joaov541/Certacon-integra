@@ -325,7 +325,9 @@ public class NotasFiscaisController : ControllerBase
             return BadRequest("O modelo deve ser NF-e (55) ou NFC-e (65).");
 
         var chave = ((string?)infNFe.Attribute("Id"))?
-            .Replace("NFe", "");
+    .Replace("NFe", "", StringComparison.OrdinalIgnoreCase)
+    .Trim()
+    .ToUpperInvariant();
 
         if (string.IsNullOrWhiteSpace(chave) ||
             !_validacaoNfe.ChaveValida(chave))
@@ -334,18 +336,24 @@ public class NotasFiscaisController : ControllerBase
         }
 
         var chaveProtocolo = raiz
-            .Descendants(ns + "infProt")
-            .Elements(ns + "chNFe")
-            .FirstOrDefault()?.Value;
+      .Descendants(ns + "infProt")
+      .Elements(ns + "chNFe")
+      .FirstOrDefault()?.Value?
+      .Trim()
+      .ToUpperInvariant();
 
         if (chaveProtocolo != null && chaveProtocolo != chave)
             return BadRequest("A chave do protocolo é diferente da chave da NF-e.");
 
-        var cnpjEmitente = emit.Element(ns + "CNPJ")?.Value
-            ?? emit.Element(ns + "CPF")?.Value;
+        var cnpjEmitente = (
+       emit.Element(ns + "CNPJ")?.Value
+       ?? emit.Element(ns + "CPF")?.Value
+   )?.Trim().ToUpperInvariant();
 
-        var cnpjDestinatario = dest?.Element(ns + "CNPJ")?.Value
-            ?? dest?.Element(ns + "CPF")?.Value;
+        var cnpjDestinatario = (
+            dest?.Element(ns + "CNPJ")?.Value
+            ?? dest?.Element(ns + "CPF")?.Value
+        )?.Trim().ToUpperInvariant();
 
         if (string.IsNullOrWhiteSpace(cnpjEmitente))
             return BadRequest("O XML não possui CNPJ ou CPF do emitente.");
@@ -498,15 +506,27 @@ public class NotasFiscaisController : ControllerBase
                     nota.Status
                 });
         }
-        catch (DbUpdateException)
+
+        catch (DbUpdateException ex)
         {
             await transacao.RollbackAsync(cancellationToken);
 
             if (caminhoArquivo != null && System.IO.File.Exists(caminhoArquivo))
-                System.IO.File.Delete(caminhoArquivo);
+                ExcluirArquivo(caminhoArquivo);
 
-            return Conflict("Não foi possível gravar a nota. Verifique se a chave já foi importada.");
+            var erroDetalhado = ex.GetBaseException().Message;
+
+            _logger.LogError(ex,
+                "Erro ao gravar nota fiscal no banco: {Erro}",
+                erroDetalhado);
+
+            return Conflict(new
+            {
+                mensagem = "Erro ao gravar a nota fiscal.",
+                detalhe = erroDetalhado
+            });
         }
+
         catch (Exception ex)
         {
             try

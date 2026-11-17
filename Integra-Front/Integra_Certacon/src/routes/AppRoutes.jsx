@@ -1,3 +1,4 @@
+
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 // Telas
@@ -34,6 +35,7 @@ function AppRoutes() {
       <Route path="/conteudos/revisao" element={<ConteudoRevisao />} />
       <Route path="/conteudos/detalhes" element={<DetalheConteudo />} />
       <Route path="/conteudos/novo" element={<NovoConteudo />} />
+      <Route path="/conteudos/editar/:id" element={<NovoConteudo />} />
 
       {/* Perfil e usuários */}
       <Route path="/perfil" element={<EditarPerfil />} />

@@ -806,3 +806,172 @@
     max-width: 230px;
   }
 }
+/* INFORMAÇÕES COMPLEMENTARES DO ARTIGO */
+
+.area-documentos {
+    width: 220px;
+    flex-shrink: 0;
+    margin-top: 88px;
+    padding: 14px;
+    border: 1px solid #d0d8e5;
+    border-radius: 6px;
+    background-color: #f8faff;
+}
+
+.area-documentos h2 {
+    margin-bottom: 22px;
+    color: #1d306c;
+    font-size: 18px;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.area-documentos .documento {
+    display: block;
+    margin-bottom: 18px;
+    padding: 0 5px 15px;
+    border-bottom: 1px solid #e0e5ed;
+}
+
+.area-documentos .documento:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.area-documentos .informacao-documento {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.area-documentos .informacao-documento strong {
+    color: #1d306c;
+    font-size: 13px;
+}
+
+.area-documentos .informacao-documento span {
+    color: #596579;
+    font-size: 13px;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 900px) {
+    .area-documentos {
+        width: 180px;
+    }
+}
+
+@media (max-width: 650px) {
+    .area-documentos {
+        width: 100%;
+        max-width: 100%;
+        margin: 5px auto 0;
+    }
+
+    .area-documentos h2 {
+        font-size: 17px;
+    }
+}
+/* FORMATAÇÃO DO CONTEÚDO */
+
+.conteudo-formatado {
+    color: #344054;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.conteudo-formatado p {
+    margin-bottom: 12px;
+}
+
+.conteudo-formatado ul,
+.conteudo-formatado ol {
+    padding-left: 25px;
+    margin-bottom: 15px;
+}
+
+.conteudo-formatado strong,
+.conteudo-formatado b {
+    font-weight: 700;
+}
+
+.conteudo-formatado em,
+.conteudo-formatado i {
+    font-style: italic;
+}
+
+.conteudo-formatado u {
+    text-decoration: underline;
+}
+
+/* DOCUMENTO ANEXADO */
+
+.documento-anexado {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #cbd5e1;
+}
+
+.documento-anexado h2 {
+    margin-bottom: 15px;
+}
+
+.documento-anexado-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.documento-anexado-info div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.documento-anexado-info strong {
+    overflow-wrap: anywhere;
+    color: #344054;
+}
+
+.documento-anexado-info span {
+    color: #667085;
+    font-size: 13px;
+}
+
+.documento-anexado-info button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #3978d4;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.documento-anexado-info button:hover {
+    background: #285fae;
+}
+
+.documento-anexado-info button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .documento-anexado-info {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .documento-anexado-info button {
+        width: 100%;
+    }
+}

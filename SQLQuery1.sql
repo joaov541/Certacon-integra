@@ -126,4 +126,101 @@ SELECT *
 FROM dbo.USUARIO_PERFIL;
 
 
+SELECT *
+FROM NOTA_FISCAL;
 
+SELECT TOP 10
+    NotaFiscal_Id,
+    Numero,
+    ChaveAcesso,
+    Cnpjemitente,
+    Cnpjdestinatario,
+    Status,
+    CaminhoArquivo,
+    DataEnvio
+FROM NOTA_FISCAL
+ORDER BY DataEnvio DESC;
+
+
+
+
+SELECT
+    NotaFiscal_Id,
+    Numero,
+    ChaveAcesso,
+    Cnpjemitente,
+    Cnpjdestinatario,
+    Status,
+    DataEnvio
+FROM NOTA_FISCAL
+WHERE Cnpjemitente LIKE '%[A-Z]%'
+   OR ChaveAcesso LIKE '%[A-Z]%'
+ORDER BY DataEnvio DESC;
+
+
+
+ALTER TABLE dbo.NOTA_FISCAL
+DROP CONSTRAINT CK_NOTA_FISCAL_CNPJDestinatario;
+
+ALTER TABLE dbo.NOTA_FISCAL
+ADD CONSTRAINT CK_NOTA_FISCAL_CNPJDestinatario
+CHECK (
+    CNPJDestinatario IS NULL
+    OR LEN(CNPJDestinatario) IN (11, 14)
+);
+
+
+SELECT
+    NotaFiscal_Id,
+    Numero,
+    ChaveAcesso,
+    CNPJEmitente,
+    CNPJDestinatario,
+    ValorTotal,
+    Status
+FROM NOTA_FISCAL
+WHERE NotaFiscal_Id = '33f5a3c2-a3d1-43db-a831-4b7c6768b8b6';
+
+SELECT *
+FROM ITEM_NOTA_FISCAL
+WHERE NotaFiscal_Id = '33f5a3c2-a3d1-43db-a831-4b7c6768b8b6';
+
+
+
+
+
+
+
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Tema_Id,
+    AutorUsuario_Id,
+    Visibilidade,
+    Status,
+    DataCriacao
+FROM ARTIGO
+ORDER BY DataCriacao DESC;
+
+
+
+
+ALTER TABLE ARTIGO
+ADD
+    NomeArquivo NVARCHAR(255) NULL,
+    CaminhoArquivo NVARCHAR(500) NULL,
+    TipoConteudo NVARCHAR(150) NULL,
+    TamanhoArquivo BIGINT NULL;
+
+
+
+
+
+
+    ALTER TABLE ARTIGO
+ADD
+    NomeArquivo NVARCHAR(255) NULL,
+    CaminhoArquivo NVARCHAR(500) NULL,
+    TipoConteudo NVARCHAR(150) NULL,
+    TamanhoArquivo BIGINT NULL;

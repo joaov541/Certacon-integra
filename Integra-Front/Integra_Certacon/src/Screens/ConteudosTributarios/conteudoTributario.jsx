@@ -1,7 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./conteudoTributario.css";
+
+import { requisicaoApi } from "../../services/api";
 
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
@@ -18,96 +20,517 @@ import iconeConteudo from "../../assets/Icones/DoisDocumentos.png";
 import Header from "../../components/Header/header";
 import HeaderDesktop from "../../components/Header/headerDesktop";
 
-const dadosIniciais = [
-    {
-        id: 1,
-        titulo: "Reforma tributária",
-        tema: "Reforma Tributária",
-        data: "09/10/2026",
-        autor: "Maria de Oliveira",
-        conteudo: "Este artigo apresenta as principais mudanças da Reforma Tributária, com destaque para a implementação do IBS e da CBS, seus impactos nas empresas e as novas regras de tributação."
-    },
-    {
-        id: 2,
-        titulo: "SPED Fiscal 2025",
-        tema: "SPED",
-        data: "12/09/2022",
-        autor: "João da Silva",
-        conteudo: "Este conteúdo aborda as atualizações do SPED Fiscal para 2025, explicando as principais obrigações, os registros fiscais e os cuidados necessários no envio das informações."
-    },
-    {
-        id: 3,
-        titulo: "Atualização das Tabelas",
-        tema: "Reforma Tributária",
-        data: "08/08/2028",
-        autor: "Lívia Frete",
-        conteudo: "Confira as atualizações das tabelas relacionadas à Reforma Tributária e entenda como essas alterações podem afetar os processos fiscais das empresas."
-    },
-    {
-        id: 4,
-        titulo: "Validação Chave Acesso",
-        tema: "Reforma Tributária",
-        data: "05/08/2020",
-        autor: "Hugo Xavier",
-        conteudo: "Neste artigo, apresentamos orientações sobre a validação da chave de acesso dos documentos fiscais e os principais pontos que devem ser verificados."
-    },
-    {
-        id: 5,
-        titulo: "PIS/Configurações",
-        tema: "PES/CONFINS",
-        data: "10/05/2025",
-        autor: "Carlos Mendes",
-        conteudo: "Este material apresenta informações sobre as configurações de PIS e COFINS, incluindo orientações para parametrização e conferência dos dados fiscais."
-    },
-];
-
 function ConteudoTributario() {
+
     const navigate = useNavigate();
 
-    const [conteudos, setConteudos] = useState(dadosIniciais);
+    // =========================================
+    // ESTADOS
+    // =========================================
+
+    const [conteudos, setConteudos] = useState([]);
+    const [meusConteudos, setMeusConteudos] = useState([]);
+
+    const [abaSelecionada, setAbaSelecionada] = useState("publicados");
+
     const [pesquisa, setPesquisa] = useState("");
     const [temaSelecionado, setTemaSelecionado] = useState("Todos");
     const [ordem, setOrdem] = useState("recentes");
 
-    const listaFiltrada = conteudos
+    const [carregando, setCarregando] = useState(true);
+    const [carregandoMeus, setCarregandoMeus] = useState(false);
+
+    const [erro, setErro] = useState("");
+    const [erroMeus, setErroMeus] = useState("");
+
+    const [enviandoRevisao, setEnviandoRevisao] = useState(null);
+
+    // =========================================
+    // DADOS E PERMISSÕES DO USUÁRIO
+    // =========================================
+
+    const usuario = JSON.parse(
+        localStorage.getItem("usuario") || "{}"
+    );
+
+    const perfis = usuario.perfis ||
+        JSON.parse(localStorage.getItem("perfis") || "[]");
+
+    const podeCriar = [
+        "Administrador",
+        "Coordenador Fiscal",
+        "Analista SPED",
+        "Analista de Documentos Fiscais",
+        "Analista de Reforma Tributária"
+    ].some(perfil => perfis.includes(perfil));
+
+    const podeArquivar =
+        perfis.includes("Administrador") ||
+        perfis.includes("Coordenador Fiscal");
+
+    // =========================================
+    // CARREGAR CONTEÚDOS PUBLICADOS
+    // =========================================
+
+    async function carregarConteudos() {
+
+        try {
+
+            setCarregando(true);
+            setErro("");
+
+            const dados = await requisicaoApi("/api/Artigos");
+
+            setConteudos(Array.isArray(dados) ? dados : []);
+
+        } catch (error) {
+
+            console.error("Erro ao carregar conteúdos:", error);
+
+            setErro(
+                error.message ||
+                "Não foi possível carregar os conteúdos."
+            );
+
+        } finally {
+
+            setCarregando(false);
+
+        }
+    }
+
+    // =========================================
+    // CARREGAR MEUS CONTEÚDOS
+    // =========================================
+
+    async function carregarMeusConteudos() {
+
+        if (!podeCriar) return;
+
+        try {
+
+            setCarregandoMeus(true);
+            setErroMeus("");
+
+            const dados = await requisicaoApi(
+                "/api/Artigos/meus-artigos"
+            );
+
+            setMeusConteudos(
+                Array.isArray(dados) ? dados : []
+            );
+
+        } catch (error) {
+
+            console.error("Erro ao carregar meus conteúdos:", error);
+
+            setErroMeus(
+                error.message ||
+                "Não foi possível carregar seus conteúdos."
+            );
+
+        } finally {
+
+            setCarregandoMeus(false);
+
+        }
+    }
+
+    // =========================================
+    // CARREGAR AS DUAS LISTAS
+    // =========================================
+
+    useEffect(() => {
+
+        carregarConteudos();
+
+        if (podeCriar) {
+            carregarMeusConteudos();
+        }
+
+    }, []);
+
+    // =========================================
+    // FORMATAÇÃO DE DATA
+    // =========================================
+
+    function formatarData(data) {
+
+        if (!data) {
+            return "Data não informada";
+        }
+
+        const dataFormatada = new Date(data);
+
+        if (isNaN(dataFormatada.getTime())) {
+            return "Data não informada";
+        }
+
+        return dataFormatada.toLocaleDateString("pt-BR");
+
+    }
+
+    // =========================================
+    // NORMALIZAR STATUS
+    // =========================================
+
+    function normalizarStatus(status) {
+
+        return (status || "")
+            .toString()
+            .trim()
+            .toUpperCase();
+
+    }
+
+    // =========================================
+    // TEMAS DISPONÍVEIS PARA FILTRO
+    // =========================================
+
+    const listaAtual = abaSelecionada === "publicados"
+        ? conteudos
+        : meusConteudos;
+
+    const temasDisponiveis = [
+        ...new Set(
+            listaAtual
+                .map(conteudo => conteudo.tema)
+                .filter(Boolean)
+        )
+    ];
+
+    // =========================================
+    // PESQUISA, FILTRO E ORDENAÇÃO
+    // =========================================
+
+    const listaFiltrada = listaAtual
+
         .filter((conteudo) => {
+
             const texto = pesquisa.toLowerCase();
 
+            const titulo = (conteudo.titulo || "").toLowerCase();
+            const tema = (conteudo.tema || "").toLowerCase();
+            const resumo = (conteudo.resumo || "").toLowerCase();
+
             const encontrouTexto =
-                conteudo.titulo.toLowerCase().includes(texto) ||
-                conteudo.tema.toLowerCase().includes(texto);
+                titulo.includes(texto) ||
+                tema.includes(texto) ||
+                resumo.includes(texto);
 
             const encontrouTema =
                 temaSelecionado === "Todos" ||
                 conteudo.tema === temaSelecionado;
 
             return encontrouTexto && encontrouTema;
+
         })
+
         .sort((a, b) => {
-            const dataA = a.data.split("/").reverse().join("");
-            const dataB = b.data.split("/").reverse().join("");
+
+            const dataA = new Date(
+                abaSelecionada === "publicados"
+                    ? a.dataPublicacao || 0
+                    : a.dataCriacao || 0
+            ).getTime();
+
+            const dataB = new Date(
+                abaSelecionada === "publicados"
+                    ? b.dataPublicacao || 0
+                    : b.dataCriacao || 0
+            ).getTime();
 
             return ordem === "recentes"
-                ? dataB.localeCompare(dataA)
-                : dataA.localeCompare(dataB);
+                ? dataB - dataA
+                : dataA - dataB;
+
         });
 
-    function excluirConteudo(id) {
-        const confirmar = window.confirm(
-            "Deseja realmente excluir este conteúdo?"
-        );
+    // =========================================
+    // COR DA ETIQUETA DO TEMA
+    // =========================================
 
-        if (confirmar) {
-            setConteudos((atuais) =>
-                atuais.filter((conteudo) => conteudo.id !== id)
-            );
+    function classeTema(tema) {
+
+        const nomeTema = (tema || "").toLowerCase();
+
+        if (nomeTema.includes("reforma")) {
+            return "tema-reforma-tributaria";
         }
+
+        if (
+            nomeTema.includes("sped") ||
+            nomeTema.includes("efd")
+        ) {
+            return "tema-sped";
+        }
+
+        if (
+            nomeTema.includes("nota") ||
+            nomeTema.includes("nf-e") ||
+            nomeTema.includes("nfp") ||
+            nomeTema.includes("xml")
+        ) {
+            return "tema-notas-fiscais";
+        }
+
+        if (nomeTema.includes("icms")) {
+            return "tema-icms";
+        }
+
+        return "tema-padrao";
+
     }
 
+    // =========================================
+    // CLASSE DO STATUS
+    // =========================================
+
+    function classeStatus(status) {
+
+        const statusNormalizado = normalizarStatus(status);
+
+        switch (statusNormalizado) {
+
+            case "RASCUNHO":
+                return "status-rascunho";
+
+            case "EM_REVISAO":
+                return "status-em-revisao";
+
+            case "APROVADO":
+                return "status-aprovado";
+
+            case "PUBLICADO":
+                return "status-publicado";
+
+            case "REJEITADO":
+                return "status-rejeitado";
+
+            case "ARQUIVADO":
+                return "status-arquivado";
+
+            default:
+                return "status-padrao";
+
+        }
+
+    }
+
+    // =========================================
+    // TEXTO DO STATUS
+    // =========================================
+
+    function textoStatus(status) {
+
+        const statusNormalizado = normalizarStatus(status);
+
+        const nomes = {
+            RASCUNHO: "Rascunho",
+            EM_REVISAO: "Em revisão",
+            APROVADO: "Aprovado",
+            PUBLICADO: "Publicado",
+            REJEITADO: "Rejeitado",
+            ARQUIVADO: "Arquivado"
+        };
+
+        return nomes[statusNormalizado] || status || "Não informado";
+
+    }
+
+    // =========================================
+    // ABRIR DETALHES
+    // =========================================
+
+    function abrirDetalhes(conteudo) {
+
+        navigate("/conteudos/detalhes", {
+
+            state: {
+
+                conteudo: {
+
+                    id: conteudo.artigoId,
+
+                    artigoId: conteudo.artigoId,
+
+                    titulo: conteudo.titulo,
+
+                    tema: conteudo.tema,
+
+                    data: formatarData(
+                        conteudo.dataPublicacao || conteudo.dataCriacao
+                    ),
+
+                    dataPublicacao: conteudo.dataPublicacao,
+
+                    autor: conteudo.autor || "Não informado",
+
+                    resumo: conteudo.resumo,
+
+                    conteudo: conteudo.conteudo,
+
+                    visibilidade: conteudo.visibilidade,
+
+                    status: conteudo.status
+
+                }
+
+            }
+
+        });
+
+    }
+
+    // =========================================
+    // EDITAR RASCUNHO
+    // =========================================
+
+    function editarConteudo(conteudo) {
+
+        navigate(
+            `/conteudos/editar/${conteudo.artigoId}`,
+            {
+                state: {
+                    conteudo: {
+                        artigoId: conteudo.artigoId,
+                        temaId: conteudo.temaId,
+                        titulo: conteudo.titulo,
+                        conteudo: conteudo.conteudo
+                    }
+                }
+            }
+        );
+
+    }
+
+    // =========================================
+    // ENVIAR ARTIGO PARA REVISÃO
+    // =========================================
+
+    async function enviarParaRevisao(id) {
+
+        const confirmar = window.confirm(
+            "Deseja enviar este conteúdo para revisão?"
+        );
+
+        if (!confirmar) return;
+
+        try {
+
+            setEnviandoRevisao(id);
+
+            const resposta = await requisicaoApi(
+                `/api/Artigos/${id}/enviar-revisao`,
+                {
+                    method: "POST"
+                }
+            );
+
+            alert(
+                resposta?.mensagem ||
+                "Conteúdo enviado para revisão com sucesso!"
+            );
+
+            // Atualiza o status na tela sem precisar recarregar.
+            setMeusConteudos(atuais =>
+
+                atuais.map(conteudo =>
+
+                    conteudo.artigoId === id
+
+                        ? {
+                            ...conteudo,
+                            status: "EM_REVISAO"
+                        }
+
+                        : conteudo
+
+                )
+
+            );
+
+        } catch (error) {
+
+            console.error("Erro ao enviar para revisão:", error);
+
+            alert(
+                error.message ||
+                "Não foi possível enviar o conteúdo para revisão."
+            );
+
+        } finally {
+
+            setEnviandoRevisao(null);
+
+        }
+
+    }
+
+    // =========================================
+    // ARQUIVAR CONTEÚDO
+    // =========================================
+
+    async function excluirConteudo(id) {
+
+        const confirmar = window.confirm(
+            "Deseja realmente arquivar este conteúdo?"
+        );
+
+        if (!confirmar) return;
+
+        try {
+
+            await requisicaoApi(`/api/Artigos/${id}`, {
+                method: "DELETE"
+            });
+
+            setConteudos(atuais =>
+                atuais.filter(conteudo => conteudo.artigoId !== id)
+            );
+
+            setMeusConteudos(atuais =>
+                atuais.filter(conteudo => conteudo.artigoId !== id)
+            );
+
+            alert("Conteúdo arquivado com sucesso!");
+
+        } catch (error) {
+
+            console.error("Erro ao arquivar conteúdo:", error);
+
+            alert(
+                error.message ||
+                "Não foi possível arquivar este conteúdo."
+            );
+
+        }
+
+    }
+
+    // =========================================
+    // SAIR DO SISTEMA
+    // =========================================
+
+    function sairSistema() {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        localStorage.removeItem("perfis");
+
+        navigate("/login", { replace: true });
+
+    }
+
+    // =========================================
+    // TELA
+    // =========================================
+
     return (
+
         <div className="pagina-conteudos">
 
-            <Sidebar />
+            <Sidebar sairSistema={sairSistema} />
 
             <main className="principal-conteudos">
 
@@ -127,27 +550,79 @@ function ConteudoTributario() {
 
                 <section className="area-lista-conteudos">
 
+                    {/* TÍTULO */}
+
                     <div className="titulo-conteudos">
 
                         <div>
+
                             <h1>Conteúdos Tributários</h1>
 
                             <p>
                                 Explore conteúdos por tema, mantenha-se conectado
                             </p>
+
                         </div>
+
+                        {podeCriar && (
+
+                            <button
+                                type="button"
+                                className="adicionar-conteudo"
+                                onClick={() => navigate("/conteudos/novo")}
+                            >
+
+                                <span className="adicionar-conteudo-texto">
+                                    + Adicionar Conteúdo
+                                </span>
+
+                                <span className="adicionar-conteudo-mais">
+                                    +
+                                </span>
+
+                            </button>
+
+                        )}
+
+                    </div>
+
+                    {/* ABAS */}
+
+                    <div className="abas-conteudos">
 
                         <button
                             type="button"
-                            className="adicionar-conteudo"
-                            onClick={() => navigate("/conteudos/novo")}
+                            className={
+                                abaSelecionada === "publicados"
+                                    ? "aba-conteudos aba-conteudos-ativa"
+                                    : "aba-conteudos"
+                            }
+                            onClick={() => {
+                                setAbaSelecionada("publicados");
+                                setTemaSelecionado("Todos");
+                            }}
                         >
-                            <span className="adicionar-conteudo-texto">
-                                + Adicionar Conteúdo
-                            </span>
-
-                            <span className="adicionar-conteudo-mais">+</span>
+                            Todos os conteúdos
                         </button>
+
+                        {podeCriar && (
+
+                            <button
+                                type="button"
+                                className={
+                                    abaSelecionada === "meus"
+                                        ? "aba-conteudos aba-conteudos-ativa"
+                                        : "aba-conteudos"
+                                }
+                                onClick={() => {
+                                    setAbaSelecionada("meus");
+                                    setTemaSelecionado("Todos");
+                                }}
+                            >
+                                Meus conteúdos
+                            </button>
+
+                        )}
 
                     </div>
 
@@ -163,7 +638,9 @@ function ConteudoTributario() {
                                 type="text"
                                 placeholder="Buscar por título ou palavra-chave"
                                 value={pesquisa}
-                                onChange={(e) => setPesquisa(e.target.value)}
+                                onChange={(e) =>
+                                    setPesquisa(e.target.value)
+                                }
                             />
 
                         </div>
@@ -172,14 +649,23 @@ function ConteudoTributario() {
 
                             <select
                                 value={temaSelecionado}
-                                onChange={(e) => setTemaSelecionado(e.target.value)}
+                                onChange={(e) =>
+                                    setTemaSelecionado(e.target.value)
+                                }
                             >
-                                <option value="Todos">Todos os temas</option>
-                                <option value="Reforma Tributária">Reforma Tributária</option>
-                                <option value="SPED">SPED</option>
-                                <option value="Notas Fiscais">Notas Fiscais</option>
-                                <option value="ICMS">ICMS</option>
-                                <option value="PES/CONFINS">PES/CONFINS</option>
+
+                                <option value="Todos">
+                                    Todos os temas
+                                </option>
+
+                                {temasDisponiveis.map(tema => (
+
+                                    <option key={tema} value={tema}>
+                                        {tema}
+                                    </option>
+
+                                ))}
+
                             </select>
 
                             <img src={ExpandirText} alt="" />
@@ -192,8 +678,15 @@ function ConteudoTributario() {
                                 value={ordem}
                                 onChange={(e) => setOrdem(e.target.value)}
                             >
-                                <option value="recentes">Mais recentes</option>
-                                <option value="antigos">Mais antigos</option>
+
+                                <option value="recentes">
+                                    Mais recentes
+                                </option>
+
+                                <option value="antigos">
+                                    Mais antigos
+                                </option>
+
                             </select>
 
                             <img src={ExpandirText} alt="" />
@@ -202,104 +695,264 @@ function ConteudoTributario() {
 
                     </div>
 
-                    {/* TABELA DE CONTEÚDOS */}
+                    {/* TABELA */}
 
                     <div className="tabela-conteudos">
 
                         <table>
 
                             <thead>
+
                                 <tr>
+
                                     <th>Título</th>
+
                                     <th>Tema</th>
-                                    <th>Data de publicação</th>
+
+                                    <th>
+                                        {abaSelecionada === "publicados"
+                                            ? "Data de publicação"
+                                            : "Data de criação"}
+                                    </th>
+
                                     <th>Autor</th>
-                                    <th className="coluna-acoes">Ações</th>
+
+                                    {abaSelecionada === "meus" && (
+                                        <th>Status</th>
+                                    )}
+
+                                    <th className="coluna-acoes">
+                                        Ações
+                                    </th>
+
                                 </tr>
+
                             </thead>
 
                             <tbody>
 
-                                {listaFiltrada.length > 0 ? (
+                                {(abaSelecionada === "publicados"
+                                    ? carregando
+                                    : carregandoMeus) ? (
 
-                                    listaFiltrada.map((conteudo) => (
+                                    <tr>
 
-                                        <tr
-                                            key={conteudo.id}
-                                            className="linha-conteudo-clicavel"
-                                            onClick={() =>
-                                                navigate("/conteudos/detalhes", {
-                                                    state: { conteudo }
-                                                })
+                                        <td
+                                            colSpan={
+                                                abaSelecionada === "meus" ? 6 : 5
                                             }
+                                            className="sem-conteudos"
                                         >
+                                            Carregando conteúdos...
+                                        </td>
 
-                                            <td className="celula-titulo">
+                                    </tr>
 
-                                                <img
-                                                    src={iconeConteudo}
-                                                    alt=""
-                                                    className="icone-card-conteudo"
-                                                />
+                                ) : (abaSelecionada === "publicados"
+                                    ? erro
+                                    : erroMeus) ? (
 
-                                                <strong>{conteudo.titulo}</strong>
+                                    <tr>
 
-                                            </td>
+                                        <td
+                                            colSpan={
+                                                abaSelecionada === "meus" ? 6 : 5
+                                            }
+                                            className="sem-conteudos"
+                                        >
+                                            {abaSelecionada === "publicados"
+                                                ? erro
+                                                : erroMeus}
+                                        </td>
 
-                                            <td className="celula-tema">
+                                    </tr>
 
-                                                <span
-                                                    className={`etiqueta-tema ${
-                                                        conteudo.tema === "SPED"
-                                                            ? "tema-sped"
-                                                            : conteudo.tema === "ICMS"
-                                                                ? "tema-icms"
-                                                                : conteudo.tema === "Notas Fiscais"
-                                                                    ? "tema-notas-fiscais"
-                                                                    : conteudo.tema === "Reforma Tributária"
-                                                                        ? "tema-reforma-tributaria"
-                                                                        : "tema-padrao"
-                                                    }`}
-                                                >
-                                                    {conteudo.tema}
-                                                </span>
+                                ) : listaFiltrada.length > 0 ? (
 
-                                            </td>
+                                    listaFiltrada.map((conteudo) => {
 
-                                            <td className="celula-data">
-                                                {conteudo.data}
-                                            </td>
+                                        const status = normalizarStatus(
+                                            conteudo.status
+                                        );
 
-                                            <td className="celula-autor">
-                                                {conteudo.autor}
-                                            </td>
+                                        const ehRascunho =
+                                            status === "RASCUNHO";
 
-                                            <td className="coluna-acoes">
+                                        return (
 
-                                                <button
-                                                    type="button"
-                                                    className="excluir-conteudo"
-                                                    title="Excluir conteúdo"
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        excluirConteudo(conteudo.id);
-                                                    }}
-                                                >
-                                                    <img src={Lixeira} alt="Excluir" />
-                                                </button>
+                                            <tr
+                                                key={conteudo.artigoId}
+                                                className="linha-conteudo-clicavel"
+                                                onClick={() =>
+                                                    abrirDetalhes(conteudo)
+                                                }
+                                            >
 
-                                            </td>
+                                                <td className="celula-titulo">
 
-                                        </tr>
+                                                    <img
+                                                        src={iconeConteudo}
+                                                        alt=""
+                                                        className="icone-card-conteudo"
+                                                    />
 
-                                    ))
+                                                    <strong>
+                                                        {conteudo.titulo}
+                                                    </strong>
+
+                                                </td>
+
+                                                <td className="celula-tema">
+
+                                                    <span
+                                                        className={`etiqueta-tema ${classeTema(conteudo.tema)}`}
+                                                    >
+                                                        {conteudo.tema || "Sem tema"}
+                                                    </span>
+
+                                                </td>
+
+                                                <td className="celula-data">
+
+                                                    {formatarData(
+                                                        abaSelecionada === "publicados"
+                                                            ? conteudo.dataPublicacao
+                                                            : conteudo.dataCriacao
+                                                    )}
+
+                                                </td>
+
+                                                <td className="celula-autor">
+
+                                                    {conteudo.autor || "Não informado"}
+
+                                                </td>
+
+                                                {abaSelecionada === "meus" && (
+
+                                                    <td>
+
+                                                        <span
+                                                            className={`etiqueta-status-artigo ${classeStatus(status)}`}
+                                                        >
+                                                            {textoStatus(status)}
+                                                        </span>
+
+                                                    </td>
+
+                                                )}
+
+                                                <td className="coluna-acoes">
+
+                                                    <div className="acoes-artigo">
+
+                                                        {/* EDITAR SOMENTE RASCUNHO */}
+
+                                                        {abaSelecionada === "meus" &&
+                                                            ehRascunho && (
+
+                                                            <button
+                                                                type="button"
+                                                                className="acao-editar-artigo"
+                                                                title="Editar rascunho"
+                                                                onClick={(event) => {
+
+                                                                    event.stopPropagation();
+
+                                                                    editarConteudo(conteudo);
+
+                                                                }}
+                                                            >
+                                                                Editar
+                                                            </button>
+
+                                                        )}
+
+                                                        {/* ENVIAR PARA REVISÃO SOMENTE RASCUNHO */}
+
+                                                        {abaSelecionada === "meus" &&
+                                                            ehRascunho && (
+
+                                                            <button
+                                                                type="button"
+                                                                className="acao-enviar-revisao"
+                                                                title="Enviar para revisão"
+                                                                disabled={
+                                                                    enviandoRevisao === conteudo.artigoId
+                                                                }
+                                                                onClick={(event) => {
+
+                                                                    event.stopPropagation();
+
+                                                                    enviarParaRevisao(
+                                                                        conteudo.artigoId
+                                                                    );
+
+                                                                }}
+                                                            >
+                                                                {enviandoRevisao === conteudo.artigoId
+                                                                    ? "Enviando..."
+                                                                    : "Enviar"}
+                                                            </button>
+
+                                                        )}
+
+                                                        {/* ARQUIVAR */}
+
+                                                        {abaSelecionada === "publicados" &&
+                                                            podeArquivar && (
+
+                                                            <button
+                                                                type="button"
+                                                                className="excluir-conteudo"
+                                                                title="Arquivar conteúdo"
+                                                                onClick={(event) => {
+
+                                                                    event.stopPropagation();
+
+                                                                    excluirConteudo(
+                                                                        conteudo.artigoId
+                                                                    );
+
+                                                                }}
+                                                            >
+
+                                                                <img
+                                                                    src={Lixeira}
+                                                                    alt="Arquivar"
+                                                                />
+
+                                                            </button>
+
+                                                        )}
+
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+
+                                        );
+
+                                    })
 
                                 ) : (
 
                                     <tr>
-                                        <td colSpan="5" className="sem-conteudos">
-                                            Nenhum conteúdo encontrado.
+
+                                        <td
+                                            colSpan={
+                                                abaSelecionada === "meus" ? 6 : 5
+                                            }
+                                            className="sem-conteudos"
+                                        >
+
+                                            {abaSelecionada === "meus"
+                                                ? "Você ainda não possui conteúdos cadastrados."
+                                                : "Nenhum conteúdo encontrado."}
+
                                         </td>
+
                                     </tr>
 
                                 )}
@@ -317,19 +970,17 @@ function ConteudoTributario() {
             <FooterMobile />
 
         </div>
+
     );
+
 }
 
 
+// =========================================
 // MENU LATERAL
+// =========================================
 
-function Sidebar() {
-
-    const navigate = useNavigate();
-
-    function sairSistema() {
-        navigate("/login");
-    }
+function Sidebar({ sairSistema }) {
 
     return (
 
@@ -403,11 +1054,15 @@ function Sidebar() {
             </button>
 
         </aside>
+
     );
+
 }
 
 
+// =========================================
 // MENU MOBILE
+// =========================================
 
 function FooterMobile() {
 
@@ -468,6 +1123,7 @@ function FooterMobile() {
         </footer>
 
     );
+
 }
 
 export default ConteudoTributario;

@@ -893,3 +893,15 @@ input {
         margin: 14px 0 10px;
     }
 }
+
+.login-erro {
+    color: #d93025;
+    font-size: 14px;
+    margin: 12px 0;
+    text-align: center;
+}
+
+.botao-entrar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

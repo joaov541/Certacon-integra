@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
+import { realizarLogin } from "../../services/api";
+
 import logoIntegra from "../../assets/Icones/LogoNome.png";
 import iconeEscudo from "../../assets/Icones/EscudoLaranja.png";
 import iconeDocumento from "../../assets/Icones/documentoLaranja.png";
@@ -18,11 +20,58 @@ function Login() {
     const [cnpj, setCnpj] = useState("");
     const [senha, setSenha] = useState("");
 
-    function entrar(event) {
+    const [erro, setErro] = useState("");
+    const [carregando, setCarregando] = useState(false);
+
+    async function entrar(event) {
         event.preventDefault();
 
-        // Login provisório: entra diretamente na próxima tela
-        navigate("/home");
+        setErro("");
+
+        if (!cnpj.trim() || !senha.trim()) {
+            setErro("Informe seu e-mail ou CNPJ e sua senha.");
+            return;
+        }
+
+        try {
+            setCarregando(true);
+
+            // Envia os dados para a API
+            const dados = await realizarLogin(cnpj, senha);
+
+            // Armazena o token JWT
+            localStorage.setItem("token", dados.token);
+
+            // Armazena os dados do usuário
+            localStorage.setItem(
+                "usuario",
+                JSON.stringify({
+                    usuarioId: dados.usuarioId,
+                    nome: dados.nome,
+                    email: dados.email,
+                    perfis: dados.perfis
+                })
+            );
+
+            // Armazena também os perfis separadamente
+            localStorage.setItem(
+                "perfis",
+                JSON.stringify(dados.perfis)
+            );
+
+            // Direciona para a página inicial
+            navigate("/home");
+
+        } catch (error) {
+            console.error("Erro ao realizar login:", error);
+
+            setErro(
+                error.message || "Não foi possível conectar ao servidor."
+            );
+
+        } finally {
+            setCarregando(false);
+        }
     }
 
     function recuperarSenha() {
@@ -154,6 +203,7 @@ function Login() {
                                         setCnpj(event.target.value)
                                     }
                                     autoComplete="username"
+                                    required
                                 />
 
                             </div>
@@ -185,6 +235,7 @@ function Login() {
                                         setSenha(event.target.value)
                                     }
                                     autoComplete="current-password"
+                                    required
                                 />
 
                             </div>
@@ -199,13 +250,25 @@ function Login() {
 
                         </div>
 
+                        {/* MENSAGEM DE ERRO */}
+
+                        {erro && (
+                            <p
+                                className="login-erro"
+                                role="alert"
+                            >
+                                {erro}
+                            </p>
+                        )}
+
                         {/* ENTRAR */}
 
                         <button
                             type="submit"
                             className="botao-entrar"
+                            disabled={carregando}
                         >
-                            Entrar
+                            {carregando ? "Entrando..." : "Entrar"}
                         </button>
 
                     </form>

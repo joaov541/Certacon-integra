@@ -32,4 +32,11 @@ public partial class Artigo
     public virtual ICollection<RevisaoArtigo> RevisaoArtigos { get; set; } = new List<RevisaoArtigo>();
 
     public virtual Tema Tema { get; set; } = null!;
+    public string? NomeArquivo { get; set; }
+
+    public string? CaminhoArquivo { get; set; }
+
+    public string? TipoConteudo { get; set; }
+
+    public long? TamanhoArquivo { get; set; }
 }

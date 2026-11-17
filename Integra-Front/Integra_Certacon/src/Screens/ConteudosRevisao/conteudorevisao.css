@@ -1108,3 +1108,129 @@
         height: 24px;
     }
 }
+
+/* =========================================
+   PESQUISA DA REVISÃO
+========================================= */
+
+.revisao-pesquisa {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.revisao-pesquisa input {
+    width: 100%;
+    max-width: 420px;
+    padding: 12px 15px;
+    border: 1px solid #dfe3eb;
+    border-radius: 8px;
+    outline: none;
+    font-size: 13px;
+}
+
+.revisao-pesquisa input:focus {
+    border-color: #f28c28;
+}
+
+/* =========================================
+   AÇÕES DA REVISÃO
+========================================= */
+
+.revisao-acoes-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.revisao-acoes-status button {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.revisao-acoes-status button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.revisao-botao-aprovar {
+    background: #e1f5e9;
+    color: #21834b;
+}
+
+.revisao-botao-aprovar:hover {
+    background: #c9ecd7;
+}
+
+.revisao-botao-ajustes {
+    background: #fff1d9;
+    color: #a66a00;
+}
+
+.revisao-botao-ajustes:hover {
+    background: #ffe4b7;
+}
+
+.revisao-botao-rejeitar {
+    background: #ffe5e5;
+    color: #c03939;
+}
+
+.revisao-botao-rejeitar:hover {
+    background: #ffd0d0;
+}
+
+.revisao-botao-publicar {
+    background: #e1f5e9;
+    color: #21834b;
+}
+
+.revisao-botao-publicar:hover {
+    background: #c9ecd7;
+}
+
+.revisao-botao-visualizar {
+    background: #e9efff;
+    color: #315ba8;
+}
+
+.revisao-botao-visualizar:hover {
+    background: #d6e2ff;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .revisao-pesquisa input {
+        max-width: 100%;
+    }
+
+    .revisao-acoes-status {
+        justify-content: flex-start;
+    }
+
+    .cartao-acoes {
+        width: 100%;
+    }
+
+}
+.revisao-acoes-status button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.revisao-acoes-status button svg {
+    flex-shrink: 0;
+}

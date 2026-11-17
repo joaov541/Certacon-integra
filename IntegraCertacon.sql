@@ -207,3 +207,4 @@ SELECT
 FROM dbo.ARTIGO
 WHERE Status = 'RASCUNHO'
 ORDER BY Data_Criacao DESC;
+

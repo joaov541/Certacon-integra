@@ -2698,3 +2698,14 @@
         min-width: 600px;
     }
 }
+.home-erro {
+    color: #d93025;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.home-lista-vazia {
+    padding: 20px;
+    color: #666;
+    text-align: center;
+}

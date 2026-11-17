@@ -212,7 +212,7 @@ SELECT
     Nome,
     Email
 FROM dbo.USUARIO
-WHERE Email = 'cliente@integra.local';
+
 
 
 DECLARE @UsuarioId UNIQUEIDENTIFIER =

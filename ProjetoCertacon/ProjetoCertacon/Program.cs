@@ -13,6 +13,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.Services.AddControllers();
 
+
+// Permitir comunicação com o frontend React
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 
@@ -85,7 +98,7 @@ if (app.Environment.IsDevelopment())
 
 // Middlewares
 app.UseHttpsRedirection();
-
+app.UseCors("PermitirFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 

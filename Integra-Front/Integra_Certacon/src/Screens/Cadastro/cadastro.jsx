@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./cadastro.css";
 
+import { useNavigate } from "react-router-dom";
+import { requisicaoApi } from "../../services/api";
 import PerfilLaranja from "../../assets/Icones/PerfilLaranja.png";
 import iconeEscudo from "../../assets/Icones/EscudoBranco.png";
 import iconeDocumento from "../../assets/Icones/quadroEstatistica.png";
@@ -17,7 +19,10 @@ import EmailCinza from "../../assets/Icones/EmailCinza.png";
 import CadeadoCinza from "../../assets/Icones/CadeadoCinza.png";
 import prime_book from "../../assets/Icones/prime_book.png";
 
+
 export default function Cadastro() {
+    const navigate = useNavigate();
+    const [cadastrando, setCadastrando] = useState(false);
     const [mostrarSenha, setMostrarSenha] = useState(false);
     const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
     const [verificandoCnpj, setVerificandoCnpj] = useState(false);
@@ -34,23 +39,44 @@ export default function Cadastro() {
     });
 
     // Atualiza os campos do formulário
+    // Atualiza os campos do formulário
     const atualizarCampo = (e) => {
         const { name, value } = e.target;
 
         if (name === "cnpj") {
-            let cnpj = value.replace(/\D/g, "");
+            // Mantém somente letras e números e converte para maiúsculas
+            let cnpj = value
+                .toUpperCase()
+                .replace(/[^A-Z0-9]/g, "");
 
-            cnpj = cnpj.slice(0, 14);
+            // As 12 primeiras posições aceitam letras e números.
+            // As duas últimas aceitam somente números.
+            cnpj =
+                cnpj.slice(0, 12) +
+                cnpj.slice(12).replace(/\D/g, "").slice(0, 2);
 
-            cnpj = cnpj
-                .replace(/^(\d{2})(\d)/, "$1.$2")
-                .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-                .replace(/\.(\d{3})(\d)/, ".$1/$2")
-                .replace(/(\d{4})(\d)/, "$1-$2");
+            // Aplica a máscara XX.XXX.XXX/XXXX-XX
+            let cnpjFormatado = cnpj.slice(0, 2);
+
+            if (cnpj.length > 2) {
+                cnpjFormatado += "." + cnpj.slice(2, 5);
+            }
+
+            if (cnpj.length > 5) {
+                cnpjFormatado += "." + cnpj.slice(5, 8);
+            }
+
+            if (cnpj.length > 8) {
+                cnpjFormatado += "/" + cnpj.slice(8, 12);
+            }
+
+            if (cnpj.length > 12) {
+                cnpjFormatado += "-" + cnpj.slice(12, 14);
+            }
 
             setDados((anterior) => ({
                 ...anterior,
-                cnpj: cnpj,
+                cnpj: cnpjFormatado,
                 razaoSocial: "",
             }));
 
@@ -65,11 +91,19 @@ export default function Cadastro() {
     };
 
     // Consulta o CNPJ
+    // Consulta o CNPJ
     const verificarCnpj = async () => {
-        const cnpjLimpo = dados.cnpj.replace(/\D/g, "");
+        const cnpjLimpo = dados.cnpj
+            .replace(/[^a-zA-Z0-9]/g, "")
+            .toUpperCase();
 
-        if (cnpjLimpo.length !== 14) {
-            alert("Digite um CNPJ com 14 números.");
+        const formatoValido = /^[A-Z0-9]{12}[0-9]{2}$/.test(cnpjLimpo);
+
+        if (!formatoValido) {
+            alert(
+                "Digite um CNPJ válido com 14 posições. " +
+                "As duas últimas devem ser números."
+            );
             return;
         }
 
@@ -101,22 +135,28 @@ export default function Cadastro() {
             setCnpjVerificado(true);
 
             alert("CNPJ consultado com sucesso!");
+
         } catch (erro) {
+            console.error("Erro ao consultar CNPJ:", erro);
+
             alert(
-                "Não foi possível verificar esse CNPJ. Confira os dados e tente novamente."
+                "Não foi possível verificar esse CNPJ. " +
+                "Confira os dados e tente novamente."
             );
 
             setDados((anterior) => ({
                 ...anterior,
                 razaoSocial: "",
             }));
+
         } finally {
             setVerificandoCnpj(false);
         }
     };
 
     // Finaliza o cadastro
-    const handleCadastrar = (e) => {
+
+    const handleCadastrar = async (e) => {
         e.preventDefault();
 
         const camposObrigatorios = { ...dados };
@@ -124,10 +164,15 @@ export default function Cadastro() {
 
         if (
             Object.values(camposObrigatorios).some(
-                (valor) => !valor.trim()
+                valor => !valor.trim()
             )
         ) {
             alert("Preencha todos os campos para continuar.");
+            return;
+        }
+
+        if (dados.senha.length < 8) {
+            alert("A senha deve possuir pelo menos 8 caracteres.");
             return;
         }
 
@@ -141,10 +186,46 @@ export default function Cadastro() {
             return;
         }
 
-        alert(
-            "Dados preenchidos! A integração do cadastro com a API do sistema ainda precisa ser configurada."
-        );
+        try {
+            setCadastrando(true);
+
+            const resposta = await requisicaoApi(
+                "/api/Autenticacao/cadastro",
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        nome: dados.nome,
+                        email: dados.email,
+                        senha: dados.senha,
+                        razaoSocial: dados.razaoSocial,
+                        cnpj: dados.cnpj
+                            .replace(/[^a-zA-Z0-9]/g, "")
+                            .toUpperCase(),
+                        telefoneContato: dados.telefone
+                    })
+                }
+            );
+
+            alert(
+                resposta.mensagem ||
+                "Cadastro realizado com sucesso!"
+            );
+
+            navigate("/login");
+
+        } catch (erro) {
+            console.error("Erro ao cadastrar empresa:", erro);
+
+            alert(
+                erro.message ||
+                "Não foi possível realizar o cadastro."
+            );
+
+        } finally {
+            setCadastrando(false);
+        }
     };
+
 
     return (
         <main className="cadastro">
@@ -487,10 +568,10 @@ export default function Cadastro() {
                                         type="text"
                                         value={dados.cnpj}
                                         onChange={atualizarCampo}
-                                        placeholder="00.000.000/0000-00"
+                                        placeholder="00.AAA.000/0000-00"
                                         autoComplete="off"
                                         maxLength={18}
-                                        inputMode="numeric"
+                                        inputMode="text"
                                         required
                                     />
 
@@ -533,13 +614,14 @@ export default function Cadastro() {
                         </div>
 
                         {/* Botão cadastrar */}
-
                         <button
                             type="submit"
                             className="cadastro-botao-submit"
+                            disabled={cadastrando}
                         >
                             <img src={ADDProfileBranco} alt="" />
-                            Cadastrar
+
+                            {cadastrando ? "Cadastrando..." : "Cadastrar"}
                         </button>
 
                     </form>

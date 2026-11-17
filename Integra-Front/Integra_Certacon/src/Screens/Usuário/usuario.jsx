@@ -1,9 +1,12 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import "./usuario.css";
+
+import { NavLink, useNavigate } from "react-router-dom";
+import { requisicaoApi } from "../../services/api";
 
 import Header from "../../components/Header/header";
 import HeaderDesktop from "../../components/Header/headerDesktop";
-import { NavLink, useNavigate } from "react-router-dom";
 
 import CasaBranca from "../../assets/Icones/CasaBranca.png";
 import LivroBranco from "../../assets/Icones/LivroBranco.png";
@@ -16,77 +19,102 @@ import SairBranco from "../../assets/Icones/SairBranco.png";
 import EditarQuadrado from "../../assets/Icones/EditarQuadrado.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 
-const dadosIniciais = [
-  {
-    id: 1,
-    nome: "Ana Jurandi",
-    email: "Ana@gmail.com",
-    perfil: "ADM",
-    cliente: "—",
-    status: "ativo",
-  },
-  {
-    id: 2,
-    nome: "Eduardo Oliveira",
-    email: "Edu@gmail.com",
-    perfil: "ADM",
-    cliente: "—",
-    status: "ativo",
-  },
-  {
-    id: 3,
-    nome: "Guilherme Augusto",
-    email: "Gui@gmail.com",
-    perfil: "ADM",
-    cliente: "11-344-676-9102-23",
-    status: "ativo",
-  },
-  {
-    id: 4,
-    nome: "Nicoly Almeida",
-    email: "Nic@gmail.com",
-    perfil: "ADM",
-    cliente: "—",
-    status: "ativo",
-  },
-  {
-    id: 5,
-    nome: "Vitor Pereira",
-    email: "Vit@gmail.com",
-    perfil: "ADM",
-    cliente: "12-345-678-9101-11",
-    status: "desativado",
-  },
-];
-
 function Usuario() {
   const navigate = useNavigate();
 
-  const [usuarios, setUsuarios] = useState(dadosIniciais);
+  // Lista de usuários recebida da API
+  const [usuarios, setUsuarios] = useState([]);
+
   const [pesquisa, setPesquisa] = useState("");
   const [pagina, setPagina] = useState(1);
+
   const [modalAberto, setModalAberto] = useState(false);
   const [idEditando, setIdEditando] = useState(null);
+
+  const [carregando, setCarregando] = useState(true);
+  const [salvando, setSalvando] = useState(false);
 
   const [formulario, setFormulario] = useState({
     nome: "",
     email: "",
-    perfil: "ADM",
+    perfil: "Administrador",
     cliente: "",
     status: "ativo",
   });
 
+  const usuariosPorPagina = 5;
+
+  // Perfis cadastrados no banco de dados
+  const perfisDisponiveis = [
+    "Administrador",
+    "Coordenador Fiscal",
+    "Analista SPED",
+    "Analista de Documentos Fiscais",
+    "Analista de Reforma Tributária",
+    "Cliente",
+  ];
+
+  // Formata o CNPJ para exibição
+  function formatarCnpj(cnpj) {
+  if (!cnpj) return "—";
+
+  const valor = String(cnpj)
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toUpperCase();
+
+  if (valor.length !== 14) return cnpj;
+
+  return valor.replace(
+    /^([A-Z0-9]{2})([A-Z0-9]{3})([A-Z0-9]{3})([A-Z0-9]{4})(\d{2})$/,
+    "$1.$2.$3/$4-$5"
+  );
+}
+
+  // Busca os usuários cadastrados na API
+  async function carregarUsuarios() {
+    try {
+      setCarregando(true);
+
+      const resposta = await requisicaoApi("/api/Usuarios");
+
+      setUsuarios(Array.isArray(resposta) ? resposta : []);
+
+    } catch (erro) {
+      console.error("Erro ao carregar usuários:", erro);
+
+      alert(
+        erro.message ||
+        "Não foi possível carregar os usuários."
+      );
+
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  useEffect(() => {
+    carregarUsuarios();
+  }, []);
+
+  // Pesquisa por nome, e-mail, perfil ou CNPJ
   const usuariosFiltrados = usuarios.filter((usuario) => {
     const texto = pesquisa.toLowerCase();
 
+    const nome = usuario.nome || "";
+    const email = usuario.email || "";
+    const cnpj = usuario.cnpj || "";
+
+    const perfis = Array.isArray(usuario.perfis)
+      ? usuario.perfis.join(" ")
+      : "";
+
     return (
-      usuario.nome.toLowerCase().includes(texto) ||
-      usuario.email.toLowerCase().includes(texto) ||
-      usuario.perfil.toLowerCase().includes(texto)
+      nome.toLowerCase().includes(texto) ||
+      email.toLowerCase().includes(texto) ||
+      cnpj.toLowerCase().includes(texto) ||
+      perfis.toLowerCase().includes(texto)
     );
   });
-
-  const usuariosPorPagina = 5;
 
   const totalPaginas = Math.max(
     1,
@@ -100,33 +128,30 @@ function Usuario() {
     inicio + usuariosPorPagina
   );
 
-  function abrirCadastro() {
-    setFormulario({
-      nome: "",
-      email: "",
-      perfil: "ADM",
-      cliente: "",
-      status: "ativo",
-    });
+  // Volta para a primeira página quando a pesquisa muda
+  useEffect(() => {
+    setPagina(1);
+  }, [pesquisa]);
 
-    setIdEditando(null);
-    setModalAberto(true);
-  }
-
+  // Abre o modal de edição
   function abrirEdicao(usuario) {
+    const perfilUsuario =
+      usuario.perfis?.[0] || "Cliente";
+
     setFormulario({
-      nome: usuario.nome,
-      email: usuario.email,
-      perfil: usuario.perfil,
-      cliente: usuario.cliente === "—" ? "" : usuario.cliente,
-      status: usuario.status,
+      nome: usuario.nome || "",
+      email: usuario.email || "",
+      perfil: perfilUsuario,
+      cliente: usuario.cnpj || "",
+      status: usuario.ativo ? "ativo" : "desativado",
     });
 
-    setIdEditando(usuario.id);
+    setIdEditando(usuario.usuarioId);
     setModalAberto(true);
   }
 
-  function salvarUsuario(e) {
+  // Salva as alterações na API
+  async function salvarUsuario(e) {
     e.preventDefault();
 
     if (!formulario.nome.trim() || !formulario.email.trim()) {
@@ -134,65 +159,103 @@ function Usuario() {
       return;
     }
 
-    if (idEditando) {
-      setUsuarios((lista) =>
-        lista.map((usuario) =>
-          usuario.id === idEditando
-            ? {
-              ...usuario,
-              ...formulario,
-              cliente: formulario.cliente.trim() || "—",
-            }
-            : usuario
-        )
-      );
-    } else {
-      const novoUsuario = {
-        id: Date.now(),
-        ...formulario,
-        cliente: formulario.cliente.trim() || "—",
-      };
-
-      setUsuarios((lista) => [...lista, novoUsuario]);
-
-      setPagina(
-        Math.ceil((usuarios.length + 1) / usuariosPorPagina)
-      );
+    if (!idEditando) {
+      alert("Não foi possível identificar o usuário.");
+      return;
     }
 
-    setModalAberto(false);
-  }
+    try {
+      setSalvando(true);
 
-  function excluirUsuario(id) {
-    const confirmar = window.confirm(
-      "Deseja realmente excluir este usuário?"
-    );
+      // Atualiza os dados pessoais e o perfil
+      await requisicaoApi(`/api/Usuarios/${idEditando}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          nome: formulario.nome.trim(),
+          email: formulario.email.trim(),
+          cnpj: formulario.cliente
+  .replace(/[^a-zA-Z0-9]/g, "")
+  .toUpperCase() || null,
+          perfil: formulario.perfil,
+        }),
+      });
 
-    if (confirmar) {
-      const novaLista = usuarios.filter(
-        (usuario) => usuario.id !== id
+      // Localiza os dados atuais do usuário
+      const usuarioAtual = usuarios.find(
+        (usuario) => usuario.usuarioId === idEditando
       );
 
-      setUsuarios(novaLista);
+      const statusAtual = usuarioAtual?.ativo
+        ? "ativo"
+        : "desativado";
 
-      const quantidadeRestante = usuariosFiltrados.length - 1;
-
-      if (
-        quantidadeRestante <= (pagina - 1) * usuariosPorPagina &&
-        pagina > 1
-      ) {
-        setPagina(pagina - 1);
+      // Atualiza o status somente se houve alteração
+      if (statusAtual !== formulario.status) {
+        await requisicaoApi(
+          `/api/Usuarios/${idEditando}/status`,
+          {
+            method: "PATCH",
+            body: JSON.stringify({
+              ativo: formulario.status === "ativo",
+            }),
+          }
+        );
       }
+
+      alert("Usuário atualizado com sucesso!");
+
+      setModalAberto(false);
+
+      // Atualiza a tabela com os dados do banco
+      await carregarUsuarios();
+
+    } catch (erro) {
+      console.error("Erro ao atualizar usuário:", erro);
+
+      alert(
+        erro.message ||
+        "Não foi possível atualizar o usuário."
+      );
+
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  // Exclui logicamente o usuário
+  async function excluirUsuario(id) {
+    const confirmar = window.confirm(
+      "Deseja realmente desativar este usuário?"
+    );
+
+    if (!confirmar) return;
+
+    try {
+      await requisicaoApi(`/api/Usuarios/${id}`, {
+        method: "DELETE",
+      });
+
+      alert("Usuário desativado com sucesso!");
+
+      await carregarUsuarios();
+
+    } catch (erro) {
+      console.error("Erro ao desativar usuário:", erro);
+
+      alert(
+        erro.message ||
+        "Não foi possível desativar o usuário."
+      );
     }
   }
 
   return (
     <div className="pagina-usuarios">
       <Sidebar />
+
       <main className="principal-usuarios">
         <HeaderDesktop />
         <Header />
-
 
         <section className="conteudo-usuarios">
           <div className="cabecalho-usuarios">
@@ -206,6 +269,16 @@ function Usuario() {
               + Novo Usuário
             </button>
             */}
+          </div>
+
+          {/* Pesquisa de usuários */}
+          <div className="pesquisa-usuarios">
+            <input
+              type="text"
+              placeholder="Pesquisar usuário..."
+              value={pesquisa}
+              onChange={(e) => setPesquisa(e.target.value)}
+            />
           </div>
 
           <div className="tabela-usuarios">
@@ -222,47 +295,63 @@ function Usuario() {
               </thead>
 
               <tbody>
-                {usuariosExibidos.length > 0 ? (
-                  usuariosExibidos.map((usuario) => (
-                    <tr key={usuario.id}>
-                      <td>{usuario.nome}</td>
+                {carregando ? (
+                  <tr>
+                    <td colSpan="6" className="nenhum-usuario">
+                      Carregando usuários...
+                    </td>
+                  </tr>
+                ) : usuariosExibidos.length > 0 ? (
+                  usuariosExibidos.map((usuario) => {
+                    const perfil = Array.isArray(usuario.perfis)
+                      ? usuario.perfis.join(", ")
+                      : "—";
 
-                      <td>{usuario.email}</td>
+                    return (
+                      <tr key={usuario.usuarioId}>
+                        <td>{usuario.nome}</td>
 
-                      <td>{usuario.perfil}</td>
+                        <td>{usuario.email}</td>
 
-                      <td className="cliente-cnpj">
-                        {usuario.cliente}
-                      </td>
+                        <td>{perfil}</td>
 
-                      <td>
-                        <span
-                          className={`status-usuario ${usuario.status === "ativo"
-                              ? "status-ativo"
-                              : "status-desativado"
+                        <td className="cliente-cnpj">
+                          {formatarCnpj(usuario.cnpj)}
+                        </td>
+
+                        <td>
+                          <span
+                            className={`status-usuario ${
+                              usuario.ativo
+                                ? "status-ativo"
+                                : "status-desativado"
                             }`}
-                        >
-                          {usuario.status}
-                        </span>
-                      </td>
+                          >
+                            {usuario.ativo ? "ativo" : "desativado"}
+                          </span>
+                        </td>
 
-                      <td className="acoes-usuario">
-                        <button
-                          title="Editar usuário"
-                          onClick={() => abrirEdicao(usuario)}
-                        >
-                          <img src={EditarQuadrado} alt="Editar" />
-                        </button>
+                        <td className="acoes-usuario">
+                          <button
+                            title="Editar usuário"
+                            onClick={() => abrirEdicao(usuario)}
+                          >
+                            <img src={EditarQuadrado} alt="Editar" />
+                          </button>
 
-                        <button
-                          title="Excluir usuário"
-                          onClick={() => excluirUsuario(usuario.id)}
-                        >
-                          <img src={Lixeira} alt="Excluir" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                          <button
+                            title="Desativar usuário"
+                            onClick={() =>
+                              excluirUsuario(usuario.usuarioId)
+                            }
+                            disabled={!usuario.ativo}
+                          >
+                            <img src={Lixeira} alt="Desativar" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="6" className="nenhum-usuario">
@@ -274,33 +363,39 @@ function Usuario() {
             </table>
           </div>
 
+          {/* Paginação */}
           <div className="paginacao-usuarios">
-            {Array.from({ length: totalPaginas }, (_, index) => (
-              <button
-                key={index + 1}
-                className={
-                  pagina === index + 1 ? "pagina-ativa" : ""
-                }
-                onClick={() => setPagina(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
+            {Array.from(
+              { length: totalPaginas },
+              (_, index) => (
+                <button
+                  key={index + 1}
+                  className={
+                    pagina === index + 1
+                      ? "pagina-ativa"
+                      : ""
+                  }
+                  onClick={() => setPagina(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              )
+            )}
           </div>
         </section>
       </main>
 
+      {/* Modal de edição */}
       {modalAberto && (
         <div className="fundo-modal-usuario">
           <form
             className="modal-usuario"
             onSubmit={salvarUsuario}
           >
-            <h2>
-              {idEditando ? "Editar usuário" : "Novo usuário"}
-            </h2>
+            <h2>Editar usuário</h2>
 
             <label>Nome completo</label>
+
             <input
               type="text"
               placeholder="Digite o nome"
@@ -314,6 +409,7 @@ function Usuario() {
             />
 
             <label>E-mail</label>
+
             <input
               type="email"
               placeholder="Digite o e-mail"
@@ -327,6 +423,7 @@ function Usuario() {
             />
 
             <label>Perfil</label>
+
             <select
               value={formulario.perfil}
               onChange={(e) =>
@@ -336,12 +433,15 @@ function Usuario() {
                 })
               }
             >
-              <option value="ADM">ADM</option>
-              <option value="Analista">Analista</option>
-              <option value="Cliente">Cliente</option>
+              {perfisDisponiveis.map((perfil) => (
+                <option key={perfil} value={perfil}>
+                  {perfil}
+                </option>
+              ))}
             </select>
 
             <label>Cliente CNPJ</label>
+
             <input
               type="text"
               placeholder="Digite o CNPJ"
@@ -355,6 +455,7 @@ function Usuario() {
             />
 
             <label>Status</label>
+
             <select
               value={formulario.status}
               onChange={(e) =>
@@ -373,6 +474,7 @@ function Usuario() {
                 type="button"
                 className="botao-cancelar-usuario"
                 onClick={() => setModalAberto(false)}
+                disabled={salvando}
               >
                 Cancelar
               </button>
@@ -380,8 +482,9 @@ function Usuario() {
               <button
                 type="submit"
                 className="botao-salvar-usuario"
+                disabled={salvando}
               >
-                Salvar
+                {salvando ? "Salvando..." : "Salvar"}
               </button>
             </div>
           </form>
@@ -394,8 +497,16 @@ function Usuario() {
 function Sidebar() {
   const navigate = useNavigate();
 
+  function sair() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("perfis");
+
+    navigate("/login");
+  }
+
   return (
-     <aside className="menu-usuarios">
+    <aside className="menu-usuarios">
 
       <div className="logo-menu-usuarios">
         <img src={LogoNome} alt="Integra" />
@@ -465,7 +576,7 @@ function Sidebar() {
 
       <button
         className="sair-usuarios"
-        onClick={() => navigate("/login")}
+        onClick={sair}
       >
         <img src={SairBranco} alt="" />
         <span>Sair</span>

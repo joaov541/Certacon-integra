@@ -1,7 +1,9 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import "./Home.css";
 
 import { NavLink, useNavigate } from "react-router-dom";
+import { requisicaoApi } from "../../services/api";
 
 import Header from "../../components/Header/header";
 import HeaderDesktop from "../../components/Header/headerDesktop";
@@ -34,8 +36,112 @@ export default function Home() {
 
     const [pesquisa, setPesquisa] = useState("");
 
+    // Dados do usuário que realizou o login
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+    const nomeUsuario = usuario.nome?.split(" ")[0] || "usuário";
+
+    const perfis = usuario.perfis ||
+        JSON.parse(localStorage.getItem("perfis") || "[]");
+
+    const ehAdministrador = perfis.includes("Administrador");
+
+    const podeRevisar =
+        ehAdministrador || perfis.includes("Coordenador Fiscal");
+
+    // Dados do Dashboard
+    const [artigos, setArtigos] = useState([]);
+    const [notas, setNotas] = useState([]);
+    const [pendentes, setPendentes] = useState([]);
+
+    const [carregando, setCarregando] = useState(true);
+    const [erroDashboard, setErroDashboard] = useState("");
+
+    // Carrega as informações da API
+    useEffect(() => {
+        async function carregarDashboard() {
+            setCarregando(true);
+            setErroDashboard("");
+
+            const erros = [];
+
+            try {
+                const dadosArtigos = await requisicaoApi("/api/Artigos");
+
+                setArtigos(
+                    Array.isArray(dadosArtigos) ? dadosArtigos : []
+                );
+            } catch (error) {
+                console.error("Erro ao carregar conteúdos:", error);
+                erros.push("Não foi possível carregar os conteúdos.");
+            }
+
+            try {
+                const dadosNotas = await requisicaoApi("/api/NotasFiscais");
+
+                setNotas(
+                    Array.isArray(dadosNotas) ? dadosNotas : []
+                );
+            } catch (error) {
+                console.error("Erro ao carregar notas fiscais:", error);
+                erros.push("Não foi possível carregar as notas fiscais.");
+            }
+
+            if (podeRevisar) {
+                try {
+                    const dadosPendentes = await requisicaoApi(
+                        "/api/Artigos/pendentes-revisao"
+                    );
+
+                    setPendentes(
+                        Array.isArray(dadosPendentes) ? dadosPendentes : []
+                    );
+                } catch (error) {
+                    console.error("Erro ao carregar revisões:", error);
+                    erros.push("Não foi possível carregar os conteúdos em revisão.");
+                }
+            }
+
+            if (erros.length > 0) {
+                setErroDashboard(erros.join(" "));
+            }
+
+            setCarregando(false);
+        }
+
+        carregarDashboard();
+    }, [podeRevisar]);
+
+    // Organiza os conteúdos mais recentes
+    const ultimosArtigos = [...artigos]
+        .sort((a, b) => {
+            return new Date(b.dataPublicacao || 0) -
+                new Date(a.dataPublicacao || 0);
+        })
+        .slice(0, 3);
+
+    // Formata as datas
+    function formatarData(data) {
+        if (!data) {
+            return "Data não informada";
+        }
+
+        const dataFormatada = new Date(data);
+
+        if (isNaN(dataFormatada.getTime())) {
+            return "Data não informada";
+        }
+
+        return dataFormatada.toLocaleDateString("pt-BR");
+    }
+
+    // Realiza o logout
     function sairSistema() {
-        navigate("/login");
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        localStorage.removeItem("perfis");
+
+        navigate("/login", { replace: true });
     }
 
     return (
@@ -144,22 +250,31 @@ export default function Home() {
                 {/* CONTEÚDO DA PÁGINA */}
                 <div className="home-conteudo">
 
-                    <h1>Olá, João!</h1>
+                    <h1>Olá, {nomeUsuario}!</h1>
 
                     <p className="home-subtitulo">
                         Confira um resumo das principais informações do sistema.
                     </p>
 
+                    {erroDashboard && (
+                        <p className="home-erro">
+                            {erroDashboard}
+                        </p>
+                    )}
+
                     {/* CARDS DE RESUMO */}
                     <div className="home-resumo">
 
+                        {/* CONTEÚDOS PUBLICADOS */}
                         <div
                             className="home-card"
                             role="link"
                             tabIndex={0}
                             onClick={() => navigate("/conteudos")}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter") navigate("/conteudos");
+                                if (e.key === "Enter") {
+                                    navigate("/conteudos");
+                                }
                             }}
                             style={{ cursor: "pointer" }}
                         >
@@ -169,21 +284,26 @@ export default function Home() {
 
                             <div className="home-card-info">
                                 <p>Conteúdos publicados</p>
-                                <strong>128</strong>
+                                <strong>
+                                    {carregando ? "..." : artigos.length}
+                                </strong>
                             </div>
 
                             <span className="home-card-crescimento">
-                                ↑ 12%
+                                Publicados
                             </span>
                         </div>
 
+                        {/* NOTAS FISCAIS */}
                         <div
                             className="home-card"
                             role="link"
                             tabIndex={0}
                             onClick={() => navigate("/notas-fiscais")}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter") navigate("/notas-fiscais");
+                                if (e.key === "Enter") {
+                                    navigate("/notas-fiscais");
+                                }
                             }}
                             style={{ cursor: "pointer" }}
                         >
@@ -193,7 +313,9 @@ export default function Home() {
 
                             <div className="home-card-info">
                                 <p>Notas Fiscais</p>
-                                <strong>1248</strong>
+                                <strong>
+                                    {carregando ? "..." : notas.length}
+                                </strong>
                             </div>
 
                             <span className="home-card-crescimento home-card-ativas">
@@ -201,29 +323,36 @@ export default function Home() {
                             </span>
                         </div>
 
-                        <div
-                            className="home-card"
-                            role="link"
-                            tabIndex={0}
-                            onClick={() => navigate("/conteudos")}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") navigate("/conteudos");
-                            }}
-                            style={{ cursor: "pointer" }}
-                        >
-                            <div className="home-card-icone">
-                                <img src={arquivoHome} alt="" />
-                            </div>
+                        {/* CONTEÚDOS EM REVISÃO */}
+                        {podeRevisar && (
+                            <div
+                                className="home-card"
+                                role="link"
+                                tabIndex={0}
+                                onClick={() => navigate("/conteudos/revisao")}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        navigate("/conteudos/revisao");
+                                    }
+                                }}
+                                style={{ cursor: "pointer" }}
+                            >
+                                <div className="home-card-icone">
+                                    <img src={arquivoHome} alt="" />
+                                </div>
 
-                            <div className="home-card-info">
-                                <p>Conteúdos</p>
-                                <strong>128</strong>
-                            </div>
+                                <div className="home-card-info">
+                                    <p>Conteúdos em revisão</p>
+                                    <strong>
+                                        {carregando ? "..." : pendentes.length}
+                                    </strong>
+                                </div>
 
-                            <span className="home-card-crescimento home-card-atencao">
-                                Atenção
-                            </span>
-                        </div>
+                                <span className="home-card-crescimento home-card-atencao">
+                                    Atenção
+                                </span>
+                            </div>
+                        )}
 
                     </div>
 
@@ -233,71 +362,53 @@ export default function Home() {
                         {/* ÚLTIMAS ATUALIZAÇÕES */}
                         <section className="home-lista">
 
-                            <div
-                                className="home-lista-item"
-                                onClick={() => navigate("/conteudos/detalhes")}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="home-lista-icone home-lista-icone-verde">
-                                    <img src={DoisDocumentos} alt="" />
-                                </div>
+                            {ultimosArtigos.length > 0 ? (
+                                ultimosArtigos.map((artigo, index) => (
+                                    <div
+                                        key={artigo.artigoId}
+                                        className="home-lista-item"
+                                        onClick={() => navigate("/conteudos/detalhes")}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div
+                                            className={`home-lista-icone ${
+                                                index === 0
+                                                    ? "home-lista-icone-verde"
+                                                    : index === 1
+                                                        ? "home-lista-icone-vermelho"
+                                                        : "home-lista-icone-azul"
+                                            }`}
+                                        >
+                                            <img src={DoisDocumentos} alt="" />
+                                        </div>
 
-                                <div className="home-lista-texto">
-                                    <h3>
-                                        Reforma tributária: Novas regras IBS e CBS
-                                    </h3>
+                                        <div className="home-lista-texto">
+                                            <h3>{artigo.titulo}</h3>
 
-                                    <p>Publicado em 09/10/2026</p>
-                                </div>
+                                            <p>
+                                                Publicado em{" "}
+                                                {formatarData(artigo.dataPublicacao)}
+                                            </p>
+                                        </div>
 
-                                <span className="home-tag home-tag-verde">
-                                    Reforma tributária
-                                </span>
-                            </div>
-
-                            <div
-                                className="home-lista-item"
-                                onClick={() => navigate("/conteudos/detalhes")}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="home-lista-icone home-lista-icone-vermelho">
-                                    <img src={DoisDocumentos} alt="" />
-                                </div>
-
-                                <div className="home-lista-texto">
-                                    <h3>
-                                        Atualização de Tabelas Liquidadas
-                                    </h3>
-
-                                    <p>Publicado em 02/10/2026</p>
-                                </div>
-
-                                <span className="home-tag home-tag-roxo">
-                                    Reforma Tributária
-                                </span>
-                            </div>
-
-                            <div
-                                className="home-lista-item"
-                                onClick={() => navigate("/conteudos/detalhes")}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="home-lista-icone home-lista-icone-azul">
-                                    <img src={DoisDocumentos} alt="" />
-                                </div>
-
-                                <div className="home-lista-texto">
-                                    <h3>
-                                        SPED Fiscal 2025 - Principais mudanças
-                                    </h3>
-
-                                    <p>Publicado em 07/05/2026</p>
-                                </div>
-
-                                <span className="home-tag home-tag-roxo">
-                                    SPED
-                                </span>
-                            </div>
+                                        <span
+                                            className={`home-tag ${
+                                                index === 0
+                                                    ? "home-tag-verde"
+                                                    : "home-tag-roxo"
+                                            }`}
+                                        >
+                                            {artigo.tema || "Conteúdo"}
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="home-lista-vazia">
+                                    {carregando
+                                        ? "Carregando conteúdos..."
+                                        : "Nenhum conteúdo publicado encontrado."}
+                                </p>
+                            )}
 
                             <button
                                 type="button"
@@ -399,25 +510,27 @@ export default function Home() {
                                 <span>Novo conteúdo</span>
                             </button>
 
-                            <button
-                                type="button"
-                                className="home-acesso-botao"
-                                onClick={() => navigate("/conteudos/revisao")}
-                            >
-                                <img
-                                    src={iconeDocumento}
-                                    alt=""
-                                    className="home-acesso-icone-desktop"
-                                />
+                            {podeRevisar && (
+                                <button
+                                    type="button"
+                                    className="home-acesso-botao"
+                                    onClick={() => navigate("/conteudos/revisao")}
+                                >
+                                    <img
+                                        src={iconeDocumento}
+                                        alt=""
+                                        className="home-acesso-icone-desktop"
+                                    />
 
-                                <img
-                                    src={NovoConteudoMobile}
-                                    alt=""
-                                    className="home-acesso-icone-mobile"
-                                />
+                                    <img
+                                        src={NovoConteudoMobile}
+                                        alt=""
+                                        className="home-acesso-icone-mobile"
+                                    />
 
-                                <span>Conteúdos em revisão</span>
-                            </button>
+                                    <span>Conteúdos em revisão</span>
+                                </button>
+                            )}
 
                             <button
                                 type="button"
@@ -479,25 +592,27 @@ export default function Home() {
                                 <span>Consultar clientes</span>
                             </button>
 
-                            <button
-                                type="button"
-                                className="home-acesso-botao"
-                                onClick={() => navigate("/historico")}
-                            >
-                                <img
-                                    src={TimeAcessoRapido}
-                                    alt=""
-                                    className="home-acesso-icone-desktop"
-                                />
+                            {ehAdministrador && (
+                                <button
+                                    type="button"
+                                    className="home-acesso-botao"
+                                    onClick={() => navigate("/historico")}
+                                >
+                                    <img
+                                        src={TimeAcessoRapido}
+                                        alt=""
+                                        className="home-acesso-icone-desktop"
+                                    />
 
-                                <img
-                                    src={HistoricoMobile}
-                                    alt=""
-                                    className="home-acesso-icone-mobile"
-                                />
+                                    <img
+                                        src={HistoricoMobile}
+                                        alt=""
+                                        className="home-acesso-icone-mobile"
+                                    />
 
-                                <span>Histórico de ações</span>
-                            </button>
+                                    <span>Histórico de ações</span>
+                                </button>
+                            )}
 
                         </section>
 
