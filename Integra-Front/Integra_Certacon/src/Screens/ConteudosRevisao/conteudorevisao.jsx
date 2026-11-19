@@ -5,7 +5,8 @@ import {
     Check,
     Pencil,
     X,
-    Eye
+    Eye,
+    Send
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -20,6 +21,28 @@ import SairBranco from "../../assets/Icones/SairBranco.png";
 import LogoNome from "../../assets/Icones/LogoNome.png";
 
 import Header from "../../components/Header/header";
+
+// Perfis do usuário autenticado (apenas para exibição da interface).
+// A autorização real continua sendo validada na API.
+function obterPerfisLogados() {
+    try {
+        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+        const armazenados = JSON.parse(localStorage.getItem("perfis") || "[]");
+        return Array.isArray(usuario.perfis) && usuario.perfis.length > 0
+            ? usuario.perfis
+            : Array.isArray(armazenados) ? armazenados : [];
+    } catch {
+        return [];
+    }
+}
+
+const PERFIS_FISCAIS = [
+    "Coordenador Fiscal",
+    "Analista SPED",
+    "Analista de Documentos Fiscais",
+    "Analista de Reforma Tributária",
+    "Cliente"
+];
 
 const itensPorPagina = 5;
 
@@ -522,13 +545,16 @@ function botoesAcoes(item) {
             {abaAtiva === "Aprovado" && (
 
                 <button
+                    type="button"
                     className="revisao-botao-publicar"
+                    title={ocupado ? "Publicando conteúdo..." : "Publicar conteúdo"}
+                    aria-label={ocupado ? "Publicando conteúdo" : "Publicar conteúdo"}
                     disabled={ocupado}
                     onClick={() =>
                         publicarConteudo(item.artigoId)
                     }
                 >
-                    {ocupado ? "Publicando..." : "Publicar"}
+                    <Send size={18} strokeWidth={2} aria-hidden="true" />
                 </button>
 
             )}
@@ -863,6 +889,8 @@ function Sidebar() {
 
     const navigate = useNavigate();
 
+    const perfis = obterPerfisLogados();
+
     const itensMenu = [
 
         {
@@ -895,7 +923,12 @@ function Sidebar() {
             caminho: "/usuario"
         }
 
-    ];
+    ].filter(item =>
+        item.caminho === "/home" ||
+        item.caminho === "/conteudos" ||
+        (item.caminho === "/notas-fiscais" && PERFIS_FISCAIS.some(perfil => perfis.includes(perfil))) ||
+        ((item.caminho === "/clientes" || item.caminho === "/usuario") && perfis.includes("Administrador"))
+    );
 
     return (
 

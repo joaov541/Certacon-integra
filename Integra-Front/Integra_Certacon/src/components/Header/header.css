@@ -244,3 +244,14 @@
         display: none !important;
     }
 }
+.integra-header .header-foto {
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.integra-header .header-foto .header-foto-imagem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}

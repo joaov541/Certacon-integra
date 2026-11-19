@@ -1538,3 +1538,64 @@
         padding-top: 12px;
     }
 }
+/* =========================================
+   CORREÇÃO DO FORMULÁRIO - DESKTOP
+   ========================================= */
+
+@media (min-width: 901px) {
+
+    .formulario-cliente {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        width: 100%;
+        height: auto;
+        min-height: fit-content;
+        padding: 8px 10px 12px;
+        overflow: visible;
+    }
+
+    .formulario-cliente h2 {
+        margin-bottom: 12px;
+    }
+
+    .campos-cliente {
+        display: grid;
+        grid-template-columns: 1.1fr 0.8fr 1.3fr;
+        column-gap: 28px;
+        row-gap: 18px;
+        width: 100%;
+        align-items: start;
+    }
+
+    .campo-cliente {
+        min-width: 0;
+    }
+
+    .campo-cliente input,
+    .campo-cliente select,
+    .select-com-seta {
+        width: 100%;
+    }
+
+    .rodape-formulario-cliente {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    .botoes-formulario-cliente {
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    .titulo-empresas-cadastradas {
+        flex-shrink: 0;
+        margin-top: 18px;
+    }
+}

@@ -502,7 +502,7 @@ function Sidebar() {
     localStorage.removeItem("usuario");
     localStorage.removeItem("perfis");
 
-    navigate("/login");
+    navigate("/login", { replace: true });
   }
 
   return (
@@ -537,17 +537,7 @@ function Sidebar() {
           <span>Conteúdos</span>
         </NavLink>
 
-        <NavLink
-          to="/notas-fiscais"
-          className={({ isActive }) =>
-            isActive
-              ? "item-menu-usuario menu-usuario-ativo"
-              : "item-menu-usuario"
-          }
-        >
-          <img src={DoisDocumentosBranco} alt="" />
-          <span>Notas Fiscais</span>
-        </NavLink>
+
 
         <NavLink
           to="/clientes"

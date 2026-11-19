@@ -61,8 +61,8 @@ namespace ProjetoCertacon.Controllers
                 usuarioId.HasValue &&
                 artigo.AutorUsuarioId == usuarioId.Value;
 
-            // Conteúdos publicados e públicos podem ser baixados sem login.
-            if (artigo.Status == "PUBLICADO")
+            // Artigos aprovados ou publicados respeitam a visibilidade.
+            if (artigo.Status == "PUBLICADO" || artigo.Status == "APROVADO")
             {
                 if (artigo.Visibilidade == "EXCLUSIVO" && !autenticado)
                 {
@@ -347,15 +347,17 @@ namespace ProjetoCertacon.Controllers
         }
 
         // ============================================================
-        // LISTAR ARTIGOS PUBLICADOS
+        // LISTAR ARTIGOS APROVADOS OU PUBLICADOS
         // GET: api/Artigos
         // ============================================================
 
         [HttpGet]
         public async Task<IActionResult> GetArtigos()
         {
+            // Aprovados também ficam disponíveis na aba Todos os conteúdos.
             var consulta = _context.Artigos
-                .Where(a => a.Status == "PUBLICADO");
+                .AsNoTracking()
+                .Where(a => a.Status == "APROVADO" || a.Status == "PUBLICADO");
 
             if (User.Identity?.IsAuthenticated == true)
             {
@@ -365,12 +367,11 @@ namespace ProjetoCertacon.Controllers
             }
             else
             {
-                consulta = consulta.Where(a =>
-                    a.Visibilidade == "PUBLICO");
+                consulta = consulta.Where(a => a.Visibilidade == "PUBLICO");
             }
 
             var artigos = await consulta
-                .OrderByDescending(a => a.DataPublicacao)
+                .OrderByDescending(a => a.DataPublicacao ?? a.DataAtualizacao ?? a.DataCriacao)
                 .Select(a => new
                 {
                     a.ArtigoId,
@@ -378,6 +379,9 @@ namespace ProjetoCertacon.Controllers
                     a.Resumo,
                     a.Conteudo,
                     a.Visibilidade,
+                    a.Status,
+                    a.DataCriacao,
+                    a.DataAtualizacao,
                     a.DataPublicacao,
                     a.NomeArquivo,
                     a.TamanhoArquivo,
@@ -475,15 +479,10 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
         public async Task<IActionResult> GetArtigoPorId(Guid id)
         {
-            var usuarioId = ObterUsuarioId();
-
-            if (usuarioId == null)
-                return Unauthorized("Usuário do token inválido.");
-
             var artigo = await _context.Artigos
+                .AsNoTracking()
                 .Where(a => a.ArtigoId == id)
                 .Select(a => new
                 {
@@ -506,21 +505,35 @@ namespace ProjetoCertacon.Controllers
                 })
                 .FirstOrDefaultAsync();
 
-            if (artigo == null)
+            if (artigo == null || artigo.Status == "ARQUIVADO")
                 return NotFound("Artigo não encontrado.");
 
+            bool autenticado = User.Identity?.IsAuthenticated == true;
+            bool disponivel = artigo.Status == "PUBLICADO" || artigo.Status == "APROVADO";
+
+            if (disponivel)
+            {
+                if (artigo.Visibilidade == "PUBLICO")
+                    return Ok(artigo);
+
+                if (artigo.Visibilidade == "EXCLUSIVO")
+                    return autenticado ? Ok(artigo) : Unauthorized();
+
+                return Forbid();
+            }
+
+            // Rascunhos e conteúdos em revisão só podem ser consultados
+            // pelo autor ou por Administrador/Coordenador Fiscal.
+            if (!autenticado)
+                return Unauthorized();
+
+            var usuarioId = ObterUsuarioId();
             bool adminOuCoordenador =
                 User.IsInRole("Administrador") ||
                 User.IsInRole("Coordenador Fiscal");
 
-            if (artigo.AutorUsuarioId != usuarioId.Value &&
-                !adminOuCoordenador)
-            {
+            if (artigo.AutorUsuarioId != usuarioId && !adminOuCoordenador)
                 return Forbid();
-            }
-
-            if (artigo.Status == "ARQUIVADO")
-                return NotFound("Este artigo está arquivado.");
 
             return Ok(artigo);
         }

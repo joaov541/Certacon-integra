@@ -1018,3 +1018,13 @@
         gap: 5px;
     }
 }
+.xml-mensagem-sucesso {
+    color: #23966b;
+}
+
+.xml-botao-enviar:disabled,
+.xml-botao-selecionar:disabled,
+.xml-botao-excluir:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

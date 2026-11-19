@@ -1188,3 +1188,31 @@
         font-size: 8px;
     }
 }
+/* Adicione ao final do Historicodeacoes.css */
+.filtros-historico {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px;
+}
+.filtros-historico .campo-filtro {
+    min-width: 0;
+}
+.filtros-historico .perfil-filtro,
+.filtros-historico .usuario-filtro,
+.filtros-historico .tipo-filtro {
+    flex: 1 1 180px;
+}
+.filtros-historico .periodo-filtro {
+    flex: 1 1 300px;
+}
+.filtros-historico .select-personalizado,
+.filtros-historico .select-personalizado select {
+    width: 100%;
+    min-width: 0;
+}
+@media (max-width: 700px) {
+    .filtros-historico .campo-filtro {
+        flex: 1 1 100%;
+    }
+}

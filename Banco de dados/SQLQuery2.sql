@@ -1027,3 +1027,41 @@ WHERE Usuario_Id IN (
     '2328D858-8D2D-4B0B-B538-6876C9E725D7'
 )
 ORDER BY Usuario_Id;
+
+
+
+SELECT
+    Perfil_Id,
+    Nome,
+    Ativo
+FROM PERFIL
+ORDER BY Nome;
+
+
+
+UPDATE PERFIL
+SET Nome = N'Analista de Reforma Tributária'
+WHERE Perfil_Id = '12A101E3-635C-4245-87E2-9AFCBB22F658';
+
+
+
+
+SELECT Nome, Ativo
+FROM PERFIL
+ORDER BY Nome;
+
+
+
+
+
+SELECT
+    p.Nome AS Perfil,
+    u.Nome AS Usuario,
+    u.Email,
+    u.Ativo
+FROM USUARIO u
+INNER JOIN USUARIO_PERFIL up
+    ON u.Usuario_Id = up.Usuario_Id
+INNER JOIN PERFIL p
+    ON up.Perfil_Id = p.Perfil_Id
+ORDER BY p.Nome, u.Nome;

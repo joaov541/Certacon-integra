@@ -1,4 +1,5 @@
-
+import { classeCorTema } from "../../utils/coresTemas";
+import "../../styles/coresTemas.css";
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./conteudoTributario.css";
@@ -19,6 +20,28 @@ import iconeConteudo from "../../assets/Icones/DoisDocumentos.png";
 
 import Header from "../../components/Header/header";
 import HeaderDesktop from "../../components/Header/headerDesktop";
+
+// Perfis do usuário autenticado (apenas para exibição da interface).
+// A autorização real continua sendo validada na API.
+function obterPerfisLogados() {
+    try {
+        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+        const armazenados = JSON.parse(localStorage.getItem("perfis") || "[]");
+        return Array.isArray(usuario.perfis) && usuario.perfis.length > 0
+            ? usuario.perfis
+            : Array.isArray(armazenados) ? armazenados : [];
+    } catch {
+        return [];
+    }
+}
+
+const PERFIS_FISCAIS = [
+    "Coordenador Fiscal",
+    "Analista SPED",
+    "Analista de Documentos Fiscais",
+    "Analista de Reforma Tributária",
+    "Cliente"
+];
 
 function ConteudoTributario() {
 
@@ -49,24 +72,23 @@ function ConteudoTributario() {
     // DADOS E PERMISSÕES DO USUÁRIO
     // =========================================
 
-    const usuario = JSON.parse(
-        localStorage.getItem("usuario") || "{}"
-    );
+    const perfis = obterPerfisLogados();
 
-    const perfis = usuario.perfis ||
-        JSON.parse(localStorage.getItem("perfis") || "[]");
-
+    // Administrador administra o portal; criação é função da equipe fiscal.
     const podeCriar = [
-        "Administrador",
         "Coordenador Fiscal",
         "Analista SPED",
         "Analista de Documentos Fiscais",
         "Analista de Reforma Tributária"
     ].some(perfil => perfis.includes(perfil));
 
-    const podeArquivar =
-        perfis.includes("Administrador") ||
+    // Arquivamento exibido somente a quem já tem a ação prevista na API.
+    const podeArquivar = perfis.includes("Administrador") ||
         perfis.includes("Coordenador Fiscal");
+
+    // A coluna Ações só existe quando há operações disponíveis nessa aba.
+    const exibirAcoes = abaSelecionada === "meus" || podeArquivar;
+    const totalColunas = 4 + (abaSelecionada === "meus" ? 1 : 0) + (exibirAcoes ? 1 : 0);
 
     // =========================================
     // CARREGAR CONTEÚDOS PUBLICADOS
@@ -342,45 +364,40 @@ function ConteudoTributario() {
     // ABRIR DETALHES
     // =========================================
 
-    function abrirDetalhes(conteudo) {
+    
+function abrirDetalhes(conteudo) {
+    navigate("/conteudos/detalhes", {
+        state: {
+            conteudo: {
+                id: conteudo.artigoId,
+                artigoId: conteudo.artigoId,
 
-        navigate("/conteudos/detalhes", {
+                titulo: conteudo.titulo,
+                tema: conteudo.tema,
 
-            state: {
+                data: formatarData(
+                    conteudo.dataPublicacao ||
+                    conteudo.dataCriacao
+                ),
 
-                conteudo: {
+                dataPublicacao: conteudo.dataPublicacao,
+                autor: conteudo.autor || "Não informado",
 
-                    id: conteudo.artigoId,
+                resumo: conteudo.resumo,
+                conteudo: conteudo.conteudo,
 
-                    artigoId: conteudo.artigoId,
+                visibilidade: conteudo.visibilidade,
+                status: conteudo.status,
 
-                    titulo: conteudo.titulo,
-
-                    tema: conteudo.tema,
-
-                    data: formatarData(
-                        conteudo.dataPublicacao || conteudo.dataCriacao
-                    ),
-
-                    dataPublicacao: conteudo.dataPublicacao,
-
-                    autor: conteudo.autor || "Não informado",
-
-                    resumo: conteudo.resumo,
-
-                    conteudo: conteudo.conteudo,
-
-                    visibilidade: conteudo.visibilidade,
-
-                    status: conteudo.status
-
-                }
-
+                // INFORMAÇÕES DO DOCUMENTO ANEXADO
+                nomeArquivo: conteudo.nomeArquivo,
+                tamanhoArquivo: conteudo.tamanhoArquivo,
+                temArquivo: conteudo.temArquivo
             }
+        }
+    });
+}
 
-        });
-
-    }
 
     // =========================================
     // EDITAR RASCUNHO
@@ -696,15 +713,18 @@ function ConteudoTributario() {
                     </div>
 
                     {/* TABELA */}
-
                     <div className="tabela-conteudos">
-
-                        <table>
+                        <table
+                            className={
+                                abaSelecionada === "publicados" && !podeArquivar
+                                    ? "tabela-sem-acoes"
+                                    : ""
+                            }
+                        >
 
                             <thead>
 
                                 <tr>
-
                                     <th>Título</th>
 
                                     <th>Tema</th>
@@ -717,14 +737,17 @@ function ConteudoTributario() {
 
                                     <th>Autor</th>
 
+                                    {/* Status aparece apenas em Meus conteúdos */}
                                     {abaSelecionada === "meus" && (
                                         <th>Status</th>
                                     )}
 
-                                    <th className="coluna-acoes">
-                                        Ações
-                                    </th>
-
+                                    {/* Ações aparecem apenas para usuários autorizados */}
+                                    {exibirAcoes && (
+                                        <th className="coluna-acoes">
+                                            Ações
+                                        </th>
+                                    )}
                                 </tr>
 
                             </thead>
@@ -738,9 +761,7 @@ function ConteudoTributario() {
                                     <tr>
 
                                         <td
-                                            colSpan={
-                                                abaSelecionada === "meus" ? 6 : 5
-                                            }
+                                            colSpan={totalColunas}
                                             className="sem-conteudos"
                                         >
                                             Carregando conteúdos...
@@ -755,9 +776,7 @@ function ConteudoTributario() {
                                     <tr>
 
                                         <td
-                                            colSpan={
-                                                abaSelecionada === "meus" ? 6 : 5
-                                            }
+                                            colSpan={totalColunas}
                                             className="sem-conteudos"
                                         >
                                             {abaSelecionada === "publicados"
@@ -804,11 +823,11 @@ function ConteudoTributario() {
 
                                                 <td className="celula-tema">
 
-                                                    <span
-                                                        className={`etiqueta-tema ${classeTema(conteudo.tema)}`}
-                                                    >
-                                                        {conteudo.tema || "Sem tema"}
-                                                    </span>
+                                                   <span
+    className={`etiqueta-tema ${classeCorTema(conteudo.tema)}`}
+>
+    {conteudo.tema || "Sem tema"}
+</span>
 
                                                 </td>
 
@@ -842,93 +861,95 @@ function ConteudoTributario() {
 
                                                 )}
 
-                                                <td className="coluna-acoes">
+                                                {exibirAcoes && (
+                                                    <td className="coluna-acoes">
 
-                                                    <div className="acoes-artigo">
+                                                        <div className="acoes-artigo">
 
-                                                        {/* EDITAR SOMENTE RASCUNHO */}
+                                                            {/* EDITAR SOMENTE RASCUNHO */}
 
-                                                        {abaSelecionada === "meus" &&
-                                                            ehRascunho && (
+                                                            {abaSelecionada === "meus" &&
+                                                                ehRascunho && (
 
-                                                            <button
-                                                                type="button"
-                                                                className="acao-editar-artigo"
-                                                                title="Editar rascunho"
-                                                                onClick={(event) => {
+                                                                    <button
+                                                                        type="button"
+                                                                        className="acao-editar-artigo"
+                                                                        title="Editar rascunho"
+                                                                        onClick={(event) => {
 
-                                                                    event.stopPropagation();
+                                                                            event.stopPropagation();
 
-                                                                    editarConteudo(conteudo);
+                                                                            editarConteudo(conteudo);
 
-                                                                }}
-                                                            >
-                                                                Editar
-                                                            </button>
+                                                                        }}
+                                                                    >
+                                                                        Editar
+                                                                    </button>
 
-                                                        )}
+                                                                )}
 
-                                                        {/* ENVIAR PARA REVISÃO SOMENTE RASCUNHO */}
+                                                            {/* ENVIAR PARA REVISÃO SOMENTE RASCUNHO */}
 
-                                                        {abaSelecionada === "meus" &&
-                                                            ehRascunho && (
+                                                            {abaSelecionada === "meus" &&
+                                                                ehRascunho && (
 
-                                                            <button
-                                                                type="button"
-                                                                className="acao-enviar-revisao"
-                                                                title="Enviar para revisão"
-                                                                disabled={
-                                                                    enviandoRevisao === conteudo.artigoId
-                                                                }
-                                                                onClick={(event) => {
+                                                                    <button
+                                                                        type="button"
+                                                                        className="acao-enviar-revisao"
+                                                                        title="Enviar para revisão"
+                                                                        disabled={
+                                                                            enviandoRevisao === conteudo.artigoId
+                                                                        }
+                                                                        onClick={(event) => {
 
-                                                                    event.stopPropagation();
+                                                                            event.stopPropagation();
 
-                                                                    enviarParaRevisao(
-                                                                        conteudo.artigoId
-                                                                    );
+                                                                            enviarParaRevisao(
+                                                                                conteudo.artigoId
+                                                                            );
 
-                                                                }}
-                                                            >
-                                                                {enviandoRevisao === conteudo.artigoId
-                                                                    ? "Enviando..."
-                                                                    : "Enviar"}
-                                                            </button>
+                                                                        }}
+                                                                    >
+                                                                        {enviandoRevisao === conteudo.artigoId
+                                                                            ? "Enviando..."
+                                                                            : "Enviar"}
+                                                                    </button>
 
-                                                        )}
+                                                                )}
 
-                                                        {/* ARQUIVAR */}
+                                                            {/* ARQUIVAR */}
 
-                                                        {abaSelecionada === "publicados" &&
-                                                            podeArquivar && (
+                                                            {abaSelecionada === "publicados" &&
+                                                                podeArquivar && (
 
-                                                            <button
-                                                                type="button"
-                                                                className="excluir-conteudo"
-                                                                title="Arquivar conteúdo"
-                                                                onClick={(event) => {
+                                                                    <button
+                                                                        type="button"
+                                                                        className="excluir-conteudo"
+                                                                        title="Arquivar conteúdo"
+                                                                        onClick={(event) => {
 
-                                                                    event.stopPropagation();
+                                                                            event.stopPropagation();
 
-                                                                    excluirConteudo(
-                                                                        conteudo.artigoId
-                                                                    );
+                                                                            excluirConteudo(
+                                                                                conteudo.artigoId
+                                                                            );
 
-                                                                }}
-                                                            >
+                                                                        }}
+                                                                    >
 
-                                                                <img
-                                                                    src={Lixeira}
-                                                                    alt="Arquivar"
-                                                                />
+                                                                        <img
+                                                                            src={Lixeira}
+                                                                            alt="Arquivar"
+                                                                        />
 
-                                                            </button>
+                                                                    </button>
 
-                                                        )}
+                                                                )}
 
-                                                    </div>
+                                                        </div>
 
-                                                </td>
+                                                    </td>
+                                                )}
 
                                             </tr>
 
@@ -941,9 +962,7 @@ function ConteudoTributario() {
                                     <tr>
 
                                         <td
-                                            colSpan={
-                                                abaSelecionada === "meus" ? 6 : 5
-                                            }
+                                            colSpan={totalColunas}
                                             className="sem-conteudos"
                                         >
 
@@ -982,6 +1001,8 @@ function ConteudoTributario() {
 
 function Sidebar({ sairSistema }) {
 
+    const perfis = obterPerfisLogados();
+
     return (
 
         <aside className="menu-conteudos">
@@ -1012,35 +1033,41 @@ function Sidebar({ sairSistema }) {
                     <span>Conteúdos</span>
                 </NavLink>
 
-                <NavLink
-                    to="/notas-fiscais"
-                    className={({ isActive }) =>
-                        isActive ? "item-menu menu-ativo" : "item-menu"
-                    }
-                >
-                    <img src={DoisDocumentosBranco} alt="" />
-                    <span>Notas Fiscais</span>
-                </NavLink>
+                {PERFIS_FISCAIS.some(perfil => perfis.includes(perfil)) && (
+                    <NavLink
+                        to="/notas-fiscais"
+                        className={({ isActive }) =>
+                            isActive ? "item-menu menu-ativo" : "item-menu"
+                        }
+                    >
+                        <img src={DoisDocumentosBranco} alt="" />
+                        <span>Notas Fiscais</span>
+                    </NavLink>
+                )}
 
-                <NavLink
-                    to="/clientes"
-                    className={({ isActive }) =>
-                        isActive ? "item-menu menu-ativo" : "item-menu"
-                    }
-                >
-                    <img src={ADDProfileBranco} alt="" />
-                    <span>Clientes</span>
-                </NavLink>
+                {perfis.includes("Administrador") && (
+                    <NavLink
+                        to="/clientes"
+                        className={({ isActive }) =>
+                            isActive ? "item-menu menu-ativo" : "item-menu"
+                        }
+                    >
+                        <img src={ADDProfileBranco} alt="" />
+                        <span>Clientes</span>
+                    </NavLink>
+                )}
 
-                <NavLink
-                    to="/usuario"
-                    className={({ isActive }) =>
-                        isActive ? "item-menu menu-ativo" : "item-menu"
-                    }
-                >
-                    <img src={PessoaBranca} alt="" />
-                    <span>Usuários</span>
-                </NavLink>
+                {perfis.includes("Administrador") && (
+                    <NavLink
+                        to="/usuario"
+                        className={({ isActive }) =>
+                            isActive ? "item-menu menu-ativo" : "item-menu"
+                        }
+                    >
+                        <img src={PessoaBranca} alt="" />
+                        <span>Usuários</span>
+                    </NavLink>
+                )}
 
             </nav>
 
@@ -1066,6 +1093,8 @@ function Sidebar({ sairSistema }) {
 
 function FooterMobile() {
 
+    const perfis = obterPerfisLogados();
+
     return (
 
         <footer className="footer-conteudos-mobile">
@@ -1090,35 +1119,41 @@ function FooterMobile() {
                 <span>Conteúdos</span>
             </NavLink>
 
-            <NavLink
-                to="/notas-fiscais"
-                className={({ isActive }) =>
-                    isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                }
-            >
-                <img src={DoisDocumentosBranco} alt="" />
-                <span>Notas Fiscais</span>
-            </NavLink>
+            {PERFIS_FISCAIS.some(perfil => perfis.includes(perfil)) && (
+                <NavLink
+                    to="/notas-fiscais"
+                    className={({ isActive }) =>
+                        isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
+                    }
+                >
+                    <img src={DoisDocumentosBranco} alt="" />
+                    <span>Notas Fiscais</span>
+                </NavLink>
+            )}
 
-            <NavLink
-                to="/clientes"
-                className={({ isActive }) =>
-                    isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                }
-            >
-                <img src={ADDProfileBranco} alt="" />
-                <span>Clientes</span>
-            </NavLink>
+            {perfis.includes("Administrador") && (
+                <NavLink
+                    to="/clientes"
+                    className={({ isActive }) =>
+                        isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
+                    }
+                >
+                    <img src={ADDProfileBranco} alt="" />
+                    <span>Clientes</span>
+                </NavLink>
+            )}
 
-            <NavLink
-                to="/usuario"
-                className={({ isActive }) =>
-                    isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                }
-            >
-                <img src={PessoaBranca} alt="" />
-                <span>Usuários</span>
-            </NavLink>
+            {perfis.includes("Administrador") && (
+                <NavLink
+                    to="/usuario"
+                    className={({ isActive }) =>
+                        isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
+                    }
+                >
+                    <img src={PessoaBranca} alt="" />
+                    <span>Usuários</span>
+                </NavLink>
+            )}
 
         </footer>
 

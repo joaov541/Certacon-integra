@@ -49,21 +49,31 @@ public class NotasFiscaisController : ControllerBase
             return Unauthorized();
 
         var notas = await _context.NotaFiscals
-            .Where(n => n.UsuarioId == id)
-            .Select(n => new
-            {
-                n.NotaFiscalId,
-                n.Numero,
-                n.Serie,
-                n.ChaveAcesso,
-                n.Cnpjemitente,
-                n.Cnpjdestinatario,
-                n.DataEmissao,
-                n.ValorTotal,
-                n.Status,
-                n.DataEnvio
-            })
-            .ToListAsync();
+     .Where(n => n.UsuarioId == id)
+     .OrderByDescending(n => n.DataEnvio)
+     .Select(n => new
+     {
+         n.NotaFiscalId,
+         n.Numero,
+         n.Serie,
+         n.ChaveAcesso,
+         n.Cnpjemitente,
+         n.Cnpjdestinatario,
+         n.DataEmissao,
+         n.ValorTotal,
+         n.Status,
+         n.DataEnvio,
+
+         // Identifica se a nota ainda possui XML.
+         PossuiXml = n.CaminhoArquivo != null
+                     && n.CaminhoArquivo != "",
+
+         // Nome do arquivo armazenado no servidor.
+         NomeArquivo = n.CaminhoArquivo != null
+             ? Path.GetFileName(n.CaminhoArquivo)
+             : null
+     })
+     .ToListAsync();
 
         return Ok(notas);
     }

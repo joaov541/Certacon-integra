@@ -20,19 +20,22 @@ import EditarQuadrado from "../../assets/Icones/EditarQuadrado.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
 import ExpandirCinza from "../../assets/Icones/ExpandirCinza.png";
 
-// Rota da API de clientes
-const API_CLIENTES = "/api/Clientes";
+// Rotas da API
+const API_USUARIOS = "/api/Usuarios";
+const API_CADASTRO_CLIENTES = "/api/CadastroClientes";
 
-// Remove a máscara e mantém letras e números
-function normalizarCNPJ(valor) {
-    return valor
+// =====================================================
+// FUNÇÕES AUXILIARES DO CNPJ
+// =====================================================
+
+function normalizarCNPJ(valor = "") {
+    return String(valor)
         .replace(/[^a-zA-Z0-9]/g, "")
         .toUpperCase()
         .slice(0, 14);
 }
 
-// Formata o CNPJ alfanumérico
-function formatarCNPJ(valor) {
+function formatarCNPJ(valor = "") {
     const cnpj = normalizarCNPJ(valor);
 
     let formatado = cnpj.slice(0, 2);
@@ -56,13 +59,11 @@ function formatarCNPJ(valor) {
     return formatado;
 }
 
-// Calcula um dígito verificador
 function calcularDigitoCNPJ(base, pesos) {
     const soma = base
         .split("")
         .reduce((total, caractere, indice) => {
             const valor = caractere.charCodeAt(0) - 48;
-
             return total + valor * pesos[indice];
         }, 0);
 
@@ -71,7 +72,6 @@ function calcularDigitoCNPJ(base, pesos) {
     return resto < 2 ? 0 : 11 - resto;
 }
 
-// Valida CNPJ numérico ou alfanumérico
 function validarCNPJ(valor) {
     const cnpj = normalizarCNPJ(valor);
 
@@ -99,57 +99,121 @@ function validarCNPJ(valor) {
     );
 }
 
-function GerenciarClientes() {
-    const navigate = useNavigate();
+// =====================================================
+// COMPONENTE PRINCIPAL
+// =====================================================
 
+function GerenciarClientes() {
+    // Dados dos clientes
     const [clientes, setClientes] = useState([]);
 
+    // Dados de acesso
+    const [nome, setNome] = useState("");
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [telefone, setTelefone] = useState("");
+
+    // Dados da empresa
     const [cnpj, setCnpj] = useState("");
     const [razaoSocial, setRazaoSocial] = useState("");
     const [status, setStatus] = useState("Ativo");
 
+    // Validação do CNPJ
     const [cnpjValidado, setCnpjValidado] = useState(false);
     const [verificandoCnpj, setVerificandoCnpj] = useState(false);
 
+    // Mensagens
     const [mensagem, setMensagem] = useState("");
     const [erro, setErro] = useState("");
 
+    // Carregamento
     const [carregando, setCarregando] = useState(true);
     const [salvando, setSalvando] = useState(false);
 
+    // Pesquisa e paginação
     const [pesquisa, setPesquisa] = useState("");
     const [paginaAtual, setPaginaAtual] = useState(1);
 
+    // Edição
     const [idEditando, setIdEditando] = useState(null);
 
     const itensPorPagina = 4;
 
-    // Busca os clientes cadastrados no banco
+    // =====================================================
+    // CARREGAR CLIENTES
+    // =====================================================
+
     async function carregarClientes() {
         try {
             setCarregando(true);
             setErro("");
 
-            const resposta = await requisicaoApi(API_CLIENTES);
+            const resposta = await requisicaoApi(API_USUARIOS);
 
             const lista = Array.isArray(resposta)
                 ? resposta
-                : resposta.clientes || [];
+                : resposta?.usuarios ||
+                  resposta?.Usuarios ||
+                  [];
 
-            const listaFormatada = lista.map((cliente) => ({
-                id: cliente.clienteId || cliente.ClienteId,
-                razaoSocial:
-                    cliente.razaoSocial || cliente.RazaoSocial || "",
-                cnpj: formatarCNPJ(
-                    cliente.cnpj || cliente.Cnpj || ""
-                ),
-                vinculo: "Cliente",
-                status:
-                    cliente.ativo === false ||
-                    cliente.Ativo === false
-                        ? "Inativo"
-                        : "Ativo",
-            }));
+            if (!Array.isArray(lista)) {
+                throw new Error(
+                    "A API retornou uma lista de usuários inválida."
+                );
+            }
+
+            const listaFormatada = lista
+                .filter((usuario) => {
+                    const perfis =
+                        usuario.perfis ||
+                        usuario.Perfis ||
+                        [];
+
+                    return (
+                        Array.isArray(perfis) &&
+                        perfis.some(
+                            (perfil) =>
+                                String(perfil).trim().toLowerCase() === "cliente"
+                        )
+                    );
+                })
+                .map((usuario) => ({
+                    id: usuario.usuarioId || usuario.UsuarioId,
+
+                    nome:
+                        usuario.nome ||
+                        usuario.Nome ||
+                        "",
+
+                    email:
+                        usuario.email ||
+                        usuario.Email ||
+                        "",
+
+                    razaoSocial:
+                        usuario.razaoSocial ||
+                        usuario.RazaoSocial ||
+                        "",
+
+                    cnpj: formatarCNPJ(
+                        usuario.cnpj ||
+                        usuario.Cnpj ||
+                        ""
+                    ),
+
+                    telefone:
+                        usuario.telefoneContato ||
+                        usuario.TelefoneContato ||
+                        "",
+
+                    vinculo: "Cliente",
+
+                    status:
+                        usuario.ativo === false ||
+                        usuario.Ativo === false
+                            ? "Inativo"
+                            : "Ativo",
+                }));
 
             setClientes(listaFormatada);
 
@@ -160,6 +224,7 @@ function GerenciarClientes() {
                 erro.message ||
                 "Não foi possível carregar as empresas cadastradas."
             );
+
         } finally {
             setCarregando(false);
         }
@@ -169,7 +234,10 @@ function GerenciarClientes() {
         carregarClientes();
     }, []);
 
-    // Atualiza o CNPJ digitado
+    // =====================================================
+    // ALTERAÇÃO DO CNPJ
+    // =====================================================
+
     function handleCnpjChange(e) {
         setCnpj(formatarCNPJ(e.target.value));
 
@@ -178,14 +246,21 @@ function GerenciarClientes() {
         setMensagem("");
     }
 
-    // Consulta e verifica o CNPJ
+    // =====================================================
+    // VALIDAR E CONSULTAR CNPJ
+    // =====================================================
+
     async function handleValidarCNPJ() {
         const cnpjLimpo = normalizarCNPJ(cnpj);
 
         if (!validarCNPJ(cnpjLimpo)) {
             setCnpjValidado(false);
             setRazaoSocial("");
-            setMensagem("CNPJ inválido. Confira os dados informados.");
+
+            setMensagem(
+                "CNPJ inválido. Confira os dados informados."
+            );
+
             return;
         }
 
@@ -233,8 +308,16 @@ function GerenciarClientes() {
         }
     }
 
-    // Limpa o formulário
+    // =====================================================
+    // LIMPAR FORMULÁRIO
+    // =====================================================
+
     function limparFormulario() {
+        setNome("");
+        setEmail("");
+        setSenha("");
+        setTelefone("");
+
         setCnpj("");
         setRazaoSocial("");
         setStatus("Ativo");
@@ -245,12 +328,40 @@ function GerenciarClientes() {
         setIdEditando(null);
     }
 
-    // Cadastra ou atualiza uma empresa
+    // =====================================================
+    // CADASTRAR OU EDITAR CLIENTE
+    // =====================================================
+
     async function salvarCliente(e) {
         e.preventDefault();
 
-        if (!cnpj.trim() || !razaoSocial.trim() || !status) {
-            setMensagem("Preencha todos os campos.");
+        setMensagem("");
+        setErro("");
+
+        if (
+            !nome.trim() ||
+            !email.trim() ||
+            !cnpj.trim() ||
+            !razaoSocial.trim()
+        ) {
+            setMensagem(
+                "Preencha todos os campos obrigatórios."
+            );
+            return;
+        }
+
+        // Senha obrigatória somente no cadastro
+        if (!idEditando && !senha.trim()) {
+            setMensagem(
+                "Informe a senha inicial do cliente."
+            );
+            return;
+        }
+
+        if (!idEditando && senha.length < 8) {
+            setMensagem(
+                "A senha inicial deve possuir pelo menos 8 caracteres."
+            );
             return;
         }
 
@@ -260,50 +371,88 @@ function GerenciarClientes() {
         }
 
         if (!cnpjValidado) {
-            setMensagem("Consulte o CNPJ antes de salvar.");
+            setMensagem(
+                "Consulte o CNPJ antes de salvar."
+            );
             return;
         }
 
         try {
             setSalvando(true);
-            setErro("");
 
+            // Dados compartilhados entre cadastro e edição
             const dados = {
-                cnpj: normalizarCNPJ(cnpj),
+                nome: nome.trim(),
+                email: email.trim().toLowerCase(),
                 razaoSocial: razaoSocial.trim(),
-                ativo: status === "Ativo",
+                cnpj: normalizarCNPJ(cnpj),
+                telefoneContato: telefone.trim() || null,
             };
 
-            const resposta = await requisicaoApi(
-                idEditando
-                    ? `${API_CLIENTES}/${idEditando}`
-                    : API_CLIENTES,
-                {
-                    method: idEditando ? "PUT" : "POST",
-                    body: JSON.stringify(dados),
-                }
-            );
+            let resposta;
+
+            if (idEditando) {
+                // =========================================
+                // EDITAR CLIENTE
+                // =========================================
+
+                resposta = await requisicaoApi(
+                    `${API_USUARIOS}/${idEditando}`,
+                    {
+                        method: "PUT",
+                        body: JSON.stringify(dados),
+                    }
+                );
+
+                // Atualiza o status separadamente
+                await requisicaoApi(
+                    `${API_USUARIOS}/${idEditando}/status`,
+                    {
+                        method: "PATCH",
+                        body: JSON.stringify({
+                            ativo: status === "Ativo",
+                        }),
+                    }
+                );
+
+            } else {
+                // =========================================
+                // CADASTRAR CLIENTE
+                // =========================================
+
+                resposta = await requisicaoApi(
+                    API_CADASTRO_CLIENTES,
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            ...dados,
+                            senha: senha,
+                        }),
+                    }
+                );
+            }
 
             alert(
                 resposta?.mensagem ||
                 (
                     idEditando
-                        ? "Empresa atualizada com sucesso!"
-                        : "Empresa cadastrada com sucesso!"
+                        ? "Cliente atualizado com sucesso!"
+                        : "Cliente cadastrado com sucesso!"
                 )
             );
 
             limparFormulario();
+
             setPaginaAtual(1);
 
             await carregarClientes();
 
         } catch (erro) {
-            console.error("Erro ao salvar empresa:", erro);
+            console.error("Erro ao salvar cliente:", erro);
 
             setMensagem(
                 erro.message ||
-                "Não foi possível salvar a empresa."
+                "Não foi possível salvar o cliente."
             );
 
         } finally {
@@ -311,17 +460,28 @@ function GerenciarClientes() {
         }
     }
 
-    // Preenche o formulário para edição
+    // =====================================================
+    // EDITAR CLIENTE
+    // =====================================================
+
     function editarCliente(cliente) {
         setIdEditando(cliente.id);
+
+        setNome(cliente.nome);
+        setEmail(cliente.email);
+        setSenha("");
+        setTelefone(cliente.telefone);
 
         setCnpj(cliente.cnpj);
         setRazaoSocial(cliente.razaoSocial);
         setStatus(cliente.status);
 
+        // O CNPJ já está cadastrado
         setCnpjValidado(true);
 
-        setMensagem("Empresa selecionada para edição.");
+        setMensagem(
+            "Cliente selecionado para edição."
+        );
 
         window.scrollTo({
             top: 0,
@@ -329,7 +489,10 @@ function GerenciarClientes() {
         });
     }
 
-    // Desativa uma empresa sem excluir seu histórico fiscal
+    // =====================================================
+    // DESATIVAR CLIENTE
+    // =====================================================
+
     async function excluirCliente(id) {
         const confirmar = window.confirm(
             "Deseja realmente desativar esta empresa? " +
@@ -340,7 +503,7 @@ function GerenciarClientes() {
 
         try {
             await requisicaoApi(
-                `${API_CLIENTES}/${id}/status`,
+                `${API_USUARIOS}/${id}/status`,
                 {
                     method: "PATCH",
                     body: JSON.stringify({
@@ -351,10 +514,15 @@ function GerenciarClientes() {
 
             alert("Empresa desativada com sucesso!");
 
+            setPaginaAtual(1);
+
             await carregarClientes();
 
         } catch (erro) {
-            console.error("Erro ao desativar empresa:", erro);
+            console.error(
+                "Erro ao desativar empresa:",
+                erro
+            );
 
             alert(
                 erro.message ||
@@ -363,28 +531,47 @@ function GerenciarClientes() {
         }
     }
 
-    // Pesquisa por razão social ou CNPJ
-    const clientesFiltrados = clientes.filter((cliente) => {
-        const texto = pesquisa.toLowerCase();
+    // =====================================================
+    // PESQUISA
+    // =====================================================
 
+    const textoPesquisa = pesquisa.trim().toLowerCase();
+
+    const clientesFiltrados = clientes.filter((cliente) => {
         return (
-            cliente.razaoSocial.toLowerCase().includes(texto) ||
-            cliente.cnpj.toLowerCase().includes(texto)
+            cliente.nome.toLowerCase().includes(textoPesquisa) ||
+            cliente.email.toLowerCase().includes(textoPesquisa) ||
+            cliente.razaoSocial.toLowerCase().includes(textoPesquisa) ||
+            cliente.cnpj.toLowerCase().includes(textoPesquisa)
         );
     });
 
-    // Paginação
+    // =====================================================
+    // PAGINAÇÃO
+    // =====================================================
+
     const totalPaginas = Math.max(
         1,
-        Math.ceil(clientesFiltrados.length / itensPorPagina)
+        Math.ceil(
+            clientesFiltrados.length / itensPorPagina
+        )
     );
 
-    const inicio = (paginaAtual - 1) * itensPorPagina;
+    const paginaSegura = Math.min(
+        paginaAtual,
+        totalPaginas
+    );
+
+    const inicio = (paginaSegura - 1) * itensPorPagina;
 
     const clientesExibidos = clientesFiltrados.slice(
         inicio,
         inicio + itensPorPagina
     );
+
+    // =====================================================
+    // TELA
+    // =====================================================
 
     return (
         <div className="pagina-gerenciar-clientes">
@@ -402,7 +589,8 @@ function GerenciarClientes() {
 
                     <div className="titulo-gerenciar-clientes"></div>
 
-                    {/* FORMULÁRIO DE CADASTRO */}
+                    {/* FORMULÁRIO */}
+
                     <form
                         className="formulario-cliente"
                         onSubmit={salvarCliente}
@@ -416,8 +604,83 @@ function GerenciarClientes() {
 
                         <div className="campos-cliente">
 
-                            <div className="campo-cliente campo-cnpj">
+                            {/* NOME */}
 
+                            <div className="campo-cliente">
+                                <label>Nome do responsável</label>
+
+                                <input
+                                    type="text"
+                                    value={nome}
+                                    onChange={(e) =>
+                                        setNome(e.target.value)
+                                    }
+                                    placeholder="Nome completo"
+                                    required
+                                />
+                            </div>
+
+                            {/* EMAIL */}
+
+                            <div className="campo-cliente">
+                                <label>E-mail de acesso</label>
+
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) =>
+                                        setEmail(e.target.value)
+                                    }
+                                    placeholder="email@empresa.com.br"
+                                    required
+                                />
+                            </div>
+
+                            {/* TELEFONE */}
+
+                            <div className="campo-cliente">
+                                <label>Telefone</label>
+
+                                <input
+                                    type="tel"
+                                    value={telefone}
+                                    onChange={(e) =>
+                                        setTelefone(e.target.value)
+                                    }
+                                    placeholder="(00) 00000-0000"
+                                />
+                            </div>
+
+                            {/* SENHA */}
+
+                            <div className="campo-cliente">
+                                <label>Senha inicial</label>
+
+                                <input
+                                    type="password"
+                                    value={senha}
+                                    onChange={(e) =>
+                                        setSenha(e.target.value)
+                                    }
+                                    placeholder={
+                                        idEditando
+                                            ? "Não é necessário preencher"
+                                            : "Digite a senha inicial"
+                                    }
+                                    required={!idEditando}
+                                    disabled={!!idEditando}
+                                />
+
+                                {idEditando && (
+                                    <small>
+                                        A senha atual não será alterada nesta edição.
+                                    </small>
+                                )}
+                            </div>
+
+                            {/* CNPJ */}
+
+                            <div className="campo-cliente campo-cnpj">
                                 <label>CNPJ</label>
 
                                 <input
@@ -432,11 +695,11 @@ function GerenciarClientes() {
                                 <small>
                                     O CNPJ será consultado antes de salvar.
                                 </small>
-
                             </div>
 
-                            <div className="campo-cliente">
+                            {/* STATUS */}
 
+                            <div className="campo-cliente">
                                 <label>Status</label>
 
                                 <div className="select-com-seta">
@@ -446,6 +709,7 @@ function GerenciarClientes() {
                                         onChange={(e) =>
                                             setStatus(e.target.value)
                                         }
+                                        disabled={!idEditando}
                                     >
                                         <option value="Ativo">
                                             Ativo
@@ -456,14 +720,23 @@ function GerenciarClientes() {
                                         </option>
                                     </select>
 
-                                    <img src={ExpandirCinza} alt="" />
+                                    <img
+                                        src={ExpandirCinza}
+                                        alt=""
+                                    />
 
                                 </div>
 
+                                {!idEditando && (
+                                    <small>
+                                        Novos clientes são cadastrados como ativos.
+                                    </small>
+                                )}
                             </div>
 
-                            <div className="campo-cliente campo-razao-social">
+                            {/* RAZÃO SOCIAL */}
 
+                            <div className="campo-cliente campo-razao-social">
                                 <label>Razão Social</label>
 
                                 <input
@@ -473,12 +746,12 @@ function GerenciarClientes() {
                                     readOnly
                                     required
                                 />
-
                             </div>
 
                         </div>
 
                         {/* RODAPÉ DO FORMULÁRIO */}
+
                         <div className="rodape-formulario-cliente">
 
                             <div className="validacao-cnpj">
@@ -499,7 +772,7 @@ function GerenciarClientes() {
                                     type="button"
                                     className="botao-validar-cnpj"
                                     onClick={handleValidarCNPJ}
-                                    disabled={verificandoCnpj}
+                                    disabled={verificandoCnpj || salvando}
                                 >
                                     {verificandoCnpj
                                         ? "Verificando..."
@@ -513,7 +786,7 @@ function GerenciarClientes() {
                                 <button
                                     type="submit"
                                     className="botao-salvar-cliente"
-                                    disabled={salvando}
+                                    disabled={salvando || verificandoCnpj}
                                 >
                                     {salvando
                                         ? "Salvando..."
@@ -526,6 +799,7 @@ function GerenciarClientes() {
                                     type="button"
                                     className="botao-cancelar-cliente"
                                     onClick={limparFormulario}
+                                    disabled={salvando}
                                 >
                                     Cancelar
                                 </button>
@@ -537,6 +811,7 @@ function GerenciarClientes() {
                     </form>
 
                     {/* EMPRESAS CADASTRADAS */}
+
                     <h2 className="titulo-empresas-cadastradas">
                         Empresas Cadastradas
                     </h2>
@@ -548,6 +823,7 @@ function GerenciarClientes() {
                     )}
 
                     {/* PESQUISA */}
+
                     <div className="pesquisa-clientes">
 
                         <img src={LupaCinza} alt="" />
@@ -565,6 +841,7 @@ function GerenciarClientes() {
                     </div>
 
                     {/* CARDS MOBILE */}
+
                     <div className="clientes-cards-mobile">
 
                         {carregando ? (
@@ -601,6 +878,10 @@ function GerenciarClientes() {
                                                 {cnpjValido
                                                     ? "CNPJ válido"
                                                     : "CNPJ inválido"}
+                                            </span>
+
+                                            <span>
+                                                Responsável: {cliente.nome}
                                             </span>
 
                                             <span>
@@ -656,6 +937,7 @@ function GerenciarClientes() {
                     </div>
 
                     {/* TABELA DESKTOP */}
+
                     <div className="tabela-clientes">
 
                         <table>
@@ -675,7 +957,10 @@ function GerenciarClientes() {
                                 {carregando ? (
 
                                     <tr>
-                                        <td colSpan="5" className="sem-clientes">
+                                        <td
+                                            colSpan="5"
+                                            className="sem-clientes"
+                                        >
                                             Carregando empresas...
                                         </td>
                                     </tr>
@@ -764,6 +1049,7 @@ function GerenciarClientes() {
                     </div>
 
                     {/* PAGINAÇÃO */}
+
                     <div className="paginacao-clientes">
 
                         {Array.from(
@@ -775,7 +1061,7 @@ function GerenciarClientes() {
                                 key={pagina}
                                 type="button"
                                 className={
-                                    paginaAtual === pagina
+                                    paginaSegura === pagina
                                         ? "pagina-ativa"
                                         : ""
                                 }
@@ -796,9 +1082,19 @@ function GerenciarClientes() {
     );
 }
 
-/* MENU LATERAL */
+// =====================================================
+// MENU LATERAL
+// =====================================================
+
 function Sidebar() {
     const navigate = useNavigate();
+
+    function sairSistema() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        localStorage.removeItem("perfis");
+        navigate("/login", { replace: true });
+    }
 
     return (
         <aside className="menu-gerenciar-clientes">
@@ -819,10 +1115,7 @@ function Sidebar() {
                     <span>Conteúdos</span>
                 </Link>
 
-                <Link to="/notas-fiscais" className="item-menu-clientes">
-                    <img src={DoisDocumentosBranco} alt="" />
-                    <span>Notas Fiscais</span>
-                </Link>
+
 
                 <Link to="/clientes" className="item-menu-clientes ativo">
                     <img src={ADDProfileBranco} alt="" />
@@ -838,7 +1131,7 @@ function Sidebar() {
 
             <button
                 className="sair-gerenciar-clientes"
-                onClick={() => navigate("/login")}
+                onClick={sairSistema}
             >
                 <img src={SairBranco} alt="" />
                 <span>Sair</span>

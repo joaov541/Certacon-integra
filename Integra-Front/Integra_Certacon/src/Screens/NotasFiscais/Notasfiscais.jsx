@@ -19,6 +19,19 @@ import HeaderDesktop from "../../components/Header/headerDesktop";
 
 import { Link, useNavigate } from "react-router-dom";
 
+// Perfis do usuário autenticado (controle visual; API valida o JWT).
+function obterPerfisUsuario() {
+    try {
+        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+        const perfisSalvos = JSON.parse(localStorage.getItem("perfis") || "[]");
+        return Array.isArray(usuario.perfis) && usuario.perfis.length
+            ? usuario.perfis
+            : Array.isArray(perfisSalvos) ? perfisSalvos : [];
+    } catch {
+        return [];
+    }
+}
+
 function NotasFiscais() {
 
     const navigate = useNavigate();
@@ -48,12 +61,15 @@ function NotasFiscais() {
     const itensPorPagina = 4;
 
     // DADOS DO USUÁRIO LOGADO
-    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-
-    const perfis = usuario.perfis ||
-        JSON.parse(localStorage.getItem("perfis") || "[]");
-
+    const perfis = obterPerfisUsuario();
     const podeExcluir = perfis.includes("Administrador");
+    const podeImportarXml = perfis.some(perfil => [
+        "Coordenador Fiscal",
+        "Analista SPED",
+        "Analista de Documentos Fiscais",
+        "Analista de Reforma Tributária",
+        "Cliente"
+    ].includes(perfil));
 
 
     // =========================================
@@ -424,6 +440,7 @@ function NotasFiscais() {
 
                     {/* IMPORTAÇÃO DE XML */}
 
+                    {podeImportarXml && (
                     <div className="area-importacao-notas">
 
                         <input
@@ -453,6 +470,7 @@ function NotasFiscais() {
                         </button>
 
                     </div>
+                    )}
 
 
                     {/* MENSAGEM DE SUCESSO */}
@@ -604,7 +622,7 @@ function NotasFiscais() {
                                     <th>Cliente</th>
                                     <th>Valor</th>
                                     <th>Status</th>
-                                    <th>Ações</th>
+                                    {podeExcluir && <th>Ações</th>}
                                 </tr>
 
                             </thead>
@@ -615,7 +633,7 @@ function NotasFiscais() {
                                 {carregando ? (
 
                                     <tr>
-                                        <td colSpan="6" className="nenhuma-nota">
+                                        <td colSpan={podeExcluir ? 6 : 5} className="nenhuma-nota">
                                             Carregando notas fiscais...
                                         </td>
                                     </tr>
@@ -623,7 +641,7 @@ function NotasFiscais() {
                                 ) : erro ? (
 
                                     <tr>
-                                        <td colSpan="6" className="nenhuma-nota">
+                                        <td colSpan={podeExcluir ? 6 : 5} className="nenhuma-nota">
                                             {erro}
                                         </td>
                                     </tr>
@@ -658,22 +676,20 @@ function NotasFiscais() {
 
                                             </td>
 
-                                            <td>
-
-                                                {podeExcluir && nota.status !== "ARQUIVADA" && (
-
-                                                    <button
-                                                        type="button"
-                                                        className="botao-excluir-nota"
-                                                        title="Arquivar nota fiscal"
-                                                        onClick={() => excluirNota(nota.notaFiscalId)}
-                                                    >
-                                                        <img src={Lixeira} alt="Arquivar" />
-                                                    </button>
-
-                                                )}
-
-                                            </td>
+                                            {podeExcluir && (
+                                                <td>
+                                                    {nota.status !== "ARQUIVADA" && (
+                                                        <button
+                                                            type="button"
+                                                            className="botao-excluir-nota"
+                                                            title="Arquivar nota fiscal"
+                                                            onClick={() => excluirNota(nota.notaFiscalId)}
+                                                        >
+                                                            <img src={Lixeira} alt="Arquivar" />
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            )}
 
                                         </tr>
 
@@ -682,7 +698,7 @@ function NotasFiscais() {
                                 ) : (
 
                                     <tr>
-                                        <td colSpan="6" className="nenhuma-nota">
+                                        <td colSpan={podeExcluir ? 6 : 5} className="nenhuma-nota">
                                             Nenhuma nota fiscal encontrada.
                                         </td>
                                     </tr>
@@ -749,6 +765,7 @@ function NotasFiscais() {
 // =========================================
 
 function Sidebar({ sairSistema }) {
+    const ehAdministrador = obterPerfisUsuario().includes("Administrador");
 
     return (
 
@@ -790,15 +807,19 @@ function Sidebar({ sairSistema }) {
                     <span>Notas Fiscais</span>
                 </Link>
 
-                <Link to="/clientes" className="item-menu-notas">
-                    <img src={ADDProfileBranco} alt="" />
-                    <span>Clientes</span>
-                </Link>
+                {ehAdministrador && (
+                    <>
+                        <Link to="/clientes" className="item-menu-notas">
+                            <img src={ADDProfileBranco} alt="" />
+                            <span>Clientes</span>
+                        </Link>
 
-                <Link to="/usuario" className="item-menu-notas">
-                    <img src={PessoaBranca} alt="" />
-                    <span>Usuários</span>
-                </Link>
+                        <Link to="/usuario" className="item-menu-notas">
+                            <img src={PessoaBranca} alt="" />
+                            <span>Usuários</span>
+                        </Link>
+                    </>
+                )}
 
             </nav>
 

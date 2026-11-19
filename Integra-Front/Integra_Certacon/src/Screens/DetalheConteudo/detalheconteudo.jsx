@@ -1,8 +1,8 @@
-
+import { classeCorTema } from "../../utils/coresTemas";
+import "../../styles/coresTemas.css";
 import "./detalheconteudo.css";
 
 import LogoNome from "../../assets/Icones/LogoNome.png";
-import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
@@ -11,13 +11,13 @@ import LivroBranco from "../../assets/Icones/LivroBranco.png";
 import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
 import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
 import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import SairBranco from "../../assets/Icones/SairBranco.png";
 
 import Pessoa from "../../assets/Icones/Pessoa.png";
-import TresPontos from "../../assets/Icones/TresPontos.png";
 import Relogio from "../../assets/Icones/Relogio.png";
 import { useState } from "react";
+import Header from "../../components/Header/header";
+import HeaderDesktop from "../../components/Header/headerDesktop";
 import DOMPurify from "dompurify";
 function DetalheRevisao() {
 
@@ -84,45 +84,35 @@ function DetalheRevisao() {
         setBaixandoArquivo(false);
     }
 }
-  // Dados do usuário logado
-  let usuario = {};
+  // As permissões visuais são lidas da sessão; a API valida a autorização real.
   let perfis = [];
-
   try {
-    usuario = JSON.parse(localStorage.getItem("usuario")) || {};
-    perfis = JSON.parse(localStorage.getItem("perfis")) || [];
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const perfisSalvos = JSON.parse(localStorage.getItem("perfis") || "[]");
+    perfis = Array.isArray(usuario.perfis) && usuario.perfis.length
+      ? usuario.perfis
+      : Array.isArray(perfisSalvos) ? perfisSalvos : [];
   } catch {
-    usuario = {};
     perfis = [];
   }
 
-  const nomeUsuario =
-    usuario.nome ||
-    usuario.Nome ||
-    usuario.email ||
-    "Usuário";
+  const ehAdmin = perfis.includes("Administrador");
+  const podeVerNotas = [
+    "Coordenador Fiscal", "Analista SPED",
+    "Analista de Documentos Fiscais",
+    "Analista de Reforma Tributária", "Cliente"
+  ].some(perfil => perfis.includes(perfil));
 
-  const perfilUsuario =
-    Array.isArray(perfis)
-      ? (typeof perfis[0] === "string"
-        ? perfis[0]
-        : perfis[0]?.nome || perfis[0]?.Nome || "Usuário")
-      : "Usuário";
-
-  const iniciais = nomeUsuario
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((parte) => parte[0].toUpperCase())
-    .join("");
-
-  // Menu lateral
   const menuItems = [
     { label: "Início", icon: CasaBranca, path: "/home" },
     { label: "Conteúdos", icon: LivroBranco, path: "/conteudos" },
-    { label: "Notas Fiscais", icon: DoisDocumentosBranco, path: "/notas-fiscais" },
-    { label: "Clientes", icon: ADDProfileBranco, path: "/clientes" },
-    { label: "Usuários", icon: PessoaBranca, path: "/usuario" }
+    ...(podeVerNotas ? [
+      { label: "Notas Fiscais", icon: DoisDocumentosBranco, path: "/notas-fiscais" }
+    ] : []),
+    ...(ehAdmin ? [
+      { label: "Clientes", icon: ADDProfileBranco, path: "/clientes" },
+      { label: "Usuários", icon: PessoaBranca, path: "/usuario" }
+    ] : [])
   ];
 
   // Formatação dos status
@@ -285,89 +275,13 @@ function DetalheRevisao() {
 
       <main className="conteudo-principal">
 
-        {/* HEADER MOBILE */}
-
-        <header className="cabecalho-mobile">
-
-          <div className="cabecalho-superior-mobile">
-
-            <img
-              src={LogoNomeMobile}
-              alt="Integra"
-              className="logo-mobile-detalhe"
-            />
-
-            <div className="perfil-usuario-mobile">
-
-              <div className="foto-perfil-mobile">
-                {iniciais}
-              </div>
-
-              <div className="dados-usuario-mobile">
-
-                <strong>{nomeUsuario}</strong>
-
-                <span>{perfilUsuario}</span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="pesquisa-mobile-detalhe">
-
-            <img src={LupaCinza} alt="" />
-
-            <input
-              type="text"
-              placeholder="Buscar conteúdos, notas fiscais, etc..."
-            />
-
-          </div>
-
-        </header>
-
-        {/* HEADER DESKTOP */}
-
-        <header className="cabecalho">
-
-          <div className="pesquisa">
-
-            <img src={LupaCinza} alt="" />
-
-            <input
-              type="text"
-              placeholder="Buscar conteúdos, notas fiscais, etc..."
-            />
-
-          </div>
-
-          <div className="perfil-usuario">
-
-            <div className="foto-perfil">
-              {iniciais}
-            </div>
-
-            <div className="dados-usuario">
-
-              <strong>{nomeUsuario}</strong>
-
-              <span>{perfilUsuario}</span>
-
-            </div>
-
-            <button
-              className="botao-perfil-opcoes"
-              aria-label="Mais opções do perfil"
-              onClick={() => alert("Opções do perfil")}
-            >
-              <img src={TresPontos} alt="" />
-            </button>
-
-          </div>
-
-        </header>
+        {/* Cabeçalhos compartilhados: foto, nome e perfil reais do usuário */}
+        <div className="detalhe-header-mobile">
+          <Header />
+        </div>
+        <div className="detalhe-header-desktop">
+          <HeaderDesktop />
+        </div>
 
         {/* CONTEÚDO */}
 
@@ -392,9 +306,11 @@ function DetalheRevisao() {
 
               <h1>{artigo.titulo}</h1>
 
-              <span className="categoria-artigo">
-                {artigo.tema || "Tema não informado"}
-              </span>
+             <span
+    className={`categoria-artigo ${classeCorTema(artigo.tema)}`}
+>
+    {artigo.tema || "Tema não informado"}
+</span>
 
               <div className="informacoes-artigo">
 
@@ -432,38 +348,27 @@ function DetalheRevisao() {
 
               </div>
 
-              {/* RESUMO */}
-
+              {/* RESUMO, QUANDO EXISTIR */}
               {artigo.resumo && (
-
-               <div className="texto-artigo">
-
-    <h2>Conteúdo</h2>
-
-    <div
-        className="conteudo-formatado"
-        dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(
-                artigo.conteudo || "Nenhum conteúdo informado."
-            )
-        }}
-    />
-
-</div>
-
+                <div className="resumo-artigo">
+                  <h2>Resumo</h2>
+                  <p>{artigo.resumo}</p>
+                </div>
               )}
 
-              {/* CONTEÚDO COMPLETO */}
-
+              {/* HTML produzido pelo editor, sanitizado para exibição segura */}
               <div className="texto-artigo">
-
                 <h2>Conteúdo</h2>
-
-                <p>
-                  {artigo.conteudo || "Nenhum conteúdo informado."}
-                </p>
-
+                <div
+                  className="conteudo-formatado"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(
+                      artigo.conteudo || "Nenhum conteúdo informado."
+                    )
+                  }}
+                />
               </div>
+              
 {/* DOCUMENTO ANEXADO */}
 
 {artigo.temArquivo && artigo.nomeArquivo && (

@@ -1,0 +1,67 @@
+
+/* CORES OFICIAIS DOS TEMAS - INTEGRA */
+
+.tema-cor-reforma {
+    --tema-fundo: #E8DAFA;
+    --tema-texto: #6B35B5;
+    --tema-borda: #D8C4F5;
+}
+
+.tema-cor-sped {
+    --tema-fundo: #DDF0FF;
+    --tema-texto: #175A91;
+    --tema-borda: #BFE3FA;
+}
+
+.tema-cor-contribuicoes {
+    --tema-fundo: #D5F4F0;
+    --tema-texto: #116B65;
+    --tema-borda: #B0E6DD;
+}
+
+.tema-cor-nfe {
+    --tema-fundo: #FFE8D5;
+    --tema-texto: #A14C0C;
+    --tema-borda: #FFD1AD;
+}
+
+.tema-cor-nfp {
+    --tema-fundo: #FFE0E9;
+    --tema-texto: #A42F63;
+    --tema-borda: #F8BCD0;
+}
+
+.tema-cor-xml {
+    --tema-fundo: #DDF2DC;
+    --tema-texto: #286C35;
+    --tema-borda: #BFE4BD;
+}
+
+.tema-cor-padrao {
+    --tema-fundo: #E8EDF5;
+    --tema-texto: #344767;
+    --tema-borda: #D0D9E7;
+}
+
+/* MESMA APARÊNCIA NAS DUAS TELAS */
+
+.pagina-conteudos .etiqueta-tema[class*="tema-cor-"],
+.pagina-revisao .categoria-artigo[class*="tema-cor-"] {
+    background-color: var(--tema-fundo);
+    color: var(--tema-texto);
+    border: 1px solid var(--tema-borda);
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* TAMANHO DA ETIQUETA NOS DETALHES */
+
+.pagina-revisao .categoria-artigo[class*="tema-cor-"] {
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    padding: 7px 14px;
+    text-align: center;
+    white-space: normal;
+}

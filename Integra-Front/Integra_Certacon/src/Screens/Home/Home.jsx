@@ -36,18 +36,30 @@ export default function Home() {
 
     const [pesquisa, setPesquisa] = useState("");
 
-    // Dados do usuário que realizou o login
+    // Perfis do usuário autenticado. A API é responsável pela autorização real.
     const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const perfisSalvos = JSON.parse(localStorage.getItem("perfis") || "[]");
+    const perfis = Array.isArray(usuario.perfis) && usuario.perfis.length > 0
+        ? usuario.perfis
+        : Array.isArray(perfisSalvos) ? perfisSalvos : [];
 
     const nomeUsuario = usuario.nome?.split(" ")[0] || "usuário";
-
-    const perfis = usuario.perfis ||
-        JSON.parse(localStorage.getItem("perfis") || "[]");
-
     const ehAdministrador = perfis.includes("Administrador");
-
-    const podeRevisar =
-        ehAdministrador || perfis.includes("Coordenador Fiscal");
+    const podeRevisar = perfis.includes("Coordenador Fiscal");
+    const podeCriar = [
+        "Coordenador Fiscal",
+        "Analista SPED",
+        "Analista de Documentos Fiscais",
+        "Analista de Reforma Tributária"
+    ].some(perfil => perfis.includes(perfil));
+    const podeVerNotas = [
+        "Coordenador Fiscal",
+        "Analista SPED",
+        "Analista de Documentos Fiscais",
+        "Analista de Reforma Tributária",
+        "Cliente"
+    ].some(perfil => perfis.includes(perfil));
+    const podeEnviarXml = podeVerNotas;
 
     // Dados do Dashboard
     const [artigos, setArtigos] = useState([]);
@@ -76,7 +88,7 @@ export default function Home() {
                 erros.push("Não foi possível carregar os conteúdos.");
             }
 
-            try {
+            if (podeVerNotas) try {
                 const dadosNotas = await requisicaoApi("/api/NotasFiscais");
 
                 setNotas(
@@ -110,7 +122,7 @@ export default function Home() {
         }
 
         carregarDashboard();
-    }, [podeRevisar]);
+    }, [podeRevisar, podeVerNotas]);
 
     // Organiza os conteúdos mais recentes
     const ultimosArtigos = [...artigos]
@@ -184,6 +196,7 @@ export default function Home() {
                         <span>Conteúdos</span>
                     </NavLink>
 
+                    {podeVerNotas && (
                     <NavLink
                         to="/notas-fiscais"
                         className={({ isActive }) =>
@@ -195,7 +208,9 @@ export default function Home() {
                         <img src={iconeNotas} alt="" />
                         <span>Notas Fiscais</span>
                     </NavLink>
+                    )}
 
+                    {ehAdministrador && (
                     <NavLink
                         to="/clientes"
                         className={({ isActive }) =>
@@ -207,7 +222,9 @@ export default function Home() {
                         <img src={iconeClientesBranco} alt="" />
                         <span>Clientes</span>
                     </NavLink>
+                    )}
 
+                    {ehAdministrador && (
                     <NavLink
                         to="/usuario"
                         className={({ isActive }) =>
@@ -219,6 +236,7 @@ export default function Home() {
                         <img src={iconePessoa} alt="" />
                         <span>Usuários</span>
                     </NavLink>
+                    )}
 
                 </nav>
 
@@ -295,6 +313,7 @@ export default function Home() {
                         </div>
 
                         {/* NOTAS FISCAIS */}
+                        {podeVerNotas && (
                         <div
                             className="home-card"
                             role="link"
@@ -322,6 +341,7 @@ export default function Home() {
                                 Ativas
                             </span>
                         </div>
+                        )}
 
                         {/* CONTEÚDOS EM REVISÃO */}
                         {podeRevisar && (
@@ -367,7 +387,15 @@ export default function Home() {
                                     <div
                                         key={artigo.artigoId}
                                         className="home-lista-item"
-                                        onClick={() => navigate("/conteudos/detalhes")}
+                                        onClick={() => navigate("/conteudos/detalhes", {
+                                            state: {
+                                                conteudo: {
+                                                    ...artigo,
+                                                    id: artigo.artigoId,
+                                                    data: formatarData(artigo.dataPublicacao)
+                                                }
+                                            }
+                                        })}
                                         style={{ cursor: "pointer" }}
                                     >
                                         <div
@@ -447,6 +475,7 @@ export default function Home() {
                                 <span>Conteúdos</span>
                             </NavLink>
 
+                            {podeVerNotas && (
                             <NavLink
                                 to="/notas-fiscais"
                                 className={({ isActive }) =>
@@ -458,7 +487,9 @@ export default function Home() {
                                 <img src={iconeNotas} alt="" />
                                 <span>Notas Fiscais</span>
                             </NavLink>
+                            )}
 
+                            {ehAdministrador && (
                             <NavLink
                                 to="/clientes"
                                 className={({ isActive }) =>
@@ -470,7 +501,9 @@ export default function Home() {
                                 <img src={iconeClientesBranco} alt="" />
                                 <span>Clientes</span>
                             </NavLink>
+                            )}
 
+                            {ehAdministrador && (
                             <NavLink
                                 to="/usuario"
                                 className={({ isActive }) =>
@@ -482,6 +515,7 @@ export default function Home() {
                                 <img src={iconePessoa} alt="" />
                                 <span>Usuários</span>
                             </NavLink>
+                            )}
 
                         </footer>
 
@@ -490,6 +524,7 @@ export default function Home() {
 
                             <h2>Acesso rápido</h2>
 
+                            {podeCriar && (
                             <button
                                 type="button"
                                 className="home-acesso-botao"
@@ -509,6 +544,7 @@ export default function Home() {
 
                                 <span>Novo conteúdo</span>
                             </button>
+                            )}
 
                             {podeRevisar && (
                                 <button
@@ -532,6 +568,7 @@ export default function Home() {
                                 </button>
                             )}
 
+                            {podeEnviarXml && (
                             <button
                                 type="button"
                                 className="home-acesso-botao"
@@ -551,7 +588,9 @@ export default function Home() {
 
                                 <span>Enviar XML</span>
                             </button>
+                            )}
 
+                            {podeVerNotas && (
                             <button
                                 type="button"
                                 className="home-acesso-botao"
@@ -571,7 +610,9 @@ export default function Home() {
 
                                 <span>Consultar NF-e</span>
                             </button>
+                            )}
 
+                            {ehAdministrador && (
                             <button
                                 type="button"
                                 className="home-acesso-botao"
@@ -591,6 +632,7 @@ export default function Home() {
 
                                 <span>Consultar clientes</span>
                             </button>
+                            )}
 
                             {ehAdministrador && (
                                 <button
