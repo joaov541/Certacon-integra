@@ -37,6 +37,15 @@ const perfilInicial = {
 
 function EditarPerfil() {
     const navigate = useNavigate();
+
+    // Logout exclusivo do botão exibido no final da tela Meu Perfil no mobile.
+    function sairPerfilMobile() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        localStorage.removeItem("perfis");
+        navigate("/login", { replace: true });
+    }
+
     const inputFotoRef = useRef(null);
     const [fotoPerfil, setFotoPerfil] = useState(null);
     const [salvandoFoto, setSalvandoFoto] = useState(false);
@@ -586,6 +595,16 @@ function EditarPerfil() {
                             </div>
                         </div>
                     )}
+
+                    {/* Sair da conta apenas na tela Meu Perfil mobile */}
+                    <button
+                        type="button"
+                        className="botao-sair-perfil-mobile"
+                        onClick={sairPerfilMobile}
+                    >
+                        <img src={SairBranco} alt="" />
+                        <span>Sair da conta</span>
+                    </button>
                 </section>
             </main>
 

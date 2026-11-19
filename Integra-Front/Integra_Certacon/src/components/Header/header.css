@@ -255,3 +255,98 @@
   object-fit: cover;
   border-radius: 50%;
 }
+
+
+/* ======================================
+   PESQUISA FUNCIONAL - HEADER MOBILE
+====================================== */
+
+.integra-header {
+    position: relative;
+}
+
+.integra-header .header-pesquisa-container {
+    position: relative;
+    width: 100%;
+    z-index: 1100;
+}
+
+.integra-header .header-pesquisa-container
+.header-pesquisa {
+    width: 100%;
+    margin: 0;
+}
+
+.integra-header .header-resultados-pesquisa {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 1200;
+
+    max-height: min(420px, 55vh);
+    overflow-y: auto;
+
+    background: #ffffff;
+    border: 1px solid #d9e2f0;
+    border-radius: 10px;
+
+    box-shadow: 0 8px 24px rgba(29, 46, 104, 0.16);
+}
+
+.integra-header .header-grupo-resultados h3 {
+    margin: 0;
+    padding: 12px 14px 8px;
+
+    color: #1d2e68;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.integra-header .header-resultado-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+
+    width: 100%;
+    padding: 11px 14px;
+
+    background: #ffffff;
+    border: none;
+    border-bottom: 1px solid #edf0f5;
+
+    text-align: left;
+    cursor: pointer;
+}
+
+.integra-header .header-resultado-item strong {
+    max-width: 100%;
+    color: #1d2e68;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.integra-header .header-resultado-item span {
+    color: #667085;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+.integra-header .header-resultado-item:hover {
+    background: #f3f6fc;
+}
+
+.integra-header .header-pesquisa-mensagem {
+    margin: 0;
+    padding: 16px;
+    color: #667085;
+    font-size: 13px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .integra-header .header-resultados-pesquisa {
+        max-height: 45vh;
+    }
+}

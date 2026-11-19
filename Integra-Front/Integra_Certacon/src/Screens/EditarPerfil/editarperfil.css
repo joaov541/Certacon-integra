@@ -1361,3 +1361,43 @@
 .pagina-perfil .acoes-foto-perfil button:disabled { opacity: .6; cursor: not-allowed; }
 .pagina-perfil .erro-foto-perfil { color: #b91c1c; font-size: 13px; text-align: center; }
 
+
+
+/* =========================================
+   SAIR DA CONTA — EXCLUSIVO MEU PERFIL MOBILE
+   Desktop mantém o logout original na Sidebar.
+========================================= */
+.pagina-perfil .botao-sair-perfil-mobile {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    .pagina-perfil .botao-sair-perfil-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        min-height: 48px;
+        margin: 24px 0 8px;
+        padding: 12px 18px;
+        border: 1px solid #1d2e68;
+        border-radius: 8px;
+        background: #1d2e68;
+        color: #fff;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .pagina-perfil .botao-sair-perfil-mobile img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+    }
+
+    .pagina-perfil .botao-sair-perfil-mobile:active {
+        background: #29448c;
+    }
+}

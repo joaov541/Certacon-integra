@@ -1336,3 +1336,323 @@
         font-size: 12px;
     }
 }
+
+/* ==========================================================
+   CORREÇÃO DOS CARDS MOBILE — CONTEÚDOS TRIBUTÁRIOS
+   Somente telas até 700px. Preserva o desktop.
+   ========================================================== */
+@media (max-width: 700px) {
+    .pagina-conteudos .tabela-conteudos,
+    .pagina-conteudos .tabela-conteudos table,
+    .pagina-conteudos .tabela-conteudos tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        overflow: visible;
+        background: transparent;
+    }
+
+    .pagina-conteudos .tabela-conteudos tbody tr {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 9px;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        margin: 0 0 14px;
+        padding: 16px;
+        border: 1px solid #d9e2f0;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 2px 7px rgba(29, 46, 104, 0.05);
+    }
+
+    /* Sobrescreve as larguras de 43%, 17%, 18% e 22%
+       configuradas para a tabela desktop sem Ações. */
+    .pagina-conteudos .tabela-conteudos tbody td,
+    .pagina-conteudos .tabela-sem-acoes tbody td,
+    .pagina-conteudos .tabela-sem-acoes tbody td:nth-child(n) {
+        display: block;
+        flex: none;
+        position: static;
+        width: 100% !important;
+        min-width: 0;
+        max-width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0 !important;
+        border: 0;
+        background: transparent;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-align: left;
+    }
+
+    .pagina-conteudos .tabela-conteudos .celula-titulo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 !important;
+        min-height: 38px;
+    }
+
+    .pagina-conteudos .tabela-conteudos .icone-card-conteudo {
+        display: block;
+        position: static;
+        transform: none;
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        padding: 7px;
+        border-radius: 10px;
+        background: #e8f2fc;
+    }
+
+    .pagina-conteudos .tabela-conteudos .celula-titulo strong {
+        display: block;
+        width: auto;
+        min-width: 0;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        font-size: 15px;
+        line-height: 1.35;
+        color: #1d2e68;
+    }
+
+    .pagina-conteudos .tabela-conteudos .celula-tema,
+    .pagina-conteudos .tabela-conteudos .celula-data,
+    .pagina-conteudos .tabela-conteudos .celula-autor {
+        padding-left: 0 !important;
+        margin-top: 0;
+        font-size: 12px;
+        line-height: 1.45;
+        color: #465268;
+    }
+
+    .pagina-conteudos .tabela-conteudos .etiqueta-tema {
+        display: inline-block;
+        width: auto;
+        max-width: 100%;
+        min-width: 0;
+        height: auto;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        line-height: 1.3;
+        white-space: normal;
+        text-align: center;
+    }
+
+    /* Ações permanecem disponíveis para perfis autorizados. */
+    .pagina-conteudos .tabela-conteudos tbody td.coluna-acoes {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        align-self: stretch;
+        width: 100% !important;
+        margin-top: 3px;
+        padding-top: 9px !important;
+        border-top: 1px solid #e5eaf2;
+    }
+
+    .pagina-conteudos .tabela-conteudos .acoes-artigo {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .pagina-conteudos .tabela-conteudos .sem-conteudos {
+        text-align: center !important;
+        padding: 20px !important;
+    }
+}
+/* ===========================================================
+   INTEGRA | AJUSTE FINAL DOS CARDS MOBILE CONFORME FIGMA
+   Cole NO FINAL de conteudoTributario.css.
+   Não altera desktop, dados ou permissões.
+   =========================================================== */
+@media (max-width: 700px) {
+  /* Espaçamentos da área de filtros e cartões */
+  .pagina-conteudos .filtros-conteudos {
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .pagina-conteudos .tabela-conteudos,
+  .pagina-conteudos .tabela-conteudos table,
+  .pagina-conteudos .tabela-conteudos tbody {
+    width: 100%;
+    min-width: 0;
+    background: transparent;
+  }
+
+  /* Cada linha da tabela passa a ser um cartão compacto */
+  .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel {
+    position: relative;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    align-items: start;
+    column-gap: 8px;
+    row-gap: 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 83px;
+    margin: 0 0 20px;
+    padding: 10px 12px 10px 9px;
+    border: 1px solid #222b3b;
+    border-radius: 10px;
+    background: #f3f6fc;
+    box-shadow: none;
+  }
+
+  .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel > td {
+    position: static;
+    display: block;
+    width: 100% !important;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    padding: 0 !important;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Ícone fixo na esquerda, título e textos alinhados entre si */
+  .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel > td.celula-titulo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 22px;
+    padding-left: 54px !important;
+    padding-right: 25px !important;
+  }
+
+  .pagina-conteudos .tabela-conteudos .celula-titulo strong {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+    white-space: normal;
+    text-overflow: clip;
+    color: #111111;
+    font-size: 17px;
+    line-height: 1.18;
+    font-weight: 700;
+  }
+
+  .pagina-conteudos .tabela-conteudos .icone-card-conteudo {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    transform: none;
+    display: block;
+    width: 43px;
+    height: 43px;
+    padding: 7px;
+    border-radius: 11px;
+    background: #dce5f3;
+    object-fit: contain;
+  }
+
+  .pagina-conteudos .tabela-conteudos .celula-tema {
+    grid-column: 2;
+    grid-row: 2;
+    line-height: 1;
+    padding-top: 1px !important;
+  }
+
+  .pagina-conteudos .tabela-conteudos .etiqueta-tema[class*="tema-cor-"] {
+    display: inline-block;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    padding: 2px 9px;
+    border-radius: 8px;
+    font-size: 10px;
+    line-height: 1.3;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .pagina-conteudos .tabela-conteudos .celula-data {
+    grid-column: 2;
+    grid-row: 3;
+    font-size: 11px;
+    line-height: 1.25;
+    color: #222;
+    padding-top: 3px !important;
+  }
+
+  .pagina-conteudos .tabela-conteudos .celula-autor {
+    grid-column: 2;
+    grid-row: 4;
+    font-size: 11px;
+    line-height: 1.25;
+    color: #222;
+  }
+
+  /* Botões somente quando o JSX já autoriza a coluna Ações */
+  .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel > td.coluna-acoes {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    width: auto !important;
+    max-width: min(45%, 180px);
+    margin: 0;
+    padding: 0 !important;
+    border: 0;
+    background: transparent;
+    z-index: 1;
+  }
+
+  .pagina-conteudos .tabela-conteudos .acoes-artigo {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .pagina-conteudos .tabela-conteudos .excluir-conteudo {
+    width: 28px;
+    height: 28px;
+    padding: 3px;
+  }
+
+  /* Destaques dos ícones: acompanham a cor do tema */
+  .pagina-conteudos .tabela-conteudos tr:has(.tema-cor-reforma) .icone-card-conteudo { background: #E8DAFA; }
+  .pagina-conteudos .tabela-conteudos tr:has(.tema-cor-sped) .icone-card-conteudo { background: #DDF0FF; }
+  .pagina-conteudos .tabela-conteudos tr:has(.tema-cor-contribuicoes) .icone-card-conteudo { background: #D5F4F0; }
+  .pagina-conteudos .tabela-conteudos tr:has(.tema-cor-nfe) .icone-card-conteudo { background: #FFE8D5; }
+  .pagina-conteudos .tabela-conteudos tr:has(.tema-cor-nfp) .icone-card-conteudo { background: #FFE0E9; }
+  .pagina-conteudos .tabela-conteudos tr:has(.tema-cor-xml) .icone-card-conteudo { background: #DDF2DC; }
+
+  /* Mensagens: não usar grid de cartão para linhas de aviso */
+  .pagina-conteudos .tabela-conteudos tbody tr:has(.sem-conteudos) {
+    display: block;
+    min-height: auto;
+  }
+  .pagina-conteudos .tabela-conteudos .sem-conteudos {
+    padding: 16px !important;
+    text-align: center !important;
+  }
+
+  /* Rodapé permanece fixo, com área segura do celular */
+  .pagina-conteudos .footer-conteudos-mobile {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}

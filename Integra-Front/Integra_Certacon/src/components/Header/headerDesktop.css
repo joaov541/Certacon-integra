@@ -1,116 +1,389 @@
 
+/* =========================================
+   HEADER DESKTOP - INTEGRA
+========================================= */
+
 .integra-header-desktop {
     display: flex;
+    position: relative;
     width: 100%;
     padding: 25px 34px 10px;
-    background: #fff;
+    background: #ffffff;
     font-family: Arial, sans-serif;
+    overflow: visible;
+    z-index: 100;
 }
+
+/* =========================================
+   ESTRUTURA SUPERIOR
+========================================= */
 
 .integra-header-desktop .header-desktop-superior {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    min-width: 0;
     gap: 25px;
 }
 
-/* BARRA DE PESQUISA */
+/* =========================================
+   ÁREA DA PESQUISA
+========================================= */
+
+.integra-header-desktop .header-desktop-pesquisa-area {
+    display: flex;
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    z-index: 1100;
+}
+
+/* =========================================
+   BARRA DE PESQUISA
+========================================= */
 
 .integra-header-desktop .header-desktop-pesquisa {
     display: flex;
     align-items: center;
-    width: 85%;
+    width: 100%;
     height: 38px;
     gap: 12px;
+    margin: 0;
     padding: 0 18px;
-    border: 1.5px solid #888;
+
+    border: 1.5px solid #888888;
     border-radius: 10px;
-    background: transparent;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
     background-color: #f3f6fc;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* Destaque ao clicar na pesquisa */
+
+.integra-header-desktop .header-desktop-pesquisa:focus-within {
+    border-color: #1d2e68;
+    box-shadow: 0 0 0 2px rgba(29, 46, 104, 0.10);
+}
+
+/* ÍCONE DA LUPA */
+
 .integra-header-desktop .header-desktop-pesquisa img {
-    width: px;
+    display: block;
+    width: 23px;
     height: 23px;
     flex-shrink: 0;
     object-fit: contain;
 }
 
+/* CAMPO DE PESQUISA */
+
 .integra-header-desktop .header-desktop-pesquisa input {
     width: 100%;
     min-width: 0;
     height: 100%;
+
+    padding: 0;
     border: none;
     outline: none;
+
     background: transparent;
-    color: #333;
+    color: #333333;
+
     font-family: Arial, sans-serif;
     font-size: 15px;
 }
 
+/* TEXTO DO PLACEHOLDER */
+
 .integra-header-desktop .header-desktop-pesquisa input::placeholder {
     color: #929292;
+    opacity: 1;
 }
 
-/* USUÁRIO */
+/* =========================================
+   RESULTADOS DA PESQUISA
+========================================= */
+
+.integra-header-desktop .header-desktop-resultados {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 1200;
+
+    width: 100%;
+    max-height: 420px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    border: 1px solid #d9e2f0;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    box-shadow: 0 8px 24px rgba(29, 46, 104, 0.16);
+}
+
+/* =========================================
+   GRUPOS DOS RESULTADOS
+========================================= */
+
+.integra-header-desktop .header-desktop-grupo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* TÍTULOS DAS CATEGORIAS */
+
+.integra-header-desktop .header-desktop-grupo h3 {
+    margin: 0;
+    padding: 12px 16px 8px;
+
+    background: #f3f6fc;
+    color: #1d2e68;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* =========================================
+   ITENS DOS RESULTADOS
+========================================= */
+
+.integra-header-desktop .header-desktop-resultado-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    width: 100%;
+    gap: 5px;
+    padding: 12px 16px;
+
+    border: none;
+    border-bottom: 1px solid #edf0f5;
+
+    background: #ffffff;
+
+    text-align: left;
+    cursor: pointer;
+
+    transition: background 0.2s;
+}
+
+/* HOVER NOS RESULTADOS */
+
+.integra-header-desktop .header-desktop-resultado-item:hover {
+    background: #eef4fc;
+}
+
+/* FOCO PARA NAVEGAÇÃO POR TECLADO */
+
+.integra-header-desktop .header-desktop-resultado-item:focus-visible {
+    outline: 2px solid #ff8500;
+    outline-offset: -2px;
+    background: #eef4fc;
+}
+
+/* TÍTULO DOS RESULTADOS */
+
+.integra-header-desktop .header-desktop-resultado-item strong {
+    display: block;
+    max-width: 100%;
+
+    color: #1d2e68;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+/* DESCRIÇÃO, TEMA OU CNPJ */
+
+.integra-header-desktop .header-desktop-resultado-item span {
+    display: block;
+    max-width: 100%;
+
+    color: #667085;
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+/* ÚLTIMO ITEM DE CADA GRUPO */
+
+.integra-header-desktop
+.header-desktop-grupo .header-desktop-resultado-item:last-child {
+    border-bottom: none;
+}
+
+/* =========================================
+   MENSAGENS DA PESQUISA
+========================================= */
+
+.integra-header-desktop .header-desktop-mensagem {
+    margin: 0;
+    padding: 18px 16px;
+
+    color: #667085;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* =========================================
+   ROLAGEM DOS RESULTADOS
+========================================= */
+
+.integra-header-desktop .header-desktop-resultados::-webkit-scrollbar {
+    width: 7px;
+}
+
+.integra-header-desktop .header-desktop-resultados::-webkit-scrollbar-track {
+    background: #f3f6fc;
+    border-radius: 10px;
+}
+
+.integra-header-desktop .header-desktop-resultados::-webkit-scrollbar-thumb {
+    background: #b9c5d8;
+    border-radius: 10px;
+}
+
+.integra-header-desktop .header-desktop-resultados::-webkit-scrollbar-thumb:hover {
+    background: #8798b2;
+}
+
+/* =========================================
+   ÁREA DO USUÁRIO
+========================================= */
 
 .integra-header-desktop .header-desktop-usuario {
     display: flex;
     align-items: center;
+
+    flex-shrink: 0;
     gap: 10px;
 }
+
+/* =========================================
+   FOTO DE PERFIL
+========================================= */
 
 .integra-header-desktop .header-desktop-foto {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 45px;
     height: 45px;
+
     flex-shrink: 0;
+    overflow: hidden;
+
     border-radius: 50%;
     background: #1d2e68;
-    color: #fff;
+
+    color: #ffffff;
     font-size: 16px;
     font-weight: bold;
     text-decoration: none;
+
+    cursor: pointer;
 }
+
+/* FOTO CARREGADA PELA API */
+
+.integra-header-desktop .header-desktop-foto-imagem {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* =========================================
+   DADOS DO USUÁRIO
+========================================= */
 
 .integra-header-desktop .header-desktop-dados {
     display: flex;
     flex-direction: column;
     gap: 3px;
+
+    min-width: 0;
     white-space: nowrap;
 }
 
+/* NOME */
+
 .integra-header-desktop .header-desktop-dados strong {
-    color: #111;
+    color: #111111;
     font-size: 14px;
+    font-weight: 700;
 }
 
+/* PERFIL / CARGO */
+
 .integra-header-desktop .header-desktop-dados span {
-    color: #888;
+    color: #888888;
     font-size: 12px;
 }
 
-/* TABLET E CELULAR */
+/* =========================================
+   AJUSTES PARA DESKTOPS MENORES
+========================================= */
 
-@media (max-width: 900px) {
+@media (min-width: 901px) and (max-width: 1200px) {
+
     .integra-header-desktop {
-        display: none;
+        padding: 20px 20px 10px;
+    }
+
+    .integra-header-desktop .header-desktop-superior {
+        gap: 15px;
+    }
+
+    .integra-header-desktop .header-desktop-pesquisa {
+        padding: 0 12px;
+    }
+
+    .integra-header-desktop .header-desktop-pesquisa input {
+        font-size: 13px;
+    }
+
+    .integra-header-desktop .header-desktop-dados strong {
+        font-size: 12px;
+    }
+
+    .integra-header-desktop .header-desktop-dados span {
+        font-size: 11px;
     }
 }
 
-/* Adicionar ao final de headerDesktop.css */
-.integra-header-desktop .header-desktop-foto {
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.integra-header-desktop .header-desktop-foto .header-desktop-foto-imagem {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+/* =========================================
+   TABLET E CELULAR
+========================================= */
+
+@media (max-width: 900px) {
+
+    .integra-header-desktop {
+        display: none;
+    }
+
 }
