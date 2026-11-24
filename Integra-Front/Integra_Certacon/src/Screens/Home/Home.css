@@ -1543,3 +1543,142 @@
     .home-card-info strong { color: #1d2e68; }
     .home-acesso-botao { background-color: #ffffff; }
 }
+
+/* HEADER COMPLETO NA HOME MOBILE — layout em fluxo */
+@media (max-width: 700px) {
+    .home .home-area {
+        min-height: 0;
+        padding-bottom: 64px;
+    }
+    .home .home-area > .integra-header-desktop {
+        display: none !important;
+    }
+    .home .home-area > .integra-header {
+        display: flex !important;
+        position: relative !important;
+        inset: auto !important;
+        flex: 0 0 auto;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        padding: 10px 12px;
+        gap: 8px;
+        background: #fff;
+        pointer-events: auto;
+        z-index: 180;
+        overflow: visible;
+    }
+    .home .home-area > .integra-header .header-superior {
+        width: 100%;
+        min-height: 55px;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .home .home-area > .integra-header .header-logo {
+        display: block !important;
+        width: 165px;
+        max-width: 58%;
+        height: 55px;
+    }
+    .home .home-area > .integra-header .header-pesquisa-container {
+        width: 100%;
+    }
+    .home .home-area > .integra-header .header-pesquisa {
+        display: flex !important;
+        width: 100%;
+        height: 40px;
+        padding: 0 12px;
+        gap: 8px;
+    }
+    .home .home-area > .integra-header .header-pesquisa input {
+        font-size: 14px;
+    }
+    .home .home-area > .integra-header .header-foto {
+        width: 44px;
+        height: 44px;
+    }
+    .home .home-conteudo {
+        position: relative;
+        inset: auto;
+        flex: 1 1 0;
+        min-height: 0;
+        padding: 16px 12px 20px;
+    }
+    .home .home-conteudo::before { content: none; }
+    .home .home-conteudo h1 {
+        position: static;
+        font-size: 26px;
+        margin: 0 0 8px;
+    }
+    .home .home-subtitulo {
+        position: static;
+        margin: 0 0 20px;
+        font-size: 14px;
+    }
+}
+@media (max-width: 380px) {
+    .home .home-area { padding-bottom: 62px; }
+    .home .home-conteudo { padding: 14px 10px 20px; }
+    .home .home-conteudo h1 { font-size: 23px; }
+}
+
+/* Acesso público à consulta NF-e */
+.home .home-menu-lista { min-height: 0; overflow-y: auto; }
+@media (max-width: 700px) {
+    .home .home-footer-item span { white-space: normal; text-align: center; line-height: 1.1; }
+    .home .home-acesso-botao { white-space: normal; min-height: 42px; height: auto; padding-block: 8px; }
+}
+/* =========================================
+   INTEGRAÇÃO COM O LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .home {
+    display: flex;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+}
+
+.integra-layout .home .home-area {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+}
+
+.integra-layout .home .home-conteudo {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+}
+
+.integra-layout .home .home-conteudo::before {
+    content: none;
+}
+
+@media (max-width: 700px) {
+
+    .integra-layout .home .home-conteudo {
+        padding: 16px 12px 20px;
+    }
+
+    .integra-layout .home .home-conteudo h1 {
+        position: static;
+        margin: 0 0 8px;
+    }
+
+    .integra-layout .home .home-subtitulo {
+        position: static;
+        margin: 0 0 20px;
+    }
+
+}

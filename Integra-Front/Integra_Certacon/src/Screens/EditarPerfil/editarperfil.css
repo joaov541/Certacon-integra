@@ -1,1403 +1,1457 @@
-
-* {
-    box-sizing: border-box;
-}
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
 
 .pagina-perfil {
+    --perfil-azul: #1d2e68;
+    --perfil-laranja: #ff8500;
+
     display: flex;
+    flex-direction: column;
+
     width: 100%;
-    min-height: 100vh;
+    min-width: 0;
+    min-height: 100%;
+
     background: #ffffff;
+    color: #252525;
+
     font-family: Arial, sans-serif;
 }
 
-/* MENU LATERAL */
+.pagina-perfil * {
+    box-sizing: border-box;
+}
 
-.menu-perfil {
+/* =========================================
+   ÁREA PRINCIPAL
+========================================= */
+
+.pagina-perfil .principal-perfil {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    width: 334px;
-    min-width: 196px;
-    min-height: 100vh;
-    padding: 25px 16px;
-    background: #1d2e68;
-    color: white;
-}
 
-.logo-perfil {
-    width: 100%;
-    margin-bottom: 28px;
-}
-
-.logo-perfil img {
-    display: block;
     width: 100%;
     height: auto;
-}
 
-.navegacao-perfil {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.item-menu-perfil {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    padding: 9px 8px;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 15px;
-    text-decoration: none;
-    transition: background 0.2s;
-    margin-left: 20px;
-}
-
-.item-menu-perfil:hover {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-.item-menu-perfil img {
-    width: 33px;
-    height: 33px;
-    object-fit: contain;
-}
-
-.item-menu-perfil span {
-    font-size: 14px;
-}
-
-.sair-perfil {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: auto;
-    margin-left: 20px;
-    padding: 8px;
-    border: none;
-    background: transparent;
-    color: white;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.sair-perfil img {
-    width: 33px;
-    height: 33px;
-    object-fit: contain;
-}
-
-.sair-perfil span {
-    font-size: 14px;
-}
-
-/* ÁREA PRINCIPAL */
-
-.principal-perfil {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
     min-width: 0;
-    min-height: 100vh;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
 }
 
-/* CABEÇALHO */
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
 
-.topo-perfil {
+.pagina-perfil .conteudo-perfil {
+    position: relative;
+
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 62px;
-    padding: 10px 35px;
-    background: #ffffff;
-}
-
-.pesquisa-topo-perfil {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 88%;
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 7px;
-    background: #e8f1fa;
-}
-
-.pesquisa-topo-perfil img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.pesquisa-topo-perfil input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: #333;
-    font-size: 14px;
-}
-
-.pesquisa-topo-perfil input::placeholder {
-    color: #7d9bb8;
-}
-
-.usuario-topo-perfil {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.avatar-topo-perfil {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 35px;
-    height: 35px;
-    border: 1px solid #1d2e68;
-    border-radius: 50%;
-    background: #dceaf7;
-    color: #1d2e68;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.dados-usuario-perfil {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    color: #111;
-    font-size: 12px;
-}
-
-.dados-usuario-perfil strong {
-    font-size: 13px;
-}
-
-.dados-usuario-perfil span {
-    font-size: 11px;
-}
-
-/* CONTEÚDO */
-
-.conteudo-perfil {
     flex: 1;
-    padding: 10px 32px 25px;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    padding: 22px 30px 30px;
+
+    overflow: visible;
 }
 
-.conteudo-perfil h1 {
+.pagina-perfil .conteudo-perfil h1 {
     margin: 0 0 25px;
+
     color: #123c68;
-    font-size: 36px;
-    font-weight: 600;
-}
 
-/* BOTÃO VOLTAR */
-
-.voltar-perfil {
-    display: none;
-}
-
-.area-perfil {
-    display: grid;
-    grid-template-columns: minmax(350px, 1fr) 218px;
-    align-items: start;
-    gap: 16px;
-    max-width: 100%;
-    margin: 0 0 0 12px;
-}
-
-/* CARTÃO PRINCIPAL */
-
-.cartao-perfil {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 484px;
-    padding: 30px 20px 12px;
-    border-radius: 8px;
-    background: #1d2e68;
-    color: white;
-}
-
-.foto-perfil1 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 190px;
-    height: 190px;
-    overflow: hidden;
-    border: 3px solid #050505;
-    border-radius: 50%;
-    background: #c8e0ff;
-}
-
-.foto-perfil img {
-    width: 100%;
-    height: 100%;
-    padding: 12px;
-    object-fit: contain;
-}
-
-.identificacao-perfil {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-top: 20px;
-    text-align: center;
-}
-
-.identificacao-perfil h2 {
-    margin: 0;
-    color: white;
     font-size: 32px;
     font-weight: 600;
 }
 
-.identificacao-perfil p {
-    margin: 2px 0 0;
-    color: white;
-    font-size: 16px;
-}
+/* =========================================
+   BOTÃO VOLTAR
+========================================= */
 
-.input-nome-perfil,
-.input-cargo-perfil {
-    width: 85%;
-    margin: 4px 0;
-    padding: 7px;
-    border: 1px solid #ffffff;
-    border-radius: 5px;
-    outline: none;
-    background: white;
-    color: #1d2e68;
-    text-align: center;
-}
+.pagina-perfil .voltar-perfil {
+    display: none;
 
-.input-nome-perfil {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.input-cargo-perfil {
-    font-size: 14px;
-}
-
-/* INFORMAÇÕES */
-
-.informacoes-perfil {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px 15px;
-    width: 100%;
-    margin-top: 25px;
-    padding: 0 10px;
-}
-
-.informacao-item {
-    display: flex;
     align-items: center;
-    gap: 12px;
-    min-width: 0;
+    align-self: flex-start;
+
+    width: fit-content;
+
+    margin-bottom: 15px;
+
+    color: #3c8cdf;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
 }
 
-.informacao-item img {
+.pagina-perfil .voltar-perfil:hover {
+    color: var(--perfil-laranja);
+}
+
+/* =========================================
+   ÁREA DOS CARTÕES
+========================================= */
+
+.pagina-perfil .area-perfil {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        230px;
+
+    align-items: stretch;
+
+    gap: 16px;
+
+    width: 100%;
+    max-width: 100%;
+
+    min-height: 500px;
+
+    margin: 0;
+}
+
+/* =========================================
+   CARTÃO PRINCIPAL
+========================================= */
+
+.pagina-perfil .cartao-perfil {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 500px;
+
+    padding: 30px 24px 20px;
+
+    border-radius: 8px;
+
+    background: var(--perfil-azul);
+    color: #fff;
+}
+
+/* =========================================
+   ÁREA DA FOTO
+========================================= */
+
+.pagina-perfil .area-foto-edicao {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-bottom: 12px;
+}
+
+/* =========================================
+   FOTO DE PERFIL
+========================================= */
+
+.pagina-perfil .foto-perfil1 {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
+
+    width: 112px;
+    height: 112px;
+
+    overflow: hidden;
+
+    border: 3px solid #050505;
+    border-radius: 50%;
+
+    background: #c8e0ff;
+}
+
+.pagina-perfil .foto-perfil1 img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 50%;
+}
+
+/* FOTO ENVIADA PELO USUÁRIO */
+
+.pagina-perfil .foto-perfil1 img.foto-personalizada {
+    padding: 0;
+
+    object-fit: cover;
+}
+
+/* ÍCONE PADRÃO */
+
+.pagina-perfil .foto-perfil1 img.foto-padrao {
+    padding: 12px;
+
     object-fit: contain;
 }
 
-.informacao-item div {
+/* =========================================
+   BOTÕES DA FOTO
+========================================= */
+
+.pagina-perfil .acoes-foto-perfil {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    width: 100%;
+}
+
+.pagina-perfil .acoes-foto-perfil button {
+    min-height: 34px;
+
+    padding: 8px 12px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    background: #fff;
+    color: var(--perfil-azul);
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: background 0.2s;
+}
+
+.pagina-perfil .acoes-foto-perfil button:hover:not(:disabled) {
+    background: #e8f1fa;
+}
+
+.pagina-perfil .limite-foto-perfil {
+    color: #c6d6ff;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.pagina-perfil .erro-foto-perfil {
+    width: 100%;
+
+    margin: 0;
+    padding: 10px;
+
+    border-radius: 6px;
+
+    background: #ffe5e5;
+    color: #a52b2b;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    text-align: center;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   NOME E PERFIS DE ACESSO
+========================================= */
+
+.pagina-perfil .identificacao-perfil {
     display: flex;
     flex-direction: column;
+
+    align-items: center;
+
+    width: 100%;
     min-width: 0;
-    gap: 5px;
+
+    margin-top: 12px;
+
+    text-align: center;
 }
 
-.informacao-item span {
-    color: #7188c7;
-    font-size: 13px;
-}
+.pagina-perfil .identificacao-perfil h2 {
+    width: 100%;
 
-.informacao-item p {
     margin: 0;
+
+    color: #ffffff;
+
+    font-size: 30px;
+    font-weight: 600;
+
     overflow-wrap: anywhere;
-    color: white;
+}
+
+.pagina-perfil .identificacao-perfil p {
+    margin: 5px 0 0;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   INPUT DO NOME
+========================================= */
+
+.pagina-perfil .input-nome-perfil {
+    width: 85%;
+    max-width: 500px;
+
+    min-height: 38px;
+
+    margin: 4px 0;
+    padding: 8px;
+
+    border: 1px solid #fff;
+    border-radius: 5px;
+
+    outline: none;
+
+    background: #fff;
+    color: var(--perfil-azul);
+
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 700;
+
+    text-align: center;
+}
+
+/* =========================================
+   INFORMAÇÕES DO PERFIL
+========================================= */
+
+.pagina-perfil .informacoes-perfil {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px 25px;
+
+    width: 100%;
+
+    margin-top: 35px;
+    padding: 0 12px;
+}
+
+.pagina-perfil .informacao-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.pagina-perfil .informacao-item img {
+    display: block;
+
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    object-fit: contain;
+}
+
+.pagina-perfil .informacao-item > div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 0;
+}
+
+.pagina-perfil .informacao-item span {
+    color: #b4c5f0;
+
     font-size: 13px;
 }
 
-.informacao-item input {
+.pagina-perfil .informacao-item p {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   CAMPOS EDITÁVEIS
+========================================= */
+
+.pagina-perfil .informacao-item input {
     width: 100%;
     min-width: 0;
-    padding: 5px;
-    border: 1px solid #ffffff;
-    border-radius: 4px;
+
+    min-height: 32px;
+
+    padding: 6px 8px;
+
+    border: 1px solid #fff;
+    border-radius: 5px;
+
     outline: none;
-    background: white;
-    color: #1d2e68;
-    font-size: 12px;
-}
 
-/* BOTÕES */
+    background: #ffffff;
+    color: var(--perfil-azul);
 
-.acoes-perfil {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    margin-top: auto;
-    padding-top: 25px;
-}
-
-.botao-editar-perfil,
-.botao-salvar-perfil,
-.botao-cancelar-perfil {
-    min-height: 31px;
-    border: 1px solid white;
-    border-radius: 6px;
-    cursor: pointer;
+    font-family: inherit;
     font-size: 13px;
-    transition: 0.2s;
 }
 
-.botao-editar-perfil {
+.pagina-perfil .informacao-item input:focus,
+.pagina-perfil .input-nome-perfil:focus {
+    border-color: var(--perfil-laranja);
+
+    box-shadow:
+        0 0 0 2px rgba(255, 133, 0, 0.25);
+}
+
+/* =========================================
+   BOTÕES DO PERFIL
+========================================= */
+
+.pagina-perfil .acoes-perfil {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
     width: 100%;
-    height: 40px;
-    background: transparent;
-    color: white;
+
+    margin-top: auto;
+    padding-top: 30px;
 }
 
-.botao-editar-perfil:hover {
+.pagina-perfil .botao-editar-perfil,
+.pagina-perfil .botao-salvar-perfil,
+.pagina-perfil .botao-cancelar-perfil {
+    min-height: 42px;
+
+    padding: 8px 15px;
+
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        opacity 0.2s;
+}
+
+/* EDITAR */
+
+.pagina-perfil .botao-editar-perfil {
+    width: 100%;
+
+    background: transparent;
+    color: #fff;
+}
+
+.pagina-perfil .botao-editar-perfil:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.12);
 }
 
-.botao-salvar-perfil {
+/* SALVAR */
+
+.pagina-perfil .botao-salvar-perfil {
     flex: 1;
+
     background: #ffffff;
-    color: #1d2e68;
+    color: var(--perfil-azul);
 }
 
-.botao-cancelar-perfil {
-    padding: 0 15px;
+.pagina-perfil .botao-salvar-perfil:hover:not(:disabled) {
+    background: #e8f1fa;
+}
+
+/* CANCELAR */
+
+.pagina-perfil .botao-cancelar-perfil {
     background: transparent;
-    color: white;
+    color: #ffffff;
 }
 
-/* CARTÕES LATERAIS */
-
-.configuracoes-perfil {
-    display: flex;
-    flex-direction: column;
-    gap: 17px;
+.pagina-perfil .botao-cancelar-perfil:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
 }
 
-.cartao-configuracao {
+/* =========================================
+   CARTÕES LATERAIS
+========================================= */
+
+.pagina-perfil .configuracoes-perfil {
     display: flex;
     flex-direction: column;
-    min-height: 213px;
-    padding: 20px 15px;
+
+    gap: 16px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+/* =========================================
+   CARTÃO DE CONFIGURAÇÃO
+========================================= */
+
+.pagina-perfil .cartao-configuracao {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 210px;
+
+    padding: 22px 18px;
+
     border-radius: 8px;
+
     background: #e8f1fa;
     color: #111;
 }
 
-.cartao-configuracao h3 {
-    margin: 0 0 12px 5px;
-    font-size: 16px;
+.pagina-perfil .cartao-configuracao h3 {
+    margin: 0 0 18px;
+
+    color: #111;
+
+    font-size: 17px;
     font-weight: 600;
 }
 
-.configuracao-item {
+/* =========================================
+   ITENS DE CONFIGURAÇÃO
+========================================= */
+
+.pagina-perfil .configuracao-item {
     display: flex;
+
     align-items: center;
-    gap: 9px;
-    margin: 6px 0;
+
+    gap: 10px;
+
+    min-width: 0;
+
+    margin: 8px 0;
 }
 
-.configuracao-item img {
-    width: 30px;
-    height: 30px;
-}
-
-.icone-configuracao {
+.pagina-perfil .icone-configuracao {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
+    flex-shrink: 0;
+
     width: 34px;
     min-width: 34px;
-    color: #777;
-    font-size: 34px;
-    line-height: 1;
 }
 
-.configuracao-item div {
+.pagina-perfil .configuracao-item img {
+    display: block;
+
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    object-fit: contain;
+}
+
+.pagina-perfil .configuracao-item > div {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+
+    gap: 4px;
+
+    min-width: 0;
 }
 
-.configuracao-item div span {
-    color: #777;
-    font-size: 14px;
+.pagina-perfil .configuracao-item div span {
+    color: #687386;
+
+    font-size: 13px;
 }
 
-.configuracao-item p {
+.pagina-perfil .configuracao-item p {
     margin: 0;
+
     color: #111;
+
     font-size: 14px;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
 }
 
-.configuracao-item strong {
-    color: #62bfa6;
-    font-weight: normal;
-}
+/* =========================================
+   DIVISÓRIA
+========================================= */
 
-.linha-configuracao {
+.pagina-perfil .linha-configuracao {
     width: 100%;
     height: 1px;
+
     margin: 15px 0 8px;
+
     background: #b7c2ce;
 }
 
-.alterar-senha {
+/* =========================================
+   ALTERAR SENHA
+========================================= */
+
+.pagina-perfil .alterar-senha {
     display: flex;
+
     align-items: center;
+
     gap: 8px;
+
+    width: 100%;
+
+    min-height: 36px;
+
+    margin-top: auto;
     padding: 4px 0;
+
     border: none;
+    border-radius: 5px;
+
     background: transparent;
-    color: #777;
-    cursor: pointer;
+    color: #687386;
+
+    font-family: inherit;
+    font-size: 15px;
+
     text-align: left;
-    font-size: 16px;
+
+    cursor: pointer;
 }
 
-.alterar-senha img {
+.pagina-perfil .alterar-senha img {
+    display: block;
+
+    flex-shrink: 0;
+
     width: 30px;
     height: 30px;
+
+    object-fit: contain;
 }
 
-.alterar-senha span {
-    font-size: 25px;
+.pagina-perfil .alterar-senha:hover:not(:disabled) {
+    color: var(--perfil-azul);
 }
 
-.cartao-preferencias {
-    min-height: 220px;
+/* =========================================
+   PREFERÊNCIAS
+========================================= */
+
+.pagina-perfil .cartao-preferencias {
+    flex: 1;
 }
 
-.cartao-preferencias .configuracao-item {
+.pagina-perfil .cartao-preferencias .configuracao-item {
     margin: 10px 0;
 }
 
-/* RESPONSIVIDADE PARA TABLETS */
-
-@media (max-width: 950px) and (min-width: 701px) {
-
-    .pagina-perfil {
-        position: relative;
-    }
-
-    /* MENU AZUL NA PARTE INFERIOR */
-
-    .menu-perfil {
-        display: contents;
-    }
-
-    .logo-perfil {
-        position: absolute;
-        top: 12px;
-        left: 20px;
-        z-index: 5;
-        width: 175px;
-        margin: 0;
-    }
-
-    .navegacao-perfil {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1000;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-        gap: 4px;
-        width: 100%;
-        padding: 9px 8px;
-        background: #1d2e68;
-    }
-
-    .item-menu-perfil {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        margin: 0;
-        padding: 5px;
-        font-size: 11px;
-        text-align: center;
-    }
-
-    .item-menu-perfil img {
-        width: 25px;
-        height: 25px;
-    }
-
-    .item-menu-perfil span {
-        font-size: 11px;
-    }
-
-    .item-menu-perfil:hover {
-        background: rgba(255, 255, 255, 0.12);
-    }
-
-    .sair-perfil {
-        display: none;
-    }
-
-    .topo-perfil {
-        height: 65px;
-        padding: 10px 20px 10px 210px;
-    }
-
-    .pesquisa-topo-perfil {
-        width: 70%;
-    }
-
-    .conteudo-perfil {
-        padding: 15px 20px 100px;
-    }
-
-    .conteudo-perfil h1 {
-        font-size: 31px;
-    }
-
-    .area-perfil {
-        grid-template-columns: minmax(0, 1fr) 190px;
-        gap: 12px;
-        margin-left: 0;
-    }
-
-    .cartao-perfil {
-        min-width: 0;
-        padding: 25px 12px;
-    }
-
-    .foto-perfil {
-        width: 155px;
-        height: 155px;
-    }
-
-    .identificacao-perfil h2 {
-        font-size: 26px;
-    }
-
-    .informacoes-perfil {
-        gap: 15px 8px;
-        padding: 0;
-    }
-
-    .informacao-item {
-        gap: 7px;
-    }
-
-    .informacao-item span {
-        font-size: 12px;
-    }
-
-    .informacao-item p {
-        font-size: 12px;
-    }
-
-    .configuracoes-perfil {
-        gap: 12px;
-    }
-
-    .cartao-configuracao {
-        padding: 15px 10px;
-    }
-
-    .cartao-configuracao h3 {
-        font-size: 15px;
-    }
-
-    .configuracao-item div span,
-    .configuracao-item p {
-        font-size: 12px;
-    }
-}
-
-/* TABLETS MENORES */
-
-@media (max-width: 800px) and (min-width: 701px) {
-
-    .area-perfil {
-        grid-template-columns: minmax(0, 1fr) 170px;
-        gap: 10px;
-    }
-
-    .informacoes-perfil {
-        grid-template-columns: 1fr;
-        gap: 13px;
-    }
-
-    .cartao-perfil {
-        min-height: 0;
-    }
-
-    .cartao-configuracao {
-        padding: 14px 9px;
-    }
-
-    .topo-perfil {
-        padding-left: 190px;
-    }
-
-    .logo-perfil {
-        width: 155px;
-    }
-}
-
-/* RESPONSIVIDADE PARA CELULARES */
-
-@media (max-width: 700px) {
-    .pagina-perfil {
-        flex-direction: column;
-    }
-
-    .menu-perfil {
-        display: contents;
-    }
-
-    .logo-perfil {
-        position: absolute;
-        top: 15px;
-        left: 12px;
-        width: 145px;
-        margin: 0;
-        z-index: 20;
-    }
-
-    .logo-perfil img {
-        width: 100%;
-        height: auto;
-    }
-
-    .navegacao-perfil,
-    .sair-perfil {
-        display: none;
-    }
-
-    .principal-perfil {
-        width: 100%;
-        padding-top: 0;
-    }
-
-    .topo-perfil {
-        position: relative;
-        display: block;
-        width: 100%;
-        height: auto;
-        padding: 70px 12px 10px;
-    }
-
-    .usuario-topo-perfil {
-        position: absolute;
-        top: 10px;
-        right: 12px;
-        z-index: 20;
-        margin: 0;
-    }
-
-    .pesquisa-topo-perfil {
-        display: flex;
-        position: relative;
-        width: 100%;
-        height: 38px;
-        margin: 0;
-    }
-}   @media (max-width: 700px) {
-
-    .pagina-perfil {
-        position: relative !important;
-    }
-
-    .menu-perfil {
-        display: contents !important;
-    }
-
-    /* LOGO */
-    .logo-perfil {
-        position: absolute !important;
-        top: 15px !important;
-        left: 12px !important;
-        width: 145px !important;
-        margin: 0 !important;
-        z-index: 100 !important;
-    }
-
-    /* CABEÇALHO */
-    .topo-perfil {
-        position: relative !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        justify-content: flex-start !important;
-        height: auto !important;
-        min-height: 115px !important;
-        padding: 70px 12px 10px !important;
-        gap: 0 !important;
-    }
-
-    /* BOLINHA DO PERFIL */
-    .usuario-topo-perfil {
-        position: absolute !important;
-        top: 12px !important;
-        right: 12px !important;
-        margin: 0 !important;
-        z-index: 100 !important;
-    }
-
-    /* PESQUISA ABAIXO DOS DOIS */
-    .pesquisa-topo-perfil {
-        position: relative !important;
-        display: flex !important;
-        order: 2 !important;
-        width: 100% !important;
-        height: 38px !important;
-        margin: 0 !important;
-        transform: none !important;
-    }
-
-    .navegacao-perfil,
-    .sair-perfil {
-        display: none !important;
-    }
-}@media (max-width: 700px) {
-
-    .pagina-perfil {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    /* MANTÉM A LOGO E ESCONDE A NAVEGAÇÃO */
-
-    .menu-perfil {
-        display: contents;
-    }
-
-    .logo-perfil {
-        display: block;
-        width: 145px;
-        margin: 15px 12px 5px;
-    }
-
-    .logo-perfil img {
-        display: block;
-        width: 100%;
-        height: auto;
-    }
-
-    .navegacao-perfil,
-    .sair-perfil {
-        display: none;
-    }
-
-    .principal-perfil {
-        width: 100%;
-        min-height: 100vh;
-    }
-
-    /* CABEÇALHO E PESQUISA */
-
-    .topo-perfil {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        height: auto;
-        gap: 12px;
-        padding: 10px 12px;
-    }
-
-    .pesquisa-topo-perfil {
-        order: 1;
-        width: 100%;
-        height: 38px;
-    }
-
-    .usuario-topo-perfil {
-        order: 2;
-        align-self: flex-end;
-    }
-
-    .conteudo-perfil {
-        padding: 18px 12px 25px;
-    }
-
-    /* BOTÃO VOLTAR */
-
-    .voltar-perfil {
-        display: inline-flex;
-        align-items: center;
-        align-self: flex-start;
-        gap: 7px;
-        width: fit-content;
-        margin-bottom: 13px;
-        color: #3c8cdf;
-        font-size: 14px;
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    .voltar-perfil:hover {
-        color: #f38f2c;
-    }
-
-    .conteudo-perfil h1 {
-        font-size: 26px;
-        margin-bottom: 20px;
-    }
-
-    .area-perfil {
-        grid-template-columns: 1fr;
-        gap: 18px;
-        margin: 0;
-    }
-
-    .cartao-perfil {
-        width: 100%;
-        min-width: 0;
-        min-height: auto;
-        padding: 25px 15px;
-    }
-
-    .foto-perfil {
-        width: 160px;
-        height: 160px;
-    }
-
-    .identificacao-perfil h2 {
-        font-size: 27px;
-    }
-
-    .informacoes-perfil {
-        grid-template-columns: 1fr 1fr;
-        gap: 18px 12px;
-        padding: 0;
-    }
-
-    .informacao-item {
-        gap: 8px;
-    }
-
-    .informacao-item img {
-        width: 25px;
-        height: 25px;
-    }
-
-    .informacao-item span {
-        font-size: 12px;
-    }
-
-    .informacao-item p {
-        font-size: 12px;
-    }
-
-    .configuracoes-perfil {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-    }
-
-    .cartao-configuracao {
-        min-height: 200px;
-        padding: 16px 12px;
-    }
-
-    .cartao-configuracao h3 {
-        font-size: 15px;
-    }
-
-    .configuracao-item {
-        gap: 7px;
-    }
-
-    .configuracao-item div span,
-    .configuracao-item p {
-        font-size: 12px;
-    }
-}
-
-/* AJUSTES PARA CELULARES MENORES */
-
-@media (max-width: 450px) {
-
-    .configuracoes-perfil {
-        grid-template-columns: 1fr;
-    }
-
-    .informacoes-perfil {
-        grid-template-columns: 1fr;
-    }
-
-    .foto-perfil {
-        width: 145px;
-        height: 145px;
-    }
-
-    .identificacao-perfil h2 {
-        font-size: 25px;
-    }
-
-    .conteudo-perfil h1 {
-        font-size: 23px;
-    }
-
-    .acoes-perfil {
-        gap: 8px;
-    }
-
-    .botao-cancelar-perfil {
-        padding: 0 10px;
-    }
-
-    .cartao-configuracao {
-        min-height: auto;
-    }
-
-    .informacao-item {
-        gap: 10px;
-    }
-
-    .input-nome-perfil {
-        width: 100%;
-        font-size: 18px;
-    }
-
-    .input-cargo-perfil {
-        width: 100%;
-    }
-}
-
-/* CELULARES MUITO ESTREITOS */
-
-@media (max-width: 340px) {
-
-    .topo-perfil {
-        padding: 10px;
-    }
-
-    .dados-usuario-perfil {
-        display: none;
-    }
-
-    .conteudo-perfil {
-        padding-right: 10px;
-        padding-left: 10px;
-    }
-
-    .cartao-perfil {
-        padding-right: 12px;
-        padding-left: 12px;
-    }
-
-    .botao-salvar-perfil,
-    .botao-cancelar-perfil {
-        font-size: 11px;
-    }
-}
-
-/* MODAL DE ALTERAÇÃO DE SENHA */
-
-.fundo-modal-senha {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.modal-alterar-senha {
+/* =========================================
+   MENSAGENS
+========================================= */
+
+.pagina-perfil .mensagem-perfil {
     width: 100%;
-    max-width: 430px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 30px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
 
-.modal-alterar-senha h2 {
-    margin: 0 0 12px;
-    color: #1d2e68;
-    font-size: 22px;
-}
+    margin-bottom: 20px;
+    padding: 13px 15px;
 
-.modal-alterar-senha label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-}
-
-.modal-alterar-senha input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d5d9e2;
     border-radius: 8px;
-    font-size: 14px;
-    outline: none;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
 }
 
-.modal-alterar-senha input:focus {
-    border-color: #1d2e68;
+.pagina-perfil .mensagem-perfil.sucesso {
+    border: 1px solid #9bd7b5;
+
+    background: #e8f7ee;
+    color: #236b42;
 }
 
-.botoes-modal-senha {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 15px;
+.pagina-perfil .mensagem-perfil.erro {
+    border: 1px solid #e7b4b4;
+
+    background: #fff2f2;
+    color: #a52b2b;
 }
 
-.botoes-modal-senha button {
-    padding: 11px 16px;
+.pagina-perfil .mensagem-perfil p {
+    margin: 0 0 10px;
+}
+
+.pagina-perfil .botao-tentar-perfil {
+    min-height: 34px;
+
+    padding: 0 15px;
+
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
+    border-radius: 6px;
 
-.botoes-modal-senha button:first-child {
-    background: #e9edf4;
-    color: #333;
-}
-
-.botoes-modal-senha button:last-child {
-    background: #f28c28;
+    background: var(--perfil-azul);
     color: #fff;
-}
 
-.botoes-modal-senha button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
+    font-family: inherit;
+    font-size: 13px;
 
-@media (max-width: 480px) {
-    .modal-alterar-senha {
-        padding: 22px;
-    }
-
-    .botoes-modal-senha {
-        flex-direction: column;
-    }
-
-    .botoes-modal-senha button {
-        width: 100%;
-    }
-}
-
-/* ============================================= */
-/* AJUSTES DESKTOP - MEU PERFIL / FIGMA          */
-/* ============================================= */
-
-@media (min-width: 951px) {
-
-    /* ÁREA PRINCIPAL */
-
-    .principal-perfil {
-        flex: 1;
-        min-width: 0;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .conteudo-perfil {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 16px 30px 25px;
-        min-width: 0;
-    }
-
-    .conteudo-perfil h1 {
-        margin: 0 0 25px;
-        font-size: 32px;
-        color: #123c68;
-        font-weight: 600;
-    }
-
-    /* ÁREA DOS CARTÕES */
-
-    .area-perfil {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 230px;
-        gap: 16px;
-        align-items: stretch;
-
-        width: 100%;
-        flex: 1;
-        min-height: 500px;
-
-        margin: 0;
-    }
-
-    /* CARTÃO PRINCIPAL AZUL */
-
-    .cartao-perfil {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        width: 100%;
-        height: 100%;
-        min-height: 500px;
-
-        padding: 30px 24px 20px;
-
-        background: #1d2e68;
-        border-radius: 8px;
-        color: #ffffff;
-    }
-
-    /* FOTO DE PERFIL */
-
-    .foto-perfil1,
-    .foto-perfil {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        width: 190px;
-        height: 190px;
-        flex-shrink: 0;
-
-        border: 3px solid #050505;
-        border-radius: 50%;
-        overflow: hidden;
-        background: #c8e0ff;
-    }
-
-    .foto-perfil1 img,
-    .foto-perfil img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        padding: 12px;
-    }
-
-    /* NOME E PERFIL */
-
-    .identificacao-perfil {
-        margin-top: 20px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .identificacao-perfil h2 {
-        font-size: 32px;
-        font-weight: 600;
-        color: #ffffff;
-    }
-
-    .identificacao-perfil p {
-        margin-top: 5px;
-        font-size: 17px;
-        color: #ffffff;
-    }
-
-    /* DADOS DO USUÁRIO */
-
-    .informacoes-perfil {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 20px 25px;
-
-        width: 100%;
-        margin-top: 35px;
-        padding: 0 12px;
-    }
-
-    .informacao-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 0;
-    }
-
-    .informacao-item img {
-        width: 30px;
-        height: 30px;
-        flex-shrink: 0;
-        object-fit: contain;
-    }
-
-    .informacao-item span {
-        font-size: 14px;
-        color: #7188c7;
-    }
-
-    .informacao-item p {
-        font-size: 14px;
-        color: #ffffff;
-        overflow-wrap: anywhere;
-    }
-
-    /* BOTÕES DE EDIÇÃO */
-
-    .acoes-perfil {
-        display: flex;
-        width: 100%;
-        gap: 10px;
-
-        margin-top: auto;
-        padding-top: 30px;
-    }
-
-    .botao-editar-perfil {
-        width: 100%;
-        height: 42px;
-        border: 1px solid #ffffff;
-        border-radius: 6px;
-        background: transparent;
-        color: #ffffff;
-        cursor: pointer;
-    }
-
-    /* CARTÕES LATERAIS */
-
-    .configuracoes-perfil {
-        display: flex;
-        flex-direction: column;
-
-        height: 100%;
-        gap: 16px;
-        min-width: 0;
-    }
-
-    .cartao-configuracao {
-        flex: 1;
-        min-height: 0;
-
-        display: flex;
-        flex-direction: column;
-
-        padding: 22px 18px;
-        background: #e8f1fa;
-        border-radius: 8px;
-    }
-
-    .cartao-configuracao h3 {
-        margin-bottom: 18px;
-        font-size: 17px;
-    }
-
-    .cartao-preferencias {
-        flex: 1;
-        min-height: 0;
-    }
-
-    .configuracao-item {
-        gap: 10px;
-        margin: 8px 0;
-    }
-
-    .configuracao-item img {
-        width: 30px;
-        height: 30px;
-        object-fit: contain;
-        flex-shrink: 0;
-    }
-
-    /* EVITA ESPAÇOS INDESEJADOS */
-
-    .pagina-perfil {
-        min-height: 100vh;
-        align-items: stretch;
-    }
-}
-/* Adicione ao FINAL de editarperfil.css */
-.pagina-perfil .area-foto-edicao {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-.pagina-perfil .area-foto-edicao .foto-perfil1 {
-    width: 112px;
-    height: 112px;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.pagina-perfil .area-foto-edicao .foto-perfil1 img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-.pagina-perfil .acoes-foto-perfil { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-.pagina-perfil .acoes-foto-perfil button {
     cursor: pointer;
-    padding: 8px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    background: #fff;
-    color: #1d2e68;
-    font: inherit;
 }
-.pagina-perfil .acoes-foto-perfil button:disabled { opacity: .6; cursor: not-allowed; }
-.pagina-perfil .erro-foto-perfil { color: #b91c1c; font-size: 13px; text-align: center; }
-
-
 
 /* =========================================
-   SAIR DA CONTA — EXCLUSIVO MEU PERFIL MOBILE
-   Desktop mantém o logout original na Sidebar.
+   LOGOUT MOBILE
 ========================================= */
+
 .pagina-perfil .botao-sair-perfil-mobile {
     display: none;
 }
 
+/* =========================================
+   MODAL DE ALTERAÇÃO DE SENHA
+========================================= */
+
+.pagina-perfil .fundo-modal-senha {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    overflow-y: auto;
+
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.pagina-perfil .modal-alterar-senha {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    width: 100%;
+    max-width: 430px;
+
+    max-height: 90vh;
+    max-height: 90dvh;
+
+    padding: 28px;
+
+    overflow-y: auto;
+
+    border-radius: 12px;
+
+    background: #fff;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.pagina-perfil .modal-alterar-senha h2 {
+    margin: 0;
+
+    color: var(--perfil-azul);
+
+    font-size: 22px;
+}
+
+.pagina-perfil .descricao-modal-senha {
+    margin: 0 0 5px;
+
+    color: #687386;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================================
+   CAMPOS DE SENHA
+========================================= */
+
+.pagina-perfil .modal-alterar-senha > label {
+    color: #333;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.pagina-perfil .modal-alterar-senha > input {
+    flex-shrink: 0;
+
+    width: 100%;
+    min-height: 42px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #d5d9e2;
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #fff;
+
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.pagina-perfil .modal-alterar-senha > input:focus {
+    border-color: var(--perfil-azul);
+}
+
+/* =========================================
+   MOSTRAR SENHAS
+========================================= */
+
+.pagina-perfil .mostrar-senha-perfil {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 3px;
+
+    color: #687386;
+
+    font-size: 12px !important;
+    font-weight: 400 !important;
+
+    cursor: pointer;
+}
+
+.pagina-perfil .mostrar-senha-perfil input {
+    width: 16px;
+    height: 16px;
+
+    margin: 0;
+
+    accent-color: var(--perfil-azul);
+
+    cursor: pointer;
+}
+
+/* =========================================
+   ERROS DO MODAL
+========================================= */
+
+.pagina-perfil .erro-modal-senha {
+    margin: 0;
+    padding: 12px;
+
+    border: 1px solid #e7b4b4;
+    border-radius: 7px;
+
+    background: #fff2f2;
+    color: #a52b2b;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   BOTÕES DO MODAL
+========================================= */
+
+.pagina-perfil .botoes-modal-senha {
+    display: flex;
+
+    justify-content: flex-end;
+
+    flex-shrink: 0;
+
+    gap: 12px;
+
+    margin-top: 12px;
+}
+
+.pagina-perfil .botoes-modal-senha button {
+    min-height: 39px;
+
+    padding: 10px 15px;
+
+    border: none;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+/* CANCELAR */
+
+.pagina-perfil .botoes-modal-senha button:first-child {
+    background: #e9edf4;
+    color: #333;
+}
+
+/* SALVAR SENHA */
+
+.pagina-perfil .botoes-modal-senha button:last-child {
+    background: #f28c28;
+    color: #ffffff;
+}
+
+.pagina-perfil .botoes-modal-senha button:last-child:hover:not(:disabled) {
+    background: #df7818;
+}
+
+/* =========================================
+   ACESSIBILIDADE
+========================================= */
+
+.pagina-perfil button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+.pagina-perfil button:focus-visible {
+    outline: 2px solid var(--perfil-laranja);
+
+    outline-offset: 2px;
+}
+
+.pagina-perfil input:disabled {
+    opacity: 0.75;
+
+    cursor: not-allowed;
+}
+
+/* =========================================
+   INTEGRAÇÃO COM O LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .pagina-perfil {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 100%;
+
+    overflow: visible;
+}
+
+.integra-layout .pagina-perfil .principal-perfil {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+}
+
+.integra-layout .pagina-perfil .conteudo-perfil {
+    position: relative;
+
+    inset: auto;
+
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    margin: 0;
+
+    overflow: visible;
+}
+
+/* =========================================
+   TABLETS
+   701PX ATÉ 1200PX
+========================================= */
+
+@media (min-width: 701px) and (max-width: 1200px) {
+
+    .pagina-perfil .conteudo-perfil {
+        padding: 25px 22px 30px;
+    }
+
+    .pagina-perfil .conteudo-perfil h1 {
+        font-size: 28px;
+    }
+
+    .pagina-perfil .area-perfil {
+        grid-template-columns:
+            minmax(0, 1fr)
+            200px;
+
+        gap: 12px;
+    }
+
+    .pagina-perfil .cartao-perfil {
+        padding: 25px 16px 20px;
+    }
+
+    .pagina-perfil .identificacao-perfil h2 {
+        font-size: 26px;
+    }
+
+    .pagina-perfil .identificacao-perfil p {
+        font-size: 14px;
+    }
+
+    .pagina-perfil .informacoes-perfil {
+        gap: 18px 12px;
+
+        padding: 0;
+    }
+
+    .pagina-perfil .informacao-item {
+        gap: 8px;
+    }
+
+    .pagina-perfil .informacao-item img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .pagina-perfil .informacao-item span,
+    .pagina-perfil .informacao-item p {
+        font-size: 12px;
+    }
+
+    .pagina-perfil .configuracoes-perfil {
+        gap: 12px;
+    }
+
+    .pagina-perfil .cartao-configuracao {
+        padding: 16px 12px;
+    }
+
+    .pagina-perfil .cartao-configuracao h3 {
+        font-size: 16px;
+    }
+
+    .pagina-perfil .configuracao-item div span,
+    .pagina-perfil .configuracao-item p {
+        font-size: 12px;
+    }
+
+}
+
+/* =========================================
+   TABLETS ESTREITOS
+========================================= */
+
+@media (min-width: 701px) and (max-width: 950px) {
+
+    .pagina-perfil .area-perfil {
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        min-height: 0;
+    }
+
+    .pagina-perfil .cartao-perfil {
+        min-height: 450px;
+    }
+
+    .pagina-perfil .configuracoes-perfil {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .pagina-perfil .cartao-configuracao {
+        min-height: 190px;
+    }
+
+}
+
+/* =========================================
+   MOBILE
+   ATÉ 700PX
+========================================= */
+
 @media (max-width: 700px) {
+
+    .pagina-perfil {
+        width: 100%;
+        height: auto;
+
+        min-height: 100%;
+
+        overflow: visible;
+    }
+
+    .pagina-perfil .principal-perfil {
+        width: 100%;
+        height: auto;
+
+        min-width: 0;
+        min-height: 0;
+
+        padding: 0;
+    }
+
+    .pagina-perfil .conteudo-perfil {
+        width: 100%;
+
+        padding: 18px 14px 25px;
+    }
+
+    /* VOLTAR */
+
+    .pagina-perfil .voltar-perfil {
+        display: inline-flex;
+
+        margin-bottom: 13px;
+    }
+
+    /* TÍTULO */
+
+    .pagina-perfil .conteudo-perfil h1 {
+        margin-bottom: 20px;
+
+        font-size: 26px;
+    }
+
+    /* ÁREA DOS CARTÕES */
+
+    .pagina-perfil .area-perfil {
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 18px;
+
+        min-height: 0;
+
+        margin: 0;
+    }
+
+    /* CARTÃO PRINCIPAL */
+
+    .pagina-perfil .cartao-perfil {
+        width: 100%;
+
+        min-width: 0;
+        min-height: 0;
+
+        padding: 25px 15px 20px;
+    }
+
+    /* FOTO */
+
+    .pagina-perfil .foto-perfil1 {
+        width: 112px;
+        height: 112px;
+    }
+
+    .pagina-perfil .acoes-foto-perfil {
+        gap: 8px;
+    }
+
+    .pagina-perfil .acoes-foto-perfil button {
+        min-height: 32px;
+
+        padding: 7px 10px;
+
+        font-size: 11px;
+    }
+
+    .pagina-perfil .limite-foto-perfil {
+        font-size: 10px;
+    }
+
+    /* IDENTIFICAÇÃO */
+
+    .pagina-perfil .identificacao-perfil h2 {
+        font-size: 25px;
+    }
+
+    .pagina-perfil .identificacao-perfil p {
+        font-size: 14px;
+    }
+
+    .pagina-perfil .input-nome-perfil {
+        width: 100%;
+
+        font-size: 18px;
+    }
+
+    /* INFORMAÇÕES */
+
+    .pagina-perfil .informacoes-perfil {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 18px 12px;
+
+        margin-top: 25px;
+        padding: 0;
+    }
+
+    .pagina-perfil .informacao-item {
+        gap: 8px;
+    }
+
+    .pagina-perfil .informacao-item img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .pagina-perfil .informacao-item span {
+        font-size: 12px;
+    }
+
+    .pagina-perfil .informacao-item p {
+        font-size: 12px;
+    }
+
+    /* BOTÕES */
+
+    .pagina-perfil .acoes-perfil {
+        gap: 8px;
+
+        padding-top: 25px;
+    }
+
+    .pagina-perfil .botao-editar-perfil,
+    .pagina-perfil .botao-salvar-perfil,
+    .pagina-perfil .botao-cancelar-perfil {
+        min-height: 40px;
+
+        font-size: 12px;
+    }
+
+    /* CARTÕES DE CONFIGURAÇÃO */
+
+    .pagina-perfil .configuracoes-perfil {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .pagina-perfil .cartao-configuracao {
+        min-height: 200px;
+
+        padding: 16px 12px;
+    }
+
+    .pagina-perfil .cartao-configuracao h3 {
+        margin-bottom: 12px;
+
+        font-size: 15px;
+    }
+
+    .pagina-perfil .configuracao-item {
+        gap: 7px;
+    }
+
+    .pagina-perfil .configuracao-item div span,
+    .pagina-perfil .configuracao-item p {
+        font-size: 12px;
+    }
+
+    .pagina-perfil .alterar-senha {
+        font-size: 14px;
+    }
+
+    /* MENSAGENS */
+
+    .pagina-perfil .mensagem-perfil {
+        padding: 12px;
+
+        font-size: 12px;
+    }
+
+    /* =====================================
+       LOGOUT EXCLUSIVO MOBILE
+    ===================================== */
+
     .pagina-perfil .botao-sair-perfil-mobile {
         display: flex;
+
         align-items: center;
         justify-content: center;
+
         gap: 10px;
+
         width: 100%;
         min-height: 48px;
+
         margin: 24px 0 8px;
         padding: 12px 18px;
-        border: 1px solid #1d2e68;
+
+        border: 1px solid var(--perfil-azul);
         border-radius: 8px;
-        background: #1d2e68;
+
+        background: var(--perfil-azul);
         color: #fff;
+
         font-family: inherit;
         font-size: 15px;
         font-weight: 600;
+
         cursor: pointer;
     }
 
     .pagina-perfil .botao-sair-perfil-mobile img {
         width: 22px;
         height: 22px;
+
         object-fit: contain;
     }
 
-    .pagina-perfil .botao-sair-perfil-mobile:active {
+    .pagina-perfil .botao-sair-perfil-mobile:hover:not(:disabled) {
         background: #29448c;
     }
+
+    /* MODAL */
+
+    .pagina-perfil .fundo-modal-senha {
+        padding: 15px;
+    }
+
+    .pagina-perfil .modal-alterar-senha {
+        padding: 22px;
+    }
+
+}
+
+/* =========================================
+   CELULARES MENORES
+========================================= */
+
+@media (max-width: 450px) {
+
+    .pagina-perfil .configuracoes-perfil {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .pagina-perfil .informacoes-perfil {
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 15px;
+    }
+
+    .pagina-perfil .conteudo-perfil h1 {
+        font-size: 23px;
+    }
+
+    .pagina-perfil .identificacao-perfil h2 {
+        font-size: 24px;
+    }
+
+    .pagina-perfil .cartao-configuracao {
+        min-height: 0;
+    }
+
+    .pagina-perfil .botao-cancelar-perfil {
+        padding: 8px 12px;
+    }
+
+    .pagina-perfil .botoes-modal-senha {
+        flex-direction: column;
+    }
+
+    .pagina-perfil .botoes-modal-senha button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================
+   CELULARES MUITO ESTREITOS
+========================================= */
+
+@media (max-width: 340px) {
+
+    .pagina-perfil .conteudo-perfil {
+        padding: 15px 10px 20px;
+    }
+
+    .pagina-perfil .cartao-perfil {
+        padding: 20px 12px;
+    }
+
+    .pagina-perfil .identificacao-perfil h2 {
+        font-size: 21px;
+    }
+
+    .pagina-perfil .botao-salvar-perfil,
+    .pagina-perfil .botao-cancelar-perfil {
+        font-size: 11px;
+    }
+
+    .pagina-perfil .modal-alterar-senha {
+        padding: 16px;
+    }
+
 }

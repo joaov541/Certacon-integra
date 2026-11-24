@@ -10,11 +10,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers
+// =========================================
+// CONTROLLERS
+// =========================================
+
 builder.Services.AddControllers();
 
+// =========================================
+// CORS - FRONTEND REACT
+// =========================================
 
-// Permitir comunicação com o frontend React
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirFrontend", policy =>
@@ -26,83 +31,147 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Swagger
+// =========================================
+// SWAGGER
+// =========================================
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Cole seu token JWT aqui."
-    });
+    options.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Cole seu token JWT aqui."
+        });
 
     options.AddSecurityRequirement(document =>
         new OpenApiSecurityRequirement
         {
-            [new OpenApiSecuritySchemeReference("Bearer", document)] =
-                new List<string>()
+            [new OpenApiSecuritySchemeReference(
+                "Bearer",
+                document
+            )] = new List<string>()
         });
 });
 
-// Banco de dados
-builder.Services.AddDbContext<IntegraCertaconContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("ConexaoIntegra")));
+// =========================================
+// BANCO DE DADOS
+// =========================================
 
-// Serviços da aplicação
+builder.Services.AddDbContext<IntegraCertaconContext>(
+    options => options.UseSqlServer(
+        builder.Configuration.GetConnectionString(
+            "ConexaoIntegra"
+        )
+    )
+);
+
+// =========================================
+// SERVIÇOS DA APLICAÇÃO
+// =========================================
+
 builder.Services.AddScoped<ArmazenamentoXmlService>();
+builder.Services.AddScoped<ValidacaoCnpjService>();
 builder.Services.AddScoped<ValidacaoNfeService>();
 builder.Services.AddScoped<AuditoriaService>();
+builder.Services.AddScoped<PermissaoService>();
+builder.Services.AddSingleton<LimiteConsultaChavesService>();
+builder.Services.AddScoped<SimuladorTributarioService>();
 
-// Senhas
-builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
+// =========================================
+// PROTEÇÃO DE SENHAS
+// =========================================
 
-// JWT
+builder.Services.AddScoped<
+    IPasswordHasher<Usuario>,
+    PasswordHasher<Usuario>
+>();
+
+// =========================================
+// AUTENTICAÇÃO JWT
+// =========================================
+
 var chave = builder.Configuration["Jwt:Chave"]
-    ?? throw new Exception("A chave JWT não foi configurada.");
+    ?? throw new Exception(
+        "A chave JWT não foi configurada."
+    );
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services
+    .AddAuthentication(
+        JwtBearerDefaults.AuthenticationScheme
+    )
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["Jwt:Emissor"],
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                ValidateIssuer = true,
 
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["Jwt:Audiencia"],
+                ValidIssuer =
+                    builder.Configuration["Jwt:Emissor"],
 
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
+                ValidateAudience = true,
 
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(chave))
-        };
+                ValidAudience =
+                    builder.Configuration["Jwt:Audiencia"],
+
+                ValidateLifetime = true,
+
+                ValidateIssuerSigningKey = true,
+
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(chave)
+                    )
+            };
     });
+
+// =========================================
+// AUTORIZAÇÃO
+// =========================================
 
 builder.Services.AddAuthorization();
 
+// =========================================
+// CONSTRUÇÃO DA APLICAÇÃO
+// =========================================
+
 var app = builder.Build();
 
-// Swagger no ambiente de desenvolvimento
+
+// =========================================
+// SWAGGER - DESENVOLVIMENTO
+// =========================================
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Middlewares
+// =========================================
+// MIDDLEWARES
+// =========================================
+
 app.UseHttpsRedirection();
+
 app.UseCors("PermitirFrontend");
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
-// Rotas
+// =========================================
+// ROTAS
+// =========================================
+
 app.MapControllers();
 
 app.Run();

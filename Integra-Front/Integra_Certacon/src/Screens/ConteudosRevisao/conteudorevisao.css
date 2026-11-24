@@ -1,1236 +1,902 @@
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
 
-* {
-    margin: 0;
-    padding: 0;
+.revisao-pagina {
+    --revisao-azul: #1d2e68;
+    --revisao-laranja: #ff8500;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 100%;
+
+    background: #f3f6fc;
+    color: #151515;
+
+    font-family: Arial, sans-serif;
+}
+
+.revisao-pagina * {
     box-sizing: border-box;
 }
 
-.revisao-pagina {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
-    background: #fff;
-    color: #151515;
-    font-family: Arial, sans-serif;
-}
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
 
-/* MENU LATERAL */
-
-/* MENU LATERAL */
-
-.revisao-sidebar {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 334px;
-    width: 334px;
-    min-width: 334px;
-    min-height: 100vh;
-    padding: 25px 20px;
-    background: #1d2e68;
-    color: #fff;
-}
-
-.revisao-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 35px;
-}
-
-.revisao-logo img {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    object-fit: contain;
-}
-
-.revisao-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.revisao-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-left: 20px;
-    padding: 9px 8px;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 15px;
-    text-decoration: none;
-    transition: background 0.2s;
-}
-
-.revisao-menu-item:hover,
-.revisao-menu-ativo {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-.revisao-menu-item img,
-.revisao-sair img {
-    display: block;
-    flex-shrink: 0;
-    width: 33px;
-    height: 33px;
-    object-fit: contain;
-}
-
-.revisao-menu-item span,
-.revisao-sair span {
-    font-size: 14px;
-}
-
-.revisao-sair {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-top: auto;
-    margin-left: 20px;
-    padding: 10px 8px;
-    border: none;
-    background: transparent;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    text-align: left;
-    cursor: pointer;
-}
-
-/* CONTEÚDO PRINCIPAL */
-
-.revisao-principal {
+.revisao-pagina .revisao-principal {
     display: flex;
     flex: 1;
     flex-direction: column;
-    min-width: 0;
-}
 
-/* HEADER OFICIAL */
-
-.revisao-principal .integra-header {
-    gap: 20px;
-    padding: 15px 30px 20px;
-}
-
-.revisao-principal .header-logo {
-    width: 220px;
-    height: 75px;
-}
-
-.revisao-principal .header-foto {
-    width: 55px;
-    height: 55px;
-    font-size: 15px;
-}
-
-.revisao-principal .header-dados strong {
-    font-size: 15px;
-}
-
-.revisao-principal .header-dados span {
-    font-size: 12px;
-}
-
-.revisao-principal .header-pesquisa {
-    height: 40px;
-    padding: 0 15px;
-}
-
-.revisao-principal .header-pesquisa img {
-    width: 20px;
-    height: 20px;
-}
-
-.revisao-principal .header-pesquisa input {
-    font-size: 13px;
-}
-
-/* HEADER DESKTOP */
-
-.revisao-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 76px;
-    padding: 14px 30px;
-    border-bottom: 10px solid #f3f6fc;
-    background: #fff;
-}
-
-.revisao-busca {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    max-width: 555px;
-    height: 37px;
-    padding: 0 15px;
-    border-radius: 6px;
-    background: #f3f6fc;
-}
-
-.revisao-busca img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.revisao-busca input {
     width: 100%;
     min-width: 0;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: #333;
-    font-family: inherit;
-    font-size: 11px;
-}
-
-.revisao-busca input::placeholder {
-    color: #777;
-}
-
-.revisao-usuario {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-}
-
-.revisao-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #dce6f0;
-    color: #1d2e68;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.revisao-dados-usuario {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.revisao-dados-usuario strong {
-    font-size: 11px;
-}
-
-.revisao-dados-usuario span {
-    color: #777;
-    font-size: 10px;
-}
-
-.revisao-opcoes {
-    margin-left: 5px;
-    color: #777;
-    font-size: 12px;
-}
-
-/* HEADER MOBILE */
-
-.revisao-header-mobile {
-    display: none;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
     min-height: 0;
-    padding: 10px 17px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
+
+    height: auto;
+    padding: 0;
+
+    overflow: visible;
 }
 
-.revisao-logo-mobile {
-    display: block;
-    flex-shrink: 0;
-    width: 175px;
-    max-width: 48%;
-    max-height: 55px;
-    object-fit: contain;
-    object-position: left center;
-}
+/* =========================================
+   ÁREA DE REVISÃO
+========================================= */
 
-/* ÁREA DE REVISÃO */
-
-.revisao-conteudo {
+.revisao-pagina .revisao-conteudo {
     display: flex;
     flex: 1;
     flex-direction: column;
+
     width: 100%;
-    min-height: calc(100vh - 160px);
+    min-width: 0;
+    min-height: 0;
+
     padding: 25px 30px 20px;
+
     background: #f3f6fc;
 }
 
-.revisao-titulo {
+.revisao-pagina .revisao-titulo {
     margin: 0 0 26px;
-    color: #1d2e68;
+
+    color: var(--revisao-azul);
+
     font-size: 23px;
+    font-weight: 700;
 }
 
-/* ABAS */
+/* =========================================
+   ABAS
+========================================= */
 
-.revisao-abas {
+.revisao-pagina .revisao-abas {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
     align-items: end;
-    margin-bottom: 30px;
+
+    margin-bottom: 15px;
+
     border-bottom: 1px solid #dedede;
 }
 
-.aba-revisao {
+.revisao-pagina .aba-revisao {
     justify-self: center;
+
     min-width: 150px;
+
     padding: 9px 12px 7px;
+
     border: none;
     border-radius: 5px 5px 0 0;
+
     background: transparent;
     color: #718caf;
+
     font-family: inherit;
     font-size: 18px;
+
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
-.aba-revisao:hover {
+.revisao-pagina .aba-revisao:hover {
     background: #edf4fb;
 }
 
-.aba-revisao.ativa {
+.revisao-pagina .aba-revisao.ativa {
     background: #aaccf0;
     color: #4479b1;
 }
 
-/* TABELA DESKTOP */
+/* =========================================
+   PESQUISA
+========================================= */
 
-.revisao-tabela-container {
+.revisao-pagina .revisao-pesquisa {
+    display: flex;
+
     width: 100%;
-    overflow-x: auto;
-    padding: 0 20px;
+
+    margin: 15px 0 25px;
 }
 
-.revisao-tabela {
+.revisao-pagina .revisao-pesquisa input {
     width: 100%;
-    min-width: 700px;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 12px;
-}
+    max-width: 420px;
 
-.revisao-tabela th,
-.revisao-tabela td {
-    height: 29px;
-    padding: 5px 10px;
-    border-bottom: 1px solid #737373;
-    text-align: center;
-    white-space: nowrap;
+    min-height: 42px;
+
+    padding: 12px 15px;
+
+    border: 1px solid #dfe3eb;
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #fff;
+    color: #252525;
+
+    font-family: inherit;
     font-size: 13px;
 }
 
-.revisao-tabela th {
-    border-top: 1px solid #737373;
-    background: #e8f2fc;
-    color: #1b2b65;
+.revisao-pagina .revisao-pesquisa input:focus {
+    border-color: var(--revisao-laranja);
 }
 
-.revisao-tabela th:first-child {
+/* =========================================
+   TABELA DESKTOP
+========================================= */
+
+.revisao-pagina .revisao-tabela-container {
+    width: 100%;
+    min-width: 0;
+
+    overflow-x: auto;
+
+    padding: 0 20px;
+}
+
+.revisao-pagina .revisao-tabela {
+    width: 100%;
+    min-width: 700px;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    font-size: 12px;
+}
+
+.revisao-pagina .revisao-tabela th,
+.revisao-pagina .revisao-tabela td {
+    min-height: 29px;
+
+    padding: 8px 10px;
+
+    border-bottom: 1px solid #737373;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    font-size: 13px;
+}
+
+.revisao-pagina .revisao-tabela th {
+    border-top: 1px solid #737373;
+
+    background: #e8f2fc;
+    color: #1b2b65;
+
+    font-weight: 700;
+}
+
+.revisao-pagina .revisao-tabela th:first-child {
     border-left: 1px solid #737373;
+
     border-radius: 7px 0 0 0;
 }
 
-.revisao-tabela th:last-child {
+.revisao-pagina .revisao-tabela th:last-child {
     border-right: 1px solid #737373;
+
     border-radius: 0 7px 0 0;
 }
 
-.revisao-tabela tbody td {
+.revisao-pagina .revisao-tabela tbody td {
     border-left: 1px solid #737373;
+
     background: #fff;
 }
 
-.revisao-tabela tbody td:last-child {
+.revisao-pagina .revisao-tabela tbody td:last-child {
     border-right: 1px solid #737373;
 }
 
-.revisao-tabela tbody tr:last-child td:first-child {
+.revisao-pagina .revisao-tabela tbody tr:last-child td:first-child {
     border-radius: 0 0 0 7px;
 }
 
-.revisao-tabela tbody tr:last-child td:last-child {
+.revisao-pagina .revisao-tabela tbody tr:last-child td:last-child {
     border-radius: 0 0 7px 0;
 }
 
-.revisao-tabela tbody tr:hover td {
+.revisao-pagina .revisao-tabela tbody tr:hover td {
     background: #f7faff;
 }
 
-.revisao-coluna-acoes {
+.revisao-pagina .revisao-coluna-acoes {
+    min-width: 130px;
+
     text-align: center !important;
 }
 
-/* ETIQUETAS */
+/* =========================================
+   ETIQUETAS DOS TEMAS
+========================================= */
 
-.revisao-etiqueta {
+.revisao-pagina .revisao-etiqueta {
     display: block;
+
     width: 100%;
     max-width: 150px;
+
     margin: 0 auto;
-    padding: 2px 7px;
+    padding: 4px 8px;
+
     overflow: hidden;
+
     border-radius: 5px;
+
     background: #e4f1fb;
     color: #2f69a5;
+
+    font-size: 12px;
+
     text-align: center;
     text-overflow: ellipsis;
+
     white-space: nowrap;
 }
 
-/* AÇÕES */
+/* =========================================
+   BOTÕES DE AÇÕES
+========================================= */
 
-.revisao-acao {
-    display: inline-flex;
+.revisao-pagina .revisao-acoes-status {
+    display: flex;
+
     align-items: center;
     justify-content: center;
-    width: 25px;
-    height: 25px;
-    padding: 3px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
 }
 
-.revisao-acao img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.revisao-acoes-status {
+.revisao-pagina .revisao-acoes-status button {
     display: inline-flex;
+
     align-items: center;
-    gap: 3px;
-}
+    justify-content: center;
 
-.revisao-acoes-status button {
-    width: 21px;
-    height: 21px;
-    padding: 0;
-    border: 1px solid #d2dbe7;
-    border-radius: 4px;
-    background: #fff;
-    color: #276e51;
-    font-size: 15px;
+    flex-shrink: 0;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 5px;
+
+    border: none;
+    border-radius: 6px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
     cursor: pointer;
+
+    transition:
+        background 0.2s,
+        opacity 0.2s;
 }
 
-.revisao-acoes-status button:last-child {
-    color: #c84b5b;
+.revisao-pagina .revisao-acoes-status button svg {
+    display: block;
+
+    flex-shrink: 0;
+
+    width: 18px;
+    height: 18px;
 }
 
-.revisao-vazio {
+.revisao-pagina .revisao-acoes-status button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+/* APROVAR */
+
+.revisao-pagina .revisao-botao-aprovar {
+    background: #e1f5e9;
+    color: #21834b;
+}
+
+.revisao-pagina .revisao-botao-aprovar:hover:not(:disabled) {
+    background: #c9ecd7;
+}
+
+/* SOLICITAR AJUSTES */
+
+.revisao-pagina .revisao-botao-ajustes {
+    background: #fff1d9;
+    color: #a66a00;
+}
+
+.revisao-pagina .revisao-botao-ajustes:hover:not(:disabled) {
+    background: #ffe4b7;
+}
+
+/* REJEITAR */
+
+.revisao-pagina .revisao-botao-rejeitar {
+    background: #ffe5e5;
+    color: #c03939;
+}
+
+.revisao-pagina .revisao-botao-rejeitar:hover:not(:disabled) {
+    background: #ffd0d0;
+}
+
+/* PUBLICAR */
+
+.revisao-pagina .revisao-botao-publicar {
+    background: #e1f5e9;
+    color: #21834b;
+}
+
+.revisao-pagina .revisao-botao-publicar:hover:not(:disabled) {
+    background: #c9ecd7;
+}
+
+/* VISUALIZAR */
+
+.revisao-pagina .revisao-botao-visualizar {
+    background: #e9efff;
+    color: #315ba8;
+}
+
+.revisao-pagina .revisao-botao-visualizar:hover:not(:disabled) {
+    background: #d6e2ff;
+}
+
+/* ACESSIBILIDADE */
+
+.revisao-pagina button:focus-visible {
+    outline: 2px solid var(--revisao-laranja);
+    outline-offset: 2px;
+}
+
+/* =========================================
+   LISTA VAZIA
+========================================= */
+
+.revisao-pagina .revisao-vazio {
     height: 60px !important;
+
+    padding: 20px !important;
+
     color: #777;
+
     text-align: center !important;
+
+    white-space: normal;
 }
 
-/* CARTÕES */
+/* =========================================
+   CARTÕES MOBILE
+========================================= */
 
-.revisao-cartoes {
+.revisao-pagina .revisao-cartoes {
     display: none;
 }
 
-.revisao-vazio-mobile {
+.revisao-pagina .revisao-vazio-mobile {
     display: none;
 }
 
-/* PAGINAÇÃO */
+/* =========================================
+   PAGINAÇÃO
+========================================= */
 
-.revisao-paginacao {
+.revisao-pagina .revisao-paginacao {
     display: flex;
+
     align-items: center;
     justify-content: flex-end;
+
+    flex-wrap: wrap;
+
     gap: 10px;
+
     margin-top: auto;
     padding: 35px 5px 0;
 }
 
-.revisao-paginacao button {
+.revisao-pagina .revisao-paginacao button {
     display: flex;
+
     align-items: center;
     justify-content: center;
-    width: 32px;
+
+    min-width: 32px;
     height: 32px;
+
+    padding: 0 8px;
+
     border: 1px solid #777;
     border-radius: 7px;
+
     background: #fff;
     color: #222;
+
     font-family: inherit;
     font-size: 11px;
+
     cursor: pointer;
 }
 
-.revisao-paginacao button:hover:not(:disabled) {
+.revisao-pagina .revisao-paginacao button:hover:not(:disabled) {
     background: #eaf1fa;
 }
 
-.revisao-paginacao button.pagina-ativa {
+.revisao-pagina .revisao-paginacao button.pagina-ativa {
     border-color: #2d4699;
+
     background: #2d4699;
     color: #fff;
 }
 
-.revisao-paginacao button:disabled {
+.revisao-pagina .revisao-paginacao button:disabled {
     opacity: 0.4;
+
     cursor: not-allowed;
 }
 
-/* TABLETS */
+/* =========================================
+   MENSAGENS DE ERRO
+========================================= */
 
-/* TABLETS (701px até 1200px) */
+.revisao-pagina .revisao-erro {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    width: 100%;
+
+    margin-bottom: 20px;
+    padding: 20px;
+
+    border: 1px solid #e8c1c1;
+    border-radius: 8px;
+
+    background: #fff5f5;
+    color: #a52828;
+}
+
+.revisao-pagina .revisao-erro h2 {
+    margin: 0;
+
+    font-size: 20px;
+}
+
+.revisao-pagina .revisao-erro p {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.revisao-pagina .revisao-erro button {
+    padding: 10px 15px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: var(--revisao-azul);
+    color: #fff;
+
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+/* =========================================
+   INTEGRAÇÃO COM LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .revisao-pagina {
+    width: 100%;
+    height: auto;
+
+    min-height: 100%;
+
+    overflow: visible;
+}
+
+.integra-layout .revisao-principal {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+}
+
+.integra-layout .revisao-conteudo {
+    width: 100%;
+    height: auto;
+
+    min-height: 0;
+
+    margin: 0;
+
+    overflow: visible;
+}
+
+/* =========================================
+   TABLETS
+   701PX ATÉ 1200PX
+========================================= */
 
 @media (min-width: 701px) and (max-width: 1200px) {
 
-    /* MENU LATERAL */
-
-    .revisao-sidebar {
-        flex: 0 0 210px;
-        width: 210px;
-        min-width: 210px;
-        padding: 20px 10px;
-    }
-
-    .revisao-logo {
-        margin-bottom: 25px;
-    }
-
-    .revisao-logo img {
-        max-width: 190px;
-        max-height: 75px;
-    }
-
-    .revisao-menu {
-        gap: 16px;
-    }
-
-    .revisao-menu-item {
-        gap: 9px;
-        margin-left: 4px;
-        padding: 8px 5px;
-    }
-
-    .revisao-menu-item img {
-        width: 28px;
-        height: 28px;
-    }
-
-    .revisao-menu-item span {
-        font-size: 13px;
-    }
-
-    .revisao-sair {
-        margin-left: 4px;
-    }
-
-    /* HEADER */
-
-    .revisao-header,
-    .revisao-principal .integra-header {
-        min-height: 90px;
-        gap: 25px;
-        padding: 15px 22px;
-    }
-
-    .revisao-busca,
-    .revisao-principal .header-pesquisa {
-        max-width: none;
-        height: 39px;
-    }
-
-    .revisao-avatar,
-    .revisao-principal .header-foto {
-        width: 40px;
-        height: 40px;
-        font-size: 13px;
-    }
-
-    .revisao-dados-usuario strong,
-    .revisao-principal .header-dados strong {
-        font-size: 14px;
-    }
-
-    .revisao-dados-usuario span,
-    .revisao-principal .header-dados span {
-        font-size: 12px;
-    }
-
-    /* CONTEÚDO */
-
-    .revisao-conteudo {
+    .revisao-pagina .revisao-conteudo {
         padding: 25px 22px;
     }
 
-    .revisao-titulo {
+    .revisao-pagina .revisao-titulo {
         margin-bottom: 22px;
-        font-size: 27px;
+
+        font-size: 25px;
     }
 
-    /* ABAS */
-
-    .revisao-abas {
-        margin-bottom: 24px;
+    .revisao-pagina .revisao-abas {
+        margin-bottom: 20px;
     }
 
-    .aba-revisao {
+    .revisao-pagina .aba-revisao {
         min-width: 0;
+
         font-size: 16px;
     }
 
-    /* TABELA (rolagem horizontal) */
-
-    .revisao-tabela-container {
+    .revisao-pagina .revisao-tabela-container {
         padding: 0;
+
         overflow-x: auto;
     }
 
-    .revisao-tabela {
-        min-width: 750px;
+    .revisao-pagina .revisao-tabela {
+        min-width: 700px;
+
         font-size: 12px;
     }
 
-    .revisao-tabela th,
-    .revisao-tabela td {
+    .revisao-pagina .revisao-tabela th,
+    .revisao-pagina .revisao-tabela td {
         padding: 7px 6px;
+
         font-size: 12px;
     }
 
-    /* PAGINAÇÃO */
-
-    .revisao-paginacao {
+    .revisao-pagina .revisao-paginacao {
         gap: 5px;
+
         margin-top: 25px;
         padding: 10px 0;
     }
 
-    .revisao-paginacao button {
+    .revisao-pagina .revisao-paginacao button {
         min-width: 36px;
         height: 36px;
+
         padding: 0 10px;
-        border-radius: 10px;
+
         font-size: 14px;
     }
-}
-/* CELULARES */
 
-@media (max-width: 600px) {
+}
+
+/* =========================================
+   MOBILE
+   ATÉ 700PX
+========================================= */
+
+@media (max-width: 700px) {
 
     .revisao-pagina {
-        display: flex;
-        flex-direction: column;
         width: 100%;
-        min-height: 100vh;
-        background: #f3f6fc;
-        overflow-x: hidden;
-    }
-
-    .revisao-principal {
-        width: 100%;
-        min-width: 0;
-        padding-bottom: 70px;
-        background: #f3f6fc;
-    }
-
-    /* MENU INFERIOR */
-
-    .revisao-sidebar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        z-index: 10;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 65px;
-        min-height: 65px;
-        padding: 5px;
-        background: #1d2e68;
-    }
-
-    .revisao-logo {
-        display: none;
-    }
-
-    .revisao-menu {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-        width: 100%;
-        gap: 0;
-    }
-
-    .revisao-menu-item {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        min-height: 50px;
-        margin: 0;
-        padding: 5px 2px;
-        border-radius: 5px;
-    }
-
-    .revisao-menu-item img {
-        width: 25px;
-        height: 25px;
-    }
-
-    .revisao-menu-item span {
-        display: block;
-        font-size: 9px;
-    }
-
-    .revisao-sair {
-        display: none;
-    }
-
-    /* DESTAQUE LARANJA SOMENTE NO MOBILE */
-
-    .revisao-menu-item.revisao-menu-ativo {
-        background: transparent;
-    }
-
-    .revisao-menu-item.revisao-menu-ativo img {
-        filter: brightness(0) saturate(100%)
-            invert(55%) sepia(98%) saturate(1500%)
-            hue-rotate(359deg) brightness(102%) contrast(105%);
-    }
-
-    .revisao-menu-item.revisao-menu-ativo span {
-        color: #ff8500;
-        font-weight: bold;
-    }
-
-    /* HEADER DESKTOP */
-
-    .revisao-header {
-        display: none;
-    }
-
-    /* HEADER MOBILE PERSONALIZADO */
-
-    .revisao-header-mobile {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        width: 100%;
-        min-height: 0;
-        padding: 10px 17px;
-        background: #fff;
-        box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
-    }
-
-    .revisao-header-superior-mobile {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        width: 100%;
-    }
-
-    .revisao-logo-mobile {
-        display: block;
-        flex-shrink: 0;
-        width: 145px;
-        max-width: 45%;
-        max-height: 48px;
-        object-fit: contain;
-        object-position: left center;
-    }
-
-    /* PERFIL DO USUÁRIO */
-
-    .revisao-usuario-mobile {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        min-width: 0;
-    }
-
-    .revisao-avatar-mobile {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: #1d2e68;
-        color: #fff;
-        font-size: 11px;
-        font-weight: bold;
-    }
-
-    .revisao-dados-mobile {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        min-width: 0;
-    }
-
-    .revisao-dados-mobile strong {
-        color: #252a33;
-        font-size: 11px;
-        white-space: nowrap;
-    }
-
-    .revisao-dados-mobile span {
-        color: #888;
-        font-size: 9px;
-        white-space: nowrap;
-    }
-
-    /* PESQUISA MOBILE */
-
-    .revisao-busca-mobile {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        height: 32px;
-        padding: 0 12px;
-        border: 1px solid #a8a8a8;
-        border-radius: 6px;
-        background: #fff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-    }
-
-    .revisao-busca-mobile img {
-        display: block;
-        flex-shrink: 0;
-        width: 19px;
-        height: 19px;
-        object-fit: contain;
-    }
-
-    .revisao-busca-mobile input {
-        width: 100%;
-        min-width: 0;
-        height: 100%;
-        border: none;
-        outline: none;
-        background: transparent;
-        color: #333;
-        font-family: Arial, sans-serif;
-        font-size: 12px;
-    }
-
-    .revisao-busca-mobile input::placeholder {
-        color: #888;
-    }
-
-    /* CORREÇÃO DO HEADER OFICIAL COMPARTILHADO */
-
-    .revisao-principal .integra-header {
-        gap: 3px;
-        min-height: 0;
-        padding: 10px 17px;
-    }
-
-    .revisao-principal .header-superior {
-        min-height: 0;
         height: auto;
-        gap: 10px;
+
+        min-height: 100%;
+
+        overflow: visible;
     }
 
-    .revisao-principal .header-logo {
-        width: 145px;
-        max-width: 45%;
-        height: 48px;
-    }
-
-    .revisao-principal .header-pesquisa {
-        height: 32px;
-        margin-top: 0;
-        padding: 0 12px;
-    }
-
-    .revisao-principal .header-pesquisa img {
-        width: 19px;
-        height: 19px;
-    }
-
-    .revisao-principal .header-pesquisa input {
-        font-size: 12px;
-    }
-
-    /* CONTEÚDO */
-
-    .revisao-conteudo {
+    .revisao-pagina .revisao-principal {
         width: 100%;
-        padding: 14px 15px 25px;
-        background: #f3f6fc;
+        min-width: 0;
+
+        padding: 0;
     }
 
-    .revisao-titulo {
-        margin: 0 0 26px;
-        color: #1d2e68;
+    .revisao-pagina .revisao-conteudo {
+        width: 100%;
+
+        padding: 18px 15px 25px;
+    }
+
+    .revisao-pagina .revisao-titulo {
+        margin: 0 0 24px;
+
         font-size: 20px;
     }
 
     /* ABAS */
 
-    .revisao-abas {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    .revisao-pagina .revisao-abas {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
         gap: 4px;
-        margin-bottom: 24px;
-        padding-bottom: 9px;
-        border-bottom: 1px solid #333;
+
+        margin-bottom: 15px;
+        padding-bottom: 7px;
+
+        border-bottom: 1px solid #c4cbd4;
     }
 
-    .aba-revisao {
+    .revisao-pagina .aba-revisao {
         justify-self: stretch;
+
         min-width: 0;
+
         padding: 9px 3px;
-        border-radius: 5px 5px 0 0;
+
         color: #6685ad;
+
         font-size: 13px;
+
         text-align: center;
     }
 
-    .aba-revisao.ativa {
+    .revisao-pagina .aba-revisao.ativa {
         background: #91b8e3;
         color: #fff;
     }
 
-    /* ESCONDE TABELA */
+    /* PESQUISA */
 
-    .revisao-tabela-container {
-        display: none;
+    .revisao-pagina .revisao-pesquisa {
+        margin: 10px 0 20px;
     }
 
-    /* CARTÕES MOBILE */
+    .revisao-pagina .revisao-pesquisa input {
+        max-width: 100%;
 
-    .revisao-cartoes {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+        min-height: 38px;
 
-    .revisao-cartao {
-        position: relative;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
-        grid-template-areas:
-            "titulo data acoes"
-            "tema autor acoes";
-        gap: 4px 8px;
-        min-height: 114px;
-        padding: 8px;
-        border: 1px solid #c4cbd4;
-        border-radius: 9px;
-        background: #f3f6fc;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
+        padding: 10px 12px;
 
-    .cartao-campo {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        min-width: 0;
         font-size: 12px;
     }
 
-    .cartao-campo strong {
-        width: fit-content;
-        border-bottom: 1px solid #111;
-        color: #111;
-        font-size: 16px;
+    /* ESCONDER TABELA DESKTOP */
+
+    .revisao-pagina .revisao-tabela-container {
+        display: none;
     }
 
-    .cartao-campo > span:not(.revisao-etiqueta) {
+    /* CARTÕES */
+
+    .revisao-pagina .revisao-cartoes {
+        display: flex;
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .revisao-pagina .revisao-cartao {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        grid-template-areas:
+            "titulo data"
+            "tema autor"
+            "acoes acoes";
+
+        gap: 10px;
+
+        width: 100%;
+        min-height: 114px;
+
+        padding: 12px;
+
+        border: 1px solid #c4cbd4;
+        border-radius: 9px;
+
+        background: #f8faff;
+
+        box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .revisao-pagina .cartao-campo {
+        display: flex;
+        flex-direction: column;
+
+        gap: 4px;
+
+        min-width: 0;
+
+        font-size: 12px;
+    }
+
+    .revisao-pagina .cartao-campo strong {
+        width: fit-content;
+
+        color: var(--revisao-azul);
+
+        font-size: 13px;
+    }
+
+    .revisao-pagina .cartao-campo > span {
         overflow-wrap: anywhere;
     }
 
-    .cartao-titulo {
+    .revisao-pagina .cartao-titulo {
         grid-area: titulo;
     }
 
-    .cartao-data {
+    .revisao-pagina .cartao-data {
         grid-area: data;
-        align-items: center;
     }
 
-    .cartao-data strong {
-        white-space: nowrap;
-    }
-
-    .cartao-tema {
+    .revisao-pagina .cartao-tema {
         grid-area: tema;
     }
 
-    .cartao-autor {
+    .revisao-pagina .cartao-autor {
         grid-area: autor;
     }
 
-    .cartao-tema .revisao-etiqueta {
+    .revisao-pagina .cartao-tema .revisao-etiqueta {
         width: fit-content;
-        margin: 0;
-    }
-
-    .revisao-etiqueta {
         max-width: 100%;
+
+        margin: 0;
+
         font-size: 11px;
+
+        white-space: normal;
     }
 
-    .cartao-acoes {
+    /* AÇÕES MOBILE */
+
+    .revisao-pagina .cartao-acoes {
         display: flex;
+
         grid-area: acoes;
+
         align-items: center;
-        gap: 2px;
+        justify-content: flex-end;
+
+        width: 100%;
+
+        padding-top: 10px;
+
+        border-top: 1px solid #e0e5ed;
     }
 
-    .cartao-acoes .revisao-acao {
-        width: 34px;
-        height: 34px;
+    .revisao-pagina .cartao-acoes .revisao-acoes-status {
+        justify-content: flex-end;
+
+        gap: 8px;
     }
 
-    .cartao-acoes .revisao-acao img {
-        width: 30px;
-        height: 30px;
+    .revisao-pagina .cartao-acoes .revisao-acoes-status button {
+        width: 35px;
+        height: 35px;
     }
 
-    .revisao-vazio-mobile {
+    .revisao-pagina .revisao-vazio-mobile {
         display: block;
+
         padding: 20px 5px;
+
         color: #777;
+
+        font-size: 13px;
+
         text-align: center;
     }
 
     /* PAGINAÇÃO */
 
-    .revisao-paginacao {
+    .revisao-pagina .revisao-paginacao {
         justify-content: flex-end;
+
         gap: 6px;
+
         margin-top: 18px;
         padding: 25px 5px 0;
     }
 
-    .revisao-paginacao button {
-        width: 26px;
-        height: 26px;
-        border-radius: 7px;
+    .revisao-pagina .revisao-paginacao button {
+        min-width: 30px;
+        height: 30px;
+
         font-size: 12px;
     }
 
-    .revisao-paginacao button.pagina-ativa {
-        border-color: #2d4699;
-        background: #2d4699;
-    }
 }
 
-/* CELULARES MUITO ESTREITOS */
+/* =========================================
+   CELULARES ESTREITOS
+========================================= */
 
-@media (max-width: 350px) {
+@media (max-width: 380px) {
 
-    .revisao-header-mobile {
-        padding: 9px 12px;
+    .revisao-pagina .revisao-conteudo {
+        padding: 14px 12px 20px;
     }
 
-    .revisao-logo-mobile {
-        width: 125px;
-    }
-
-    .revisao-usuario-mobile {
-        gap: 5px;
-    }
-
-    .revisao-avatar-mobile {
-        width: 34px;
-        height: 34px;
-    }
-
-    .revisao-dados-mobile strong {
-        font-size: 10px;
-    }
-
-    .revisao-dados-mobile span {
-        font-size: 8px;
-    }
-
-    .revisao-conteudo {
-        padding-right: 12px;
-        padding-left: 12px;
-    }
-
-    .revisao-titulo {
+    .revisao-pagina .revisao-titulo {
         font-size: 18px;
     }
 
-    .aba-revisao {
+    .revisao-pagina .aba-revisao {
         font-size: 11px;
     }
 
-    .revisao-cartao {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-        gap: 5px;
-        padding: 7px;
+    .revisao-pagina .revisao-cartao {
+        gap: 8px;
+
+        padding: 9px;
     }
 
-    .cartao-campo strong {
-        font-size: 14px;
+    .revisao-pagina .cartao-campo {
+        font-size: 11px;
     }
 
-    .cartao-campo {
-        font-size: 10px;
+    .revisao-pagina .cartao-campo strong {
+        font-size: 12px;
     }
 
-    .cartao-acoes .revisao-acao {
-        width: 27px;
-        height: 27px;
+    .revisao-pagina .cartao-acoes .revisao-acoes-status button {
+        width: 32px;
+        height: 32px;
     }
 
-    .cartao-acoes .revisao-acao img {
-        width: 24px;
-        height: 24px;
-    }
-}
-
-/* =========================================
-   PESQUISA DA REVISÃO
-========================================= */
-
-.revisao-pesquisa {
-    display: flex;
-    width: 100%;
-    margin: 20px 0;
-}
-
-.revisao-pesquisa input {
-    width: 100%;
-    max-width: 420px;
-    padding: 12px 15px;
-    border: 1px solid #dfe3eb;
-    border-radius: 8px;
-    outline: none;
-    font-size: 13px;
-}
-
-.revisao-pesquisa input:focus {
-    border-color: #f28c28;
-}
-
-/* =========================================
-   AÇÕES DA REVISÃO
-========================================= */
-
-.revisao-acoes-status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    flex-wrap: wrap;
-}
-
-.revisao-acoes-status button {
-    border: none;
-    border-radius: 6px;
-    padding: 7px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.revisao-acoes-status button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.revisao-botao-aprovar {
-    background: #e1f5e9;
-    color: #21834b;
-}
-
-.revisao-botao-aprovar:hover {
-    background: #c9ecd7;
-}
-
-.revisao-botao-ajustes {
-    background: #fff1d9;
-    color: #a66a00;
-}
-
-.revisao-botao-ajustes:hover {
-    background: #ffe4b7;
-}
-
-.revisao-botao-rejeitar {
-    background: #ffe5e5;
-    color: #c03939;
-}
-
-.revisao-botao-rejeitar:hover {
-    background: #ffd0d0;
-}
-
-.revisao-botao-publicar {
-    background: #e1f5e9;
-    color: #21834b;
-}
-
-.revisao-botao-publicar:hover {
-    background: #c9ecd7;
-}
-
-.revisao-botao-visualizar {
-    background: #e9efff;
-    color: #315ba8;
-}
-
-.revisao-botao-visualizar:hover {
-    background: #d6e2ff;
-}
-
-/* =========================================
-   RESPONSIVIDADE
-========================================= */
-
-@media (max-width: 768px) {
-
-    .revisao-pesquisa input {
-        max-width: 100%;
-    }
-
-    .revisao-acoes-status {
-        justify-content: flex-start;
-    }
-
-    .cartao-acoes {
-        width: 100%;
-    }
-
-}
-.revisao-acoes-status button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.revisao-acoes-status button svg {
-    flex-shrink: 0;
 }

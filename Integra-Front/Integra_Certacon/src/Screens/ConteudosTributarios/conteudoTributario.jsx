@@ -1,51 +1,47 @@
-import { classeCorTema } from "../../utils/coresTemas";
-import "../../styles/coresTemas.css";
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import "./conteudoTributario.css";
+import { useNavigate } from "react-router-dom";
 
+import "./conteudoTributario.css";
+import "../../styles/coresTemas.css";
+
+import { classeCorTema } from "../../utils/coresTemas";
 import { requisicaoApi } from "../../services/api";
 
-import CasaBranca from "../../assets/Icones/CasaBranca.png";
-import LivroBranco from "../../assets/Icones/LivroBranco.png";
-import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
-import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
-import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
+import usePermissoes from "../../hooks/usePermissoes";
+import usePesquisaLayout from "../../hooks/usePesquisaLayout";
+
+// ÍCONES
+
 import LupaCinza from "../../assets/Icones/LupaCinza.png";
 import ExpandirText from "../../assets/Icones/ExpandirText.png";
-import SairBranco from "../../assets/Icones/SairBranco.png";
 import Lixeira from "../../assets/Icones/Lixeira.png";
-import LogoNome from "../../assets/Icones/LogoNome.png";
 import iconeConteudo from "../../assets/Icones/DoisDocumentos.png";
-
-import Header from "../../components/Header/header";
-import HeaderDesktop from "../../components/Header/headerDesktop";
-
-// Perfis do usuário autenticado (apenas para exibição da interface).
-// A autorização real continua sendo validada na API.
-function obterPerfisLogados() {
-    try {
-        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-        const armazenados = JSON.parse(localStorage.getItem("perfis") || "[]");
-        return Array.isArray(usuario.perfis) && usuario.perfis.length > 0
-            ? usuario.perfis
-            : Array.isArray(armazenados) ? armazenados : [];
-    } catch {
-        return [];
-    }
-}
-
-const PERFIS_FISCAIS = [
-    "Coordenador Fiscal",
-    "Analista SPED",
-    "Analista de Documentos Fiscais",
-    "Analista de Reforma Tributária",
-    "Cliente"
-];
 
 function ConteudoTributario() {
 
     const navigate = useNavigate();
+
+    // =========================================
+    // PERMISSÕES DINÂMICAS
+    // =========================================
+
+    const {
+        autenticado,
+        temPermissao,
+        temAlgumaPermissao,
+        carregando: carregandoPermissoes,
+        erro: erroPermissoes,
+        atualizar
+    } = usePermissoes();
+
+    const podeCriar =
+        temAlgumaPermissao("artigo.criar");
+
+    const podeVerMeusConteudos =
+        temAlgumaPermissao("artigo.ler.rascunho");
+
+    const podeArquivar =
+        temAlgumaPermissao("artigo.arquivar");
 
     // =========================================
     // ESTADOS
@@ -54,123 +50,219 @@ function ConteudoTributario() {
     const [conteudos, setConteudos] = useState([]);
     const [meusConteudos, setMeusConteudos] = useState([]);
 
-    const [abaSelecionada, setAbaSelecionada] = useState("publicados");
+    const [abaSelecionada, setAbaSelecionada] =
+        useState("publicados");
 
     const [pesquisa, setPesquisa] = useState("");
-    const [temaSelecionado, setTemaSelecionado] = useState("Todos");
-    const [ordem, setOrdem] = useState("recentes");
 
-    const [carregando, setCarregando] = useState(true);
-    const [carregandoMeus, setCarregandoMeus] = useState(false);
+    const [temaSelecionado, setTemaSelecionado] =
+        useState("Todos");
+
+    const [ordem, setOrdem] =
+        useState("recentes");
+
+    const [carregando, setCarregando] =
+        useState(true);
+
+    const [carregandoMeus, setCarregandoMeus] =
+        useState(false);
 
     const [erro, setErro] = useState("");
     const [erroMeus, setErroMeus] = useState("");
 
-    const [enviandoRevisao, setEnviandoRevisao] = useState(null);
+    const [enviandoRevisao, setEnviandoRevisao] =
+        useState(null);
+
+    const [arquivando, setArquivando] =
+        useState(null);
 
     // =========================================
-    // DADOS E PERMISSÕES DO USUÁRIO
+    // PESQUISA DO HEADER COMPARTILHADO
     // =========================================
 
-    const perfis = obterPerfisLogados();
+    usePesquisaLayout(pesquisa, setPesquisa);
 
-    // Administrador administra o portal; criação é função da equipe fiscal.
-    const podeCriar = [
-        "Coordenador Fiscal",
-        "Analista SPED",
-        "Analista de Documentos Fiscais",
-        "Analista de Reforma Tributária"
-    ].some(perfil => perfis.includes(perfil));
+    // =========================================
+    // SESSÃO ATUAL
+    // =========================================
 
-    // Arquivamento exibido somente a quem já tem a ação prevista na API.
-    const podeArquivar = perfis.includes("Administrador") ||
-        perfis.includes("Coordenador Fiscal");
-
-    // A coluna Ações só existe quando há operações disponíveis nessa aba.
-    const exibirAcoes = abaSelecionada === "meus" || podeArquivar;
-    const totalColunas = 4 + (abaSelecionada === "meus" ? 1 : 0) + (exibirAcoes ? 1 : 0);
+    const token = localStorage.getItem("token");
 
     // =========================================
     // CARREGAR CONTEÚDOS PUBLICADOS
     // =========================================
 
-    async function carregarConteudos() {
+    useEffect(() => {
 
-        try {
+        let ativo = true;
 
+        setConteudos([]);
+        setErro("");
+
+        if (carregandoPermissoes) {
             setCarregando(true);
-            setErro("");
+            return;
+        }
 
-            const dados = await requisicaoApi("/api/Artigos");
-
-            setConteudos(Array.isArray(dados) ? dados : []);
-
-        } catch (error) {
-
-            console.error("Erro ao carregar conteúdos:", error);
-
-            setErro(
-                error.message ||
-                "Não foi possível carregar os conteúdos."
-            );
-
-        } finally {
-
+        if (erroPermissoes) {
             setCarregando(false);
+            return;
+        }
+
+        async function carregarConteudos() {
+
+            try {
+
+                setCarregando(true);
+
+                const dados = await requisicaoApi(
+                    "/api/Artigos"
+                );
+
+                if (!ativo) return;
+
+                setConteudos(
+                    Array.isArray(dados)
+                        ? dados
+                        : []
+                );
+
+            } catch (error) {
+
+                if (!ativo) return;
+
+                console.error(
+                    "Erro ao carregar conteúdos:",
+                    error
+                );
+
+                setErro(
+                    error.message ||
+                    "Não foi possível carregar os conteúdos."
+                );
+
+            } finally {
+
+                if (ativo) {
+                    setCarregando(false);
+                }
+
+            }
 
         }
-    }
+
+        carregarConteudos();
+
+        return () => {
+            ativo = false;
+        };
+
+    }, [
+        token,
+        carregandoPermissoes,
+        erroPermissoes
+    ]);
 
     // =========================================
     // CARREGAR MEUS CONTEÚDOS
     // =========================================
 
-    async function carregarMeusConteudos() {
+    useEffect(() => {
 
-        if (!podeCriar) return;
+        let ativo = true;
 
-        try {
+        setMeusConteudos([]);
+        setErroMeus("");
 
-            setCarregandoMeus(true);
-            setErroMeus("");
-
-            const dados = await requisicaoApi(
-                "/api/Artigos/meus-artigos"
-            );
-
-            setMeusConteudos(
-                Array.isArray(dados) ? dados : []
-            );
-
-        } catch (error) {
-
-            console.error("Erro ao carregar meus conteúdos:", error);
-
-            setErroMeus(
-                error.message ||
-                "Não foi possível carregar seus conteúdos."
-            );
-
-        } finally {
+        if (
+            !autenticado ||
+            carregandoPermissoes ||
+            erroPermissoes ||
+            !podeVerMeusConteudos
+        ) {
 
             setCarregandoMeus(false);
 
+            return;
+
         }
-    }
+
+        async function carregarMeusConteudos() {
+
+            try {
+
+                setCarregandoMeus(true);
+
+                const dados = await requisicaoApi(
+                    "/api/Artigos/meus-artigos"
+                );
+
+                if (!ativo) return;
+
+                setMeusConteudos(
+                    Array.isArray(dados)
+                        ? dados
+                        : []
+                );
+
+            } catch (error) {
+
+                if (!ativo) return;
+
+                console.error(
+                    "Erro ao carregar meus conteúdos:",
+                    error
+                );
+
+                setErroMeus(
+                    error.message ||
+                    "Não foi possível carregar seus conteúdos."
+                );
+
+            } finally {
+
+                if (ativo) {
+                    setCarregandoMeus(false);
+                }
+
+            }
+
+        }
+
+        carregarMeusConteudos();
+
+        return () => {
+            ativo = false;
+        };
+
+    }, [
+        token,
+        autenticado,
+        carregandoPermissoes,
+        erroPermissoes,
+        podeVerMeusConteudos
+    ]);
 
     // =========================================
-    // CARREGAR AS DUAS LISTAS
+    // CONTROLAR ABA SELECIONADA
     // =========================================
 
     useEffect(() => {
 
-        carregarConteudos();
+        if (
+            abaSelecionada === "meus" &&
+            !podeVerMeusConteudos
+        ) {
 
-        if (podeCriar) {
-            carregarMeusConteudos();
+            setAbaSelecionada("publicados");
+            setTemaSelecionado("Todos");
+
         }
 
-    }, []);
+    }, [
+        abaSelecionada,
+        podeVerMeusConteudos
+    ]);
 
     // =========================================
     // FORMATAÇÃO DE DATA
@@ -188,7 +280,23 @@ function ConteudoTributario() {
             return "Data não informada";
         }
 
-        return dataFormatada.toLocaleDateString("pt-BR");
+        return dataFormatada.toLocaleDateString(
+            "pt-BR"
+        );
+
+    }
+
+    // =========================================
+    // NORMALIZAR TEXTO
+    // =========================================
+
+    function normalizarTexto(texto) {
+
+        return String(texto || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
 
     }
 
@@ -198,25 +306,135 @@ function ConteudoTributario() {
 
     function normalizarStatus(status) {
 
-        return (status || "")
-            .toString()
+        return String(status || "")
             .trim()
             .toUpperCase();
 
     }
 
     // =========================================
-    // TEMAS DISPONÍVEIS PARA FILTRO
+    // PERMISSÕES POR ARTIGO
     // =========================================
 
-    const listaAtual = abaSelecionada === "publicados"
-        ? conteudos
-        : meusConteudos;
+    function obterTemaId(artigo) {
+
+        return artigo.temaId ??
+            artigo.TemaId ??
+            null;
+
+    }
+
+    function podeEditarArtigo(artigo) {
+
+        return (
+            abaSelecionada === "meus" &&
+            normalizarStatus(artigo.status) === "RASCUNHO" &&
+            temPermissao(
+                "artigo.editar",
+                obterTemaId(artigo)
+            )
+        );
+
+    }
+
+    function podeEnviarArtigo(artigo) {
+
+        return (
+            abaSelecionada === "meus" &&
+            normalizarStatus(artigo.status) === "RASCUNHO" &&
+            temPermissao(
+                "artigo.enviar.revisao",
+                obterTemaId(artigo)
+            )
+        );
+
+    }
+
+    function podeArquivarArtigo(artigo) {
+
+        if (!podeArquivar) return false;
+
+        const status = normalizarStatus(
+            artigo.status
+        );
+
+        if (status === "ARQUIVADO") {
+            return false;
+        }
+
+        const permissaoGlobal =
+            temPermissao("artigo.arquivar");
+
+        if (permissaoGlobal) {
+            return true;
+        }
+
+        return (
+            abaSelecionada === "meus" &&
+            status === "RASCUNHO" &&
+            temPermissao(
+                "artigo.arquivar",
+                obterTemaId(artigo)
+            )
+        );
+
+    }
+
+    // =========================================
+    // CONTEÚDOS PUBLICADOS
+    // =========================================
+
+    const conteudosPublicados = conteudos.filter(
+        artigo => {
+
+            const status = normalizarStatus(
+                artigo.status
+            );
+
+            return !status ||
+                status === "PUBLICADO";
+
+        }
+    );
+
+    // =========================================
+    // MEUS CONTEÚDOS AUTORIZADOS
+    // =========================================
+
+    const meusConteudosPermitidos =
+        meusConteudos.filter(artigo => {
+
+            if (
+                normalizarStatus(artigo.status) ===
+                "ARQUIVADO"
+            ) {
+                return false;
+            }
+
+            return temPermissao(
+                "artigo.ler.rascunho",
+                obterTemaId(artigo)
+            );
+
+        });
+
+    // =========================================
+    // LISTA ATUAL
+    // =========================================
+
+    const listaAtual =
+        abaSelecionada === "publicados"
+            ? conteudosPublicados
+            : meusConteudosPermitidos;
+
+    // =========================================
+    // TEMAS DISPONÍVEIS
+    // =========================================
 
     const temasDisponiveis = [
         ...new Set(
             listaAtual
-                .map(conteudo => conteudo.tema)
+                .map(artigo => artigo.tema)
                 .filter(Boolean)
         )
     ];
@@ -227,22 +445,35 @@ function ConteudoTributario() {
 
     const listaFiltrada = listaAtual
 
-        .filter((conteudo) => {
+        .filter(artigo => {
 
-            const texto = pesquisa.toLowerCase();
+            const texto = normalizarTexto(pesquisa);
 
-            const titulo = (conteudo.titulo || "").toLowerCase();
-            const tema = (conteudo.tema || "").toLowerCase();
-            const resumo = (conteudo.resumo || "").toLowerCase();
+            const titulo = normalizarTexto(
+                artigo.titulo
+            );
+
+            const tema = normalizarTexto(
+                artigo.tema
+            );
+
+            const resumo = normalizarTexto(
+                artigo.resumo
+            );
+
+            const autor = normalizarTexto(
+                artigo.autor
+            );
 
             const encontrouTexto =
                 titulo.includes(texto) ||
                 tema.includes(texto) ||
-                resumo.includes(texto);
+                resumo.includes(texto) ||
+                autor.includes(texto);
 
             const encontrouTema =
                 temaSelecionado === "Todos" ||
-                conteudo.tema === temaSelecionado;
+                artigo.tema === temaSelecionado;
 
             return encontrouTexto && encontrouTema;
 
@@ -269,40 +500,20 @@ function ConteudoTributario() {
         });
 
     // =========================================
-    // COR DA ETIQUETA DO TEMA
+    // CONTROLE DA COLUNA DE AÇÕES
     // =========================================
 
-    function classeTema(tema) {
+    const exibirAcoes = listaAtual.some(
+        artigo =>
+            podeEditarArtigo(artigo) ||
+            podeEnviarArtigo(artigo) ||
+            podeArquivarArtigo(artigo)
+    );
 
-        const nomeTema = (tema || "").toLowerCase();
-
-        if (nomeTema.includes("reforma")) {
-            return "tema-reforma-tributaria";
-        }
-
-        if (
-            nomeTema.includes("sped") ||
-            nomeTema.includes("efd")
-        ) {
-            return "tema-sped";
-        }
-
-        if (
-            nomeTema.includes("nota") ||
-            nomeTema.includes("nf-e") ||
-            nomeTema.includes("nfp") ||
-            nomeTema.includes("xml")
-        ) {
-            return "tema-notas-fiscais";
-        }
-
-        if (nomeTema.includes("icms")) {
-            return "tema-icms";
-        }
-
-        return "tema-padrao";
-
-    }
+    const totalColunas =
+        4 +
+        (abaSelecionada === "meus" ? 1 : 0) +
+        (exibirAcoes ? 1 : 0);
 
     // =========================================
     // CLASSE DO STATUS
@@ -310,32 +521,24 @@ function ConteudoTributario() {
 
     function classeStatus(status) {
 
-        const statusNormalizado = normalizarStatus(status);
+        const classes = {
 
-        switch (statusNormalizado) {
+            RASCUNHO: "status-rascunho",
 
-            case "RASCUNHO":
-                return "status-rascunho";
+            EM_REVISAO: "status-em-revisao",
 
-            case "EM_REVISAO":
-                return "status-em-revisao";
+            APROVADO: "status-aprovado",
 
-            case "APROVADO":
-                return "status-aprovado";
+            PUBLICADO: "status-publicado",
 
-            case "PUBLICADO":
-                return "status-publicado";
+            REJEITADO: "status-rejeitado",
 
-            case "REJEITADO":
-                return "status-rejeitado";
+            ARQUIVADO: "status-arquivado"
 
-            case "ARQUIVADO":
-                return "status-arquivado";
+        };
 
-            default:
-                return "status-padrao";
-
-        }
+        return classes[normalizarStatus(status)] ||
+            "status-padrao";
 
     }
 
@@ -345,18 +548,25 @@ function ConteudoTributario() {
 
     function textoStatus(status) {
 
-        const statusNormalizado = normalizarStatus(status);
-
         const nomes = {
+
             RASCUNHO: "Rascunho",
+
             EM_REVISAO: "Em revisão",
+
             APROVADO: "Aprovado",
+
             PUBLICADO: "Publicado",
+
             REJEITADO: "Rejeitado",
+
             ARQUIVADO: "Arquivado"
+
         };
 
-        return nomes[statusNormalizado] || status || "Não informado";
+        return nomes[normalizarStatus(status)] ||
+            status ||
+            "Não informado";
 
     }
 
@@ -364,56 +574,69 @@ function ConteudoTributario() {
     // ABRIR DETALHES
     // =========================================
 
-    
-function abrirDetalhes(conteudo) {
-    navigate("/conteudos/detalhes", {
-        state: {
-            conteudo: {
-                id: conteudo.artigoId,
-                artigoId: conteudo.artigoId,
+    function abrirDetalhes(artigo) {
 
-                titulo: conteudo.titulo,
-                tema: conteudo.tema,
+        navigate("/conteudos/detalhes", {
 
-                data: formatarData(
-                    conteudo.dataPublicacao ||
-                    conteudo.dataCriacao
-                ),
+            state: {
 
-                dataPublicacao: conteudo.dataPublicacao,
-                autor: conteudo.autor || "Não informado",
+                conteudo: {
 
-                resumo: conteudo.resumo,
-                conteudo: conteudo.conteudo,
+                    ...artigo,
 
-                visibilidade: conteudo.visibilidade,
-                status: conteudo.status,
+                    id: artigo.artigoId,
 
-                // INFORMAÇÕES DO DOCUMENTO ANEXADO
-                nomeArquivo: conteudo.nomeArquivo,
-                tamanhoArquivo: conteudo.tamanhoArquivo,
-                temArquivo: conteudo.temArquivo
+                    artigoId: artigo.artigoId,
+
+                    temaId: obterTemaId(artigo),
+
+                    data: formatarData(
+                        artigo.dataPublicacao ||
+                        artigo.dataCriacao
+                    ),
+
+                    autor:
+                        artigo.autor ||
+                        "Não informado",
+
+                    nomeArquivo: artigo.nomeArquivo,
+
+                    tamanhoArquivo:
+                        artigo.tamanhoArquivo,
+
+                    temArquivo: artigo.temArquivo
+
+                }
+
             }
+
+        });
+
+    }
+
+    // =========================================
+    // EDITAR CONTEÚDO
+    // =========================================
+
+    function editarConteudo(artigo) {
+
+        if (!podeEditarArtigo(artigo)) {
+
+            alert(
+                "Você não possui permissão para editar este conteúdo."
+            );
+
+            return;
+
         }
-    });
-}
-
-
-    // =========================================
-    // EDITAR RASCUNHO
-    // =========================================
-
-    function editarConteudo(conteudo) {
 
         navigate(
-            `/conteudos/editar/${conteudo.artigoId}`,
+            `/conteudos/editar/${artigo.artigoId}`,
             {
                 state: {
                     conteudo: {
-                        artigoId: conteudo.artigoId,
-                        temaId: conteudo.temaId,
-                        titulo: conteudo.titulo,
-                        conteudo: conteudo.conteudo
+                        ...artigo,
+                        temaId: obterTemaId(artigo)
                     }
                 }
             }
@@ -422,10 +645,17 @@ function abrirDetalhes(conteudo) {
     }
 
     // =========================================
-    // ENVIAR ARTIGO PARA REVISÃO
+    // ENVIAR PARA REVISÃO
     // =========================================
 
-    async function enviarParaRevisao(id) {
+    async function enviarParaRevisao(artigo) {
+
+        if (
+            !podeEnviarArtigo(artigo) ||
+            enviandoRevisao
+        ) {
+            return;
+        }
 
         const confirmar = window.confirm(
             "Deseja enviar este conteúdo para revisão?"
@@ -435,13 +665,30 @@ function abrirDetalhes(conteudo) {
 
         try {
 
-            setEnviandoRevisao(id);
+            setEnviandoRevisao(
+                artigo.artigoId
+            );
 
             const resposta = await requisicaoApi(
-                `/api/Artigos/${id}/enviar-revisao`,
+                `/api/Artigos/${artigo.artigoId}/enviar-revisao`,
                 {
                     method: "POST"
                 }
+            );
+
+            setMeusConteudos(atuais =>
+                atuais.map(item =>
+
+                    item.artigoId === artigo.artigoId
+
+                        ? {
+                            ...item,
+                            status: "EM_REVISAO"
+                        }
+
+                        : item
+
+                )
             );
 
             alert(
@@ -449,27 +696,12 @@ function abrirDetalhes(conteudo) {
                 "Conteúdo enviado para revisão com sucesso!"
             );
 
-            // Atualiza o status na tela sem precisar recarregar.
-            setMeusConteudos(atuais =>
-
-                atuais.map(conteudo =>
-
-                    conteudo.artigoId === id
-
-                        ? {
-                            ...conteudo,
-                            status: "EM_REVISAO"
-                        }
-
-                        : conteudo
-
-                )
-
-            );
-
         } catch (error) {
 
-            console.error("Erro ao enviar para revisão:", error);
+            console.error(
+                "Erro ao enviar para revisão:",
+                error
+            );
 
             alert(
                 error.message ||
@@ -488,7 +720,14 @@ function abrirDetalhes(conteudo) {
     // ARQUIVAR CONTEÚDO
     // =========================================
 
-    async function excluirConteudo(id) {
+    async function excluirConteudo(artigo) {
+
+        if (
+            !podeArquivarArtigo(artigo) ||
+            arquivando
+        ) {
+            return;
+        }
 
         const confirmar = window.confirm(
             "Deseja realmente arquivar este conteúdo?"
@@ -498,72 +737,82 @@ function abrirDetalhes(conteudo) {
 
         try {
 
-            await requisicaoApi(`/api/Artigos/${id}`, {
-                method: "DELETE"
-            });
+            setArquivando(artigo.artigoId);
+
+            await requisicaoApi(
+                `/api/Artigos/${artigo.artigoId}`,
+                {
+                    method: "DELETE"
+                }
+            );
 
             setConteudos(atuais =>
-                atuais.filter(conteudo => conteudo.artigoId !== id)
+                atuais.filter(
+                    item =>
+                        item.artigoId !== artigo.artigoId
+                )
             );
 
             setMeusConteudos(atuais =>
-                atuais.filter(conteudo => conteudo.artigoId !== id)
+                atuais.filter(
+                    item =>
+                        item.artigoId !== artigo.artigoId
+                )
             );
 
-            alert("Conteúdo arquivado com sucesso!");
+            alert(
+                "Conteúdo arquivado com sucesso!"
+            );
 
         } catch (error) {
 
-            console.error("Erro ao arquivar conteúdo:", error);
+            console.error(
+                "Erro ao arquivar conteúdo:",
+                error
+            );
 
             alert(
                 error.message ||
                 "Não foi possível arquivar este conteúdo."
             );
 
+        } finally {
+
+            setArquivando(null);
+
         }
 
     }
 
     // =========================================
-    // SAIR DO SISTEMA
+    // ESTADO DA LISTA ATUAL
     // =========================================
 
-    function sairSistema() {
+    const carregandoLista =
+        carregandoPermissoes ||
+        (
+            abaSelecionada === "publicados"
+                ? carregando
+                : carregandoMeus
+        );
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        localStorage.removeItem("perfis");
-
-        navigate("/login", { replace: true });
-
-    }
+    const erroLista =
+        abaSelecionada === "publicados"
+            ? erro
+            : erroMeus;
 
     // =========================================
-    // TELA
+    // RENDERIZAÇÃO
+    //
+    // Sidebar e Headers são fornecidos
+    // exclusivamente pelo LayoutSistema.
     // =========================================
 
     return (
 
         <div className="pagina-conteudos">
 
-            <Sidebar sairSistema={sairSistema} />
-
             <main className="principal-conteudos">
-
-                {/* HEADER DESKTOP */}
-
-                <HeaderDesktop
-                    pesquisa={pesquisa}
-                    setPesquisa={setPesquisa}
-                />
-
-                {/* HEADER RESPONSIVO */}
-
-                <Header
-                    pesquisa={pesquisa}
-                    setPesquisa={setPesquisa}
-                />
 
                 <section className="area-lista-conteudos">
 
@@ -573,20 +822,27 @@ function abrirDetalhes(conteudo) {
 
                         <div>
 
-                            <h1>Conteúdos Tributários</h1>
+                            <h1>
+                                Conteúdos Tributários
+                            </h1>
 
                             <p>
-                                Explore conteúdos por tema, mantenha-se conectado
+                                Explore conteúdos por tema,
+                                mantenha-se conectado
                             </p>
 
                         </div>
 
-                        {podeCriar && (
+                        {podeCriar &&
+                            !carregandoPermissoes &&
+                            !erroPermissoes && (
 
                             <button
                                 type="button"
                                 className="adicionar-conteudo"
-                                onClick={() => navigate("/conteudos/novo")}
+                                onClick={() =>
+                                    navigate("/conteudos/novo")
+                                }
                             >
 
                                 <span className="adicionar-conteudo-texto">
@@ -603,6 +859,31 @@ function abrirDetalhes(conteudo) {
 
                     </div>
 
+                    {/* ERRO DE PERMISSÕES */}
+
+                    {erroPermissoes && (
+
+                        <div
+                            className="erro-permissoes-conteudos"
+                            role="alert"
+                        >
+
+                            <p>
+                                Não foi possível carregar
+                                suas permissões de acesso.
+                            </p>
+
+                            <button
+                                type="button"
+                                onClick={atualizar}
+                            >
+                                Tentar novamente
+                            </button>
+
+                        </div>
+
+                    )}
+
                     {/* ABAS */}
 
                     <div className="abas-conteudos">
@@ -614,15 +895,27 @@ function abrirDetalhes(conteudo) {
                                     ? "aba-conteudos aba-conteudos-ativa"
                                     : "aba-conteudos"
                             }
+
                             onClick={() => {
-                                setAbaSelecionada("publicados");
-                                setTemaSelecionado("Todos");
+
+                                setAbaSelecionada(
+                                    "publicados"
+                                );
+
+                                setTemaSelecionado(
+                                    "Todos"
+                                );
+
                             }}
                         >
+
                             Todos os conteúdos
+
                         </button>
 
-                        {podeCriar && (
+                        {podeVerMeusConteudos &&
+                            !carregandoPermissoes &&
+                            !erroPermissoes && (
 
                             <button
                                 type="button"
@@ -631,12 +924,22 @@ function abrirDetalhes(conteudo) {
                                         ? "aba-conteudos aba-conteudos-ativa"
                                         : "aba-conteudos"
                                 }
+
                                 onClick={() => {
-                                    setAbaSelecionada("meus");
-                                    setTemaSelecionado("Todos");
+
+                                    setAbaSelecionada(
+                                        "meus"
+                                    );
+
+                                    setTemaSelecionado(
+                                        "Todos"
+                                    );
+
                                 }}
                             >
+
                                 Meus conteúdos
+
                             </button>
 
                         )}
@@ -649,25 +952,34 @@ function abrirDetalhes(conteudo) {
 
                         <div className="pesquisa-lista-conteudos">
 
-                            <img src={LupaCinza} alt="" />
+                            <img
+                                src={LupaCinza}
+                                alt=""
+                            />
 
                             <input
                                 type="text"
                                 placeholder="Buscar por título ou palavra-chave"
                                 value={pesquisa}
-                                onChange={(e) =>
-                                    setPesquisa(e.target.value)
+                                onChange={event =>
+                                    setPesquisa(
+                                        event.target.value
+                                    )
                                 }
                             />
 
                         </div>
 
+                        {/* FILTRO DE TEMA */}
+
                         <div className="seletor-conteudos">
 
                             <select
                                 value={temaSelecionado}
-                                onChange={(e) =>
-                                    setTemaSelecionado(e.target.value)
+                                onChange={event =>
+                                    setTemaSelecionado(
+                                        event.target.value
+                                    )
                                 }
                             >
 
@@ -677,7 +989,10 @@ function abrirDetalhes(conteudo) {
 
                                 {temasDisponiveis.map(tema => (
 
-                                    <option key={tema} value={tema}>
+                                    <option
+                                        key={tema}
+                                        value={tema}
+                                    >
                                         {tema}
                                     </option>
 
@@ -685,15 +1000,24 @@ function abrirDetalhes(conteudo) {
 
                             </select>
 
-                            <img src={ExpandirText} alt="" />
+                            <img
+                                src={ExpandirText}
+                                alt=""
+                            />
 
                         </div>
+
+                        {/* ORDENAÇÃO */}
 
                         <div className="seletor-conteudos">
 
                             <select
                                 value={ordem}
-                                onChange={(e) => setOrdem(e.target.value)}
+                                onChange={event =>
+                                    setOrdem(
+                                        event.target.value
+                                    )
+                                }
                             >
 
                                 <option value="recentes">
@@ -706,17 +1030,22 @@ function abrirDetalhes(conteudo) {
 
                             </select>
 
-                            <img src={ExpandirText} alt="" />
+                            <img
+                                src={ExpandirText}
+                                alt=""
+                            />
 
                         </div>
 
                     </div>
 
                     {/* TABELA */}
+
                     <div className="tabela-conteudos">
+
                         <table
                             className={
-                                abaSelecionada === "publicados" && !podeArquivar
+                                !exibirAcoes
                                     ? "tabela-sem-acoes"
                                     : ""
                             }
@@ -725,38 +1054,42 @@ function abrirDetalhes(conteudo) {
                             <thead>
 
                                 <tr>
+
                                     <th>Título</th>
 
                                     <th>Tema</th>
 
                                     <th>
+
                                         {abaSelecionada === "publicados"
                                             ? "Data de publicação"
                                             : "Data de criação"}
+
                                     </th>
 
                                     <th>Autor</th>
 
-                                    {/* Status aparece apenas em Meus conteúdos */}
                                     {abaSelecionada === "meus" && (
+
                                         <th>Status</th>
+
                                     )}
 
-                                    {/* Ações aparecem apenas para usuários autorizados */}
                                     {exibirAcoes && (
+
                                         <th className="coluna-acoes">
                                             Ações
                                         </th>
+
                                     )}
+
                                 </tr>
 
                             </thead>
 
                             <tbody>
 
-                                {(abaSelecionada === "publicados"
-                                    ? carregando
-                                    : carregandoMeus) ? (
+                                {carregandoLista ? (
 
                                     <tr>
 
@@ -764,14 +1097,14 @@ function abrirDetalhes(conteudo) {
                                             colSpan={totalColunas}
                                             className="sem-conteudos"
                                         >
+
                                             Carregando conteúdos...
+
                                         </td>
 
                                     </tr>
 
-                                ) : (abaSelecionada === "publicados"
-                                    ? erro
-                                    : erroMeus) ? (
+                                ) : erroPermissoes || erroLista ? (
 
                                     <tr>
 
@@ -779,183 +1112,208 @@ function abrirDetalhes(conteudo) {
                                             colSpan={totalColunas}
                                             className="sem-conteudos"
                                         >
-                                            {abaSelecionada === "publicados"
-                                                ? erro
-                                                : erroMeus}
+
+                                            {erroPermissoes
+                                                ? "Não foi possível carregar as permissões."
+                                                : erroLista}
+
                                         </td>
 
                                     </tr>
 
                                 ) : listaFiltrada.length > 0 ? (
 
-                                    listaFiltrada.map((conteudo) => {
+                                    listaFiltrada.map(artigo => (
 
-                                        const status = normalizarStatus(
-                                            conteudo.status
-                                        );
+                                        <tr
+                                            key={artigo.artigoId}
+                                            className="linha-conteudo-clicavel"
 
-                                        const ehRascunho =
-                                            status === "RASCUNHO";
+                                            onClick={() =>
+                                                abrirDetalhes(artigo)
+                                            }
+                                        >
 
-                                        return (
+                                            {/* TÍTULO */}
 
-                                            <tr
-                                                key={conteudo.artigoId}
-                                                className="linha-conteudo-clicavel"
-                                                onClick={() =>
-                                                    abrirDetalhes(conteudo)
-                                                }
-                                            >
+                                            <td className="celula-titulo">
 
-                                                <td className="celula-titulo">
+                                                <img
+                                                    src={iconeConteudo}
+                                                    alt=""
+                                                    className="icone-card-conteudo"
+                                                />
 
-                                                    <img
-                                                        src={iconeConteudo}
-                                                        alt=""
-                                                        className="icone-card-conteudo"
-                                                    />
+                                                <strong>
+                                                    {artigo.titulo}
+                                                </strong>
 
-                                                    <strong>
-                                                        {conteudo.titulo}
-                                                    </strong>
+                                            </td>
 
-                                                </td>
+                                            {/* TEMA */}
 
-                                                <td className="celula-tema">
+                                            <td className="celula-tema">
 
-                                                   <span
-    className={`etiqueta-tema ${classeCorTema(conteudo.tema)}`}
->
-    {conteudo.tema || "Sem tema"}
-</span>
+                                                <span
+                                                    className={`etiqueta-tema ${classeCorTema(artigo.tema)}`}
+                                                >
 
-                                                </td>
+                                                    {artigo.tema ||
+                                                        "Sem tema"}
 
-                                                <td className="celula-data">
+                                                </span>
 
-                                                    {formatarData(
-                                                        abaSelecionada === "publicados"
-                                                            ? conteudo.dataPublicacao
-                                                            : conteudo.dataCriacao
-                                                    )}
+                                            </td>
 
-                                                </td>
+                                            {/* DATA */}
 
-                                                <td className="celula-autor">
+                                            <td className="celula-data">
 
-                                                    {conteudo.autor || "Não informado"}
-
-                                                </td>
-
-                                                {abaSelecionada === "meus" && (
-
-                                                    <td>
-
-                                                        <span
-                                                            className={`etiqueta-status-artigo ${classeStatus(status)}`}
-                                                        >
-                                                            {textoStatus(status)}
-                                                        </span>
-
-                                                    </td>
-
+                                                {formatarData(
+                                                    abaSelecionada === "publicados"
+                                                        ? artigo.dataPublicacao
+                                                        : artigo.dataCriacao
                                                 )}
 
-                                                {exibirAcoes && (
-                                                    <td className="coluna-acoes">
+                                            </td>
 
-                                                        <div className="acoes-artigo">
+                                            {/* AUTOR */}
 
-                                                            {/* EDITAR SOMENTE RASCUNHO */}
+                                            <td className="celula-autor">
 
-                                                            {abaSelecionada === "meus" &&
-                                                                ehRascunho && (
+                                                {artigo.autor ||
+                                                    "Não informado"}
 
-                                                                    <button
-                                                                        type="button"
-                                                                        className="acao-editar-artigo"
-                                                                        title="Editar rascunho"
-                                                                        onClick={(event) => {
+                                            </td>
 
-                                                                            event.stopPropagation();
+                                            {/* STATUS */}
 
-                                                                            editarConteudo(conteudo);
+                                            {abaSelecionada === "meus" && (
 
-                                                                        }}
-                                                                    >
-                                                                        Editar
-                                                                    </button>
+                                                <td className="celula-status">
 
-                                                                )}
+                                                    <span
+                                                        className={`etiqueta-status-artigo ${classeStatus(artigo.status)}`}
+                                                    >
 
-                                                            {/* ENVIAR PARA REVISÃO SOMENTE RASCUNHO */}
+                                                        {textoStatus(
+                                                            artigo.status
+                                                        )}
 
-                                                            {abaSelecionada === "meus" &&
-                                                                ehRascunho && (
+                                                    </span>
 
-                                                                    <button
-                                                                        type="button"
-                                                                        className="acao-enviar-revisao"
-                                                                        title="Enviar para revisão"
-                                                                        disabled={
-                                                                            enviandoRevisao === conteudo.artigoId
-                                                                        }
-                                                                        onClick={(event) => {
+                                                </td>
 
-                                                                            event.stopPropagation();
+                                            )}
 
-                                                                            enviarParaRevisao(
-                                                                                conteudo.artigoId
-                                                                            );
+                                            {/* AÇÕES */}
 
-                                                                        }}
-                                                                    >
-                                                                        {enviandoRevisao === conteudo.artigoId
-                                                                            ? "Enviando..."
-                                                                            : "Enviar"}
-                                                                    </button>
+                                            {exibirAcoes && (
 
-                                                                )}
+                                                <td className="coluna-acoes">
 
-                                                            {/* ARQUIVAR */}
+                                                    <div className="acoes-artigo">
 
-                                                            {abaSelecionada === "publicados" &&
-                                                                podeArquivar && (
+                                                        {/* EDITAR */}
 
-                                                                    <button
-                                                                        type="button"
-                                                                        className="excluir-conteudo"
-                                                                        title="Arquivar conteúdo"
-                                                                        onClick={(event) => {
+                                                        {podeEditarArtigo(artigo) && (
 
-                                                                            event.stopPropagation();
+                                                            <button
+                                                                type="button"
+                                                                className="acao-editar-artigo"
+                                                                title="Editar rascunho"
 
-                                                                            excluirConteudo(
-                                                                                conteudo.artigoId
-                                                                            );
+                                                                onClick={event => {
 
-                                                                        }}
-                                                                    >
+                                                                    event.stopPropagation();
 
-                                                                        <img
-                                                                            src={Lixeira}
-                                                                            alt="Arquivar"
-                                                                        />
+                                                                    editarConteudo(
+                                                                        artigo
+                                                                    );
 
-                                                                    </button>
+                                                                }}
+                                                            >
 
-                                                                )}
+                                                                Editar
 
-                                                        </div>
+                                                            </button>
 
-                                                    </td>
-                                                )}
+                                                        )}
 
-                                            </tr>
+                                                        {/* ENVIAR PARA REVISÃO */}
 
-                                        );
+                                                        {podeEnviarArtigo(artigo) && (
 
-                                    })
+                                                            <button
+                                                                type="button"
+                                                                className="acao-enviar-revisao"
+                                                                title="Enviar para revisão"
+
+                                                                disabled={
+                                                                    enviandoRevisao !== null
+                                                                }
+
+                                                                onClick={event => {
+
+                                                                    event.stopPropagation();
+
+                                                                    enviarParaRevisao(
+                                                                        artigo
+                                                                    );
+
+                                                                }}
+                                                            >
+
+                                                                {enviandoRevisao === artigo.artigoId
+                                                                    ? "Enviando..."
+                                                                    : "Enviar"}
+
+                                                            </button>
+
+                                                        )}
+
+                                                        {/* ARQUIVAR */}
+
+                                                        {podeArquivarArtigo(artigo) && (
+
+                                                            <button
+                                                                type="button"
+                                                                className="excluir-conteudo"
+                                                                title="Arquivar conteúdo"
+
+                                                                disabled={
+                                                                    arquivando !== null
+                                                                }
+
+                                                                onClick={event => {
+
+                                                                    event.stopPropagation();
+
+                                                                    excluirConteudo(
+                                                                        artigo
+                                                                    );
+
+                                                                }}
+                                                            >
+
+                                                                <img
+                                                                    src={Lixeira}
+                                                                    alt="Arquivar"
+                                                                />
+
+                                                            </button>
+
+                                                        )}
+
+                                                    </div>
+
+                                                </td>
+
+                                            )}
+
+                                        </tr>
+
+                                    ))
 
                                 ) : (
 
@@ -967,7 +1325,7 @@ function abrirDetalhes(conteudo) {
                                         >
 
                                             {abaSelecionada === "meus"
-                                                ? "Você ainda não possui conteúdos cadastrados."
+                                                ? "Nenhum conteúdo encontrado entre seus artigos."
                                                 : "Nenhum conteúdo encontrado."}
 
                                         </td>
@@ -986,176 +1344,7 @@ function abrirDetalhes(conteudo) {
 
             </main>
 
-            <FooterMobile />
-
         </div>
-
-    );
-
-}
-
-
-// =========================================
-// MENU LATERAL
-// =========================================
-
-function Sidebar({ sairSistema }) {
-
-    const perfis = obterPerfisLogados();
-
-    return (
-
-        <aside className="menu-conteudos">
-
-            <div className="logo-conteudos">
-                <img src={LogoNome} alt="Integra" />
-            </div>
-
-            <nav className="navegacao-conteudos">
-
-                <NavLink
-                    to="/home"
-                    className={({ isActive }) =>
-                        isActive ? "item-menu menu-ativo" : "item-menu"
-                    }
-                >
-                    <img src={CasaBranca} alt="" />
-                    <span>Início</span>
-                </NavLink>
-
-                <NavLink
-                    to="/conteudos"
-                    className={({ isActive }) =>
-                        isActive ? "item-menu menu-ativo" : "item-menu"
-                    }
-                >
-                    <img src={LivroBranco} alt="" />
-                    <span>Conteúdos</span>
-                </NavLink>
-
-                {PERFIS_FISCAIS.some(perfil => perfis.includes(perfil)) && (
-                    <NavLink
-                        to="/notas-fiscais"
-                        className={({ isActive }) =>
-                            isActive ? "item-menu menu-ativo" : "item-menu"
-                        }
-                    >
-                        <img src={DoisDocumentosBranco} alt="" />
-                        <span>Notas Fiscais</span>
-                    </NavLink>
-                )}
-
-                {perfis.includes("Administrador") && (
-                    <NavLink
-                        to="/clientes"
-                        className={({ isActive }) =>
-                            isActive ? "item-menu menu-ativo" : "item-menu"
-                        }
-                    >
-                        <img src={ADDProfileBranco} alt="" />
-                        <span>Clientes</span>
-                    </NavLink>
-                )}
-
-                {perfis.includes("Administrador") && (
-                    <NavLink
-                        to="/usuario"
-                        className={({ isActive }) =>
-                            isActive ? "item-menu menu-ativo" : "item-menu"
-                        }
-                    >
-                        <img src={PessoaBranca} alt="" />
-                        <span>Usuários</span>
-                    </NavLink>
-                )}
-
-            </nav>
-
-            <button
-                type="button"
-                className="sair-conteudos"
-                onClick={sairSistema}
-            >
-                <img src={SairBranco} alt="" />
-                <span>Sair</span>
-            </button>
-
-        </aside>
-
-    );
-
-}
-
-
-// =========================================
-// MENU MOBILE
-// =========================================
-
-function FooterMobile() {
-
-    const perfis = obterPerfisLogados();
-
-    return (
-
-        <footer className="footer-conteudos-mobile">
-
-            <NavLink
-                to="/home"
-                className={({ isActive }) =>
-                    isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                }
-            >
-                <img src={CasaBranca} alt="" />
-                <span>Início</span>
-            </NavLink>
-
-            <NavLink
-                to="/conteudos"
-                className={({ isActive }) =>
-                    isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                }
-            >
-                <img src={LivroBranco} alt="" />
-                <span>Conteúdos</span>
-            </NavLink>
-
-            {PERFIS_FISCAIS.some(perfil => perfis.includes(perfil)) && (
-                <NavLink
-                    to="/notas-fiscais"
-                    className={({ isActive }) =>
-                        isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                    }
-                >
-                    <img src={DoisDocumentosBranco} alt="" />
-                    <span>Notas Fiscais</span>
-                </NavLink>
-            )}
-
-            {perfis.includes("Administrador") && (
-                <NavLink
-                    to="/clientes"
-                    className={({ isActive }) =>
-                        isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                    }
-                >
-                    <img src={ADDProfileBranco} alt="" />
-                    <span>Clientes</span>
-                </NavLink>
-            )}
-
-            {perfis.includes("Administrador") && (
-                <NavLink
-                    to="/usuario"
-                    className={({ isActive }) =>
-                        isActive ? "item-footer-mobile footer-ativo" : "item-footer-mobile"
-                    }
-                >
-                    <img src={PessoaBranca} alt="" />
-                    <span>Usuários</span>
-                </NavLink>
-            )}
-
-        </footer>
 
     );
 

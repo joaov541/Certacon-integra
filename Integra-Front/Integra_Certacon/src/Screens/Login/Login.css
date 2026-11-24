@@ -905,3 +905,15 @@ input {
     opacity: 0.7;
     cursor: not-allowed;
 }
+
+/* Consulta pública NF-e */
+.login .link-consultar-nfe {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; min-height: 42px; margin-top: 20px; padding: 10px 12px;
+    border: 1px solid #1d2e68; border-radius: 6px;
+    background: transparent; color: #1d2e68; font-size: 13px;
+    text-align: center; text-decoration: none; cursor: pointer;
+}
+.login .link-consultar-nfe:hover { background: #e8eef9; }
+.login .link-consultar-nfe:focus-visible { outline: 2px solid #ff8500; outline-offset: 3px; }
+.login .link-consultar-nfe img { width: 20px; height: 20px; object-fit: contain; }

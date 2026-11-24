@@ -1,0 +1,1417 @@
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
+
+.ac-pagina {
+    --ac-azul: #1d2e68;
+    --ac-laranja: #ff8500;
+    --ac-fundo: #f4f7fb;
+    --ac-borda: #dce3ee;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+
+    background: var(--ac-fundo);
+    color: #252a33;
+
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.ac-pagina * {
+    box-sizing: border-box;
+}
+
+.ac-pagina a,
+.ac-pagina button {
+    font-family: inherit;
+}
+
+.ac-pagina section[id] {
+    scroll-margin-top: 20px;
+}
+
+/* =========================================
+   CABEÇALHO PÚBLICO
+========================================= */
+
+.ac-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    padding: 16px max(24px, calc((100% - 1160px) / 2));
+
+    background: var(--ac-azul);
+    color: #ffffff;
+}
+
+.ac-header img {
+    display: block;
+
+    width: 185px;
+    max-width: 100%;
+    max-height: 65px;
+
+    object-fit: contain;
+}
+
+.ac-header nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.ac-header a {
+    color: #ffffff;
+
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.ac-header a:hover {
+    text-decoration: underline;
+}
+
+.ac-header .ac-link-ativo {
+    color: #ffb45e;
+    font-weight: 700;
+}
+
+.ac-header .ac-criar-conta {
+    padding: 10px 16px;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: var(--ac-azul);
+
+    font-weight: 700;
+}
+
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
+
+.ac-conteudo {
+    width: 100%;
+    max-width: 1400px;
+    min-width: 0;
+
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.ac-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-bottom: 20px;
+
+    color: #447fbe;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.ac-voltar:hover {
+    color: var(--ac-laranja);
+}
+
+/* =========================================
+   HERO
+========================================= */
+
+.ac-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    padding: clamp(25px, 4vw, 50px);
+    margin-bottom: 25px;
+
+    border-radius: 15px;
+
+    background: var(--ac-azul);
+    color: #ffffff;
+}
+
+.ac-hero-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.ac-hero-tag {
+    color: #ffb45e;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.ac-hero h1 {
+    margin: 10px 0 14px;
+
+    color: #ffffff;
+
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.2;
+}
+
+.ac-hero p {
+    max-width: 650px;
+    margin: 0;
+
+    color: #e4e8f4;
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.ac-hero-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 175px;
+    height: 175px;
+
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.ac-hero-acoes {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.ac-hero-acoes a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 11px 16px;
+
+    border: 1px solid var(--ac-laranja);
+    border-radius: 7px;
+
+    background: var(--ac-laranja);
+    color: #17234c;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.ac-hero-acoes a + a {
+    border-color: #aab6dd;
+
+    background: transparent;
+    color: #ffffff;
+}
+
+.ac-hero-acoes a:hover {
+    opacity: 0.85;
+}
+
+/* =========================================
+   ATALHOS
+========================================= */
+
+.ac-atalhos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.ac-atalho {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+    gap: 8px;
+
+    min-width: 0;
+
+    padding: 18px;
+
+    border: 1px solid var(--ac-borda);
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: var(--ac-azul);
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+.ac-atalho:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 5px 15px rgba(29, 46, 104, 0.10);
+}
+
+.ac-atalho-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 45px;
+    height: 45px;
+
+    margin-bottom: 4px;
+
+    border-radius: 8px;
+
+    background: #e6edf9;
+    color: var(--ac-azul);
+}
+
+.ac-atalho strong {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.ac-atalho span {
+    color: #68758a;
+    font-size: 12px;
+}
+
+/* =========================================
+   SEÇÕES PRINCIPAIS
+========================================= */
+
+.ac-secao {
+    min-width: 0;
+
+    margin-bottom: 25px;
+    padding: 28px;
+
+    border: 1px solid var(--ac-borda);
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+.ac-secao-cabecalho {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.ac-secao-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 50px;
+    height: 50px;
+
+    border-radius: 9px;
+
+    background: #e6edf9;
+    color: var(--ac-azul);
+}
+
+.ac-secao-cabecalho h2 {
+    margin: 0 0 5px;
+
+    color: var(--ac-azul);
+    font-size: 23px;
+    line-height: 1.3;
+}
+
+.ac-secao-cabecalho p {
+    margin: 0;
+
+    color: #68758a;
+    font-size: 13px;
+}
+
+.ac-texto {
+    color: #526079;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.ac-texto p {
+    margin: 0 0 15px;
+}
+
+.ac-subtitulo {
+    margin: 25px 0 16px;
+
+    color: var(--ac-azul);
+
+    font-size: 17px;
+}
+
+/* =========================================
+   BENEFÍCIOS DO CPF NA NOTA
+========================================= */
+
+.ac-beneficios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 15px;
+    margin: 22px 0;
+}
+
+.ac-beneficio {
+    min-width: 0;
+
+    padding: 20px;
+
+    border: 1px solid #dce5f3;
+    border-radius: 9px;
+
+    background: #f4f7fb;
+}
+
+.ac-beneficio > svg {
+    color: var(--ac-azul);
+}
+
+.ac-beneficio h3 {
+    margin: 12px 0 8px;
+
+    color: var(--ac-azul);
+    font-size: 15px;
+}
+
+.ac-beneficio p {
+    margin: 0;
+
+    color: #596477;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* =========================================
+   CAIXAS INFORMATIVAS
+========================================= */
+
+.ac-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    margin-top: 20px;
+    padding: 16px;
+
+    border: 1px solid #d5e1f2;
+    border-radius: 8px;
+
+    background: #edf3fc;
+    color: #526079;
+}
+
+.ac-info > svg {
+    flex-shrink: 0;
+    color: var(--ac-azul);
+}
+
+.ac-info p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* =========================================
+   ETAPAS DO CASHBACK
+========================================= */
+
+.ac-etapas {
+    display: flex;
+    align-items: stretch;
+
+    gap: 12px;
+}
+
+.ac-etapa {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 25px 16px 18px;
+
+    border: 1px solid #dce5f3;
+    border-radius: 10px;
+
+    background: #f4f7fb;
+    color: var(--ac-azul);
+
+    text-align: center;
+}
+
+.ac-etapa-numero {
+    position: absolute;
+
+    top: 10px;
+    left: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 23px;
+    height: 23px;
+
+    border-radius: 50%;
+
+    background: var(--ac-azul);
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ac-etapa > svg {
+    margin-top: 7px;
+}
+
+.ac-etapa h4 {
+    margin: 12px 0 8px;
+
+    color: var(--ac-azul);
+    font-size: 14px;
+}
+
+.ac-etapa p {
+    margin: 0;
+
+    color: #596477;
+
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.ac-etapa-seta {
+    align-self: center;
+    flex-shrink: 0;
+
+    color: var(--ac-laranja);
+}
+
+/* =========================================
+   REQUISITOS DO CASHBACK
+========================================= */
+
+.ac-requisitos {
+    margin-top: 25px;
+    padding: 22px;
+
+    border: 1px solid #dce5f3;
+    border-radius: 10px;
+
+    background: #f4f7fb;
+}
+
+.ac-requisitos h3 {
+    margin: 0 0 18px;
+
+    color: var(--ac-azul);
+    font-size: 18px;
+}
+
+.ac-requisitos ul {
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.ac-requisitos li {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    color: #526079;
+    font-size: 14px;
+}
+
+.ac-requisitos li svg {
+    flex-shrink: 0;
+    color: #27824d;
+}
+
+/* =========================================
+   CRONOGRAMA DA REFORMA
+========================================= */
+
+.ac-cronograma {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+}
+
+.ac-cronograma article {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 8px;
+
+    padding: 22px;
+
+    border: 1px solid var(--ac-borda);
+    border-top: 4px solid var(--ac-laranja);
+    border-radius: 8px;
+
+    background: #ffffff;
+}
+
+.ac-cronograma article > svg {
+    color: var(--ac-azul);
+}
+
+.ac-cronograma strong {
+    color: var(--ac-azul);
+
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.ac-cronograma h4 {
+    margin: 0;
+
+    color: var(--ac-azul);
+    font-size: 16px;
+}
+
+.ac-cronograma p {
+    margin: 0;
+
+    color: #596477;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* =========================================
+   COMPARAÇÃO ENTRE PROGRAMAS
+========================================= */
+
+.ac-comparacao-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+.ac-comparacao {
+    min-width: 0;
+
+    padding: 22px;
+
+    border: 1px solid var(--ac-borda);
+    border-radius: 10px;
+
+    background: #f8faff;
+}
+
+.ac-comparacao-tag {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 5px;
+
+    background: #e6edf9;
+    color: var(--ac-azul);
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.ac-comparacao h3 {
+    margin: 14px 0 18px;
+
+    color: var(--ac-azul);
+
+    font-size: 19px;
+}
+
+.ac-comparacao dl {
+    margin: 0;
+}
+
+.ac-comparacao dt {
+    margin-bottom: 5px;
+
+    color: var(--ac-azul);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ac-comparacao dd {
+    margin: 0 0 14px;
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid #e0e6f0;
+
+    color: #596477;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.ac-comparacao dd:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+
+    border-bottom: none;
+}
+
+/* =========================================
+   DIREITOS DO CIDADÃO
+========================================= */
+
+.ac-direitos-lista {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.ac-direitos-lista li {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 13px;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid #e4e9f1;
+}
+
+.ac-direitos-lista li:first-child {
+    padding-top: 0;
+}
+
+.ac-direitos-lista li:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.ac-direitos-lista li > svg {
+    flex-shrink: 0;
+
+    margin-top: 1px;
+
+    color: #27824d;
+}
+
+.ac-direitos-lista strong {
+    color: var(--ac-azul);
+    font-size: 15px;
+}
+
+.ac-direitos-lista p {
+    margin: 6px 0 0;
+
+    color: #596477;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* =========================================
+   PERGUNTAS FREQUENTES
+========================================= */
+
+.ac-faq {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.ac-faq-item {
+    overflow: hidden;
+
+    border: 1px solid var(--ac-borda);
+    border-radius: 8px;
+
+    background: #ffffff;
+}
+
+.ac-faq-item h3 {
+    margin: 0;
+}
+
+.ac-faq-item button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    width: 100%;
+    min-height: 58px;
+
+    padding: 15px 17px;
+
+    border: none;
+
+    background: #f7f9fc;
+    color: var(--ac-azul);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-align: left;
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.ac-faq-item button:hover {
+    background: #eaf0fa;
+}
+
+.ac-faq-item button svg {
+    flex-shrink: 0;
+
+    transition: transform 0.2s ease;
+}
+
+.ac-faq-item.ac-faq-aberto {
+    border-color: #aabbdc;
+}
+
+.ac-faq-aberto button {
+    background: #eaf0fa;
+}
+
+.ac-seta-aberta {
+    transform: rotate(180deg);
+}
+
+.ac-faq-resposta {
+    padding: 17px;
+
+    border-top: 1px solid #e0e6f0;
+}
+
+.ac-faq-resposta[hidden] {
+    display: none;
+}
+
+.ac-faq-resposta p {
+    margin: 0;
+
+    color: #526079;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* =========================================
+   FONTES OFICIAIS
+========================================= */
+
+.ac-fontes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.ac-fonte {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    min-width: 0;
+
+    padding: 18px;
+
+    border: 1px solid var(--ac-borda);
+    border-radius: 8px;
+
+    background: #f7f9fc;
+    color: var(--ac-azul);
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.ac-fonte:hover {
+    border-color: #aabbdc;
+    background: #eaf0fa;
+}
+
+.ac-fonte > svg {
+    flex-shrink: 0;
+}
+
+.ac-fonte strong {
+    font-size: 14px;
+}
+
+.ac-fonte p {
+    margin: 5px 0 0;
+
+    color: #68758a;
+
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   FERRAMENTAS RELACIONADAS
+========================================= */
+
+.ac-relacionados {
+    margin-top: 30px;
+    padding: 25px;
+
+    border-radius: 12px;
+
+    background: var(--ac-azul);
+    color: #ffffff;
+}
+
+.ac-relacionados h2 {
+    margin: 0 0 8px;
+
+    color: #ffffff;
+    font-size: 23px;
+}
+
+.ac-relacionados > p {
+    margin: 0 0 20px;
+
+    color: #dce5fa;
+    font-size: 14px;
+}
+
+.ac-relacionados-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+}
+
+.ac-relacionados-grid a {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+    padding: 17px;
+
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+
+    text-decoration: none;
+
+    transition: background 0.2s ease;
+}
+
+.ac-relacionados-grid a:hover {
+    background: rgba(255, 255, 255, 0.17);
+}
+
+.ac-relacionados-grid a > svg {
+    flex-shrink: 0;
+}
+
+.ac-relacionados-grid a > div {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    min-width: 0;
+
+    gap: 4px;
+}
+
+.ac-relacionados-grid strong {
+    font-size: 14px;
+}
+
+.ac-relacionados-grid span {
+    color: #dce5fa;
+    font-size: 12px;
+}
+
+/* =========================================
+   AVISO FINAL
+========================================= */
+
+.ac-aviso-final {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-top: 20px;
+    padding: 17px;
+
+    border: 1px solid #dce5f3;
+    border-radius: 8px;
+
+    background: #edf3fc;
+    color: #526079;
+}
+
+.ac-aviso-final svg {
+    flex-shrink: 0;
+    color: var(--ac-azul);
+}
+
+.ac-aviso-final p {
+    margin: 0;
+
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* =========================================
+   RODAPÉ
+========================================= */
+
+.ac-footer {
+    padding: 20px;
+
+    background: var(--ac-azul);
+    color: #ffffff;
+
+    font-size: 13px;
+    text-align: center;
+}
+
+/* =========================================
+   ACESSIBILIDADE
+========================================= */
+
+.ac-pagina a:focus-visible,
+.ac-pagina button:focus-visible {
+    outline: 2px solid var(--ac-laranja);
+    outline-offset: 3px;
+}
+
+.ac-faq-item button:focus-visible {
+    outline-offset: -3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ac-pagina *,
+    .ac-pagina *::before,
+    .ac-pagina *::after {
+        animation: none;
+        transition: none;
+    }
+
+    .ac-atalho:hover {
+        transform: none;
+    }
+
+}
+
+/* =========================================
+   INTEGRAÇÃO COM LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .ac-pagina {
+    width: 100%;
+    min-width: 0;
+    min-height: 100%;
+
+    height: auto;
+    overflow: visible;
+}
+
+.integra-layout .ac-conteudo {
+    position: relative;
+    inset: auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    height: auto;
+    overflow: visible;
+}
+
+/* =========================================
+   TABLETS E DESKTOP COMPACTO
+========================================= */
+
+@media (min-width: 701px) and (max-width: 1200px) {
+
+    .ac-conteudo {
+        padding: 24px 20px;
+    }
+
+    .ac-hero {
+        padding: 28px;
+    }
+
+    .ac-hero-icone {
+        width: 125px;
+        height: 125px;
+    }
+
+    .ac-hero-icone svg {
+        width: 85px;
+        height: 85px;
+    }
+
+    .ac-atalhos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ac-secao {
+        padding: 22px;
+    }
+
+    .ac-beneficios-grid {
+        gap: 10px;
+    }
+
+    .ac-beneficio {
+        padding: 14px;
+    }
+
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+
+    .ac-hero-icone {
+        display: none;
+    }
+
+    .ac-beneficios-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ac-etapas {
+        flex-direction: column;
+    }
+
+    .ac-etapa-seta {
+        transform: rotate(90deg);
+    }
+
+    .ac-fontes,
+    .ac-relacionados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .ac-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        padding: 14px 16px;
+        gap: 14px;
+    }
+
+    .ac-header img {
+        width: 150px;
+    }
+
+    .ac-header nav {
+        gap: 12px;
+        row-gap: 14px;
+    }
+
+    .ac-header a {
+        font-size: 12px;
+    }
+
+    .ac-header .ac-criar-conta {
+        padding: 8px 12px;
+    }
+
+    .ac-conteudo {
+        padding: 18px 14px 25px;
+    }
+
+    .ac-hero {
+        padding: 25px 20px;
+        gap: 0;
+    }
+
+    .ac-hero-icone {
+        display: none;
+    }
+
+    .ac-hero h1 {
+        font-size: 28px;
+    }
+
+    .ac-hero p {
+        font-size: 13px;
+    }
+
+    .ac-hero-acoes {
+        flex-direction: column;
+    }
+
+    .ac-hero-acoes a {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .ac-atalhos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+        margin-bottom: 22px;
+    }
+
+    .ac-atalho {
+        padding: 13px;
+    }
+
+    .ac-atalho-icone {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ac-atalho strong {
+        font-size: 13px;
+    }
+
+    .ac-atalho span {
+        font-size: 11px;
+    }
+
+    .ac-secao {
+        margin-bottom: 18px;
+        padding: 18px;
+
+        border-radius: 10px;
+    }
+
+    .ac-secao-cabecalho {
+        align-items: flex-start;
+
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .ac-secao-icone {
+        width: 42px;
+        height: 42px;
+    }
+
+    .ac-secao-icone svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    .ac-secao-cabecalho h2 {
+        font-size: 19px;
+    }
+
+    .ac-secao-cabecalho p {
+        font-size: 12px;
+    }
+
+    .ac-texto {
+        font-size: 13px;
+    }
+
+    .ac-beneficios-grid,
+    .ac-comparacao-grid,
+    .ac-fontes,
+    .ac-relacionados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ac-beneficio {
+        padding: 16px;
+    }
+
+    .ac-etapas {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ac-etapa {
+        padding: 22px 16px;
+    }
+
+    .ac-etapa-seta {
+        transform: rotate(90deg);
+    }
+
+    .ac-requisitos {
+        padding: 16px;
+    }
+
+    .ac-requisitos li {
+        font-size: 13px;
+    }
+
+    .ac-cronograma {
+        gap: 10px;
+    }
+
+    .ac-cronograma article {
+        padding: 14px;
+    }
+
+    .ac-cronograma strong {
+        font-size: 28px;
+    }
+
+    .ac-cronograma p {
+        font-size: 12px;
+    }
+
+    .ac-comparacao {
+        padding: 18px;
+    }
+
+    .ac-faq-item button {
+        padding: 13px;
+
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .ac-faq-resposta {
+        padding: 13px;
+    }
+
+    .ac-faq-resposta p {
+        font-size: 13px;
+    }
+
+    .ac-info {
+        padding: 13px;
+        gap: 9px;
+    }
+
+    .ac-info p {
+        font-size: 12px;
+    }
+
+    .ac-relacionados {
+        margin-top: 22px;
+        padding: 18px;
+    }
+
+    .ac-relacionados h2 {
+        font-size: 20px;
+    }
+
+    .ac-fonte {
+        padding: 14px;
+    }
+
+}
+
+/* =========================================
+   CELULARES ESTREITOS
+========================================= */
+
+@media (max-width: 380px) {
+
+    .ac-conteudo {
+        padding: 15px 10px 22px;
+    }
+
+    .ac-hero {
+        padding: 22px 16px;
+    }
+
+    .ac-hero h1 {
+        font-size: 25px;
+    }
+
+    .ac-secao {
+        padding: 14px;
+    }
+
+    .ac-secao-cabecalho h2 {
+        font-size: 17px;
+    }
+
+    .ac-atalho {
+        padding: 11px;
+    }
+
+    .ac-cronograma {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+}

@@ -1,13 +1,16 @@
-
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./headerDesktop.css";
 
 import { requisicaoApi } from "../../services/api";
+import usePermissoes from "../../hooks/usePermissoes";
 import LupaPesquisa from "../../assets/Icones/LupaPesquisa.png";
 
-function HeaderDesktop() {
+function HeaderDesktop({ mostrarPesquisa = true, pesquisaPersonalizada = null }) {
   const navigate = useNavigate();
+  const { autenticado, temAlgumaPermissao, carregando } = usePermissoes();
+  const podeLerArtigos = !autenticado || temAlgumaPermissao("artigo.ler.publico") || temAlgumaPermissao("artigo.ler.exclusivo");
+  const podeLerNotas = autenticado && (temAlgumaPermissao("nota.ler.todas") || temAlgumaPermissao("nota.ler.proprias"));
   const pesquisaRef = useRef(null);
 
   const [usuario, setUsuario] = useState(null);
@@ -105,7 +108,7 @@ function HeaderDesktop() {
   useEffect(() => {
     const termo = pesquisa.trim();
 
-    if (termo.length < 2) {
+    if (carregando || !mostrarPesquisa || termo.length < 2 || (!podeLerArtigos && !podeLerNotas)) {
       setArtigosEncontrados([]);
       setNotasEncontradas([]);
       setPesquisando(false);
@@ -122,8 +125,8 @@ function HeaderDesktop() {
 
       try {
         const respostas = await Promise.allSettled([
-          requisicaoApi("/api/Artigos"),
-          requisicaoApi("/api/NotasFiscais")
+          podeLerArtigos ? requisicaoApi("/api/Artigos") : Promise.resolve([]),
+          podeLerNotas ? requisicaoApi("/api/NotasFiscais") : Promise.resolve([])
         ]);
 
         if (cancelado) return;
@@ -187,7 +190,7 @@ function HeaderDesktop() {
       cancelado = true;
       clearTimeout(temporizador);
     };
-  }, [pesquisa]);
+  }, [pesquisa, mostrarPesquisa, carregando, podeLerArtigos, podeLerNotas]);
 
   // =========================================
   // FECHAR PESQUISA AO CLICAR FORA
@@ -269,13 +272,13 @@ function HeaderDesktop() {
     event.preventDefault();
 
     const termo = pesquisa.trim();
-    if (!termo) return;
+    if (!termo || (!podeLerArtigos && !podeLerNotas)) return;
 
     setMostrarResultados(false);
     setPesquisa("");
 
     navigate(
-      `/conteudos?busca=${encodeURIComponent(termo)}`
+      `${podeLerArtigos ? "/conteudos" : "/notas-fiscais"}?busca=${encodeURIComponent(termo)}`
     );
   }
 
@@ -308,11 +311,20 @@ function HeaderDesktop() {
   return (
     <header className="integra-header-desktop">
 
-      <div className="header-desktop-superior">
+      <div className="header-desktop-superior" style={!mostrarPesquisa && !pesquisaPersonalizada ? { justifyContent: "flex-end" } : undefined}>
 
         {/* PESQUISA */}
 
-        <div
+        {pesquisaPersonalizada && (
+          <div className="header-desktop-pesquisa-area">
+            <div className="header-desktop-pesquisa">
+              <img src={LupaPesquisa} alt="" />
+              <input type="search" placeholder={pesquisaPersonalizada.placeholder || "Buscar usuários..."} aria-label={pesquisaPersonalizada.placeholder || "Buscar usuários"} autoComplete="off" value={pesquisaPersonalizada.valor} onChange={(e) => pesquisaPersonalizada.onChange(e.target.value)} />
+            </div>
+          </div>
+        )}
+        {mostrarPesquisa && !pesquisaPersonalizada && (
+<div
           className="header-desktop-pesquisa-area"
           ref={pesquisaRef}
         >
@@ -324,7 +336,7 @@ function HeaderDesktop() {
 
             <input
               type="search"
-              placeholder="Buscar conteúdos, notas fiscais, etc..."
+              placeholder={podeLerArtigos && podeLerNotas ? "Buscar conteúdos, notas fiscais..." : podeLerNotas ? "Buscar notas fiscais..." : "Buscar conteúdos..."}
               aria-label="Pesquisar no sistema"
               value={pesquisa}
               autoComplete="off"
@@ -365,7 +377,7 @@ function HeaderDesktop() {
 
                   {/* ARTIGOS */}
 
-                  {artigosEncontrados.length > 0 && (
+                  {podeLerArtigos && artigosEncontrados.length > 0 && (
                     <div className="header-desktop-grupo">
 
                       <h3>Conteúdos tributários</h3>
@@ -390,7 +402,7 @@ function HeaderDesktop() {
 
                   {/* NOTAS FISCAIS */}
 
-                  {notasEncontradas.length > 0 && (
+                  {podeLerNotas && notasEncontradas.length > 0 && (
                     <div className="header-desktop-grupo">
 
                       <h3>Notas fiscais</h3>
@@ -423,6 +435,7 @@ function HeaderDesktop() {
           )}
 
         </div>
+      )}
 
         {/* USUÁRIO */}
 

@@ -1,331 +1,1463 @@
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import {
+    useEffect,
+    useState,
+    useCallback
+} from "react";
+
+import { NavLink } from "react-router-dom";
+
 import "./Historicodeacoes.css";
+
 import { requisicaoApi } from "../../services/api";
 
-import CasaBranca from "../../assets/Icones/CasaBranca.png";
-import LivroBranco from "../../assets/Icones/LivroBranco.png";
-import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
-import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
-import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
+import usePermissoes from "../../hooks/usePermissoes";
+import usePesquisaLayout from "../../hooks/usePesquisaLayout";
+
 import LupaCinza from "../../assets/Icones/LupaCinza.png";
-import SairBranco from "../../assets/Icones/SairBranco.png";
-import LogoNome from "../../assets/Icones/LogoNome.png";
-import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import Calendario from "../../assets/Icones/calendario.png";
 import ExpandirText from "../../assets/Icones/ExpandirText.png";
 
 const ITENS_POR_PAGINA = 5;
 
+// =========================================
+// FORMATAÇÃO DE DATA E HORA
+// =========================================
+
 function dataUtcParaBrasil(valor) {
     if (!valor) return "—";
-    const comFuso = /(?:Z|[+-]\d{2}:\d{2})$/i.test(valor) ? valor : `${valor}Z`;
+
+    const texto = String(valor);
+
+    const comFuso =
+        /(?:Z|[+-]\d{2}:\d{2})$/i.test(texto)
+            ? texto
+            : `${texto}Z`;
+
     const data = new Date(comFuso);
-    if (Number.isNaN(data.getTime())) return "—";
+
+    if (Number.isNaN(data.getTime())) {
+        return "—";
+    }
+
     return new Intl.DateTimeFormat("pt-BR", {
         timeZone: "America/Sao_Paulo",
-        day: "2-digit", month: "2-digit", year: "numeric",
-        hour: "2-digit", minute: "2-digit"
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
     }).format(data);
 }
 
-// O serviço de auditoria grava UTC; datas do filtro são do horário de Brasília.
-// Como São Paulo não usa horário de verão atualmente, a meia-noite é UTC-03.
+// =========================================
+// CONVERSÃO DOS FILTROS PARA UTC
+// =========================================
+
+// Preserva o padrão atual do sistema:
+// horário de Brasília (UTC-03).
+
 function inicioBrasiliaEmUtc(data) {
-    return data ? new Date(`${data}T00:00:00-03:00`).toISOString() : "";
+    return data
+        ? new Date(`${data}T00:00:00-03:00`).toISOString()
+        : "";
 }
+
 function diaSeguinteBrasilEmUtc(data) {
     if (!data) return "";
-    const proximo = new Date(`${data}T00:00:00-03:00`);
-    proximo.setUTCDate(proximo.getUTCDate() + 1);
+
+    const proximo = new Date(
+        `${data}T00:00:00-03:00`
+    );
+
+    proximo.setUTCDate(
+        proximo.getUTCDate() + 1
+    );
+
     return proximo.toISOString();
 }
 
-function Historicodeacoes() {
-    const [acoes, setAcoes] = useState([]);
-    const [perfis, setPerfis] = useState([]);
-    const [usuarios, setUsuarios] = useState([]);
-    const [tipos, setTipos] = useState([]);
-    const [perfilSelecionado, setPerfilSelecionado] = useState("");
-    const [usuarioSelecionado, setUsuarioSelecionado] = useState("");
-    const [tipoSelecionado, setTipoSelecionado] = useState("");
-    const [pesquisa, setPesquisa] = useState("");
-    const [dataInicio, setDataInicio] = useState("");
-    const [dataFim, setDataFim] = useState("");
-    const [paginaAtual, setPaginaAtual] = useState(1);
-    const [totalPaginas, setTotalPaginas] = useState(1);
-    const [carregando, setCarregando] = useState(true);
-    const [erro, setErro] = useState("");
-    const [perfilCabecalho, setPerfilCabecalho] = useState(null);
-    const [filtrosAplicados, setFiltrosAplicados] = useState({});
+// =========================================
+// COMPONENTE PRINCIPAL
+// =========================================
 
-    useEffect(() => {
-        async function iniciar() {
-            try {
-                const [opcoes, meuPerfil] = await Promise.all([
-                    requisicaoApi("/api/Auditoria/filtros"),
-                    requisicaoApi("/api/MeuPerfil")
-                ]);
-                setPerfis(opcoes.perfis || []);
-                setUsuarios(opcoes.usuarios || []);
-                setTipos(opcoes.acoes || []);
-                setPerfilCabecalho(meuPerfil);
-            } catch (e) {
-                console.error("Erro ao carregar filtros de auditoria:", e);
-                setErro(e.message || "Não foi possível carregar os filtros.");
-            }
-        }
-        iniciar();
+function Historicodeacoes() {
+
+    // =========================================
+    // PERMISSÕES DINÂMICAS
+    // =========================================
+
+    const {
+        autenticado,
+        temPermissao,
+        carregando: carregandoPermissoes,
+        erro: erroPermissoes,
+        atualizar
+    } = usePermissoes();
+
+    const podeVisualizarHistorico =
+        autenticado &&
+        temPermissao("auditoria.ler");
+
+    const acessoLiberado =
+        podeVisualizarHistorico &&
+        !carregandoPermissoes &&
+        !erroPermissoes;
+
+    const token = localStorage.getItem("token");
+
+    // =========================================
+    // ESTADOS DA LISTAGEM
+    // =========================================
+
+    const [acoes, setAcoes] = useState([]);
+
+    const [perfis, setPerfis] = useState([]);
+
+    const [usuarios, setUsuarios] = useState([]);
+
+    const [tipos, setTipos] = useState([]);
+
+    // =========================================
+    // ESTADOS DOS FILTROS
+    // =========================================
+
+    const [perfilSelecionado, setPerfilSelecionado] =
+        useState("");
+
+    const [usuarioSelecionado, setUsuarioSelecionado] =
+        useState("");
+
+    const [tipoSelecionado, setTipoSelecionado] =
+        useState("");
+
+    const [pesquisa, setPesquisa] = useState("");
+
+    const [dataInicio, setDataInicio] = useState("");
+
+    const [dataFim, setDataFim] = useState("");
+
+    const [filtrosAplicados, setFiltrosAplicados] =
+        useState({});
+
+    // =========================================
+    // PAGINAÇÃO
+    // =========================================
+
+    const [paginaAtual, setPaginaAtual] =
+        useState(1);
+
+    const [totalPaginas, setTotalPaginas] =
+        useState(1);
+
+    // =========================================
+    // CARREGAMENTO E ERROS
+    // =========================================
+
+    const [carregando, setCarregando] =
+        useState(true);
+
+    const [carregandoFiltros, setCarregandoFiltros] =
+        useState(true);
+
+    const [erro, setErro] = useState("");
+
+    const [erroFiltros, setErroFiltros] =
+        useState("");
+
+    const [erroPeriodo, setErroPeriodo] =
+        useState("");
+
+    const [versaoConsulta, setVersaoConsulta] =
+        useState(0);
+
+    const [versaoFiltros, setVersaoFiltros] =
+        useState(0);
+
+    // =========================================
+    // PESQUISA DO LAYOUT COMPARTILHADO
+    // =========================================
+
+    const alterarPesquisa = useCallback(valor => {
+        setPesquisa(valor);
     }, []);
 
-    useEffect(() => {
-        let ativo = true;
-        async function carregar() {
-            setCarregando(true);
-            setErro("");
-            try {
-                const parametros = new URLSearchParams({
-                    pagina: String(paginaAtual),
-                    tamanhoPagina: String(ITENS_POR_PAGINA)
-                });
-                if (filtrosAplicados.perfilId) parametros.set("perfilId", filtrosAplicados.perfilId);
-                if (filtrosAplicados.usuarioId) parametros.set("usuarioId", filtrosAplicados.usuarioId);
-                if (filtrosAplicados.acao) parametros.set("acao", filtrosAplicados.acao);
-                if (filtrosAplicados.pesquisa) parametros.set("pesquisa", filtrosAplicados.pesquisa);
-                if (filtrosAplicados.dataInicio) parametros.set("dataInicio", inicioBrasiliaEmUtc(filtrosAplicados.dataInicio));
-                if (filtrosAplicados.dataFim) parametros.set("dataFim", diaSeguinteBrasilEmUtc(filtrosAplicados.dataFim));
+    usePesquisaLayout(
+        pesquisa,
+        alterarPesquisa
+    );
 
-                const resposta = await requisicaoApi(`/api/Auditoria?${parametros.toString()}`);
-                if (!ativo) return;
-                setAcoes(resposta.registros || []);
-                setTotalPaginas(Math.max(1, resposta.totalPaginas || 1));
-            } catch (e) {
-                if (ativo) {
-                    setErro(e.message || "Erro ao carregar histórico.");
-                    setAcoes([]);
-                }
-            } finally {
-                if (ativo) setCarregando(false);
-            }
+    // =========================================
+    // LIMPAR DADOS AO ALTERAR A SESSÃO
+    // =========================================
+
+    useEffect(() => {
+
+        setAcoes([]);
+        setPerfis([]);
+        setUsuarios([]);
+        setTipos([]);
+
+        setPerfilSelecionado("");
+        setUsuarioSelecionado("");
+        setTipoSelecionado("");
+
+        setPesquisa("");
+        setDataInicio("");
+        setDataFim("");
+
+        setPaginaAtual(1);
+        setTotalPaginas(1);
+
+        setFiltrosAplicados({});
+
+        setErro("");
+        setErroFiltros("");
+        setErroPeriodo("");
+
+    }, [token, acessoLiberado]);
+
+    // =========================================
+    // CARREGAR OPÇÕES DOS FILTROS
+    // =========================================
+
+    useEffect(() => {
+
+        let ativo = true;
+
+        if (!acessoLiberado) {
+
+            setPerfis([]);
+            setUsuarios([]);
+            setTipos([]);
+            setCarregandoFiltros(false);
+
+            return;
+
         }
-        carregar();
-        return () => { ativo = false; };
-    }, [paginaAtual, filtrosAplicados]);
+
+        async function carregarFiltros() {
+
+            try {
+
+                setCarregandoFiltros(true);
+                setErroFiltros("");
+
+                const opcoes = await requisicaoApi(
+                    "/api/Auditoria/filtros"
+                );
+
+                if (
+                    !ativo ||
+                    localStorage.getItem("token") !== token
+                ) {
+                    return;
+                }
+
+                setPerfis(
+                    Array.isArray(opcoes?.perfis)
+                        ? opcoes.perfis
+                        : []
+                );
+
+                setUsuarios(
+                    Array.isArray(opcoes?.usuarios)
+                        ? opcoes.usuarios
+                        : []
+                );
+
+                setTipos(
+                    Array.isArray(opcoes?.acoes)
+                        ? opcoes.acoes
+                        : []
+                );
+
+            } catch (error) {
+
+                if (!ativo) return;
+
+                console.error(
+                    "Erro ao carregar filtros de auditoria:",
+                    error
+                );
+
+                setErroFiltros(
+                    error.message ||
+                    "Não foi possível carregar os filtros."
+                );
+
+            } finally {
+
+                if (ativo) {
+                    setCarregandoFiltros(false);
+                }
+
+            }
+
+        }
+
+        carregarFiltros();
+
+        return () => {
+            ativo = false;
+        };
+
+    }, [
+        acessoLiberado,
+        token,
+        versaoFiltros
+    ]);
+
+    // =========================================
+    // CARREGAR HISTÓRICO PELA API
+    // =========================================
+
+    useEffect(() => {
+
+        let ativo = true;
+
+        if (!acessoLiberado) {
+
+            setAcoes([]);
+            setCarregando(false);
+
+            return;
+
+        }
+
+        async function carregarHistorico() {
+
+            try {
+
+                setCarregando(true);
+                setErro("");
+                setAcoes([]);
+
+                const parametros = new URLSearchParams({
+
+                    pagina: String(paginaAtual),
+
+                    tamanhoPagina: String(
+                        ITENS_POR_PAGINA
+                    )
+
+                });
+
+                // FILTRO POR PERFIL
+
+                if (filtrosAplicados.perfilId) {
+
+                    parametros.set(
+                        "perfilId",
+                        filtrosAplicados.perfilId
+                    );
+
+                }
+
+                // FILTRO POR USUÁRIO
+
+                if (filtrosAplicados.usuarioId) {
+
+                    parametros.set(
+                        "usuarioId",
+                        filtrosAplicados.usuarioId
+                    );
+
+                }
+
+                // FILTRO POR TIPO DE AÇÃO
+
+                if (filtrosAplicados.acao) {
+
+                    parametros.set(
+                        "acao",
+                        filtrosAplicados.acao
+                    );
+
+                }
+
+                // PESQUISA TEXTUAL
+
+                if (filtrosAplicados.pesquisa) {
+
+                    parametros.set(
+                        "pesquisa",
+                        filtrosAplicados.pesquisa
+                    );
+
+                }
+
+                // DATA INICIAL
+
+                if (filtrosAplicados.dataInicio) {
+
+                    parametros.set(
+                        "dataInicio",
+
+                        inicioBrasiliaEmUtc(
+                            filtrosAplicados.dataInicio
+                        )
+                    );
+
+                }
+
+                // DATA FINAL
+
+                if (filtrosAplicados.dataFim) {
+
+                    parametros.set(
+                        "dataFim",
+
+                        diaSeguinteBrasilEmUtc(
+                            filtrosAplicados.dataFim
+                        )
+                    );
+
+                }
+
+                // CONSULTAR API
+
+                const resposta = await requisicaoApi(
+                    `/api/Auditoria?${parametros.toString()}`
+                );
+
+                if (
+                    !ativo ||
+                    localStorage.getItem("token") !== token
+                ) {
+                    return;
+                }
+
+                if (!Array.isArray(resposta?.registros)) {
+
+                    throw new Error(
+                        "A API retornou uma listagem de auditoria inválida."
+                    );
+
+                }
+
+                const paginas = Math.max(
+                    1,
+                    Number(resposta.totalPaginas) || 1
+                );
+
+                setTotalPaginas(paginas);
+
+                // Corrige a página caso o total
+                // de registros tenha diminuído.
+
+                if (paginaAtual > paginas) {
+
+                    setPaginaAtual(paginas);
+
+                    return;
+
+                }
+
+                setAcoes(resposta.registros);
+
+            } catch (error) {
+
+                if (!ativo) return;
+
+                console.error(
+                    "Erro ao carregar histórico:",
+                    error
+                );
+
+                setAcoes([]);
+
+                setErro(
+                    error.message ||
+                    "Não foi possível carregar o histórico."
+                );
+
+            } finally {
+
+                if (ativo) {
+                    setCarregando(false);
+                }
+
+            }
+
+        }
+
+        carregarHistorico();
+
+        return () => {
+            ativo = false;
+        };
+
+    }, [
+        acessoLiberado,
+        token,
+        paginaAtual,
+        filtrosAplicados,
+        versaoConsulta
+    ]);
+
+    // =========================================
+    // FILTRAR USUÁRIOS PELO PERFIL
+    // =========================================
 
     const usuariosDoPerfil = usuarios
-        .filter(u => !perfilSelecionado || u.perfilId === perfilSelecionado)
-        .filter((usuario, indice, arr) =>
-            arr.findIndex(outro => outro.usuarioId === usuario.usuarioId) === indice
+
+        .filter(usuario => {
+
+            if (!perfilSelecionado) {
+                return true;
+            }
+
+            // Preserva o formato original da API.
+
+            return (
+
+                String(usuario.perfilId || "")
+                    .toLowerCase() ===
+
+                String(perfilSelecionado)
+                    .toLowerCase()
+
+            );
+
+        })
+
+        .filter((usuario, indice, lista) =>
+
+            lista.findIndex(outro =>
+
+                String(outro.usuarioId).toLowerCase() ===
+
+                String(usuario.usuarioId).toLowerCase()
+
+            ) === indice
+
         );
 
-    function buscarAcoes() {
-        if (dataInicio && dataFim && dataInicio > dataFim) {
-            alert("A data inicial não pode ser maior que a final.");
+    // =========================================
+    // APLICAR FILTROS
+    // =========================================
+
+    function buscarAcoes(event) {
+
+        event?.preventDefault();
+
+        if (!acessoLiberado) return;
+
+        setErroPeriodo("");
+
+        if (
+            dataInicio &&
+            dataFim &&
+            dataInicio > dataFim
+        ) {
+
+            setErroPeriodo(
+                "A data inicial não pode ser maior que a data final."
+            );
+
             return;
+
         }
+
         setPaginaAtual(1);
+
         setFiltrosAplicados({
+
             perfilId: perfilSelecionado,
+
             usuarioId: usuarioSelecionado,
+
             acao: tipoSelecionado,
+
             pesquisa: pesquisa.trim(),
+
             dataInicio,
+
             dataFim
+
         });
+
     }
 
+    // =========================================
+    // LIMPAR FILTROS
+    // =========================================
+
+    function limparFiltros() {
+
+        if (!acessoLiberado) return;
+
+        setPerfilSelecionado("");
+        setUsuarioSelecionado("");
+        setTipoSelecionado("");
+
+        setPesquisa("");
+
+        setDataInicio("");
+        setDataFim("");
+
+        setErroPeriodo("");
+
+        setPaginaAtual(1);
+
+        setFiltrosAplicados({});
+
+    }
+
+    // =========================================
+    // ATUALIZAR HISTÓRICO
+    // =========================================
+
+    function atualizarHistorico() {
+
+        if (!acessoLiberado) return;
+
+        setVersaoConsulta(
+            atual => atual + 1
+        );
+
+    }
+
+    // =========================================
+    // PAGINAÇÃO COM LIMITE DE BOTÕES
+    // =========================================
+
+    const primeiraPaginaVisivel = Math.max(
+
+        1,
+
+        Math.min(
+            paginaAtual - 2,
+            totalPaginas - 4
+        )
+
+    );
+
+    const paginasVisiveis = Array.from(
+
+        {
+            length: Math.min(
+                5,
+                totalPaginas
+            )
+        },
+
+        (_, indice) =>
+            primeiraPaginaVisivel + indice
+
+    );
+
+    const carregandoLista =
+        carregando ||
+        carregandoPermissoes;
+
+    // =========================================
+    // RENDERIZAÇÃO
+    //
+    // Sidebar e Headers são fornecidos
+    // exclusivamente pelo LayoutSistema.
+    // =========================================
+
     return (
+
         <div className="pagina-historico">
-            <Sidebar />
+
             <main className="principal-historico">
-                <Header
-                    pesquisa={pesquisa}
-                    setPesquisa={setPesquisa}
-                    dadosPerfil={perfilCabecalho}
-                    onBuscar={buscarAcoes}
-                />
+
                 <section className="conteudo-historico">
-                    <NavLink to="/home" className="voltar-historico">← Voltar</NavLink>
-                    <h1>Histórico de ações</h1>
 
-                    <div className="filtros-historico">
-                        <div className="campo-filtro periodo-filtro">
-                            <label>Período</label>
-                            <div className="campos-periodo">
-                                <div className="campo-data">
-                                    <input type="date" value={dataInicio}
-                                        onChange={e => setDataInicio(e.target.value)} />
-                                    <img src={Calendario} alt="Calendário" />
-                                </div>
-                                <span>-</span>
-                                <div className="campo-data">
-                                    <input type="date" value={dataFim}
-                                        onChange={e => setDataFim(e.target.value)} />
-                                    <img src={Calendario} alt="Calendário" />
-                                </div>
-                            </div>
-                        </div>
+                    <NavLink
+                        to="/home"
 
-                        <div className="campo-filtro perfil-filtro">
-                            <label>Perfil</label>
-                            <div className="select-personalizado">
-                                <select value={perfilSelecionado} onChange={e => {
-                                    setPerfilSelecionado(e.target.value);
-                                    setUsuarioSelecionado("");
-                                }}>
-                                    <option value="">Todos os perfis</option>
-                                    {perfis.map(p => <option key={p.perfilId} value={p.perfilId}>{p.nome}</option>)}
-                                </select>
-                                <img src={ExpandirText} alt="Expandir opções" />
-                            </div>
-                        </div>
+                        className="voltar-historico"
+                    >
 
-                        <div className="campo-filtro usuario-filtro">
-                            <label>Usuário</label>
-                            <div className="select-personalizado">
-                                <select value={usuarioSelecionado}
-                                    onChange={e => setUsuarioSelecionado(e.target.value)}>
-                                    <option value="">Todos os usuários</option>
-                                    {usuariosDoPerfil.map(u => (
-                                        <option key={u.usuarioId} value={u.usuarioId}>{u.nome}</option>
-                                    ))}
-                                </select>
-                                <img src={ExpandirText} alt="Expandir opções" />
-                            </div>
-                        </div>
+                        ← Voltar
 
-                        <div className="campo-filtro tipo-filtro">
-                            <label>Tipo de ação</label>
-                            <div className="select-personalizado">
-                                <select value={tipoSelecionado}
-                                    onChange={e => setTipoSelecionado(e.target.value)}>
-                                    <option value="">Todas</option>
-                                    {tipos.map(tipo => <option key={tipo} value={tipo}>{tipo}</option>)}
-                                </select>
-                                <img src={ExpandirText} alt="Expandir opções" />
-                            </div>
-                        </div>
+                    </NavLink>
 
-                        <button type="button" className="botao-buscar-historico"
-                            onClick={buscarAcoes} disabled={carregando}>Buscar</button>
-                    </div>
+                    {/* CABEÇALHO DA PÁGINA */}
 
-                    <div className="tabela-historico">
-                        <table>
-                            <thead>
-                                <tr><th>Data e hora</th><th>Usuário</th><th>Ação</th><th>Descrição</th></tr>
-                            </thead>
-                            <tbody>
-                                {carregando ? (
-                                    <tr><td colSpan="4" className="sem-acoes">Carregando histórico...</td></tr>
-                                ) : erro ? (
-                                    <tr><td colSpan="4" className="sem-acoes">{erro}</td></tr>
-                                ) : acoes.length ? acoes.map(item => (
-                                    <tr key={item.logAuditoriaId}>
-                                        <td>{dataUtcParaBrasil(item.dataHora)}</td>
-                                        <td>{item.usuarioNome || "Sistema"}</td>
-                                        <td>{item.acao || "—"}</td>
-                                        <td>{item.detalhes || item.tabelaAfetada || "Sem detalhes"}</td>
-                                    </tr>
-                                )) : (
-                                    <tr><td colSpan="4" className="sem-acoes">Nenhuma ação encontrada.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                    <div className="cabecalho-historico">
 
-                    <div className="paginacao-historico">
-                        {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(numero => (
-                            <button key={numero} type="button" onClick={() => setPaginaAtual(numero)}
+                        <h1>Histórico de ações</h1>
+
+                        {acessoLiberado && (
+
+                            <button
+                                type="button"
+
+                                className="botao-atualizar-historico"
+
+                                onClick={atualizarHistorico}
+
                                 disabled={carregando}
-                                className={paginaAtual === numero ? "pagina-ativa" : ""}>
-                                {numero}
+                            >
+
+                                {carregando
+
+                                    ? "Atualizando..."
+
+                                    : "↻ Atualizar"}
+
                             </button>
-                        ))}
+
+                        )}
+
                     </div>
+
+                    {/* CARREGANDO PERMISSÕES */}
+
+                    {carregandoPermissoes ? (
+
+                        <p role="status">
+
+                            Carregando permissões...
+
+                        </p>
+
+                    ) : erroPermissoes ? (
+
+                        <div
+                            className="historico-aviso erro"
+
+                            role="alert"
+                        >
+
+                            <p>
+
+                                Não foi possível carregar
+                                suas permissões.
+
+                            </p>
+
+                            <button
+                                type="button"
+
+                                className="botao-buscar-historico"
+
+                                onClick={atualizar}
+                            >
+
+                                Tentar novamente
+
+                            </button>
+
+                        </div>
+
+                    ) : !podeVisualizarHistorico ? (
+
+                        <div
+                            className="historico-aviso erro"
+
+                            role="alert"
+                        >
+
+                            <strong>
+
+                                Acesso negado
+
+                            </strong>
+
+                            <p>
+
+                                Você não possui permissão
+                                para visualizar o histórico
+                                de ações.
+
+                            </p>
+
+                        </div>
+
+                    ) : (
+
+                        <>
+
+                            {/* ERRO DOS FILTROS */}
+
+                            {erroFiltros && (
+
+                                <div
+                                    className="historico-aviso erro"
+
+                                    role="alert"
+                                >
+
+                                    <p>
+
+                                        {erroFiltros}
+
+                                    </p>
+
+                                    <button
+                                        type="button"
+
+                                        className="botao-buscar-historico"
+
+                                        disabled={carregandoFiltros}
+
+                                        onClick={() =>
+
+                                            setVersaoFiltros(
+                                                atual => atual + 1
+                                            )
+
+                                        }
+                                    >
+
+                                        Tentar novamente
+
+                                    </button>
+
+                                </div>
+
+                            )}
+
+                            {/* FORMULÁRIO DE PESQUISA */}
+
+                            <form onSubmit={buscarAcoes}>
+
+                                <div className="pesquisa-historico">
+
+                                    <img
+                                        src={LupaCinza}
+                                        alt=""
+                                    />
+
+                                    <input
+                                        type="search"
+
+                                        placeholder="Buscar ações, usuários ou descrições..."
+
+                                        aria-label="Pesquisar registros de auditoria"
+
+                                        value={pesquisa}
+
+                                        onChange={event =>
+
+                                            alterarPesquisa(
+                                                event.target.value
+                                            )
+
+                                        }
+                                    />
+
+                                </div>
+
+                                {/* FILTROS */}
+
+                                <div className="filtros-historico">
+
+                                    {/* PERÍODO */}
+
+                                    <div className="campo-filtro periodo-filtro">
+
+                                        <label>
+
+                                            Período
+
+                                        </label>
+
+                                        <div className="campos-periodo">
+
+                                            <div className="campo-data">
+
+                                                <input
+                                                    type="date"
+
+                                                    aria-label="Data inicial"
+
+                                                    value={dataInicio}
+
+                                                    onChange={event => {
+
+                                                        setDataInicio(
+                                                            event.target.value
+                                                        );
+
+                                                        setErroPeriodo("");
+
+                                                    }}
+                                                />
+
+                                                <img
+                                                    src={Calendario}
+                                                    alt=""
+                                                />
+
+                                            </div>
+
+                                            <span>-</span>
+
+                                            <div className="campo-data">
+
+                                                <input
+                                                    type="date"
+
+                                                    aria-label="Data final"
+
+                                                    min={
+                                                        dataInicio ||
+                                                        undefined
+                                                    }
+
+                                                    value={dataFim}
+
+                                                    onChange={event => {
+
+                                                        setDataFim(
+                                                            event.target.value
+                                                        );
+
+                                                        setErroPeriodo("");
+
+                                                    }}
+                                                />
+
+                                                <img
+                                                    src={Calendario}
+                                                    alt=""
+                                                />
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {/* PERFIL */}
+
+                                    <div className="campo-filtro perfil-filtro">
+
+                                        <label htmlFor="historico-perfil">
+
+                                            Perfil
+
+                                        </label>
+
+                                        <div className="select-personalizado">
+
+                                            <select
+                                                id="historico-perfil"
+
+                                                value={perfilSelecionado}
+
+                                                disabled={
+                                                    carregandoFiltros
+                                                }
+
+                                                onChange={event => {
+
+                                                    setPerfilSelecionado(
+                                                        event.target.value
+                                                    );
+
+                                                    setUsuarioSelecionado("");
+
+                                                }}
+                                            >
+
+                                                <option value="">
+
+                                                    Todos os perfis
+
+                                                </option>
+
+                                                {perfis.map(perfil => (
+
+                                                    <option
+                                                        key={perfil.perfilId}
+
+                                                        value={perfil.perfilId}
+                                                    >
+
+                                                        {perfil.nome}
+
+                                                    </option>
+
+                                                ))}
+
+                                            </select>
+
+                                            <img
+                                                src={ExpandirText}
+                                                alt=""
+                                            />
+
+                                        </div>
+
+                                    </div>
+
+                                    {/* USUÁRIO */}
+
+                                    <div className="campo-filtro usuario-filtro">
+
+                                        <label htmlFor="historico-usuario">
+
+                                            Usuário
+
+                                        </label>
+
+                                        <div className="select-personalizado">
+
+                                            <select
+                                                id="historico-usuario"
+
+                                                value={usuarioSelecionado}
+
+                                                disabled={
+                                                    carregandoFiltros
+                                                }
+
+                                                onChange={event =>
+
+                                                    setUsuarioSelecionado(
+                                                        event.target.value
+                                                    )
+
+                                                }
+                                            >
+
+                                                <option value="">
+
+                                                    Todos os usuários
+
+                                                </option>
+
+                                                {usuariosDoPerfil.map(usuario => (
+
+                                                    <option
+                                                        key={usuario.usuarioId}
+
+                                                        value={usuario.usuarioId}
+                                                    >
+
+                                                        {usuario.nome}
+
+                                                    </option>
+
+                                                ))}
+
+                                            </select>
+
+                                            <img
+                                                src={ExpandirText}
+                                                alt=""
+                                            />
+
+                                        </div>
+
+                                    </div>
+
+                                    {/* TIPO DE AÇÃO */}
+
+                                    <div className="campo-filtro tipo-filtro">
+
+                                        <label htmlFor="historico-acao">
+
+                                            Tipo de ação
+
+                                        </label>
+
+                                        <div className="select-personalizado">
+
+                                            <select
+                                                id="historico-acao"
+
+                                                value={tipoSelecionado}
+
+                                                disabled={
+                                                    carregandoFiltros
+                                                }
+
+                                                onChange={event =>
+
+                                                    setTipoSelecionado(
+                                                        event.target.value
+                                                    )
+
+                                                }
+                                            >
+
+                                                <option value="">
+
+                                                    Todas
+
+                                                </option>
+
+                                                {tipos.map(tipo => (
+
+                                                    <option
+                                                        key={tipo}
+
+                                                        value={tipo}
+                                                    >
+
+                                                        {tipo}
+
+                                                    </option>
+
+                                                ))}
+
+                                            </select>
+
+                                            <img
+                                                src={ExpandirText}
+                                                alt=""
+                                            />
+
+                                        </div>
+
+                                    </div>
+
+                                    {/* BOTÕES */}
+
+                                    <div className="botoes-filtros-historico">
+
+                                        <button
+                                            type="submit"
+
+                                            className="botao-buscar-historico"
+
+                                            disabled={carregando}
+                                        >
+
+                                            Buscar
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+
+                                            className="botao-limpar-historico"
+
+                                            onClick={limparFiltros}
+
+                                            disabled={carregando}
+                                        >
+
+                                            Limpar
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                            {/* ERRO DE PERÍODO */}
+
+                            {erroPeriodo && (
+
+                                <div
+                                    className="historico-aviso erro"
+
+                                    role="alert"
+                                >
+
+                                    {erroPeriodo}
+
+                                </div>
+
+                            )}
+
+                            {/* ERRO DA API */}
+
+                            {erro && (
+
+                                <div
+                                    className="historico-aviso erro"
+
+                                    role="alert"
+                                >
+
+                                    <p>{erro}</p>
+
+                                    <button
+                                        type="button"
+
+                                        className="botao-buscar-historico"
+
+                                        onClick={atualizarHistorico}
+                                    >
+
+                                        Tentar novamente
+
+                                    </button>
+
+                                </div>
+
+                            )}
+
+                            {/* INFORMAÇÕES DA LISTAGEM */}
+
+                            {!carregandoLista && !erro && (
+
+                                <div className="historico-informacoes-lista">
+
+                                    <span>
+
+                                        Registros de auditoria
+
+                                    </span>
+
+                                    <span>
+
+                                        Horário de Brasília
+
+                                    </span>
+
+                                </div>
+
+                            )}
+
+                            {/* TABELA DE HISTÓRICO */}
+
+                            <div className="tabela-historico">
+
+                                <table>
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Data e hora</th>
+
+                                            <th>Usuário</th>
+
+                                            <th>Ação</th>
+
+                                            <th>Descrição</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        {carregandoLista ? (
+
+                                            <tr>
+
+                                                <td
+                                                    colSpan={4}
+
+                                                    className="sem-acoes"
+                                                >
+
+                                                    Carregando histórico...
+
+                                                </td>
+
+                                            </tr>
+
+                                        ) : erro ? (
+
+                                            <tr>
+
+                                                <td
+                                                    colSpan={4}
+
+                                                    className="sem-acoes"
+                                                >
+
+                                                    Não foi possível
+                                                    carregar o histórico.
+
+                                                </td>
+
+                                            </tr>
+
+                                        ) : acoes.length > 0 ? (
+
+                                            acoes.map(item => (
+
+                                                <tr key={item.logAuditoriaId}>
+
+                                                    {/* DATA E HORA */}
+
+                                                    <td>
+
+                                                        {dataUtcParaBrasil(
+                                                            item.dataHora
+                                                        )}
+
+                                                    </td>
+
+                                                    {/* USUÁRIO */}
+
+                                                    <td>
+
+                                                        {item.usuarioNome ||
+                                                            "Sistema"}
+
+                                                    </td>
+
+                                                    {/* AÇÃO */}
+
+                                                    <td>
+
+                                                        <span className="historico-tipo-acao">
+
+                                                            {item.acao || "—"}
+
+                                                        </span>
+
+                                                    </td>
+
+                                                    {/* DESCRIÇÃO */}
+
+                                                    <td>
+
+                                                        {item.detalhes ||
+
+                                                            item.tabelaAfetada ||
+
+                                                            "Sem detalhes"}
+
+                                                    </td>
+
+                                                </tr>
+
+                                            ))
+
+                                        ) : (
+
+                                            <tr>
+
+                                                <td
+                                                    colSpan={4}
+
+                                                    className="sem-acoes"
+                                                >
+
+                                                    Nenhuma ação encontrada.
+
+                                                </td>
+
+                                            </tr>
+
+                                        )}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            {/* PAGINAÇÃO */}
+
+                            {!carregandoLista &&
+                                !erro &&
+                                acoes.length > 0 && (
+
+                                <div className="rodape-historico">
+
+                                    <span className="historico-info-pagina">
+
+                                        Página {paginaAtual} de {totalPaginas}
+
+                                    </span>
+
+                                    <div className="paginacao-historico">
+
+                                        <button
+                                            type="button"
+
+                                            aria-label="Página anterior"
+
+                                            disabled={
+                                                paginaAtual === 1
+                                            }
+
+                                            onClick={() =>
+
+                                                setPaginaAtual(
+                                                    paginaAtual - 1
+                                                )
+
+                                            }
+                                        >
+
+                                            {"<"}
+
+                                        </button>
+
+                                        {paginasVisiveis.map(numero => (
+
+                                            <button
+                                                key={numero}
+
+                                                type="button"
+
+                                                aria-current={
+                                                    paginaAtual === numero
+                                                        ? "page"
+                                                        : undefined
+                                                }
+
+                                                className={
+
+                                                    paginaAtual === numero
+
+                                                        ? "pagina-ativa"
+
+                                                        : ""
+
+                                                }
+
+                                                onClick={() =>
+                                                    setPaginaAtual(numero)
+                                                }
+                                            >
+
+                                                {numero}
+
+                                            </button>
+
+                                        ))}
+
+                                        <button
+                                            type="button"
+
+                                            aria-label="Próxima página"
+
+                                            disabled={
+                                                paginaAtual === totalPaginas
+                                            }
+
+                                            onClick={() =>
+
+                                                setPaginaAtual(
+                                                    paginaAtual + 1
+                                                )
+
+                                            }
+                                        >
+
+                                            {">"}
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            )}
+
+                        </>
+
+                    )}
+
                 </section>
+
             </main>
+
         </div>
+
     );
-}
 
-function Sidebar() {
-    const navigate = useNavigate();
-    let perfis = [];
-    try {
-        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-        const salvos = JSON.parse(localStorage.getItem("perfis") || "[]");
-        const lista = Array.isArray(usuario.perfis) ? usuario.perfis : salvos;
-        perfis = Array.isArray(lista) ? lista : [];
-    } catch {
-        perfis = [];
-    }
-
-    const ehAdministrador = perfis.includes("Administrador");
-    const podeVerNotas = perfis.some(perfil => [
-        "Coordenador Fiscal",
-        "Analista SPED",
-        "Analista de Documentos Fiscais",
-        "Analista de Reforma Tributária",
-        "Cliente"
-    ].includes(perfil));
-
-    function sair() {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        localStorage.removeItem("perfis");
-        navigate("/login", { replace: true });
-    }
-
-    return (
-        <aside className="menu-historico">
-            <div className="logo-historico">
-                <img src={LogoNome} alt="Integra" className="logo-desktop-historico" />
-                <img src={LogoNomeMobile} alt="Integra" className="logo-mobile-historico" />
-            </div>
-            <nav className="navegacao-historico">
-                <NavLink to="/home" className="item-menu-historico"><img src={CasaBranca} alt="" /><span>Início</span></NavLink>
-                <NavLink to="/conteudos" className="item-menu-historico"><img src={LivroBranco} alt="" /><span>Conteúdos</span></NavLink>
-                {podeVerNotas && (
-                    <NavLink to="/notas-fiscais" className="item-menu-historico"><img src={DoisDocumentosBranco} alt="" /><span>Notas Fiscais</span></NavLink>
-                )}
-                {ehAdministrador && (
-                    <>
-                        <NavLink to="/clientes" className="item-menu-historico"><img src={ADDProfileBranco} alt="" /><span>Clientes</span></NavLink>
-                        <NavLink to="/usuario" className="item-menu-historico"><img src={PessoaBranca} alt="" /><span>Usuários</span></NavLink>
-                    </>
-                )}
-            </nav>
-            <button type="button" className="sair-historico" onClick={sair}>
-                <img src={SairBranco} alt="" /><span>Sair</span>
-            </button>
-        </aside>
-    );
-}
-
-function Header({ pesquisa, setPesquisa, dadosPerfil, onBuscar }) {
-    const nome = dadosPerfil?.nome || "Usuário";
-    const perfis = Array.isArray(dadosPerfil?.perfis) ? dadosPerfil.perfis : [];
-    const iniciais = nome.trim().split(/\s+/).slice(0, 2)
-        .map(parte => parte[0]).join("").toUpperCase();
-    return (
-        <header className="topo-historico">
-            <div className="pesquisa-topo-historico">
-                <img src={LupaCinza} alt="" />
-                <input type="search" placeholder="Buscar ações..." value={pesquisa}
-                    onChange={e => setPesquisa(e.target.value)}
-                    onKeyDown={e => { if (e.key === "Enter") onBuscar(); }} />
-            </div>
-            <div className="usuario-topo-historico">
-                <NavLink to="/perfil" className="avatar-historico" aria-label="Ir para o perfil">
-                    {iniciais || "U"}
-                </NavLink>
-                <div className="dados-usuario-historico">
-                    <strong>{nome}</strong><span>{perfis.join(", ") || "Usuário"}</span>
-                </div>
-            </div>
-        </header>
-    );
 }
 
 export default Historicodeacoes;

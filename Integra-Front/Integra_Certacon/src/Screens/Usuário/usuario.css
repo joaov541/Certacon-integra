@@ -1,1192 +1,1433 @@
-
 /* =========================================
    CONFIGURAÇÕES GERAIS
 ========================================= */
 
-* {
-  box-sizing: border-box;
-}
-
 .pagina-usuarios {
-  --azul-integra: #1d2e68;
-  --laranja-integra: #ff8500;
+    --azul-integra: #1d2e68;
+    --laranja-integra: #ff8500;
 
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
-  background: #f4f7fb;
-  color: #252525;
-  font-family: Arial, sans-serif;
+    width: 100%;
+    min-width: 0;
+    min-height: 100%;
+
+    background: #f4f7fb;
+    color: #252525;
+
+    font-family: Arial, sans-serif;
 }
 
-/* =========================================
-   MENU LATERAL DESKTOP
-========================================= */
-
-.menu-usuarios {
-  display: flex;
-  flex: 0 0 334px;
-  flex-direction: column;
-
-  width: 334px;
-  min-width: 334px;
-  height: 100vh;
-
-  padding: 25px 20px;
-
-  background: var(--azul-integra);
-  color: #fff;
-}
-
-.logo-menu-usuarios {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  margin-bottom: 35px;
-}
-
-.logo-menu-usuarios img {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  object-fit: contain;
-}
-
-.navegacao-usuarios {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-.item-menu-usuario {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-
-  padding: 9px 8px;
-  margin-left: 20px;
-
-  border: none;
-  border-radius: 5px;
-
-  background: transparent;
-  color: #fff;
-
-  font-family: inherit;
-  font-size: 15px;
-  text-decoration: none;
-  text-align: left;
-
-  transition: background 0.2s ease;
-}
-
-.item-menu-usuario img {
-  display: block;
-  flex-shrink: 0;
-
-  width: 33px;
-  height: 33px;
-
-  object-fit: contain;
-}
-
-.item-menu-usuario span {
-  font-size: 14px;
-}
-
-.item-menu-usuario:hover,
-.item-menu-usuario.menu-usuario-ativo {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.sair-usuarios {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-
-  margin-top: auto;
-  margin-left: 20px;
-  padding: 10px 8px;
-
-  border: none;
-  background: transparent;
-  color: #fff;
-
-  font-family: inherit;
-  font-size: 14px;
-  text-align: left;
-
-  cursor: pointer;
-}
-
-.sair-usuarios img {
-  display: block;
-  width: 33px;
-  height: 33px;
-  object-fit: contain;
-}
-
-.sair-usuarios span {
-  font-size: 14px;
+.pagina-usuarios * {
+    box-sizing: border-box;
 }
 
 /* =========================================
    ÁREA PRINCIPAL
 ========================================= */
 
-.principal-usuarios {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+.pagina-usuarios .principal-usuarios {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 
-  width: calc(100% - 334px);
-  min-width: 0;
-  height: 100vh;
+    width: 100%;
+    height: auto;
 
-  overflow: hidden;
-  background: #f4f7fb;
-}
+    min-width: 0;
+    min-height: 0;
 
-/* =========================================
-   CABEÇALHO ANTIGO
-========================================= */
+    padding: 0;
 
-.topo-usuarios {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  gap: 25px;
+    overflow: visible;
 
-  width: 100%;
-  height: 65px;
-  padding: 10px 24px;
-}
-
-.pesquisa-usuarios {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  width: 100%;
-  height: 38px;
-  padding: 0 13px;
-
-  border-radius: 6px;
-  background: #eaf2fb;
-}
-
-.pesquisa-usuarios img {
-  width: 19px;
-  height: 19px;
-  object-fit: contain;
-}
-
-.pesquisa-usuarios input {
-  width: 100%;
-  border: none;
-  outline: none;
-
-  background: transparent;
-  color: #333;
-  font-size: 13px;
-}
-
-.pesquisa-usuarios input::placeholder {
-  color: #8a9db4;
-}
-
-.usuario-logado {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-.avatar-administrador {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 34px;
-  height: 34px;
-
-  border: 1px solid #1d2e68;
-  border-radius: 50%;
-
-  background: #dceafa;
-  color: #1d2e68;
-
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.dados-administrador {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 11px;
-}
-
-.dados-administrador strong {
-  color: #111;
-}
-
-.dados-administrador span {
-  color: #555;
-  font-size: 10px;
-}
-
-.tres-pontos {
-  margin-left: 25px;
-  color: #111;
-  font-size: 20px;
-  letter-spacing: 2px;
+    background: #f4f7fb;
 }
 
 /* =========================================
    CONTEÚDO PRINCIPAL
 ========================================= */
 
-.conteudo-usuarios {
-  position: fixed;
-  top: 100px;
-  left: 334px;
-  right: 0;
-  bottom: 0;
+.pagina-usuarios .conteudo-usuarios {
+    position: relative;
 
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 
-  min-width: 0;
-  min-height: 0;
+    width: 100%;
+    height: auto;
 
-  padding: 36px 40px 40px;
+    min-width: 0;
+    min-height: 0;
 
-  overflow-y: auto;
-  overflow-x: hidden;
+    padding: 36px 40px 40px;
 
-  background: #f4f7fb;
-}
+    overflow: visible;
 
-.cabecalho-usuarios {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-shrink: 0;
-
-  margin: 0 0 28px;
-}
-
-.cabecalho-usuarios h1 {
-  margin: 0;
-
-  color: #1d2e68;
-  font-size: 32px;
-  font-weight: 700;
-}
-
-.botao-novo-usuario {
-  min-width: 160px;
-  height: 38px;
-  margin-top: 0;
-  padding: 0 16px;
-
-  border: none;
-  border-radius: 6px;
-
-  background: #1d2e68;
-  color: #fff;
-
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.botao-novo-usuario:hover,
-.botao-salvar-usuario:hover {
-  background: #30498f;
+    background: #f4f7fb;
 }
 
 /* =========================================
-   TABELA
+   ABAS DO RBAC
 ========================================= */
 
-.tabela-usuarios {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  overflow-x: hidden;
+.pagina-usuarios .rbac-abas {
+    display: flex;
+
+    flex-wrap: wrap;
+    flex-shrink: 0;
+
+    gap: 8px;
+
+    width: 100%;
+
+    margin-bottom: 22px;
 }
 
-.tabela-usuarios table {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
+.pagina-usuarios .rbac-abas button,
+.pagina-usuarios .rbac-btn {
+    padding: 10px 16px;
 
-  table-layout: fixed;
+    border: 1px solid var(--azul-integra);
+    border-radius: 6px;
 
-  border-collapse: separate;
-  border-spacing: 0;
+    background: #fff;
+    color: var(--azul-integra);
 
-  color: #111;
-  font-size: 11px;
+    font-family: inherit;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
-.tabela-usuarios thead th {
-  height: 31px;
-  padding: 7px 10px;
-
-  border-top: 1px solid #555;
-  border-bottom: 1px solid #555;
-
-  background: #e0effd;
-
-  text-align: center;
-  font-size: 14px;
-  font-weight: 700;
-
-  overflow-wrap: anywhere;
-
-  color: #1d2e68;
+.pagina-usuarios .rbac-abas button:hover:not(:disabled),
+.pagina-usuarios .rbac-btn:hover:not(:disabled) {
+    background: #eaf1fa;
 }
 
-.tabela-usuarios thead th:first-child {
-  border-left: 1px solid #555;
-  border-top-left-radius: 7px;
-  
+.pagina-usuarios .rbac-abas button.ativa,
+.pagina-usuarios .rbac-btn.principal {
+    background: var(--azul-integra);
+    color: #fff;
 }
 
-.tabela-usuarios thead th:last-child {
-  border-right: 1px solid #555;
-  border-top-right-radius: 7px;
+.pagina-usuarios .rbac-abas button.ativa:hover,
+.pagina-usuarios .rbac-btn.principal:hover:not(:disabled) {
+    background: #30498f;
 }
 
-.tabela-usuarios tbody td {
-  height: 40px;
-  padding: 6px 10px;
+/* =========================================
+   PESQUISA
+========================================= */
 
-  border-bottom: 1px solid #777;
+.pagina-usuarios .pesquisa-usuarios {
+    display: flex;
 
-  background: #f2f8ff;
+    align-items: center;
 
-  font-size: 13px;
-  text-align: center;
+    flex-shrink: 0;
 
-  overflow-wrap: anywhere;
+    gap: 10px;
+
+    width: 100%;
+    max-width: 450px;
+
+    height: 42px;
+
+    padding: 0 12px;
+
+    margin-bottom: 22px;
+
+    border: 1px solid #a5a5a5;
+    border-radius: 6px;
+
+    background: #f4f7fb;
+
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-.tabela-usuarios tbody td:first-child {
-  border-left: 1px solid #555;
+.pagina-usuarios .pesquisa-usuarios img {
+    display: block;
+
+    flex-shrink: 0;
+
+    width: 22px;
+    height: 22px;
+
+    object-fit: contain;
 }
 
-.tabela-usuarios tbody td:last-child {
-  border-right: 1px solid #555;
+.pagina-usuarios .pesquisa-usuarios input {
+    flex: 1;
+
+    width: 100%;
+    min-width: 0;
+
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+    color: #333;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    box-shadow: none;
 }
 
-.tabela-usuarios tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 7px;
+.pagina-usuarios .pesquisa-usuarios input::placeholder {
+    color: #929292;
 }
 
-.tabela-usuarios tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 7px;
+.pagina-usuarios .pesquisa-usuarios:focus-within {
+    border-color: var(--azul-integra);
 }
 
-.coluna-acoes-usuario {
-  width: 100px;
-  text-align: center !important;
+/* =========================================
+   CABEÇALHO DA PÁGINA
+========================================= */
+
+.pagina-usuarios .cabecalho-usuarios {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+    flex-shrink: 0;
+
+    gap: 12px;
+
+    margin: 0 0 22px;
 }
 
-.cliente-cnpj {
-  font-size: 9px;
+.pagina-usuarios .cabecalho-usuarios h1 {
+    margin: 0;
+
+    color: var(--azul-integra);
+
+    font-size: 32px;
+    font-weight: 700;
 }
 
-.status-usuario {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* =========================================
+   BOTÃO NOVO USUÁRIO
+========================================= */
 
-  width: 90px;
-  height: 27px;
+.pagina-usuarios .botao-novo-usuario {
+    min-width: 160px;
+    height: 38px;
 
-  border-radius: 12px;
-  font-size: 12px;
+    margin: 0;
+    padding: 0 16px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: var(--azul-integra);
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: background 0.2s;
 }
 
-.status-ativo {
-  background: #bcebdc;
-  color: #439b7f;
+.pagina-usuarios .botao-novo-usuario:hover:not(:disabled),
+.pagina-usuarios .botao-salvar-usuario:hover:not(:disabled) {
+    background: #30498f;
 }
 
-.status-desativado {
-  background: #ffe0e0;
-  color: #ed7777;
+/* =========================================
+   TOTAL DE USUÁRIOS
+========================================= */
+
+.pagina-usuarios .total-usuarios {
+    margin: 0 0 14px;
+
+    color: #687386;
+
+    font-size: 12px;
 }
 
-.acoes-usuario {
-  text-align: center;
-  white-space: nowrap;
+/* =========================================
+   TABELA DE USUÁRIOS
+========================================= */
+
+.pagina-usuarios .tabela-usuarios {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-x: auto;
 }
 
-.acoes-usuario button {
-  width: 24px;
-  height: 25px;
-  margin: 0 3px;
-  padding: 0;
+.pagina-usuarios .tabela-usuarios table {
+    width: 100%;
+    min-width: 650px;
 
-  border: none;
-  background: transparent;
+    table-layout: fixed;
 
-  cursor: pointer;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    color: #111;
+
+    font-size: 12px;
 }
 
-.acoes-usuario img {
-  width: 21px;
-  height: 21px;
-  object-fit: contain;
+/* =========================================
+   LARGURAS DAS COLUNAS
+========================================= */
+
+.pagina-usuarios .tabela-usuarios th:nth-child(1) {
+    width: 20%;
 }
 
-.acoes-usuario button:hover {
-  opacity: 0.6;
+.pagina-usuarios .tabela-usuarios th:nth-child(2) {
+    width: 24%;
 }
 
-.nenhum-usuario {
-  height: 55px !important;
-  text-align: center;
-  color: #777;
+.pagina-usuarios .tabela-usuarios th:nth-child(3) {
+    width: 20%;
+}
+
+.pagina-usuarios .tabela-usuarios th:nth-child(4) {
+    width: 16%;
+}
+
+.pagina-usuarios .tabela-usuarios th:nth-child(5) {
+    width: 12%;
+}
+
+.pagina-usuarios .tabela-usuarios th:nth-child(6) {
+    width: 8%;
+}
+
+/* =========================================
+   CABEÇALHO DA TABELA
+========================================= */
+
+.pagina-usuarios .tabela-usuarios thead th {
+    height: 35px;
+
+    padding: 7px 8px;
+
+    border-top: 1px solid #555;
+    border-bottom: 1px solid #555;
+
+    background: #e0effd;
+    color: var(--azul-integra);
+
+    text-align: center;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    overflow-wrap: anywhere;
+}
+
+.pagina-usuarios .tabela-usuarios thead th:first-child {
+    border-left: 1px solid #555;
+
+    border-top-left-radius: 7px;
+}
+
+.pagina-usuarios .tabela-usuarios thead th:last-child {
+    border-right: 1px solid #555;
+
+    border-top-right-radius: 7px;
+}
+
+/* =========================================
+   LINHAS DA TABELA
+========================================= */
+
+.pagina-usuarios .tabela-usuarios tbody td {
+    height: 44px;
+
+    padding: 8px;
+
+    border-bottom: 1px solid #777;
+
+    background: #f2f8ff;
+
+    font-size: 13px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    overflow-wrap: anywhere;
+}
+
+.pagina-usuarios .tabela-usuarios tbody td:first-child {
+    border-left: 1px solid #555;
+}
+
+.pagina-usuarios .tabela-usuarios tbody td:last-child {
+    border-right: 1px solid #555;
+}
+
+.pagina-usuarios .tabela-usuarios tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 7px;
+}
+
+.pagina-usuarios .tabela-usuarios tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 7px;
+}
+
+.pagina-usuarios .tabela-usuarios tbody tr:hover td {
+    background: #eaf1fa;
+}
+
+/* =========================================
+   CNPJ
+========================================= */
+
+.pagina-usuarios .tabela-usuarios .cliente-cnpj {
+    font-size: 11px;
+}
+
+/* =========================================
+   IDENTIFICADOR DA PRÓPRIA CONTA
+========================================= */
+
+.pagina-usuarios .usuario-propria-conta {
+    display: block;
+
+    width: fit-content;
+
+    margin: 4px auto 0;
+
+    color: #607394;
+
+    font-size: 10px;
+}
+
+/* =========================================
+   STATUS
+========================================= */
+
+.pagina-usuarios .status-usuario {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 65px;
+    max-width: 100%;
+
+    min-height: 27px;
+
+    padding: 4px 8px;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.pagina-usuarios .status-ativo {
+    background: #bcebdc;
+    color: #286b58;
+}
+
+.pagina-usuarios .status-desativado {
+    background: #ffe0e0;
+    color: #b52c2c;
+}
+
+/* =========================================
+   AÇÕES DA TABELA
+========================================= */
+
+.pagina-usuarios .coluna-acoes-usuario {
+    min-width: 70px;
+
+    text-align: center !important;
+}
+
+.pagina-usuarios .acoes-usuario {
+    text-align: center;
+
+    white-space: normal;
+}
+
+.pagina-usuarios .acoes-usuario button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 26px;
+    height: 28px;
+
+    margin: 0 2px;
+    padding: 3px;
+
+    border: none;
+    border-radius: 4px;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+.pagina-usuarios .acoes-usuario img {
+    display: block;
+
+    width: 21px;
+    height: 21px;
+
+    object-fit: contain;
+}
+
+.pagina-usuarios .acoes-usuario button:hover:not(:disabled) {
+    background: #dce8f8;
+}
+
+/* =========================================
+   LISTAGEM VAZIA
+========================================= */
+
+.pagina-usuarios .nenhum-usuario {
+    height: 55px !important;
+
+    padding: 15px !important;
+
+    text-align: center !important;
+
+    color: #777;
 }
 
 /* =========================================
    PAGINAÇÃO
 ========================================= */
 
-.paginacao-usuarios {
-  display: flex;
-  justify-content: flex-end;
-  flex-shrink: 0;
-  gap: 12px;
+.pagina-usuarios .paginacao-usuarios {
+    display: flex;
 
-  margin-top: auto;
-  padding-top: 30px;
+    align-items: center;
+    justify-content: flex-end;
+
+    flex-shrink: 0;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 25px;
+
+    padding-top: 10px;
 }
 
-.paginacao-usuarios button {
-  width: 33px;
-  height: 33px;
+.pagina-usuarios .paginacao-usuarios button {
+    min-width: 33px;
+    height: 33px;
 
-  border: 1px solid #555;
-  border-radius: 8px;
+    padding: 0 8px;
 
-  background: #fff;
-  color: #111;
+    border: 1px solid #555;
+    border-radius: 8px;
 
-  font-size: 11px;
-  cursor: pointer;
+    background: #fff;
+    color: #111;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
 }
 
-.paginacao-usuarios button:hover {
-  background: #eaf2fb;
+.pagina-usuarios .paginacao-usuarios button:hover:not(:disabled) {
+    background: #eaf2fb;
 }
 
-.paginacao-usuarios button.pagina-ativa {
-  border-color: #30469b;
-  background: #30469b;
-  color: #fff;
+.pagina-usuarios .paginacao-usuarios button.pagina-ativa {
+    border-color: #30469b;
+
+    background: #30469b;
+    color: #fff;
 }
 
 /* =========================================
-   MODAL
+   AVISOS DE ERRO
 ========================================= */
 
-.fundo-modal-usuario {
-  position: fixed;
-  inset: 0;
-  z-index: 300;
+.pagina-usuarios .usuario-aviso-erro {
+    display: flex;
+    flex-direction: column;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    align-items: flex-start;
 
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.45);
+    gap: 12px;
+
+    width: 100%;
+
+    margin-bottom: 18px;
+    padding: 15px;
+
+    border: 1px solid #e7b4b4;
+    border-radius: 8px;
+
+    background: #fff2f2;
+    color: #a52b2b;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
 }
 
-.modal-usuario {
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  max-width: 400px;
-
-  padding: 25px;
-
-  border-radius: 10px;
-  background: #fff;
-
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+.pagina-usuarios .usuario-aviso-erro p {
+    margin: 0;
 }
 
-.modal-usuario h2 {
-  margin: 0 0 20px;
-  color: #1d2e68;
-  font-size: 21px;
-}
+.pagina-usuarios .usuario-erro-formulario {
+    margin: 0 0 15px;
+    padding: 10px;
 
-.modal-usuario label {
-  margin-bottom: 6px;
-  color: #333;
-  font-size: 12px;
-}
+    border: 1px solid #e7b4b4;
+    border-radius: 6px;
 
-.modal-usuario input,
-.modal-usuario select {
-  width: 100%;
-  height: 37px;
+    background: #fff2f2;
+    color: #a52b2b;
 
-  margin-bottom: 15px;
-  padding: 0 10px;
+    font-size: 12px;
+    line-height: 1.5;
 
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-
-  background: #fff;
-  font-size: 12px;
-}
-
-.modal-usuario input:focus,
-.modal-usuario select:focus {
-  border-color: #1d2e68;
-}
-
-.botoes-modal-usuario {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-
-  margin-top: 10px;
-}
-
-.botoes-modal-usuario button {
-  min-width: 95px;
-  height: 35px;
-
-  border-radius: 5px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.botao-cancelar-usuario {
-  border: 1px solid #1d2e68;
-  background: #fff;
-  color: #1d2e68;
-}
-
-.botao-salvar-usuario {
-  border: none;
-  background: #1d2e68;
-  color: #fff;
+    overflow-wrap: anywhere;
 }
 
 /* =========================================
-   DESKTOP COMPACTO / TABLETS
+   MODAL DE USUÁRIOS
+========================================= */
+
+.pagina-usuarios .fundo-modal-usuario {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1500;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    overflow-y: auto;
+
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.pagina-usuarios .modal-usuario {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    max-width: 430px;
+
+    max-height: 85vh;
+    max-height: 85dvh;
+
+    padding: 25px;
+
+    overflow-y: auto;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    box-shadow:
+        0 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+.pagina-usuarios .modal-usuario h2 {
+    margin: 0 0 20px;
+
+    color: var(--azul-integra);
+
+    font-size: 21px;
+}
+
+.pagina-usuarios .modal-usuario > label {
+    margin-bottom: 6px;
+
+    color: #333;
+
+    font-size: 12px;
+}
+
+/* =========================================
+   CAMPOS DO MODAL
+========================================= */
+
+.pagina-usuarios .modal-usuario > input,
+.pagina-usuarios .modal-usuario > select {
+    flex-shrink: 0;
+
+    width: 100%;
+    height: 38px;
+
+    margin-bottom: 15px;
+    padding: 0 10px;
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    outline: none;
+
+    background: #fff;
+
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.pagina-usuarios .modal-usuario > input:focus,
+.pagina-usuarios .modal-usuario > select:focus {
+    border-color: var(--azul-integra);
+}
+
+.pagina-usuarios .modal-usuario > input:read-only,
+.pagina-usuarios .modal-usuario > input:disabled,
+.pagina-usuarios .modal-usuario > select:disabled {
+    background: #edf0f5;
+    color: #777;
+}
+
+/* =========================================
+   BOTÕES DO MODAL
+========================================= */
+
+.pagina-usuarios .botoes-modal-usuario {
+    display: flex;
+
+    justify-content: flex-end;
+
+    flex-shrink: 0;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.pagina-usuarios .botoes-modal-usuario button {
+    min-width: 95px;
+    height: 36px;
+
+    padding: 0 12px;
+
+    border-radius: 5px;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.pagina-usuarios .botao-cancelar-usuario {
+    border: 1px solid var(--azul-integra);
+
+    background: #fff;
+    color: var(--azul-integra);
+}
+
+.pagina-usuarios .botao-cancelar-usuario:hover:not(:disabled) {
+    background: #edf2fa;
+}
+
+.pagina-usuarios .botao-salvar-usuario {
+    border: none;
+
+    background: var(--azul-integra);
+    color: #fff;
+}
+
+/* =========================================
+   PAINÉIS DO RBAC
+   PERFIS, PERMISSÕES E TEMAS
+========================================= */
+
+.pagina-usuarios .rbac-painel {
+    display: grid;
+
+    flex-shrink: 0;
+
+    gap: 18px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.pagina-usuarios .rbac-painel h1,
+.pagina-usuarios .rbac-painel h2 {
+    margin: 0;
+
+    color: var(--azul-integra);
+}
+
+/* =========================================
+   FORMULÁRIOS DO RBAC
+========================================= */
+
+.pagina-usuarios .rbac-form {
+    display: grid;
+
+    gap: 12px;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 18px;
+
+    border: 1px solid #cfd3da;
+    border-radius: 8px;
+
+    background: #fff;
+}
+
+.pagina-usuarios .rbac-form label {
+    display: grid;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    font-size: 14px;
+}
+
+.pagina-usuarios .rbac-form input,
+.pagina-usuarios .rbac-form select,
+.pagina-usuarios .rbac-form textarea {
+    width: 100%;
+    min-width: 0;
+
+    padding: 10px;
+
+    border: 1px solid #a5a5a5;
+    border-radius: 5px;
+
+    outline: none;
+
+    background: #fff;
+
+    font: inherit;
+}
+
+.pagina-usuarios .rbac-form input:focus,
+.pagina-usuarios .rbac-form select:focus,
+.pagina-usuarios .rbac-form textarea:focus {
+    border-color: var(--azul-integra);
+}
+
+.pagina-usuarios .rbac-form textarea {
+    min-height: 80px;
+
+    resize: vertical;
+}
+
+/* =========================================
+   AÇÕES DO RBAC
+========================================= */
+
+.pagina-usuarios .rbac-acoes {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+/* =========================================
+   LISTAGENS DO RBAC
+========================================= */
+
+.pagina-usuarios .rbac-linha {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 14px;
+
+    border: 1px solid #d8e0ec;
+    border-radius: 7px;
+
+    background: #fff;
+}
+
+.pagina-usuarios .rbac-linha > div {
+    min-width: 0;
+}
+
+.pagina-usuarios .rbac-linha p {
+    margin: 5px 0;
+
+    font-size: 13px;
+
+    overflow-wrap: anywhere;
+}
+
+.pagina-usuarios .rbac-erro {
+    color: #a22121;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   CHECKBOXES DE PERFIS
+========================================= */
+
+.pagina-usuarios .rbac-checks {
+    flex-shrink: 0;
+
+    min-width: 0;
+
+    max-height: 180px;
+
+    margin: 0 0 14px;
+    padding: 10px;
+
+    border: 1px solid #ccd3df;
+    border-radius: 6px;
+
+    overflow-y: auto;
+}
+
+.pagina-usuarios .rbac-checks legend {
+    padding: 0 5px;
+
+    color: var(--azul-integra);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pagina-usuarios .rbac-checks label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 8px 0;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    overflow-wrap: anywhere;
+}
+
+.pagina-usuarios .rbac-checks input[type="checkbox"] {
+    flex-shrink: 0;
+
+    width: 16px;
+    height: 16px;
+
+    margin: 0;
+
+    accent-color: var(--azul-integra);
+}
+
+.pagina-usuarios .rbac-checks p {
+    margin: 5px 0;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.pagina-usuarios .rbac-checks small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #777;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* =========================================
+   ESTADOS DESABILITADOS
+========================================= */
+
+.pagina-usuarios button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+.pagina-usuarios button:focus-visible {
+    outline: 2px solid var(--laranja-integra);
+
+    outline-offset: 2px;
+}
+
+/* =========================================
+   INTEGRAÇÃO COM LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .pagina-usuarios {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 100%;
+
+    overflow: visible;
+}
+
+.integra-layout .pagina-usuarios .principal-usuarios {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+}
+
+.integra-layout .pagina-usuarios .conteudo-usuarios {
+    position: relative;
+
+    inset: auto;
+
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    margin: 0;
+
+    overflow: visible;
+}
+
+/* =========================================
+   TABLETS
    701PX ATÉ 1200PX
 ========================================= */
 
 @media (min-width: 701px) and (max-width: 1200px) {
 
-  .menu-usuarios {
-    flex: 0 0 210px;
-    width: 210px;
-    min-width: 210px;
-    padding: 20px 10px;
-  }
+    .pagina-usuarios .conteudo-usuarios {
+        padding: 25px 22px;
+    }
 
-  .logo-menu-usuarios {
-    margin-bottom: 25px;
-  }
+    .pagina-usuarios .cabecalho-usuarios {
+        margin-bottom: 20px;
+    }
 
-  .logo-menu-usuarios img {
-    max-width: 190px;
-  }
+    .pagina-usuarios .cabecalho-usuarios h1 {
+        font-size: 27px;
+    }
 
-  .navegacao-usuarios {
-    gap: 16px;
-  }
+    .pagina-usuarios .botao-novo-usuario {
+        min-width: 145px;
+        height: 36px;
 
-  .item-menu-usuario {
-    gap: 9px;
-    margin-left: 4px;
-    padding: 8px 5px;
-  }
+        font-size: 13px;
+    }
 
-  .item-menu-usuario img {
-    width: 28px;
-    height: 28px;
-  }
+    .pagina-usuarios .tabela-usuarios table {
+        min-width: 650px;
+    }
 
-  .item-menu-usuario span {
-    font-size: 13px;
-  }
+    .pagina-usuarios .tabela-usuarios thead th {
+        padding: 7px 6px;
 
-  .sair-usuarios {
-    margin-left: 4px;
-  }
+        font-size: 12px;
+    }
 
-  /* ÁREA PRINCIPAL */
+    .pagina-usuarios .tabela-usuarios tbody td {
+        padding: 6px;
 
-  .principal-usuarios {
-    width: calc(100% - 210px);
-    min-width: 0;
-  }
+        font-size: 12px;
+    }
 
-  /* HEADER DESKTOP */
+    .pagina-usuarios .status-usuario {
+        min-height: 24px;
 
-  .principal-usuarios > .integra-header-desktop {
-    display: flex !important;
+        font-size: 10px;
+    }
 
-    position: fixed;
-    top: 0;
-    left: 210px;
-    right: 0;
+    .pagina-usuarios .paginacao-usuarios {
+        margin-top: 22px;
+    }
 
-    width: auto;
-    height: 90px;
-
-    z-index: 180;
-    background: #fff;
-  }
-
-  .principal-usuarios > .integra-header {
-    display: none !important;
-  }
-
-  /* CONTEÚDO */
-
-  .conteudo-usuarios {
-    position: fixed;
-    top: 90px;
-    left: 210px;
-    right: 0;
-    bottom: 0;
-
-    width: auto;
-    min-width: 0;
-    min-height: 0;
-
-    padding: 25px 22px;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    background: #f4f7fb;
-  }
-
-  .cabecalho-usuarios {
-    margin-bottom: 22px;
-  }
-
-  .cabecalho-usuarios h1 {
-    font-size: 27px;
-  }
-
-  .botao-novo-usuario {
-    min-width: 145px;
-    height: 36px;
-    font-size: 13px;
-  }
-
-  /* TABELA RESPONSIVA */
-
-  .tabela-usuarios {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  .tabela-usuarios table {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    table-layout: fixed;
-  }
-
-  .tabela-usuarios thead th {
-    font-size: 12px;
-    padding: 7px 6px;
-  }
-
-  .tabela-usuarios tbody td {
-    padding: 6px;
-    font-size: 12px;
-  }
-
-  .status-usuario {
-    width: 75px;
-    height: 24px;
-    font-size: 11px;
-  }
-
-  /* PAGINAÇÃO */
-
-  .paginacao-usuarios {
-    padding-top: 22px;
-  }
 }
 
 /* =========================================
    MOBILE
+   ATÉ 700PX
 ========================================= */
 
 @media (max-width: 700px) {
 
-  .pagina-usuarios {
-    display: flex;
-    flex-direction: column;
+    .pagina-usuarios {
+        width: 100%;
+        height: auto;
 
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
+        min-height: 100%;
 
-    overflow: hidden;
-    background: #f4f7fb;
-  }
+        overflow: visible;
+    }
 
-  /* ESCONDE MENU LATERAL */
+    .pagina-usuarios .principal-usuarios {
+        width: 100%;
+        height: auto;
 
-  .menu-usuarios {
-    display: none;
-  }
+        min-width: 0;
+        min-height: 0;
 
-  .principal-usuarios {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+        padding: 0;
 
-    width: 100%;
-    height: 100%;
+        overflow: visible;
+    }
 
-    overflow: hidden;
-  }
+    .pagina-usuarios .conteudo-usuarios {
+        width: 100%;
 
-  /* ESCONDE HEADER DESKTOP */
+        padding: 18px 12px 25px;
+    }
 
-  .principal-usuarios > .integra-header-desktop {
-    display: none !important;
-  }
+    /* ABAS */
 
-  /* =====================================
-     HEADER MOBILE
-     MESMO PADRÃO DA TELA DE CLIENTES
-  ===================================== */
+    .pagina-usuarios .rbac-abas {
+        display: grid;
 
-  .principal-usuarios > .integra-header {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
 
-    z-index: 999;
+        gap: 8px;
 
-    display: flex !important;
-    flex-direction: column;
+        margin-bottom: 18px;
+    }
 
-    width: 100%;
-    height: auto;
+    .pagina-usuarios .rbac-abas button {
+        min-width: 0;
 
-    padding: 12px 15px 8px;
-    margin: 0;
-    gap: 10px;
+        padding: 9px 6px;
 
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
-  }
+        font-size: 13px;
+    }
 
-  /* LINHA SUPERIOR */
+    /* PESQUISA */
 
-  .principal-usuarios .header-superior {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
+    .pagina-usuarios .pesquisa-usuarios {
+        width: 100%;
+        max-width: none;
 
-    width: 100%;
-    min-height: 45px;
-    gap: 10px;
-  }
+        height: 38px;
 
-  /* LOGO */
+        margin-bottom: 18px;
+    }
 
-  .principal-usuarios .header-logo {
-    display: block !important;
+    .pagina-usuarios .pesquisa-usuarios img {
+        width: 19px;
+        height: 19px;
+    }
 
-    width: 145px;
-    max-width: 145px;
-    height: 55px;
+    .pagina-usuarios .pesquisa-usuarios input {
+        font-size: 12px;
+    }
 
-    margin-left: 0;
-    margin-right: auto;
+    /* CABEÇALHO */
 
-    object-fit: contain;
-  }
+    .pagina-usuarios .cabecalho-usuarios {
+        gap: 8px;
 
-  /* PERFIL */
+        margin-bottom: 15px;
+    }
 
-  .principal-usuarios .header-usuario {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
+    .pagina-usuarios .cabecalho-usuarios h1 {
+        font-size: 24px;
+    }
 
-    gap: 0;
-  }
+    .pagina-usuarios .botao-novo-usuario {
+        min-width: 130px;
+        height: 38px;
 
-  .principal-usuarios .header-foto {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
+        padding: 0 10px;
 
-    flex-shrink: 0;
+        font-size: 12px;
+    }
 
-    width: 42px;
-    height: 42px;
+    /* TABELA EM CARDS */
 
-    border-radius: 50%;
+    .pagina-usuarios .tabela-usuarios {
+        overflow: visible;
+    }
 
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
+    .pagina-usuarios .tabela-usuarios table,
+    .pagina-usuarios .tabela-usuarios tbody {
+        display: block;
 
-  .principal-usuarios .header-dados {
-    display: none !important;
-  }
+        width: 100%;
+        min-width: 0;
+    }
 
-  /* PESQUISA */
+    .pagina-usuarios .tabela-usuarios thead {
+        display: none;
+    }
 
-  .principal-usuarios .header-pesquisa {
-    display: flex !important;
+    .pagina-usuarios .tabela-usuarios tbody tr {
+        display: grid;
 
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr)
+            auto;
 
-    z-index: auto;
+        grid-template-areas:
+            "nome nome status"
+            "email email email"
+            "perfil cliente acoes";
 
-    width: 100%;
-    height: 36px;
+        align-items: start;
 
-    padding: 0 12px;
-    gap: 8px;
+        gap: 12px 8px;
 
-    border: 1px solid #aaa;
-    border-radius: 6px;
+        margin-bottom: 14px;
+        padding: 14px 12px;
 
-    background: #fff;
-    box-shadow: none;
-  }
+        border: 1px solid #cfd3da;
+        border-radius: 10px;
 
-  .principal-usuarios .header-pesquisa img {
-    width: 19px;
-    height: 19px;
-    object-fit: contain;
-  }
+        background: #fff;
 
-  .principal-usuarios .header-pesquisa input {
-    width: 100%;
-    font-size: 12px;
-  }
+        box-shadow:
+            0 3px 6px rgba(0, 0, 0, 0.12);
+    }
 
-  /* =====================================
-     CONTEÚDO MOBILE
-  ===================================== */
+    .pagina-usuarios .tabela-usuarios tbody tr td:nth-child(n) {
+        display: block;
 
-  .conteudo-usuarios {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 64px;
+        width: auto;
+        min-width: 0;
 
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
+        height: auto;
 
-    padding: 124px 12px 20px;
+        padding: 0;
 
-    overflow-y: auto;
-    overflow-x: hidden;
+        border: none;
+        border-radius: 0;
 
-    background: #f4f7fb;
-  }
+        background: transparent;
 
-  /* CABEÇALHO DA PÁGINA */
+        text-align: left;
 
-  .cabecalho-usuarios {
-    align-items: center;
-    margin-bottom: 16px;
-  }
+        overflow-wrap: anywhere;
+    }
 
-  .cabecalho-usuarios h1 {
-    margin: 0;
-    color: #1d2e68;
-    font-size: 24px;
-  }
-
-  .botao-novo-usuario {
-    min-width: 130px;
-    height: 40px;
-    margin: 0;
-    font-size: 13px;
-  }
-
-  /* =====================================
-     TABELA EM FORMATO DE CARDS
-  ===================================== */
-
-  .tabela-usuarios {
-    overflow-x: visible;
-  }
-
-  .tabela-usuarios table,
-  .tabela-usuarios tbody {
-    display: block;
-    width: 100%;
-    min-width: 0;
-  }
+    /* NOME */
 
-  .tabela-usuarios thead {
-    display: none;
-  }
+    .pagina-usuarios .tabela-usuarios td:nth-child(1) {
+        grid-area: nome;
 
-  .tabela-usuarios tbody tr {
-    display: grid;
+        font-size: 14px;
+    }
 
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-    grid-template-areas:
-      "nome nome status"
-      "email email email"
-      "perfil cliente acoes";
-
-    gap: 12px 8px;
-
-    margin-bottom: 14px;
-    padding: 14px 12px;
-
-    border: 1px solid #cfd3da;
-    border-radius: 10px;
-
-    background: #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
-  }
-
-  .pagina-usuarios .tabela-usuarios tbody tr td:nth-child(n) {
-    display: block;
-
-    height: auto;
-    padding: 0;
-
-    border: none;
-    border-radius: 0;
-
-    background: transparent;
-    text-align: left;
-  }
-
-  .tabela-usuarios td:nth-child(1) {
-    grid-area: nome;
-    font-size: 14px;
-  }
-
-  .tabela-usuarios td:nth-child(2) {
-    grid-area: email;
-    font-size: 13px;
-  }
-
-  .tabela-usuarios td:nth-child(3) {
-    grid-area: perfil;
-    font-size: 13px;
-  }
-
-  .tabela-usuarios td:nth-child(4) {
-    grid-area: cliente;
-    font-size: 12px;
-  }
-
-  .tabela-usuarios td:nth-child(5) {
-    grid-area: status;
-    justify-self: end;
-    align-self: start;
-  }
-
-  .tabela-usuarios td:nth-child(6) {
-    grid-area: acoes;
-    justify-self: end;
-    align-self: end;
-  }
-
-  .status-usuario {
-    width: 84px;
-    height: 24px;
-    font-size: 11px;
-  }
-
-  /* TÍTULOS DOS CAMPOS */
-
-  .tabela-usuarios td:nth-child(1)::before {
-    content: "Nome";
-  }
-
-  .tabela-usuarios td:nth-child(2)::before {
-    content: "E-mail";
-  }
-
-  .tabela-usuarios td:nth-child(3)::before {
-    content: "Perfil";
-  }
-
-  .tabela-usuarios td:nth-child(4)::before {
-    content: "Cliente CNPJ";
-  }
-
-  .tabela-usuarios td:nth-child(-n + 4)::before {
-    display: block;
-
-    margin-bottom: 2px;
-
-    color: #1d2e68;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .tabela-usuarios td.nenhum-usuario::before {
-    content: none;
-  }
-
-  .tabela-usuarios tbody tr td.nenhum-usuario {
-    grid-area: auto;
-    grid-column: 1 / -1;
-    text-align: center;
-  }
-
-  /* =====================================
-     PAGINAÇÃO
-  ===================================== */
-
-  .paginacao-usuarios {
-    gap: 8px;
-    padding-top: 10px;
-  }
-
-  .paginacao-usuarios button {
-    width: 36px;
-    height: 36px;
-    font-size: 13px;
-  }
-
-  /* =====================================
-     MODAL
-  ===================================== */
-
-  .modal-usuario {
-    max-height: 100%;
-    overflow-y: auto;
-  }
-
-  /* =====================================
-     MENU INFERIOR MOBILE
-  ===================================== */
-
-  .menu-usuarios {
-    display: contents;
-  }
-
-  .navegacao-usuarios {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    z-index: 1000;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-
-    width: 100%;
-    height: 64px;
-
-    gap: 0;
-    margin: 0;
-    padding: 5px 3px;
-
-    background: var(--azul-integra);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.10);
-  }
-
-  .item-menu-usuario {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    gap: 2px;
-
-    height: 100%;
-    min-width: 0;
-
-    margin: 0;
-    padding: 2px 0;
-
-    border-radius: 0;
-
-    color: #fff;
-    font-size: 9px;
-    text-decoration: none;
-    text-align: center;
-  }
-
-  .item-menu-usuario img {
-    display: block;
-    width: 25px;
-    height: 25px;
-    object-fit: contain;
-  }
-
-  .item-menu-usuario span {
-    font-size: 9px;
-    white-space: nowrap;
-  }
-
-  .item-menu-usuario:hover,
-  .item-menu-usuario.menu-usuario-ativo {
-    background: transparent;
-  }
-
-  .item-menu-usuario.menu-usuario-ativo {
-    color: #ff8500;
-    font-weight: 700;
-  }
-
-  .item-menu-usuario.menu-usuario-ativo img {
-    filter: brightness(0) saturate(100%) invert(56%) sepia(96%) saturate(1600%) hue-rotate(359deg) brightness(102%);
-  }
-
-  .sair-usuarios {
-    display: none;
-  }
-
-  .logo-menu-usuarios {
-    display: none;
-  }
+    /* EMAIL */
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(2) {
+        grid-area: email;
+
+        font-size: 13px;
+    }
+
+    /* PERFIL */
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(3) {
+        grid-area: perfil;
+
+        font-size: 13px;
+    }
+
+    /* CNPJ */
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(4) {
+        grid-area: cliente;
+
+        font-size: 12px;
+    }
+
+    /* STATUS */
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(5) {
+        grid-area: status;
+
+        justify-self: end;
+        align-self: start;
+    }
+
+    /* AÇÕES */
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(6) {
+        grid-area: acoes;
+
+        justify-self: end;
+        align-self: end;
+    }
+
+    .pagina-usuarios .status-usuario {
+        min-width: 70px;
+        min-height: 24px;
+
+        font-size: 10px;
+    }
+
+    /* TÍTULOS DOS CAMPOS */
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(1)::before {
+        content: "Nome";
+    }
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(2)::before {
+        content: "E-mail";
+    }
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(3)::before {
+        content: "Perfil";
+    }
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(4)::before {
+        content: "Cliente CNPJ";
+    }
+
+    .pagina-usuarios .tabela-usuarios td:nth-child(-n + 4)::before {
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: var(--azul-integra);
+
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .pagina-usuarios .usuario-propria-conta {
+        margin: 4px 0 0;
+    }
+
+    .pagina-usuarios .acoes-usuario button {
+        width: 26px;
+        height: 28px;
+
+        margin: 0 1px;
+    }
+
+    .pagina-usuarios .acoes-usuario img {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* LISTAGEM VAZIA */
+
+    .pagina-usuarios .tabela-usuarios td.nenhum-usuario::before {
+        content: none;
+    }
+
+    .pagina-usuarios .tabela-usuarios tbody tr:has(.nenhum-usuario) {
+        display: block;
+
+        padding: 10px;
+    }
+
+    .pagina-usuarios .tabela-usuarios tbody tr td.nenhum-usuario {
+        display: block;
+
+        width: 100%;
+
+        text-align: center !important;
+    }
+
+    /* PAGINAÇÃO */
+
+    .pagina-usuarios .paginacao-usuarios {
+        gap: 8px;
+
+        margin-top: 16px;
+        padding-top: 10px;
+    }
+
+    .pagina-usuarios .paginacao-usuarios button {
+        min-width: 34px;
+        height: 34px;
+
+        font-size: 12px;
+    }
+
+    /* MODAL */
+
+    .pagina-usuarios .fundo-modal-usuario {
+        padding: 15px;
+    }
+
+    .pagina-usuarios .modal-usuario {
+        max-height: 90vh;
+        max-height: 90dvh;
+
+        padding: 20px;
+    }
+
+    .pagina-usuarios .modal-usuario h2 {
+        font-size: 19px;
+    }
+
+    /* RBAC */
+
+    .pagina-usuarios .rbac-painel {
+        gap: 14px;
+    }
+
+    .pagina-usuarios .rbac-form {
+        padding: 12px;
+    }
+
+    .pagina-usuarios .rbac-linha {
+        align-items: flex-start;
+
+        padding: 12px;
+    }
+
+    .pagina-usuarios .rbac-btn {
+        padding: 9px 12px;
+
+        font-size: 12px;
+    }
+
+    .pagina-usuarios .rbac-form label {
+        font-size: 13px;
+    }
+
 }
 
 /* =========================================
@@ -1195,57 +1436,50 @@
 
 @media (max-width: 380px) {
 
-  .conteudo-usuarios {
-    bottom: 62px;
-    padding-right: 10px;
-    padding-left: 10px;
-  }
+    .pagina-usuarios .conteudo-usuarios {
+        padding: 15px 10px 20px;
+    }
 
-  .cabecalho-usuarios h1 {
-    font-size: 21px;
-  }
+    .pagina-usuarios .cabecalho-usuarios h1 {
+        font-size: 21px;
+    }
 
-  .botao-novo-usuario {
-    min-width: 115px;
-    padding: 0 8px;
-    font-size: 12px;
-  }
+    .pagina-usuarios .botao-novo-usuario {
+        min-width: 115px;
 
-  .item-menu-usuario img {
-    width: 23px;
-    height: 23px;
-  }
+        padding: 0 8px;
 
-  .item-menu-usuario span {
-    font-size: 8px;
-  }
+        font-size: 11px;
+    }
 
-  .tabela-usuarios tbody tr {
-    padding: 12px 9px;
-    gap: 10px 6px;
-  }
+    .pagina-usuarios .tabela-usuarios tbody tr {
+        padding: 12px 9px;
 
-  .paginacao-usuarios {
-    gap: 6px;
-  }
+        gap: 10px 6px;
+    }
 
-  .paginacao-usuarios button {
-    width: 32px;
-    height: 32px;
-  }
+    .pagina-usuarios .tabela-usuarios td:nth-child(3),
+    .pagina-usuarios .tabela-usuarios td:nth-child(4) {
+        font-size: 11px;
+    }
 
-  /* HEADER EM CELULARES MENORES */
+    .pagina-usuarios .status-usuario {
+        min-width: 60px;
 
-  .principal-usuarios > .integra-header {
-    padding: 9px 12px;
-  }
+        font-size: 9px;
+    }
 
-  .principal-usuarios .header-logo {
-    width: 125px;
-  }
+    .pagina-usuarios .paginacao-usuarios {
+        gap: 6px;
+    }
 
-  .principal-usuarios .header-foto {
-    width: 34px;
-    height: 34px;
-  }
+    .pagina-usuarios .paginacao-usuarios button {
+        min-width: 30px;
+        height: 30px;
+    }
+
+    .pagina-usuarios .modal-usuario {
+        padding: 16px;
+    }
+
 }

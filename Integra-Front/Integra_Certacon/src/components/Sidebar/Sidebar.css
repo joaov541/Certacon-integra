@@ -1,0 +1,725 @@
+/* =========================================
+   CONFIGURAÇÕES DO SIDEBAR
+========================================= */
+
+.integra-sidebar {
+    --sidebar-azul: #1d2e68;
+    --sidebar-laranja: #ff8500;
+
+    display: flex;
+    flex: 0 0 334px;
+    flex-direction: column;
+
+    width: 334px;
+    min-width: 334px;
+    height: 100vh;
+    height: 100dvh;
+
+    padding: 25px 20px;
+
+    background: var(--sidebar-azul);
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.integra-sidebar * {
+    box-sizing: border-box;
+}
+
+/* =========================================
+   LOGOTIPO
+========================================= */
+
+.integra-sidebar-marca {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.integra-sidebar-logo {
+    display: block;
+
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+
+    object-fit: contain;
+}
+
+/* =========================================
+   LISTA DE NAVEGAÇÃO
+========================================= */
+
+.integra-sidebar-lista {
+    display: flex;
+    flex-direction: column;
+
+    gap: 25px;
+
+    width: 100%;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: #7188c7 transparent;
+}
+
+/* =========================================
+   ITENS PRINCIPAIS
+========================================= */
+
+.integra-sidebar-item {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    gap: 13px;
+
+    margin-left: 20px;
+    padding: 9px 8px;
+
+    border: none;
+    border-radius: 5px;
+
+    background: transparent;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    text-align: left;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.integra-sidebar-item img,
+.integra-sidebar-item .integra-sidebar-icone {
+    display: block;
+    flex-shrink: 0;
+
+    width: 33px;
+    height: 33px;
+
+    object-fit: contain;
+}
+
+.integra-sidebar-item span {
+    font-size: 14px;
+}
+
+.integra-sidebar-item:hover,
+.integra-sidebar-ativo {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+/* =========================================
+   GRUPO DE FERRAMENTAS
+========================================= */
+
+.integra-sidebar-grupo {
+    display: flex;
+    flex-direction: column;
+
+    flex-shrink: 0;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.integra-sidebar-ferramentas {
+    width: calc(100% - 20px);
+}
+
+.integra-sidebar-ferramentas
+.integra-ferramentas-desktop {
+    flex: 1;
+    min-width: 0;
+}
+
+.integra-sidebar-ferramentas
+.integra-ferramentas-mobile {
+    display: none;
+}
+
+/* =========================================
+   SETA DE EXPANSÃO
+========================================= */
+
+.integra-sidebar-seta {
+    flex-shrink: 0;
+
+    width: 18px;
+    height: 18px;
+
+    transition: transform 0.2s ease;
+}
+
+.integra-sidebar-seta.integra-seta-aberta {
+    transform: rotate(180deg);
+}
+
+/* =========================================
+   SUBMENU DESKTOP
+========================================= */
+
+.integra-sidebar-submenu {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    margin: 8px 0 0 42px;
+    padding: 5px 0 5px 12px;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+
+    animation: integra-submenu-entrada 0.18s ease;
+}
+
+@keyframes integra-submenu-entrada {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   CABEÇALHO DO SUBMENU
+   EXCLUSIVO MOBILE
+========================================= */
+
+.integra-submenu-topo {
+    display: none;
+}
+
+/* =========================================
+   LINKS DO SUBMENU
+========================================= */
+
+.integra-sidebar-subitem {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+    min-height: 40px;
+
+    padding: 9px 10px;
+
+    border-radius: 6px;
+
+    background: transparent;
+    color: #ffffff;
+
+    font-size: 13px;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.integra-sidebar-subitem > svg {
+    flex-shrink: 0;
+
+    width: 22px;
+    height: 22px;
+}
+
+.integra-sidebar-subitem > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.integra-sidebar-subitem:hover {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.integra-sidebar-subitem.integra-subitem-ativo {
+    background: rgba(255, 255, 255, 0.13);
+    color: var(--sidebar-laranja);
+
+    font-weight: 700;
+}
+
+/* =========================================
+   BOTÃO SAIR
+========================================= */
+
+.integra-sidebar-sair {
+    display: flex;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    gap: 13px;
+
+    margin-top: auto;
+    margin-left: 20px;
+
+    padding: 10px 8px;
+
+    border: none;
+    border-radius: 5px;
+
+    background: transparent;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.integra-sidebar-sair img {
+    display: block;
+
+    width: 33px;
+    height: 33px;
+
+    object-fit: contain;
+}
+
+.integra-sidebar-sair span {
+    font-size: 14px;
+}
+
+.integra-sidebar-sair:hover {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+/* =========================================
+   ACESSIBILIDADE
+========================================= */
+
+.integra-sidebar-item:focus-visible,
+.integra-sidebar-sair:focus-visible,
+.integra-sidebar-subitem:focus-visible,
+.integra-submenu-topo button:focus-visible {
+    outline: 2px solid var(--sidebar-laranja);
+    outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .integra-sidebar *,
+    .integra-sidebar *::before,
+    .integra-sidebar *::after {
+        animation: none;
+        transition: none;
+    }
+
+}
+
+/* =========================================
+   DESKTOP COMPACTO E TABLETS
+   701PX ATÉ 1200PX
+========================================= */
+
+@media (min-width: 701px) and (max-width: 1200px) {
+
+    .integra-sidebar {
+        flex: 0 0 210px;
+
+        width: 210px;
+        min-width: 210px;
+
+        padding: 20px 10px;
+    }
+
+    .integra-sidebar-marca {
+        margin-bottom: 25px;
+    }
+
+    .integra-sidebar-logo {
+        max-width: 190px;
+    }
+
+    .integra-sidebar-lista {
+        gap: 16px;
+    }
+
+    .integra-sidebar-item {
+        gap: 9px;
+
+        margin-left: 4px;
+        padding: 8px 5px;
+    }
+
+    .integra-sidebar-item img,
+    .integra-sidebar-item .integra-sidebar-icone {
+        width: 28px;
+        height: 28px;
+    }
+
+    .integra-sidebar-item span {
+        font-size: 13px;
+    }
+
+    .integra-sidebar-ferramentas {
+        width: calc(100% - 4px);
+    }
+
+    .integra-sidebar-seta {
+        width: 15px;
+        height: 15px;
+    }
+
+    .integra-sidebar-submenu {
+        margin-left: 21px;
+        padding-left: 9px;
+    }
+
+    .integra-sidebar-subitem {
+        gap: 8px;
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    .integra-sidebar-subitem > svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .integra-sidebar-sair {
+        margin-left: 4px;
+    }
+
+}
+
+/* =========================================
+   MENU INFERIOR MOBILE
+   ATÉ 700PX
+========================================= */
+
+@media (max-width: 700px) {
+
+    .integra-sidebar {
+        display: block;
+
+        position: fixed;
+
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 1000;
+
+        width: 100%;
+        min-width: 0;
+        height: 64px;
+
+        padding: 0;
+        margin: 0;
+
+        background: var(--sidebar-azul);
+
+        box-shadow:
+            0 -2px 8px rgba(0, 0, 0, 0.10);
+    }
+
+    /* ESCONDER LOGO */
+
+    .integra-sidebar-marca {
+        display: none;
+    }
+
+    /* NAVEGAÇÃO INFERIOR */
+
+    .integra-sidebar-lista {
+        display: flex;
+        flex-direction: row;
+
+        align-items: center;
+        justify-content: space-around;
+
+        width: 100%;
+        height: 100%;
+
+        gap: 0;
+
+        padding: 5px 3px;
+        margin: 0;
+
+        overflow: visible;
+    }
+
+    /* ITENS MOBILE */
+
+    .integra-sidebar-item {
+        display: flex;
+        flex: 1 1 0;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 2px;
+
+        min-width: 0;
+        height: 100%;
+
+        margin: 0;
+        padding: 2px 0;
+
+        border-radius: 0;
+
+        background: transparent;
+        color: #ffffff;
+
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .integra-sidebar-item img,
+    .integra-sidebar-item .integra-sidebar-icone {
+        display: block;
+
+        width: 25px;
+        height: 25px;
+
+        object-fit: contain;
+    }
+
+    .integra-sidebar-item span {
+        font-size: 9px;
+        line-height: 1.1;
+
+        white-space: normal;
+        text-align: center;
+    }
+
+    /* ITEM ATIVO */
+
+    .integra-sidebar-item:hover,
+    .integra-sidebar-ativo {
+        background: transparent;
+    }
+
+    .integra-sidebar-ativo {
+        color: var(--sidebar-laranja);
+        font-weight: 700;
+    }
+
+    .integra-sidebar-ativo img {
+        filter:
+            brightness(0)
+            saturate(100%)
+            invert(56%)
+            sepia(96%)
+            saturate(1600%)
+            hue-rotate(359deg)
+            brightness(102%);
+    }
+
+    /* GRUPO FERRAMENTAS */
+
+    .integra-sidebar-grupo {
+        display: flex;
+
+        flex: 1 1 0;
+
+        width: auto;
+        min-width: 0;
+        height: 100%;
+    }
+
+    .integra-sidebar-ferramentas {
+        width: 100%;
+        height: 100%;
+    }
+
+    .integra-sidebar-ferramentas
+    .integra-ferramentas-desktop {
+        display: none;
+    }
+
+    .integra-sidebar-ferramentas
+    .integra-ferramentas-mobile {
+        display: block;
+    }
+
+    .integra-sidebar-seta {
+        display: none;
+    }
+
+    /* =====================================
+       SUBMENU EXPANSÍVEL MOBILE
+    ===================================== */
+
+    .integra-sidebar-submenu {
+        position: fixed;
+
+        bottom: 74px;
+        left: 12px;
+        right: 12px;
+
+        z-index: 1001;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 6px;
+
+        width: auto;
+        max-height: 60vh;
+        max-height: 60dvh;
+
+        margin: 0;
+        padding: 15px;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 12px;
+
+        background: var(--sidebar-azul);
+
+        box-shadow:
+            0 -5px 25px rgba(0, 0, 0, 0.20);
+
+        animation: integra-submenu-mobile 0.2s ease;
+    }
+
+    @keyframes integra-submenu-mobile {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* CABEÇALHO DO SUBMENU */
+
+    .integra-submenu-topo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 12px;
+
+        margin-bottom: 5px;
+        padding: 0 0 12px;
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .integra-submenu-topo strong {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .integra-submenu-topo button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 30px;
+        height: 30px;
+
+        padding: 0;
+
+        border: none;
+        border-radius: 5px;
+
+        background: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+
+        cursor: pointer;
+    }
+
+    /* LINKS DAS FERRAMENTAS */
+
+    .integra-sidebar-subitem {
+        display: flex;
+        align-items: center;
+
+        gap: 13px;
+
+        min-height: 46px;
+
+        padding: 12px;
+
+        border-radius: 7px;
+
+        font-size: 14px;
+    }
+
+    .integra-sidebar-subitem > svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    /* ESCONDER SAIR NO MENU MOBILE */
+
+    .integra-sidebar-sair {
+        display: none;
+    }
+
+}
+
+/* =========================================
+   CELULARES ESTREITOS
+========================================= */
+
+@media (max-width: 380px) {
+
+    .integra-sidebar {
+        height: 62px;
+    }
+
+    .integra-sidebar-item img,
+    .integra-sidebar-item .integra-sidebar-icone {
+        width: 23px;
+        height: 23px;
+    }
+
+    .integra-sidebar-item span {
+        font-size: 8px;
+    }
+
+    .integra-sidebar-submenu {
+        bottom: 72px;
+        left: 9px;
+        right: 9px;
+
+        padding: 12px;
+    }
+
+    .integra-sidebar-subitem {
+        font-size: 13px;
+    }
+
+}

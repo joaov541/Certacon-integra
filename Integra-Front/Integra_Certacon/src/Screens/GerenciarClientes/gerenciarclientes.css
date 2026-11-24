@@ -1,1601 +1,1355 @@
-* {
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
+
+.pagina-gerenciar-clientes {
+    --clientes-azul: #1d2e68;
+    --clientes-laranja: #f28b25;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 100%;
+
+    background: #f4f7fb;
+    color: #111;
+
+    font-family: Arial, sans-serif;
+}
+
+.pagina-gerenciar-clientes * {
     box-sizing: border-box;
 }
 
-/* CONFIGURAÇÕES GERAIS */
+/* =========================================
+   ÁREA PRINCIPAL
+========================================= */
 
-.pagina-gerenciar-clientes {
+.pagina-gerenciar-clientes .principal-gerenciar-clientes {
     display: flex;
-    width: 100%;
-    min-height: 100vh;
-    height: 100vh;
-    overflow: hidden;
-    background: #fff;
-    font-family: Arial, sans-serif;
-}
-
-.clientes-cards-mobile {
-    display: none;
-}
-
-/* MENU LATERAL */
-
-.menu-gerenciar-clientes {
-    display: flex;
+    flex: 1;
     flex-direction: column;
-    flex: 0 0 334px;
-    width: 334px;
-    min-width: 334px;
-    height: 100vh;
-    padding: 25px 20px;
-    background: #1d2e68;
-    color: #fff;
-}
 
-.logo-gerenciar-clientes {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 100%;
-    margin-bottom: 35px;
-    white-space: nowrap;
-}
-
-.logo-gerenciar-clientes img {
-    display: block;
-    max-width: 100%;
     height: auto;
-    object-fit: contain;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+
+    background: #f4f7fb;
 }
 
-.navegacao-gerenciar-clientes {
+/* =========================================
+   CONTEÚDO
+========================================= */
+
+.pagina-gerenciar-clientes .conteudo-gerenciar-clientes {
+    position: relative;
+
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 22px 24px 35px;
+
+    overflow: visible;
+}
+
+.pagina-gerenciar-clientes .conteudo-gerenciar-clientes > h1 {
+    margin: 0 0 18px;
+
+    color: #123c68;
+
+    font-size: 27px;
+    font-weight: 600;
+}
+
+/* =========================================
+   FORMULÁRIO
+========================================= */
+
+.pagina-gerenciar-clientes .formulario-cliente {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-}
 
-.item-menu-clientes {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-left: 20px;
-    padding: 9px 8px;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 15px;
-    text-decoration: none;
-    transition: background 0.2s;
-}
-
-.item-menu-clientes img {
-    display: block;
     flex-shrink: 0;
-    width: 33px;
-    height: 33px;
-    object-fit: contain;
+
+    width: 100%;
+    height: auto;
+
+    min-height: fit-content;
+
+    margin: 0;
+    padding: 12px 14px 15px;
+
+    border: 1px solid #777;
+    border-radius: 7px;
+
+    background: #f4f7fb;
+
+    overflow: visible;
+
+    scroll-margin-top: 15px;
 }
 
-.item-menu-clientes span {
-    font-size: 14px;
+.pagina-gerenciar-clientes .formulario-cliente h2 {
+    margin: 0 0 15px;
+
+    color: #123c68;
+
+    font-size: 21px;
+    font-weight: 700;
 }
 
-.item-menu-clientes:hover,
-.item-menu-clientes.ativo {
-    background: rgba(255, 255, 255, 0.12);
+/* =========================================
+   GRID DO FORMULÁRIO
+========================================= */
+
+.pagina-gerenciar-clientes .campos-cliente {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.1fr)
+        minmax(0, 0.8fr)
+        minmax(0, 1.3fr);
+
+    align-items: start;
+
+    column-gap: 28px;
+    row-gap: 18px;
+
+    width: 100%;
 }
 
-.sair-gerenciar-clientes {
+.pagina-gerenciar-clientes .campo-cliente {
     display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-top: auto;
-    margin-left: 20px;
-    padding: 10px 8px;
-    border: none;
-    background: transparent;
-    color: #fff;
+    flex-direction: column;
+
+    gap: 5px;
+
+    width: 100%;
+
+    min-width: 0;
+}
+
+.pagina-gerenciar-clientes .campo-cliente label {
+    color: #111;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* =========================================
+   INPUTS E SELECTS
+========================================= */
+
+.pagina-gerenciar-clientes .campo-cliente input,
+.pagina-gerenciar-clientes .campo-cliente select {
+    width: 100%;
+    height: 36px;
+
+    min-width: 0;
+
+    padding: 0 9px;
+
+    border: 1px solid #777;
+    border-radius: 5px;
+
+    outline: none;
+
+    background: #fff;
+    color: #555;
+
     font-family: inherit;
     font-size: 14px;
-    text-align: left;
-    cursor: pointer;
 }
 
-.sair-gerenciar-clientes img {
-    display: block;
-    flex-shrink: 0;
-    width: 33px;
-    height: 33px;
-    object-fit: contain;
+.pagina-gerenciar-clientes .campo-cliente input:focus,
+.pagina-gerenciar-clientes .campo-cliente select:focus {
+    border-color: var(--clientes-azul);
+
+    box-shadow:
+        0 0 0 2px rgba(29, 46, 104, 0.08);
 }
 
-/* ÁREA PRINCIPAL */
+.pagina-gerenciar-clientes .campo-cliente input:disabled,
+.pagina-gerenciar-clientes .campo-cliente select:disabled {
+    background: #e9edf3;
+    color: #777;
 
-.principal-gerenciar-clientes {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 0;
-    height: 100vh;
-    overflow: hidden;
-    background-color: #f4f7fb;
+    cursor: not-allowed;
 }
 
-/* HEADER ANTIGO */
+.pagina-gerenciar-clientes .campo-cliente small {
+    color: #777;
 
-.topo-gerenciar-clientes {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-    width: 100%;
-    height: 60px;
-    padding: 10px 25px;
-    background: #fff;
-}
-
-.pesquisa-topo-clientes {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 88%;
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 7px;
-    background: #e8f1fa;
-}
-
-.pesquisa-topo-clientes img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.pesquisa-topo-clientes input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: #333;
-    font-size: 14px;
-}
-
-.pesquisa-topo-clientes input::placeholder {
-    color: #7d9bb8;
-}
-
-.usuario-topo-clientes {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.avatar-gerenciar-clientes {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border: 1px solid #1d2e68;
-    border-radius: 50%;
-    background: #dceaf7;
-    color: #1d2e68;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.dados-usuario-clientes {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    color: #111;
-    font-size: 11px;
-}
-
-.dados-usuario-clientes strong {
-    font-size: 12px;
-}
-
-.dados-usuario-clientes span {
     font-size: 10px;
+    line-height: 1.5;
 }
 
-/* HEADER OFICIAL */
+.pagina-gerenciar-clientes .campo-razao-social {
+    grid-column: 1 / -1;
+}
 
-.principal-gerenciar-clientes .integra-header {
+/* =========================================
+   SELECT COM SETA
+========================================= */
+
+.pagina-gerenciar-clientes .select-com-seta {
     position: relative;
-    z-index: 100;
-    flex-shrink: 0;
-    gap: 18px;
-    padding: 15px 25px 10px;
-    background: #fff;
-}
 
-.principal-gerenciar-clientes .integra-header-desktop {
-    position: relative;
-    z-index: 100;
-    flex-shrink: 0;
-    background: #fff;
-}
-
-.principal-gerenciar-clientes .header-logo {
-    width: 220px;
-    height: 75px;
-    object-fit: contain;
-}
-
-.principal-gerenciar-clientes .header-foto {
-    width: 55px;
-    height: 55px;
-}
-
-.principal-gerenciar-clientes .header-dados strong {
-    font-size: 15px;
-}
-
-.principal-gerenciar-clientes .header-dados span {
-    font-size: 12px;
-}
-
-.principal-gerenciar-clientes .header-pesquisa {
-    height: 40px;
-}
-
-/* CONTEÚDO */
-
-.conteudo-gerenciar-clientes {
-    position: relative;
     display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-height: 0;
-    min-width: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 5px 24px 35px;
-}
 
-.conteudo-gerenciar-clientes h1 {
-    margin: 0 0 1px;
-    margin-top: 17px;
-    color: #123c68;
-    font-size: 27px;
-    font-weight: 600;
-}
-
-/* TÍTULO E BOTÃO */
-
-.titulo-gerenciar-clientes {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    width: 100%;
-}
 
-.titulo-gerenciar-clientes h1 {
-    margin: 17px 0 1px;
-    color: #123c68;
-    font-size: 27px;
-    font-weight: 600;
-}
-
-.botao-criar-cliente {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 140px;
-    height: 38px;
-    padding: 0 15px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 7px;
-    background: #1d2e68;
-    color: #fff;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.botao-criar-cliente:hover {
-    background: #293f89;
-}
-
-/* FORMULÁRIO */
-
-.formulario-cliente {
-    width: 100%;
-    min-height: 160px;
-    padding: 2px 8px 10px;
-    border-radius: 7px;
-    margin-top: 15px;
-    border: 1px solid #777;
-}
-
-.formulario-cliente h2 {
-    margin: 0 0 10px;
-    color: #123c68;
-    font-size: 21px;
-    font-weight: bold;
-}
-
-.campos-cliente {
-    display: grid;
-    grid-template-columns: 1.1fr 0.8fr 1.3fr;
-    gap: 48px;
-    align-items: start;
-}
-
-.campo-cliente {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.campo-cliente label {
-    color: #111;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.campo-cliente input,
-.campo-cliente select {
-    width: 100%;
-    height: 36px;
-    padding: 0 7px;
-    border: 1px solid #777;
-    border-radius: 5px;
-    outline: none;
-    background: #fff;
-    color: #555;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-}
-
-.campo-cliente select {
-    cursor: pointer;
-}
-
-.campo-cnpj small {
-    color: #999;
-    font-size: 10px;
-}
-
-/* SELECT COM SETA */
-
-.select-com-seta {
-    position: relative;
-    display: flex;
-    align-items: center;
     width: 100%;
     height: 36px;
 }
 
-.select-com-seta select {
+.pagina-gerenciar-clientes .select-com-seta select {
     display: block;
+
     width: 100%;
     height: 36px;
+
     padding: 0 35px 0 10px;
-    border: 1px solid #777;
-    border-radius: 6px;
-    outline: none;
-    background-color: #fff;
-    color: #555;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
+
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+
     cursor: pointer;
 }
 
-.select-com-seta select::-ms-expand {
+.pagina-gerenciar-clientes .select-com-seta select::-ms-expand {
     display: none;
 }
 
-.select-com-seta img {
+.pagina-gerenciar-clientes .select-com-seta img {
     position: absolute;
-    display: block;
-    width: 14px !important;
-    height: 14px !important;
-    max-width: 14px;
-    max-height: 14px;
-    right: 12px;
+
     top: 50%;
+    right: 12px;
+
+    display: block;
+
+    width: 14px;
+    height: 14px;
+
     object-fit: contain;
+
     transform: translateY(-50%);
+
     pointer-events: none;
 }
 
-/* RODAPÉ DO FORMULÁRIO */
+/* =========================================
+   RODAPÉ DO FORMULÁRIO
+========================================= */
 
-.rodape-formulario-cliente {
+.pagina-gerenciar-clientes .rodape-formulario-cliente {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    min-height: 36px;
-    margin-top: 10px;
-}
 
-.validacao-cnpj {
-    display: flex;
-    align-items: center;
     flex-wrap: wrap;
+
     gap: 12px;
+
+    width: 100%;
+
+    min-height: 36px;
+
+    margin-top: 18px;
+}
+
+.pagina-gerenciar-clientes .validacao-cnpj {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
     min-width: 0;
+
+    flex: 1;
 }
 
-.mensagem-cliente {
-    color: #d9534f;
-    font-size: 10px;
+/* =========================================
+   MENSAGENS DE VALIDAÇÃO
+========================================= */
+
+.pagina-gerenciar-clientes .mensagem-cliente {
+    max-width: 100%;
+
+    color: #b52c2c;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
 }
 
-.mensagem-cliente.sucesso {
-    color: #23966b;
+.pagina-gerenciar-clientes .mensagem-cliente.sucesso {
+    color: #21865d;
 }
 
-.botao-validar-cnpj {
+.pagina-gerenciar-clientes .mensagem-cliente.falha {
+    color: #b52c2c;
+}
+
+/* =========================================
+   BOTÃO VALIDAR CNPJ
+========================================= */
+
+.pagina-gerenciar-clientes .botao-validar-cnpj {
     flex-shrink: 0;
+
     width: auto;
     min-width: 105px;
-    height: 32px;
-    padding: 0 12px;
+
+    height: 34px;
+
     margin: 0;
+    padding: 0 12px;
+
     border: none;
     border-radius: 6px;
-    background: #1d2e68;
+
+    background: var(--clientes-azul);
     color: #fff;
+
+    font-family: inherit;
     font-size: 12px;
+
     cursor: pointer;
+
     transition: background 0.2s;
 }
 
-.botao-validar-cnpj:hover {
+.pagina-gerenciar-clientes .botao-validar-cnpj:hover:not(:disabled) {
     background: #293f89;
 }
 
-/* BOTÕES SALVAR E CANCELAR */
+/* =========================================
+   BOTÕES SALVAR E CANCELAR
+========================================= */
 
-.botoes-formulario-cliente {
+.pagina-gerenciar-clientes .botoes-formulario-cliente {
     display: flex;
-    gap: 7px;
+
+    flex-shrink: 0;
+
+    gap: 8px;
+
     margin-left: auto;
 }
 
-.botao-salvar-cliente,
-.botao-cancelar-cliente {
-    width: 125px;
+.pagina-gerenciar-clientes .botao-salvar-cliente,
+.pagina-gerenciar-clientes .botao-cancelar-cliente {
+    min-width: 125px;
+
     height: 36px;
+
     padding: 0 14px;
-    border: 1px solid #f28b25;
+
+    border: 1px solid transparent;
     border-radius: 7px;
+
     color: #fff;
-    font-size: 14px;
+
+    font-family: inherit;
+    font-size: 13px;
+
     cursor: pointer;
-    transition: 0.2s;
+
+    transition:
+        background 0.2s,
+        opacity 0.2s;
 }
 
-.botao-salvar-cliente {
-    background: #1d2e68;
-    border: 1px solid #1d2e68;
+/* SALVAR */
+
+.pagina-gerenciar-clientes .botao-salvar-cliente {
+    border-color: var(--clientes-azul);
+
+    background: var(--clientes-azul);
 }
 
-.botao-salvar-cliente:hover {
+.pagina-gerenciar-clientes .botao-salvar-cliente:hover:not(:disabled) {
     background: #293f89;
 }
 
-.botao-cancelar-cliente {
-    background: #f28b25;
+/* CANCELAR */
+
+.pagina-gerenciar-clientes .botao-cancelar-cliente {
+    border-color: var(--clientes-laranja);
+
+    background: var(--clientes-laranja);
 }
 
-.botao-cancelar-cliente:hover {
+.pagina-gerenciar-clientes .botao-cancelar-cliente:hover:not(:disabled) {
     background: #df7712;
 }
 
-/* EMPRESAS CADASTRADAS */
+/* =========================================
+   EMPRESAS CADASTRADAS
+========================================= */
 
-.titulo-empresas-cadastradas {
+.pagina-gerenciar-clientes .titulo-empresas-cadastradas {
     flex-shrink: 0;
-    margin: 15px 0 5px;
+
+    margin: 22px 0 12px;
+
     color: #123c68;
+
     font-size: 21px;
     font-weight: 600;
 }
 
-.pesquisa-clientes {
+/* =========================================
+   PESQUISA
+========================================= */
+
+.pagina-gerenciar-clientes .pesquisa-clientes {
     display: flex;
+
     align-items: center;
+
     flex-shrink: 0;
-    gap: 13px;
+
+    gap: 12px;
+
     width: 100%;
-    height: 30px;
-    margin-bottom: 20px;
-    padding: 0 9px;
+    height: 38px;
+
+    margin-bottom: 15px;
+    padding: 0 12px;
+
+    border: 1px solid transparent;
     border-radius: 7px;
+
     background: #e8f1fa;
 }
 
-.pesquisa-clientes img {
+.pagina-gerenciar-clientes .pesquisa-clientes:focus-within {
+    border-color: var(--clientes-azul);
+}
+
+.pagina-gerenciar-clientes .pesquisa-clientes img {
+    display: block;
+
+    flex-shrink: 0;
+
     width: 19px;
     height: 19px;
+
     object-fit: contain;
 }
 
-.pesquisa-clientes input {
+.pagina-gerenciar-clientes .pesquisa-clientes input {
     width: 100%;
+    min-width: 0;
+
     border: none;
+
     outline: none;
+
     background: transparent;
     color: #333;
+
+    font-family: inherit;
     font-size: 14px;
 }
 
-.pesquisa-clientes input::placeholder {
+.pagina-gerenciar-clientes .pesquisa-clientes input::placeholder {
     color: #7d9bb8;
 }
 
-/* TABELA */
+/* =========================================
+   TOTAL DE CLIENTES
+========================================= */
 
-.tabela-clientes {
-    display: block;
-    flex: 0 0 auto;
-    width: 100%;
-    height: auto;
-    max-height: none;
-    min-height: 0;
-    overflow-x: auto;
-    overflow-y: visible;
+.pagina-gerenciar-clientes .total-clientes {
+    margin: 0 0 12px;
+
+    color: #687386;
+
+    font-size: 12px;
 }
 
-.tabela-clientes table {
+/* =========================================
+   TABELA DESKTOP
+========================================= */
+
+.pagina-gerenciar-clientes .tabela-clientes {
+    display: block;
+
+    flex-shrink: 0;
+
     width: 100%;
     height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    max-height: none;
+
+    overflow-x: auto;
+}
+
+.pagina-gerenciar-clientes .tabela-clientes table {
+    width: 100%;
+    min-width: 550px;
+
+    height: auto;
+
     table-layout: fixed;
+
     border-collapse: separate;
     border-spacing: 0;
+
     color: #111;
-    font-size: 11px;
+
+    font-size: 12px;
 }
 
-/* LARGURA DAS COLUNAS */
+/* =========================================
+   LARGURA DAS COLUNAS
+========================================= */
 
-.tabela-clientes th:nth-child(1),
-.tabela-clientes td:nth-child(1) {
+.pagina-gerenciar-clientes .tabela-clientes th:nth-child(1),
+.pagina-gerenciar-clientes .tabela-clientes td:nth-child(1) {
     width: 28%;
 }
 
-.tabela-clientes th:nth-child(2),
-.tabela-clientes td:nth-child(2) {
-    width: 20%;
+.pagina-gerenciar-clientes .tabela-clientes th:nth-child(2),
+.pagina-gerenciar-clientes .tabela-clientes td:nth-child(2) {
+    width: 23%;
 }
 
-.tabela-clientes th:nth-child(3),
-.tabela-clientes td:nth-child(3) {
+.pagina-gerenciar-clientes .tabela-clientes th:nth-child(3),
+.pagina-gerenciar-clientes .tabela-clientes td:nth-child(3) {
     width: 15%;
 }
 
-.tabela-clientes th:nth-child(4),
-.tabela-clientes td:nth-child(4) {
+.pagina-gerenciar-clientes .tabela-clientes th:nth-child(4),
+.pagina-gerenciar-clientes .tabela-clientes td:nth-child(4) {
     width: 17%;
 }
 
-.tabela-clientes th:nth-child(5),
-.tabela-clientes td:nth-child(5) {
-    width: 20%;
+.pagina-gerenciar-clientes .tabela-clientes th:nth-child(5),
+.pagina-gerenciar-clientes .tabela-clientes td:nth-child(5) {
+    width: 17%;
 }
 
-.tabela-clientes thead th {
+/* =========================================
+   CABEÇALHO DA TABELA
+========================================= */
+
+.pagina-gerenciar-clientes .tabela-clientes thead th {
     height: 35px;
-    padding: 6px 5px;
+
+    padding: 8px 6px;
+
     border-top: 1px solid #333;
     border-bottom: 1px solid #333;
+
     background: #e0effd;
+    color: var(--clientes-azul);
+
     text-align: center;
+
     font-size: 14px;
-    font-weight: bold;
-    color: #1d2e68;
+    font-weight: 700;
 }
 
-.tabela-clientes thead th:first-child {
+.pagina-gerenciar-clientes .tabela-clientes thead th:first-child {
     border-left: 1px solid #333;
     border-top-left-radius: 7px;
 }
 
-.tabela-clientes thead th:last-child {
+.pagina-gerenciar-clientes .tabela-clientes thead th:last-child {
     border-right: 1px solid #333;
     border-top-right-radius: 7px;
-    text-align: center;
 }
 
-.tabela-clientes tbody td {
-    height: 39px;
-    padding: 5px;
+/* =========================================
+   LINHAS DA TABELA
+========================================= */
+
+.pagina-gerenciar-clientes .tabela-clientes tbody td {
+    height: 43px;
+
+    padding: 7px 6px;
+
     border-bottom: 1px solid #777;
+
     background: #f3f8fe;
-    font-size: 14px;
+
     text-align: center;
+    vertical-align: middle;
+
+    font-size: 13px;
+
+    overflow-wrap: anywhere;
 }
 
-.tabela-clientes tbody td:first-child {
+.pagina-gerenciar-clientes .tabela-clientes tbody td:first-child {
     border-left: 1px solid #777;
 }
 
-.tabela-clientes tbody td:last-child {
+.pagina-gerenciar-clientes .tabela-clientes tbody td:last-child {
     border-right: 1px solid #777;
 }
 
-.tabela-clientes tbody tr:last-child td:first-child {
+.pagina-gerenciar-clientes .tabela-clientes tbody tr:last-child td:first-child {
     border-bottom-left-radius: 7px;
 }
 
-.tabela-clientes tbody tr:last-child td:last-child {
+.pagina-gerenciar-clientes .tabela-clientes tbody tr:last-child td:last-child {
     border-bottom-right-radius: 7px;
 }
 
-/* STATUS */
+.pagina-gerenciar-clientes .tabela-clientes tbody tr:hover td {
+    background: #eaf1fa;
+}
 
-.status-cliente {
-    display: flex;
+/* =========================================
+   STATUS DOS CLIENTES
+========================================= */
+
+.pagina-gerenciar-clientes .status-cliente {
+    display: inline-flex;
+
     align-items: center;
     justify-content: center;
-    width: 90px;
-    height: 27px;
+
+    min-width: 75px;
+    min-height: 27px;
+
     margin: auto;
+    padding: 4px 10px;
+
     border-radius: 10px;
+
     font-size: 12px;
+
+    white-space: nowrap;
 }
 
-.status-ativo {
+.pagina-gerenciar-clientes .status-ativo {
     background: #b9ead9;
-    color: #54a98d;
+    color: #286b58;
 }
 
-.status-inativo {
+.pagina-gerenciar-clientes .status-inativo {
     background: #ffe0e0;
-    color: #e16b6b;
+    color: #a52b2b;
 }
 
-/* AÇÕES DA TABELA */
+/* =========================================
+   AÇÕES DA TABELA
+========================================= */
 
-.acoes-cliente {
+.pagina-gerenciar-clientes .acoes-cliente {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     gap: 8px;
 }
 
-.acoes-cliente button {
-    display: flex;
+.pagina-gerenciar-clientes .acoes-cliente button,
+.pagina-gerenciar-clientes .acoes-card-cliente button {
+    display: inline-flex;
+
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 25px;
-    padding: 0;
+
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    padding: 3px;
+
     border: none;
+    border-radius: 5px;
+
     background: transparent;
+
     cursor: pointer;
 }
 
-.acoes-cliente img {
+.pagina-gerenciar-clientes .acoes-cliente img,
+.pagina-gerenciar-clientes .acoes-card-cliente img {
+    display: block;
+
     width: 22px;
     height: 22px;
+
     object-fit: contain;
 }
 
-.acoes-cliente button:hover {
-    opacity: 0.65;
+.pagina-gerenciar-clientes .acoes-cliente button:hover:not(:disabled),
+.pagina-gerenciar-clientes .acoes-card-cliente button:hover:not(:disabled) {
+    background: #e0e8f5;
 }
 
-.sem-clientes {
+/* =========================================
+   LISTAGEM VAZIA
+========================================= */
+
+.pagina-gerenciar-clientes .sem-clientes {
     height: 55px !important;
-    text-align: center;
+
+    padding: 15px !important;
+
     color: #777;
+
+    text-align: center !important;
 }
 
-/* CARDS MOBILE */
+/* =========================================
+   CARDS MOBILE
+========================================= */
 
-.card-cliente {
+.pagina-gerenciar-clientes .clientes-cards-mobile {
+    display: none;
+}
+
+.pagina-gerenciar-clientes .card-cliente {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     gap: 10px;
+
     width: 100%;
     min-height: 76px;
+
     padding: 12px;
-    background: #f8faff;
+
     border: 1px solid #d5dce8;
     border-radius: 10px;
+
+    background: #f8faff;
+
     box-shadow: 0 2px 3px #00000020;
 }
 
-.dados-card-cliente {
+.pagina-gerenciar-clientes .dados-card-cliente {
     display: flex;
     flex-direction: column;
+
     gap: 5px;
+
     min-width: 0;
 }
 
-.dados-card-cliente strong {
+.pagina-gerenciar-clientes .dados-card-cliente strong {
     color: #222;
+
     font-size: 13px;
     font-weight: 600;
+
+    overflow-wrap: anywhere;
 }
 
-.dados-card-cliente > span:not(.validacao-card) {
+.pagina-gerenciar-clientes .dados-card-cliente > span:not(.validacao-card) {
     color: #777;
+
     font-size: 12px;
+
+    overflow-wrap: anywhere;
 }
 
-.validacao-card {
+/* =========================================
+   VALIDAÇÃO DO CNPJ NO CARD
+========================================= */
+
+.pagina-gerenciar-clientes .validacao-card {
     width: fit-content;
-    padding: 3px 12px;
+
+    padding: 4px 12px;
+
     border-radius: 20px;
+
     font-size: 10px;
 }
 
-.cnpj-valido {
+.pagina-gerenciar-clientes .cnpj-valido {
     background: #bcebdc;
     color: #286b58;
 }
 
-.cnpj-invalido {
+.pagina-gerenciar-clientes .cnpj-invalido {
     background: #f3b5b5;
     color: #9b3030;
 }
 
-.acoes-card-cliente {
+/* =========================================
+   AÇÕES MOBILE
+========================================= */
+
+.pagina-gerenciar-clientes .acoes-card-cliente {
     display: flex;
+
     align-items: center;
-    gap: 10px;
+
     flex-shrink: 0;
+
+    gap: 7px;
 }
 
-.acoes-card-cliente button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-}
-
-.acoes-card-cliente img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.sem-clientes-mobile {
+.pagina-gerenciar-clientes .sem-clientes-mobile {
     padding: 15px;
-    text-align: center;
+
     color: #777;
+
     font-size: 13px;
+
+    text-align: center;
 }
 
-/* PAGINAÇÃO */
+/* =========================================
+   PAGINAÇÃO
+========================================= */
 
-.paginacao-clientes {
+.pagina-gerenciar-clientes .paginacao-clientes {
     display: flex;
-    flex-shrink: 0;
+
+    align-items: center;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 15px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+
+    flex-shrink: 0;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 18px;
+
+    padding: 5px 0;
 }
 
-.paginacao-clientes button {
-    width: 34px;
+.pagina-gerenciar-clientes .paginacao-clientes button {
+    min-width: 34px;
     height: 34px;
+
+    padding: 0 8px;
+
     border: 1px solid #777;
     border-radius: 8px;
+
     background: #fff;
     color: #111;
+
+    font-family: inherit;
     font-size: 12px;
+
     cursor: pointer;
 }
 
-.paginacao-clientes button.pagina-ativa {
-    border-color: #1d2e68;
-    background: #1d2e68;
+.pagina-gerenciar-clientes .paginacao-clientes button:hover:not(:disabled) {
+    background: #e0e8f5;
+}
+
+.pagina-gerenciar-clientes .paginacao-clientes button.pagina-ativa {
+    border-color: var(--clientes-azul);
+
+    background: var(--clientes-azul);
     color: #fff;
 }
 
-.paginacao-clientes button:disabled {
-    opacity: 0.45;
+/* =========================================
+   AVISOS E ERROS
+========================================= */
+
+.pagina-gerenciar-clientes .clientes-aviso {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    width: 100%;
+
+    margin: 0 0 15px;
+    padding: 15px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+}
+
+.pagina-gerenciar-clientes .clientes-aviso.erro {
+    border: 1px solid #e7b4b4;
+
+    background: #fff2f2;
+    color: #a52b2b;
+}
+
+.pagina-gerenciar-clientes .clientes-aviso p {
+    margin: 0;
+}
+
+/* =========================================
+   ESTADOS DESABILITADOS
+========================================= */
+
+.pagina-gerenciar-clientes button:disabled {
+    opacity: 0.5;
+
     cursor: not-allowed;
 }
 
-/* TABLETS */
+.pagina-gerenciar-clientes button:focus-visible {
+    outline: 2px solid var(--clientes-laranja);
+    outline-offset: 2px;
+}
+
+/* =========================================
+   INTEGRAÇÃO COM LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .pagina-gerenciar-clientes {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 100%;
+
+    overflow: visible;
+}
+
+.integra-layout .pagina-gerenciar-clientes .principal-gerenciar-clientes {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+}
+
+.integra-layout .pagina-gerenciar-clientes .conteudo-gerenciar-clientes {
+    position: relative;
+
+    inset: auto;
+
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    margin: 0;
+
+    overflow: visible;
+}
+
+/* =========================================
+   TABLETS
+   701PX ATÉ 1200PX
+========================================= */
 
 @media (min-width: 701px) and (max-width: 1200px) {
 
-    .menu-gerenciar-clientes {
-        flex: 0 0 210px;
-        width: 210px;
-        min-width: 210px;
-        padding: 20px 10px;
+    .pagina-gerenciar-clientes .conteudo-gerenciar-clientes {
+        padding: 25px 22px 30px;
     }
 
-    .logo-gerenciar-clientes {
-        margin-bottom: 25px;
-    }
+    .pagina-gerenciar-clientes .conteudo-gerenciar-clientes > h1 {
+        margin-bottom: 20px;
 
-    .logo-gerenciar-clientes img {
-        max-width: 190px;
-        height: auto;
-    }
-
-    .navegacao-gerenciar-clientes {
-        gap: 16px;
-    }
-
-    .item-menu-clientes {
-        margin-left: 4px;
-        gap: 9px;
-        padding: 8px 5px;
-    }
-
-    .item-menu-clientes img {
-        width: 28px;
-        height: 28px;
-    }
-
-    .item-menu-clientes span {
-        font-size: 13px;
-    }
-
-    .sair-gerenciar-clientes {
-        margin-left: 4px;
-    }
-
-    .topo-gerenciar-clientes {
-        padding: 10px 15px;
-    }
-
-    .pesquisa-topo-clientes {
-        width: 75%;
-    }
-
-    .conteudo-gerenciar-clientes {
-        padding: 25px 22px 35px;
-    }
-
-    .conteudo-gerenciar-clientes h1 {
         font-size: 27px;
     }
 
-    .campos-cliente {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+    .pagina-gerenciar-clientes .formulario-cliente {
+        padding: 12px;
     }
 
-    .campo-razao-social {
+    .pagina-gerenciar-clientes .campos-cliente {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 16px;
+    }
+
+    .pagina-gerenciar-clientes .campo-razao-social {
         grid-column: 1 / -1;
     }
 
-    .rodape-formulario-cliente {
-        align-items: flex-start;
-        flex-direction: column;
+    .pagina-gerenciar-clientes .rodape-formulario-cliente {
+        flex-wrap: wrap;
     }
 
-    .botoes-formulario-cliente {
-        width: 100%;
-        margin-left: 0;
+    .pagina-gerenciar-clientes .validacao-cnpj {
+        flex-basis: 100%;
+    }
+
+    .pagina-gerenciar-clientes .botoes-formulario-cliente {
         justify-content: flex-end;
+
+        margin-left: auto;
     }
 
-    .tabela-clientes {
-        overflow-x: auto;
-        overflow-y: visible;
-    }
-
-    .tabela-clientes table {
+    .pagina-gerenciar-clientes .tabela-clientes table {
         min-width: 550px;
     }
 
-    .tabela-clientes thead th,
-    .tabela-clientes tbody td {
-        font-size: 12px;
-    }
-}
-
-/* HEADER MOBILE E TABLET */
-
-@media (max-width: 700px) {
-
-    .principal-gerenciar-clientes > .integra-header-desktop {
-        display: none;
-    }
-
-    .principal-gerenciar-clientes > .integra-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 999;
-        display: flex;
-        width: 100%;
-        padding: 12px 15px 8px;
-        gap: 10px;
-        background: #fff;
-        box-shadow: 0 2px 8px rgba(29, 46, 104, 0.08);
-    }
-
-    .principal-gerenciar-clientes .header-superior {
-        min-height: 45px;
-    }
-
-    .principal-gerenciar-clientes .header-logo {
-        width: 145px;
-        height: 55px;
-    }
-
-    .principal-gerenciar-clientes .header-foto {
-        width: 42px;
-        height: 42px;
-    }
-
-    .principal-gerenciar-clientes .header-dados strong {
-        font-size: 11px;
-    }
-
-    .principal-gerenciar-clientes .header-dados span {
-        font-size: 9px;
-    }
-
-    .principal-gerenciar-clientes .header-pesquisa {
-        height: 36px;
-        padding: 0 12px;
-    }
-
-    .principal-gerenciar-clientes .header-pesquisa img {
-        width: 19px;
-        height: 19px;
-    }
-
-    .principal-gerenciar-clientes .header-pesquisa input {
+    .pagina-gerenciar-clientes .tabela-clientes thead th,
+    .pagina-gerenciar-clientes .tabela-clientes tbody td {
         font-size: 12px;
     }
 
-    .principal-gerenciar-clientes .header-dados {
-        display: none !important;
-    }
-
-    .principal-gerenciar-clientes {
-        padding-top: 94px;
-    }
 }
 
-/* DESKTOP */
+/* =========================================
+   TABLETS ESTREITOS
+========================================= */
 
-@media (min-width: 701px) {
+@media (min-width: 701px) and (max-width: 900px) {
 
-    .principal-gerenciar-clientes > .integra-header {
-        display: none;
+    .pagina-gerenciar-clientes .conteudo-gerenciar-clientes {
+        padding-right: 15px;
+        padding-left: 15px;
     }
 
-    .principal-gerenciar-clientes > .integra-header-desktop {
-        display: flex;
-        position: relative;
-        flex-shrink: 0;
-        width: 100%;
-        background: #fff;
+    .pagina-gerenciar-clientes .campos-cliente {
+        gap: 12px;
     }
 
-    .principal-gerenciar-clientes {
-        padding-top: 0;
+    .pagina-gerenciar-clientes .campo-cliente label {
+        font-size: 12px;
     }
+
+    .pagina-gerenciar-clientes .campo-cliente input,
+    .pagina-gerenciar-clientes .campo-cliente select {
+        font-size: 12px;
+    }
+
+    .pagina-gerenciar-clientes .botoes-formulario-cliente button {
+        min-width: 105px;
+
+        font-size: 12px;
+    }
+
 }
 
-/* MOBILE */
+/* =========================================
+   MOBILE
+   ATÉ 700PX
+========================================= */
 
 @media (max-width: 700px) {
 
     .pagina-gerenciar-clientes {
-        flex-direction: column;
         width: 100%;
-        height: 100vh;
-        height: 100dvh;
+        height: auto;
+
+        min-height: 100%;
+
+        overflow: visible;
     }
 
-    /* MENU INFERIOR */
-
-    .menu-gerenciar-clientes {
-        position: fixed;
-        z-index: 1000;
-        bottom: 0;
-        left: 0;
-        display: flex;
-        flex-direction: column;
+    .pagina-gerenciar-clientes .principal-gerenciar-clientes {
         width: 100%;
+        height: auto;
+
         min-width: 0;
-        height: 64px;
-        min-height: 64px;
-        padding: 5px 2px;
-        background: #1d2e68;
-    }
-
-    .logo-gerenciar-clientes,
-    .sair-gerenciar-clientes {
-        display: none;
-    }
-
-    .navegacao-gerenciar-clientes {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        gap: 0;
-    }
-
-    .item-menu-clientes {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 2px;
-        height: 100%;
-        margin: 0;
-        padding: 2px 0;
-        border-radius: 0;
-        background: transparent;
-    }
-
-    .item-menu-clientes img {
-        width: 27px;
-        height: 27px;
-    }
-
-    .item-menu-clientes span {
-        font-size: 9px;
-        text-align: center;
-    }
-
-    .item-menu-clientes.ativo {
-        background: transparent;
-        color: #ff8500;
-    }
-
-    .item-menu-clientes.ativo img {
-        filter: brightness(0) saturate(100%) invert(56%) sepia(96%) saturate(1600%) hue-rotate(359deg) brightness(102%);
-    }
-
-    /* ÁREA PRINCIPAL */
-
-    .principal-gerenciar-clientes {
-        width: 100%;
-        min-width: 0;
-        height: 100%;
         min-height: 0;
-        padding-top: 0;
-        padding-bottom: 64px;
+
+        padding: 0;
     }
 
-    /* CONTEÚDO */
-
-    .conteudo-gerenciar-clientes {
+    .pagina-gerenciar-clientes .conteudo-gerenciar-clientes {
         width: 100%;
-        flex: 1;
-        min-height: 0;
-        padding: 5px 14px 25px;
+
+        padding: 18px 14px 25px;
     }
 
-    .conteudo-gerenciar-clientes h1 {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        font-size: 20px;
-    }
+    .pagina-gerenciar-clientes .conteudo-gerenciar-clientes > h1 {
+        margin: 0 0 15px;
 
-    /* TÍTULO */
-
-    .titulo-gerenciar-clientes {
-        gap: 8px;
-    }
-
-    .titulo-gerenciar-clientes h1 {
-        margin: 5px 0;
-        font-size: 20px;
-    }
-
-    .botao-criar-cliente {
-        min-width: 105px;
-        height: 32px;
-        padding: 0 8px;
-        margin-top: 5px;
-        font-size: 10px;
+        font-size: 21px;
     }
 
     /* FORMULÁRIO */
 
-    .formulario-cliente {
+    .pagina-gerenciar-clientes .formulario-cliente {
         width: 100%;
+
         min-height: auto;
-        margin-top: 5px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 7px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+        padding: 12px;
+
+        border: 1px solid #d5dce8;
+        border-radius: 8px;
+
+        background: #fff;
+
+        box-shadow:
+            0 2px 6px rgba(0, 0, 0, 0.10);
     }
 
-    .formulario-cliente h2 {
-        margin-bottom: 7px;
+    .pagina-gerenciar-clientes .formulario-cliente h2 {
+        margin-bottom: 12px;
+
+        font-size: 16px;
+    }
+
+    .pagina-gerenciar-clientes .campos-cliente {
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 12px;
+    }
+
+    .pagina-gerenciar-clientes .campo-cliente {
+        gap: 4px;
+    }
+
+    .pagina-gerenciar-clientes .campo-cliente label {
+        font-size: 12px;
+    }
+
+    .pagina-gerenciar-clientes .campo-cliente input,
+    .pagina-gerenciar-clientes .campo-cliente select {
+        height: 36px;
+
         font-size: 13px;
     }
 
-    .campos-cliente {
-        grid-template-columns: 1fr;
-        gap: 10px;
+    .pagina-gerenciar-clientes .select-com-seta,
+    .pagina-gerenciar-clientes .select-com-seta select {
+        height: 36px;
     }
 
-    .campo-cliente label {
-        font-size: 12px;
-    }
-
-    .campo-cliente input,
-    .campo-cliente select {
-        width: 100%;
-        height: 27px;
-        font-size: 12px;
-    }
-
-    .select-com-seta {
-        height: 27px;
-    }
-
-    .select-com-seta select {
-        height: 27px;
-        font-size: 12px;
-    }
-
-    .campo-cnpj small {
-        margin-top: 2px;
+    .pagina-gerenciar-clientes .campo-cliente small {
         font-size: 10px;
     }
 
     /* VALIDAÇÃO */
 
-    .rodape-formulario-cliente {
+    .pagina-gerenciar-clientes .rodape-formulario-cliente {
         flex-direction: column;
+
         align-items: stretch;
+
+        gap: 12px;
+
+        margin-top: 15px;
+    }
+
+    .pagina-gerenciar-clientes .validacao-cnpj {
+        flex-direction: column;
+
+        align-items: flex-start;
+
         gap: 8px;
-        margin-top: 8px;
+
+        width: 100%;
     }
 
-    .validacao-cnpj {
-        justify-content: flex-start;
-        gap: 7px;
+    .pagina-gerenciar-clientes .mensagem-cliente {
+        font-size: 11px;
     }
 
-    .mensagem-cliente {
-        max-width: 100%;
-    }
+    .pagina-gerenciar-clientes .botao-validar-cnpj {
+        min-width: 110px;
+        height: 34px;
 
-    .botao-validar-cnpj {
-        height: 28px;
-        min-width: 100px;
-        font-size: 10px;
+        font-size: 11px;
     }
 
     /* BOTÕES */
 
-    .botoes-formulario-cliente {
-        display: flex;
+    .pagina-gerenciar-clientes .botoes-formulario-cliente {
         width: 100%;
+
         margin-left: 0;
+
+        gap: 8px;
     }
 
-    .botoes-formulario-cliente button {
+    .pagina-gerenciar-clientes .botoes-formulario-cliente button {
         flex: 1;
+
         width: auto;
-        height: 29px;
-        font-size: 11px;
+        min-width: 0;
+
+        height: 36px;
+
+        padding: 0 8px;
+
+        font-size: 12px;
     }
 
     /* EMPRESAS CADASTRADAS */
 
-    .titulo-empresas-cadastradas {
-        margin-top: 12px;
-        margin-bottom: 8px;
+    .pagina-gerenciar-clientes .titulo-empresas-cadastradas {
+        margin: 22px 0 10px;
+
         font-size: 19px;
     }
 
-    .pesquisa-clientes {
+    /* PESQUISA */
+
+    .pagina-gerenciar-clientes .pesquisa-clientes {
         height: 39px;
+
         margin-bottom: 12px;
+
         padding: 0 12px;
+
         border: 1px solid #d5dce8;
         border-radius: 9px;
-        box-shadow: 0 2px 3px #00000020;
     }
 
-    .pesquisa-clientes img {
-        width: 22px;
-        height: 22px;
+    .pagina-gerenciar-clientes .pesquisa-clientes img {
+        width: 20px;
+        height: 20px;
     }
 
-    .pesquisa-clientes input {
+    .pagina-gerenciar-clientes .pesquisa-clientes input {
         font-size: 12px;
     }
 
-    /* ESCONDE TABELA */
+    /* ESCONDER TABELA */
 
-    .tabela-clientes {
+    .pagina-gerenciar-clientes .tabela-clientes {
         display: none;
     }
 
-    /* EXIBE CARDS */
+    /* EXIBIR CARDS */
 
-    .clientes-cards-mobile {
+    .pagina-gerenciar-clientes .clientes-cards-mobile {
         display: flex;
         flex-direction: column;
+
         gap: 12px;
+
         width: 100%;
     }
 
-    .card-cliente {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    .pagina-gerenciar-clientes .card-cliente {
         gap: 8px;
-        width: 100%;
-        min-height: 76px;
-        padding: 10px;
-        background: #f8faff;
-        border: 1px solid #d5dce8;
-        border-radius: 10px;
-        box-shadow: 0 2px 3px #00000020;
+
+        padding: 12px 10px;
     }
 
-    .dados-card-cliente {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        min-width: 0;
-    }
-
-    .dados-card-cliente strong {
-        overflow: hidden;
-        color: #222;
+    .pagina-gerenciar-clientes .dados-card-cliente strong {
         font-size: 13px;
-        font-weight: 600;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
-    .dados-card-cliente > span:not(.validacao-card) {
-        color: #777;
+    .pagina-gerenciar-clientes .dados-card-cliente > span:not(.validacao-card) {
         font-size: 12px;
     }
 
-    .validacao-card {
-        width: fit-content;
-        padding: 3px 12px;
-        border-radius: 20px;
+    .pagina-gerenciar-clientes .validacao-card {
         font-size: 10px;
     }
 
-    .cnpj-valido {
-        background: #bcebdc;
-        color: #286b58;
+    .pagina-gerenciar-clientes .acoes-card-cliente {
+        gap: 5px;
     }
 
-    .cnpj-invalido {
-        background: #f3b5b5;
-        color: #9b3030;
+    .pagina-gerenciar-clientes .acoes-card-cliente button {
+        width: 28px;
+        height: 28px;
     }
 
-    .acoes-card-cliente {
-        display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .acoes-card-cliente button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        border: none;
-        background: transparent;
-        cursor: pointer;
-    }
-
-    .acoes-card-cliente img {
+    .pagina-gerenciar-clientes .acoes-card-cliente img {
         width: 20px;
         height: 20px;
-        object-fit: contain;
-    }
-
-    .sem-clientes-mobile {
-        padding: 15px;
-        color: #777;
-        font-size: 13px;
-        text-align: center;
     }
 
     /* PAGINAÇÃO */
 
-    .paginacao-clientes {
-        margin-top: 15px;
-        padding-top: 5px;
-    }
-}
+    .pagina-gerenciar-clientes .paginacao-clientes {
+        gap: 6px;
 
-/* CELULARES MENORES */
-
-@media (max-width: 380px) {
-
-    .principal-gerenciar-clientes .integra-header {
-        padding: 9px 12px;
-    }
-
-    .principal-gerenciar-clientes .header-logo {
-        width: 125px;
-    }
-
-    .principal-gerenciar-clientes .header-foto {
-        width: 34px;
-        height: 34px;
-    }
-
-    .conteudo-gerenciar-clientes {
-        padding-right: 12px;
-        padding-left: 12px;
-    }
-
-    .titulo-gerenciar-clientes h1 {
-        font-size: 18px;
-    }
-
-    .titulo-empresas-cadastradas {
-        font-size: 17px;
-    }
-
-    .item-menu-clientes img {
-        width: 23px;
-        height: 23px;
-    }
-
-    .item-menu-clientes span {
-        font-size: 8px;
-    }
-}
-
-/* =========================================
-   CORREÇÃO DO LAYOUT - GERENCIAR CLIENTES
-   ========================================= */
-
-@media (min-width: 701px) and (max-width: 1200px) {
-
-    /* CONTEÚDO PRINCIPAL */
-
-    .conteudo-gerenciar-clientes {
-        padding: 25px 22px 30px;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-
-    /* TÍTULO */
-
-    .conteudo-gerenciar-clientes > h1 {
-        margin-top: 5px;
-        margin-bottom: 20px;
-        font-size: 27px;
-    }
-
-    /* FORMULÁRIO */
-
-    .formulario-cliente {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        min-height: auto;
-        padding: 5px 10px 10px;
-        margin-top: 0;
-        overflow: visible;
-    }
-
-    .formulario-cliente h2 {
-        margin-bottom: 12px;
-        font-size: 21px;
-    }
-
-    /* TRÊS COLUNAS NA MESMA LINHA */
-
-    .campos-cliente {
-        display: grid;
-        grid-template-columns: 1.1fr 0.8fr 1.3fr;
-        align-items: start;
-        gap: 18px;
-        width: 100%;
-    }
-
-    .campo-razao-social {
-        grid-column: auto;
-    }
-
-    .campo-cliente {
-        min-width: 0;
-    }
-
-    .campo-cliente input,
-    .campo-cliente select,
-    .select-com-seta {
-        width: 100%;
-    }
-
-    /* RODAPÉ DO FORMULÁRIO */
-
-    .rodape-formulario-cliente {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 10px;
-        width: 100%;
-        margin-top: 15px;
-    }
-
-    .validacao-cnpj {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .botoes-formulario-cliente {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        gap: 8px;
-        margin-left: auto;
-    }
-
-    .botao-salvar-cliente,
-    .botao-cancelar-cliente {
-        width: 125px;
-        height: 36px;
-    }
-
-    /* EMPRESAS CADASTRADAS */
-
-    .titulo-empresas-cadastradas {
-        position: relative;
-        margin-top: 18px;
-        margin-bottom: 8px;
-        font-size: 21px;
-    }
-
-    .pesquisa-clientes {
-        margin-bottom: 18px;
-    }
-
-    /* TABELA */
-
-    .tabela-clientes {
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: visible;
-    }
-
-    .tabela-clientes table {
-        width: 100%;
-        min-width: 550px;
-    }
-}
-
-/* TELAS UM POUCO MENORES */
-
-@media (min-width: 701px) and (max-width: 900px) {
-
-    .conteudo-gerenciar-clientes {
-        padding-right: 15px;
-        padding-left: 15px;
-    }
-
-    .campos-cliente {
-        gap: 10px;
-    }
-
-    .campo-cliente label {
-        font-size: 12px;
-    }
-
-    .campo-cliente input,
-    .campo-cliente select {
-        font-size: 12px;
-    }
-
-    .botoes-formulario-cliente button {
-        width: 105px;
-        font-size: 12px;
-    }
-
-    .validacao-cnpj {
-        gap: 5px;
-    }
-}
-
-/* =========================================
-   AJUSTE DE ESPAÇAMENTO ABAIXO DO HEADER
-   ========================================= */
-
-@media (max-width: 700px) {
-
-    .principal-gerenciar-clientes {
-        padding-top: 112px !important;
-    }
-
-    .conteudo-gerenciar-clientes {
-        padding-top: 12px;
-    }
-}
-/* =========================================
-   CORREÇÃO DO FORMULÁRIO - DESKTOP
-   ========================================= */
-
-@media (min-width: 901px) {
-
-    .formulario-cliente {
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-        width: 100%;
-        height: auto;
-        min-height: fit-content;
-        padding: 8px 10px 12px;
-        overflow: visible;
-    }
-
-    .formulario-cliente h2 {
-        margin-bottom: 12px;
-    }
-
-    .campos-cliente {
-        display: grid;
-        grid-template-columns: 1.1fr 0.8fr 1.3fr;
-        column-gap: 28px;
-        row-gap: 18px;
-        width: 100%;
-        align-items: start;
-    }
-
-    .campo-cliente {
-        min-width: 0;
-    }
-
-    .campo-cliente input,
-    .campo-cliente select,
-    .select-com-seta {
-        width: 100%;
-    }
-
-    .rodape-formulario-cliente {
-        display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-        width: 100%;
         margin-top: 16px;
     }
 
-    .botoes-formulario-cliente {
-        flex-shrink: 0;
-        margin-left: auto;
+    .pagina-gerenciar-clientes .paginacao-clientes button {
+        min-width: 32px;
+        height: 32px;
+
+        font-size: 11px;
     }
 
-    .titulo-empresas-cadastradas {
-        flex-shrink: 0;
-        margin-top: 18px;
+}
+
+/* =========================================
+   CELULARES ESTREITOS
+========================================= */
+
+@media (max-width: 380px) {
+
+    .pagina-gerenciar-clientes .conteudo-gerenciar-clientes {
+        padding: 15px 12px 20px;
     }
+
+    .pagina-gerenciar-clientes .conteudo-gerenciar-clientes > h1 {
+        font-size: 19px;
+    }
+
+    .pagina-gerenciar-clientes .titulo-empresas-cadastradas {
+        font-size: 17px;
+    }
+
+    .pagina-gerenciar-clientes .formulario-cliente {
+        padding: 10px;
+    }
+
+    .pagina-gerenciar-clientes .campos-cliente {
+        gap: 10px;
+    }
+
+    .pagina-gerenciar-clientes .campo-cliente input,
+    .pagina-gerenciar-clientes .campo-cliente select {
+        font-size: 12px;
+    }
+
+    .pagina-gerenciar-clientes .dados-card-cliente strong {
+        font-size: 12px;
+    }
+
+    .pagina-gerenciar-clientes .dados-card-cliente > span:not(.validacao-card) {
+        font-size: 11px;
+    }
+
+    .pagina-gerenciar-clientes .acoes-card-cliente {
+        gap: 3px;
+    }
+
+    .pagina-gerenciar-clientes .paginacao-clientes button {
+        min-width: 30px;
+        height: 30px;
+    }
+
 }

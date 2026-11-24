@@ -1,20 +1,16 @@
-
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./Home.css";
 
-import { NavLink, useNavigate } from "react-router-dom";
 import { requisicaoApi } from "../../services/api";
+import usePermissoes from "../../hooks/usePermissoes";
 
-import Header from "../../components/Header/header";
-import HeaderDesktop from "../../components/Header/headerDesktop";
+// COMPONENTES COMPARTILHADOS
 
-import logoIntegra from "../../assets/Icones/LogoNome.png";
-import iconeCasa from "../../assets/Icones/CasaBranca.png";
-import iconeLivro from "../../assets/Icones/LivroBranco.png";
-import iconeNotas from "../../assets/Icones/DoisDocumentosBranco.png";
-import iconeClientesBranco from "../../assets/Icones/ADDProfileBranco.png";
-import iconePessoa from "../../assets/Icones/PessoaBranca.png";
-import iconeSair from "../../assets/Icones/SairBranco.png";
+
+
+// ÍCONES DO DASHBOARD
 
 import iconeDocumento from "../../assets/Icones/ArquivoAcessoRapido.png";
 import iconeExpandir from "../../assets/Icones/SetaAcessoRapido.png";
@@ -24,7 +20,8 @@ import arquivoHome from "../../assets/Icones/ArquivoDashboard.png";
 import DoisDocumentos from "../../assets/Icones/DoisDocumentos.png";
 import TimeAcessoRapido from "../../assets/Icones/TimeAcessoRapido.png";
 
-// Ícones do tablet e mobile
+// ÍCONES TABLET E MOBILE
+
 import AddClienteMobile from "../../assets/Icones/AddClienteMobile.png";
 import NovoConteudoMobile from "../../assets/Icones/NovoConteudoMobile.png";
 import HistoricoMobile from "../../assets/Icones/HistoricoMobile.png";
@@ -32,108 +29,281 @@ import ConsultarNFEmobile from "../../assets/Icones/ConsultarNFEmobile.png";
 import EnviarXMLMobile from "../../assets/Icones/EnviarXMLMobile.png";
 
 export default function Home() {
+
     const navigate = useNavigate();
 
-    const [pesquisa, setPesquisa] = useState("");
+    // =========================================
+    // PERMISSÕES DINÂMICAS
+    // =========================================
 
-    // Perfis do usuário autenticado. A API é responsável pela autorização real.
-    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-    const perfisSalvos = JSON.parse(localStorage.getItem("perfis") || "[]");
-    const perfis = Array.isArray(usuario.perfis) && usuario.perfis.length > 0
-        ? usuario.perfis
-        : Array.isArray(perfisSalvos) ? perfisSalvos : [];
+    const {
+        temPermissao,
+        temAlgumaPermissao,
+        carregando: carregandoPermissoes,
+        erro: erroPermissoes,
+        atualizar
+    } = usePermissoes();
 
-    const nomeUsuario = usuario.nome?.split(" ")[0] || "usuário";
-    const ehAdministrador = perfis.includes("Administrador");
-    const podeRevisar = perfis.includes("Coordenador Fiscal");
-    const podeCriar = [
-        "Coordenador Fiscal",
-        "Analista SPED",
-        "Analista de Documentos Fiscais",
-        "Analista de Reforma Tributária"
-    ].some(perfil => perfis.includes(perfil));
-    const podeVerNotas = [
-        "Coordenador Fiscal",
-        "Analista SPED",
-        "Analista de Documentos Fiscais",
-        "Analista de Reforma Tributária",
-        "Cliente"
-    ].some(perfil => perfis.includes(perfil));
-    const podeEnviarXml = podeVerNotas;
+    // =========================================
+    // USUÁRIO AUTENTICADO
+    // =========================================
 
-    // Dados do Dashboard
+    let usuario = {};
+
+    try {
+        usuario = JSON.parse(
+            localStorage.getItem("usuario") || "{}"
+        ) || {};
+    } catch {
+        usuario = {};
+    }
+
+    const nomeUsuario =
+        usuario.nome?.trim().split(/\s+/)[0] || "usuário";
+
+    const token = localStorage.getItem("token");
+
+    // =========================================
+    // CONTROLE DE ACESSOS
+    // =========================================
+
+    const podeGerenciarClientes =
+        temPermissao("cliente.gerenciar");
+
+    const podeCriar =
+        temAlgumaPermissao("artigo.criar");
+
+    const podeRevisar =
+        temAlgumaPermissao("artigo.revisar");
+
+    const podeVerNotas =
+        temPermissao("nota.ler.todas") ||
+        temPermissao("nota.ler.proprias");
+
+    const podeEnviarXml =
+        temPermissao("nota.importar");
+
+    const podeVerHistorico =
+        temPermissao("auditoria.ler");
+
+    // A consulta de chave NF-e é pública.
+    // Não necessita de uma permissão específica.
+
+    // =========================================
+    // ESTADOS DO DASHBOARD
+    // =========================================
+
     const [artigos, setArtigos] = useState([]);
     const [notas, setNotas] = useState([]);
     const [pendentes, setPendentes] = useState([]);
 
     const [carregando, setCarregando] = useState(true);
-    const [erroDashboard, setErroDashboard] = useState("");
 
-    // Carrega as informações da API
+    const [erroDashboard, setErroDashboard] =
+        useState("");
+
+    // =========================================
+    // CARREGAMENTO DO DASHBOARD
+    // =========================================
+
     useEffect(() => {
+
+        let ativo = true;
+
+        setErroDashboard("");
+
+        if (!token || carregandoPermissoes || erroPermissoes) {
+
+            setCarregando(
+                Boolean(token && carregandoPermissoes)
+            );
+
+            setArtigos([]);
+            setNotas([]);
+            setPendentes([]);
+
+            return;
+
+        }
+
         async function carregarDashboard() {
+
             setCarregando(true);
-            setErroDashboard("");
+
+            setArtigos([]);
+            setNotas([]);
+            setPendentes([]);
 
             const erros = [];
+            const tarefas = [];
 
-            try {
-                const dadosArtigos = await requisicaoApi("/api/Artigos");
+            // =====================================
+            // CONTEÚDOS PUBLICADOS
+            // =====================================
 
-                setArtigos(
-                    Array.isArray(dadosArtigos) ? dadosArtigos : []
+            tarefas.push(
+
+                requisicaoApi("/api/Artigos")
+
+                    .then(dados => {
+
+                        if (!ativo) return;
+
+                        setArtigos(
+                            Array.isArray(dados)
+                                ? dados
+                                : []
+                        );
+
+                    })
+
+                    .catch(error => {
+
+                        if (!ativo) return;
+
+                        console.error(
+                            "Erro ao carregar conteúdos:",
+                            error
+                        );
+
+                        erros.push(
+                            "Não foi possível carregar os conteúdos."
+                        );
+
+                    })
+
+            );
+
+            // =====================================
+            // NOTAS FISCAIS
+            // =====================================
+
+            if (podeVerNotas) {
+
+                tarefas.push(
+
+                    requisicaoApi("/api/NotasFiscais")
+
+                        .then(dados => {
+
+                            if (!ativo) return;
+
+                            setNotas(
+                                Array.isArray(dados)
+                                    ? dados
+                                    : []
+                            );
+
+                        })
+
+                        .catch(error => {
+
+                            if (!ativo) return;
+
+                            console.error(
+                                "Erro ao carregar notas fiscais:",
+                                error
+                            );
+
+                            erros.push(
+                                "Não foi possível carregar as notas fiscais."
+                            );
+
+                        })
+
                 );
-            } catch (error) {
-                console.error("Erro ao carregar conteúdos:", error);
-                erros.push("Não foi possível carregar os conteúdos.");
+
             }
 
-            if (podeVerNotas) try {
-                const dadosNotas = await requisicaoApi("/api/NotasFiscais");
-
-                setNotas(
-                    Array.isArray(dadosNotas) ? dadosNotas : []
-                );
-            } catch (error) {
-                console.error("Erro ao carregar notas fiscais:", error);
-                erros.push("Não foi possível carregar as notas fiscais.");
-            }
+            // =====================================
+            // CONTEÚDOS EM REVISÃO
+            // =====================================
 
             if (podeRevisar) {
-                try {
-                    const dadosPendentes = await requisicaoApi(
+
+                tarefas.push(
+
+                    requisicaoApi(
                         "/api/Artigos/pendentes-revisao"
-                    );
+                    )
 
-                    setPendentes(
-                        Array.isArray(dadosPendentes) ? dadosPendentes : []
-                    );
-                } catch (error) {
-                    console.error("Erro ao carregar revisões:", error);
-                    erros.push("Não foi possível carregar os conteúdos em revisão.");
-                }
+                        .then(dados => {
+
+                            if (!ativo) return;
+
+                            setPendentes(
+                                Array.isArray(dados)
+                                    ? dados
+                                    : []
+                            );
+
+                        })
+
+                        .catch(error => {
+
+                            if (!ativo) return;
+
+                            console.error(
+                                "Erro ao carregar revisões:",
+                                error
+                            );
+
+                            erros.push(
+                                "Não foi possível carregar os conteúdos em revisão."
+                            );
+
+                        })
+
+                );
+
             }
 
-            if (erros.length > 0) {
-                setErroDashboard(erros.join(" "));
-            }
+            await Promise.all(tarefas);
 
+            if (!ativo) return;
+
+            setErroDashboard(erros.join(" "));
             setCarregando(false);
+
         }
 
         carregarDashboard();
-    }, [podeRevisar, podeVerNotas]);
 
-    // Organiza os conteúdos mais recentes
+        return () => {
+            ativo = false;
+        };
+
+    }, [
+        token,
+        carregandoPermissoes,
+        erroPermissoes,
+        podeVerNotas,
+        podeRevisar
+    ]);
+
+    // =========================================
+    // CONTEÚDOS MAIS RECENTES
+    // =========================================
+
     const ultimosArtigos = [...artigos]
+
         .sort((a, b) => {
-            return new Date(b.dataPublicacao || 0) -
-                new Date(a.dataPublicacao || 0);
+
+            return (
+                new Date(b.dataPublicacao || 0) -
+                new Date(a.dataPublicacao || 0)
+            );
+
         })
+
         .slice(0, 3);
 
-    // Formata as datas
+    // =========================================
+    // FORMATAÇÃO DE DATAS
+    // =========================================
+
     function formatarData(data) {
+
         if (!data) {
             return "Data não informada";
         }
@@ -145,516 +315,508 @@ export default function Home() {
         }
 
         return dataFormatada.toLocaleDateString("pt-BR");
+
     }
 
-    // Realiza o logout
-    function sairSistema() {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        localStorage.removeItem("perfis");
+    // =========================================
+    // ABRIR DETALHES DO CONTEÚDO
+    // =========================================
 
-        navigate("/login", { replace: true });
+    function abrirConteudo(artigo) {
+
+        navigate("/conteudos/detalhes", {
+
+            state: {
+
+                conteudo: {
+
+                    ...artigo,
+
+                    id: artigo.artigoId,
+
+                    data: formatarData(
+                        artigo.dataPublicacao
+                    )
+
+                }
+
+            }
+
+        });
+
     }
+
+    // =========================================
+    // NAVEGAÇÃO PELO TECLADO
+    // =========================================
+
+    function navegarComTeclado(event, acao) {
+
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
+
+            event.preventDefault();
+
+            acao();
+
+        }
+
+    }
+
+    // =========================================
+    // ACESSOS RÁPIDOS DINÂMICOS
+    // =========================================
+
+    const acessosRapidos = [
+
+        {
+            titulo: "Novo conteúdo",
+            rota: "/conteudos/novo",
+            iconeDesktop: iconeExpandir,
+            iconeMobile: NovoConteudoMobile,
+            permitido: podeCriar
+        },
+
+        {
+            titulo: "Conteúdos em revisão",
+            rota: "/conteudos/revisao",
+            iconeDesktop: iconeDocumento,
+            iconeMobile: NovoConteudoMobile,
+            permitido: podeRevisar
+        },
+
+        {
+            titulo: "Enviar XML",
+            rota: "/enviar-xml",
+            iconeDesktop: iconeUpload,
+            iconeMobile: EnviarXMLMobile,
+            permitido: podeEnviarXml
+        },
+
+        {
+            titulo: "Consultar NF-e",
+            rota: "/consultar-chave",
+            iconeDesktop: iconeDocumento,
+            iconeMobile: ConsultarNFEmobile,
+            classeExtra: "docAcessoRapido",
+            permitido: true
+        },
+
+        {
+            titulo: "Consultar clientes",
+            rota: "/clientes",
+            iconeDesktop: iconeGrupo,
+            iconeMobile: AddClienteMobile,
+            permitido: podeGerenciarClientes
+        },
+
+        {
+            titulo: "Histórico de ações",
+            rota: "/historico",
+            iconeDesktop: TimeAcessoRapido,
+            iconeMobile: HistoricoMobile,
+            permitido: podeVerHistorico
+        }
+
+    ].filter(item => item.permitido);
+
+    // =========================================
+    // CARDS DO DASHBOARD
+    // =========================================
+
+    const cardsResumo = [
+
+        {
+            titulo: "Conteúdos publicados",
+            quantidade: artigos.length,
+            rota: "/conteudos",
+            etiqueta: "Publicados",
+            classeEtiqueta: "",
+            permitido: true
+        },
+
+        {
+            titulo: "Notas Fiscais",
+            quantidade: notas.length,
+            rota: "/notas-fiscais",
+            etiqueta: "Ativas",
+            classeEtiqueta: "home-card-ativas",
+            permitido: podeVerNotas
+        },
+
+        {
+            titulo: "Conteúdos em revisão",
+            quantidade: pendentes.length,
+            rota: "/conteudos/revisao",
+            etiqueta: "Atenção",
+            classeEtiqueta: "home-card-atencao",
+            permitido: podeRevisar
+        }
+
+    ].filter(item => item.permitido);
+
+    // =========================================
+    // RENDERIZAÇÃO
+    // =========================================
 
     return (
+
         <main className="home">
 
-            {/* MENU LATERAL */}
-            <aside className="home-menu">
+            {/* =====================================
+                SIDEBAR COMPARTILHADO
 
-                <div className="home-marca">
-                    <img
-                        src={logoIntegra}
-                        alt="Integra"
-                        className="home-logo1"
-                    />
-                </div>
+                Desktop, tablet e mobile.
+                Permissões dinâmicas e logout.
+            ===================================== */}
 
-                <nav className="home-menu-lista">
+          
+            {/* =====================================
+                ÁREA PRINCIPAL
+            ===================================== */}
 
-                    <NavLink
-                        to="/home"
-                        className={({ isActive }) =>
-                            isActive
-                                ? "home-menu-item home-menu-item-ativo"
-                                : "home-menu-item"
-                        }
-                    >
-                        <img src={iconeCasa} alt="" />
-                        <span>Início</span>
-                    </NavLink>
-
-                    <NavLink
-                        to="/conteudos"
-                        className={({ isActive }) =>
-                            isActive
-                                ? "home-menu-item home-menu-item-ativo"
-                                : "home-menu-item"
-                        }
-                    >
-                        <img src={iconeLivro} alt="" />
-                        <span>Conteúdos</span>
-                    </NavLink>
-
-                    {podeVerNotas && (
-                    <NavLink
-                        to="/notas-fiscais"
-                        className={({ isActive }) =>
-                            isActive
-                                ? "home-menu-item home-menu-item-ativo"
-                                : "home-menu-item"
-                        }
-                    >
-                        <img src={iconeNotas} alt="" />
-                        <span>Notas Fiscais</span>
-                    </NavLink>
-                    )}
-
-                    {ehAdministrador && (
-                    <NavLink
-                        to="/clientes"
-                        className={({ isActive }) =>
-                            isActive
-                                ? "home-menu-item home-menu-item-ativo"
-                                : "home-menu-item"
-                        }
-                    >
-                        <img src={iconeClientesBranco} alt="" />
-                        <span>Clientes</span>
-                    </NavLink>
-                    )}
-
-                    {ehAdministrador && (
-                    <NavLink
-                        to="/usuario"
-                        className={({ isActive }) =>
-                            isActive
-                                ? "home-menu-item home-menu-item-ativo"
-                                : "home-menu-item"
-                        }
-                    >
-                        <img src={iconePessoa} alt="" />
-                        <span>Usuários</span>
-                    </NavLink>
-                    )}
-
-                </nav>
-
-                <button
-                    type="button"
-                    className="home-menu-item home-menu-sair"
-                    onClick={sairSistema}
-                >
-                    <img src={iconeSair} alt="" />
-                    <span>Sair</span>
-                </button>
-
-            </aside>
-
-            {/* ÁREA PRINCIPAL */}
             <section className="home-area">
 
-                {/* CABEÇALHOS COMPARTILHADOS */}
-                <HeaderDesktop
-                    pesquisa={pesquisa}
-                    setPesquisa={setPesquisa}
-                />
+                {/* HEADERS COMPARTILHADOS */}
 
-                <Header
-                    pesquisa={pesquisa}
-                    setPesquisa={setPesquisa}
-                />
+               
 
-                {/* CONTEÚDO DA PÁGINA */}
+                {/* =================================
+                    CONTEÚDO PRINCIPAL
+                ================================= */}
+
                 <div className="home-conteudo">
 
-                    <h1>Olá, {nomeUsuario}!</h1>
+                    {/* SAUDAÇÃO */}
+
+                    <h1>
+                        Olá, {nomeUsuario}!
+                    </h1>
 
                     <p className="home-subtitulo">
-                        Confira um resumo das principais informações do sistema.
+
+                        Confira um resumo das principais
+                        informações do sistema.
+
                     </p>
 
-                    {erroDashboard && (
-                        <p className="home-erro">
-                            {erroDashboard}
+                    {/* CARREGAMENTO DAS PERMISSÕES */}
+
+                    {carregandoPermissoes && (
+
+                        <p role="status">
+
+                            Carregando permissões de acesso...
+
                         </p>
+
                     )}
 
-                    {/* CARDS DE RESUMO */}
-                    <div className="home-resumo">
+                    {/* ERRO DAS PERMISSÕES */}
 
-                        {/* CONTEÚDOS PUBLICADOS */}
+                    {erroPermissoes && (
+
                         <div
-                            className="home-card"
-                            role="link"
-                            tabIndex={0}
-                            onClick={() => navigate("/conteudos")}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    navigate("/conteudos");
-                                }
-                            }}
-                            style={{ cursor: "pointer" }}
+                            className="home-erro"
+                            role="alert"
                         >
-                            <div className="home-card-icone">
-                                <img src={arquivoHome} alt="" />
-                            </div>
 
-                            <div className="home-card-info">
-                                <p>Conteúdos publicados</p>
-                                <strong>
-                                    {carregando ? "..." : artigos.length}
-                                </strong>
-                            </div>
+                            <p>
 
-                            <span className="home-card-crescimento">
-                                Publicados
-                            </span>
-                        </div>
+                                Não foi possível carregar suas
+                                permissões de acesso.
 
-                        {/* NOTAS FISCAIS */}
-                        {podeVerNotas && (
-                        <div
-                            className="home-card"
-                            role="link"
-                            tabIndex={0}
-                            onClick={() => navigate("/notas-fiscais")}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    navigate("/notas-fiscais");
-                                }
-                            }}
-                            style={{ cursor: "pointer" }}
-                        >
-                            <div className="home-card-icone">
-                                <img src={arquivoHome} alt="" />
-                            </div>
-
-                            <div className="home-card-info">
-                                <p>Notas Fiscais</p>
-                                <strong>
-                                    {carregando ? "..." : notas.length}
-                                </strong>
-                            </div>
-
-                            <span className="home-card-crescimento home-card-ativas">
-                                Ativas
-                            </span>
-                        </div>
-                        )}
-
-                        {/* CONTEÚDOS EM REVISÃO */}
-                        {podeRevisar && (
-                            <div
-                                className="home-card"
-                                role="link"
-                                tabIndex={0}
-                                onClick={() => navigate("/conteudos/revisao")}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        navigate("/conteudos/revisao");
-                                    }
-                                }}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="home-card-icone">
-                                    <img src={arquivoHome} alt="" />
-                                </div>
-
-                                <div className="home-card-info">
-                                    <p>Conteúdos em revisão</p>
-                                    <strong>
-                                        {carregando ? "..." : pendentes.length}
-                                    </strong>
-                                </div>
-
-                                <span className="home-card-crescimento home-card-atencao">
-                                    Atenção
-                                </span>
-                            </div>
-                        )}
-
-                    </div>
-
-                    {/* LISTA E ACESSO RÁPIDO */}
-                    <div className="home-baixo">
-
-                        {/* ÚLTIMAS ATUALIZAÇÕES */}
-                        <section className="home-lista">
-
-                            {ultimosArtigos.length > 0 ? (
-                                ultimosArtigos.map((artigo, index) => (
-                                    <div
-                                        key={artigo.artigoId}
-                                        className="home-lista-item"
-                                        onClick={() => navigate("/conteudos/detalhes", {
-                                            state: {
-                                                conteudo: {
-                                                    ...artigo,
-                                                    id: artigo.artigoId,
-                                                    data: formatarData(artigo.dataPublicacao)
-                                                }
-                                            }
-                                        })}
-                                        style={{ cursor: "pointer" }}
-                                    >
-                                        <div
-                                            className={`home-lista-icone ${
-                                                index === 0
-                                                    ? "home-lista-icone-verde"
-                                                    : index === 1
-                                                        ? "home-lista-icone-vermelho"
-                                                        : "home-lista-icone-azul"
-                                            }`}
-                                        >
-                                            <img src={DoisDocumentos} alt="" />
-                                        </div>
-
-                                        <div className="home-lista-texto">
-                                            <h3>{artigo.titulo}</h3>
-
-                                            <p>
-                                                Publicado em{" "}
-                                                {formatarData(artigo.dataPublicacao)}
-                                            </p>
-                                        </div>
-
-                                        <span
-                                            className={`home-tag ${
-                                                index === 0
-                                                    ? "home-tag-verde"
-                                                    : "home-tag-roxo"
-                                            }`}
-                                        >
-                                            {artigo.tema || "Conteúdo"}
-                                        </span>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="home-lista-vazia">
-                                    {carregando
-                                        ? "Carregando conteúdos..."
-                                        : "Nenhum conteúdo publicado encontrado."}
-                                </p>
-                            )}
+                            </p>
 
                             <button
                                 type="button"
                                 className="home-ver-todos"
-                                onClick={() => navigate("/conteudos")}
+                                onClick={atualizar}
                             >
+
+                                Tentar novamente
+
+                            </button>
+
+                        </div>
+
+                    )}
+
+                    {/* ERRO DO DASHBOARD */}
+
+                    {erroDashboard && (
+
+                        <p
+                            className="home-erro"
+                            role="alert"
+                        >
+
+                            {erroDashboard}
+
+                        </p>
+
+                    )}
+
+                    {/* =================================
+                        CARDS DE RESUMO
+                    ================================= */}
+
+                    <div className="home-resumo">
+
+                        {cardsResumo.map(card => (
+
+                            <div
+                                key={card.rota}
+                                className="home-card"
+                                role="link"
+                                tabIndex={0}
+
+                                onClick={() =>
+                                    navigate(card.rota)
+                                }
+
+                                onKeyDown={event =>
+                                    navegarComTeclado(
+                                        event,
+                                        () => navigate(card.rota)
+                                    )
+                                }
+
+                                style={{
+                                    cursor: "pointer"
+                                }}
+                            >
+
+                                {/* ÍCONE */}
+
+                                <div className="home-card-icone">
+
+                                    <img
+                                        src={arquivoHome}
+                                        alt=""
+                                    />
+
+                                </div>
+
+                                {/* INFORMAÇÕES */}
+
+                                <div className="home-card-info">
+
+                                    <p>
+                                        {card.titulo}
+                                    </p>
+
+                                    <strong>
+
+                                        {carregando ||
+                                        carregandoPermissoes
+                                            ? "..."
+                                            : erroPermissoes
+                                                ? "—"
+                                                : card.quantidade}
+
+                                    </strong>
+
+                                </div>
+
+                                {/* ETIQUETA */}
+
+                                <span
+                                    className={
+                                        `home-card-crescimento ${card.classeEtiqueta}`
+                                    }
+                                >
+
+                                    {card.etiqueta}
+
+                                </span>
+
+                            </div>
+
+                        ))}
+
+                    </div>
+
+                    {/* =================================
+                        LISTA E ACESSO RÁPIDO
+                    ================================= */}
+
+                    <div className="home-baixo">
+
+                        {/* =================================
+                            ÚLTIMAS ATUALIZAÇÕES
+                        ================================= */}
+
+                        <section className="home-lista">
+
+                            {ultimosArtigos.length > 0 &&
+                            !carregandoPermissoes &&
+                            !erroPermissoes ? (
+
+                                ultimosArtigos.map(
+                                    (artigo, index) => (
+
+                                        <div
+                                            key={artigo.artigoId}
+                                            className="home-lista-item"
+                                            role="link"
+                                            tabIndex={0}
+
+                                            onClick={() =>
+                                                abrirConteudo(artigo)
+                                            }
+
+                                            onKeyDown={event =>
+                                                navegarComTeclado(
+                                                    event,
+                                                    () => abrirConteudo(artigo)
+                                                )
+                                            }
+
+                                            style={{
+                                                cursor: "pointer"
+                                            }}
+                                        >
+
+                                            {/* ÍCONE DO CONTEÚDO */}
+
+                                            <div
+                                                className={`home-lista-icone ${
+                                                    index === 0
+                                                        ? "home-lista-icone-verde"
+                                                        : index === 1
+                                                            ? "home-lista-icone-vermelho"
+                                                            : "home-lista-icone-azul"
+                                                }`}
+                                            >
+
+                                                <img
+                                                    src={DoisDocumentos}
+                                                    alt=""
+                                                />
+
+                                            </div>
+
+                                            {/* TEXTO DO CONTEÚDO */}
+
+                                            <div className="home-lista-texto">
+
+                                                <h3>
+                                                    {artigo.titulo}
+                                                </h3>
+
+                                                <p>
+
+                                                    Publicado em{" "}
+
+                                                    {formatarData(
+                                                        artigo.dataPublicacao
+                                                    )}
+
+                                                </p>
+
+                                            </div>
+
+                                            {/* TEMA */}
+
+                                            <span
+                                                className={`home-tag ${
+                                                    index === 0
+                                                        ? "home-tag-verde"
+                                                        : "home-tag-roxo"
+                                                }`}
+                                            >
+
+                                                {artigo.tema ||
+                                                    "Conteúdo"}
+
+                                            </span>
+
+                                        </div>
+
+                                    )
+                                )
+
+                            ) : (
+
+                                <p className="home-lista-vazia">
+
+                                    {carregando ||
+                                    carregandoPermissoes
+                                        ? "Carregando conteúdos..."
+                                        : erroPermissoes
+                                            ? "Não foi possível carregar os conteúdos."
+                                            : "Nenhum conteúdo publicado encontrado."}
+
+                                </p>
+
+                            )}
+
+                            {/* VER TODOS OS CONTEÚDOS */}
+
+                            <button
+                                type="button"
+                                className="home-ver-todos"
+                                onClick={() =>
+                                    navigate("/conteudos")
+                                }
+                            >
+
                                 Ver todos →
+
                             </button>
 
                         </section>
 
-                        {/* FOOTER MOBILE */}
-                        <footer className="home-footer">
+                        {/* =================================
+                            ACESSO RÁPIDO
+                        ================================= */}
 
-                            <NavLink
-                                to="/home"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "home-footer-item home-footer-ativo"
-                                        : "home-footer-item"
-                                }
-                            >
-                                <img src={iconeCasa} alt="" />
-                                <span>Início</span>
-                            </NavLink>
-
-                            <NavLink
-                                to="/conteudos"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "home-footer-item home-footer-ativo"
-                                        : "home-footer-item"
-                                }
-                            >
-                                <img src={iconeLivro} alt="" />
-                                <span>Conteúdos</span>
-                            </NavLink>
-
-                            {podeVerNotas && (
-                            <NavLink
-                                to="/notas-fiscais"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "home-footer-item home-footer-ativo"
-                                        : "home-footer-item"
-                                }
-                            >
-                                <img src={iconeNotas} alt="" />
-                                <span>Notas Fiscais</span>
-                            </NavLink>
-                            )}
-
-                            {ehAdministrador && (
-                            <NavLink
-                                to="/clientes"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "home-footer-item home-footer-ativo"
-                                        : "home-footer-item"
-                                }
-                            >
-                                <img src={iconeClientesBranco} alt="" />
-                                <span>Clientes</span>
-                            </NavLink>
-                            )}
-
-                            {ehAdministrador && (
-                            <NavLink
-                                to="/usuario"
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "home-footer-item home-footer-ativo"
-                                        : "home-footer-item"
-                                }
-                            >
-                                <img src={iconePessoa} alt="" />
-                                <span>Usuários</span>
-                            </NavLink>
-                            )}
-
-                        </footer>
-
-                        {/* ACESSO RÁPIDO */}
                         <section className="home-acesso">
 
                             <h2>Acesso rápido</h2>
 
-                            {podeCriar && (
-                            <button
-                                type="button"
-                                className="home-acesso-botao"
-                                onClick={() => navigate("/conteudos/novo")}
-                            >
-                                <img
-                                    src={iconeExpandir}
-                                    alt=""
-                                    className="home-acesso-icone-desktop"
-                                />
+                            {acessosRapidos.map(item => (
 
-                                <img
-                                    src={NovoConteudoMobile}
-                                    alt=""
-                                    className="home-acesso-icone-mobile"
-                                />
-
-                                <span>Novo conteúdo</span>
-                            </button>
-                            )}
-
-                            {podeRevisar && (
                                 <button
+                                    key={item.rota}
                                     type="button"
                                     className="home-acesso-botao"
-                                    onClick={() => navigate("/conteudos/revisao")}
+
+                                    onClick={() =>
+                                        navigate(item.rota)
+                                    }
                                 >
-                                    <img
-                                        src={iconeDocumento}
-                                        alt=""
-                                        className="home-acesso-icone-desktop"
-                                    />
+
+                                    {/* ÍCONE DESKTOP */}
 
                                     <img
-                                        src={NovoConteudoMobile}
+                                        src={item.iconeDesktop}
+                                        alt=""
+                                        className={
+                                            `home-acesso-icone-desktop ${item.classeExtra || ""}`
+                                        }
+                                    />
+
+                                    {/* ÍCONE MOBILE */}
+
+                                    <img
+                                        src={item.iconeMobile}
                                         alt=""
                                         className="home-acesso-icone-mobile"
                                     />
 
-                                    <span>Conteúdos em revisão</span>
+                                    {/* TÍTULO */}
+
+                                    <span>
+                                        {item.titulo}
+                                    </span>
+
                                 </button>
-                            )}
 
-                            {podeEnviarXml && (
-                            <button
-                                type="button"
-                                className="home-acesso-botao"
-                                onClick={() => navigate("/enviar-xml")}
-                            >
-                                <img
-                                    src={iconeUpload}
-                                    alt=""
-                                    className="home-acesso-icone-desktop"
-                                />
-
-                                <img
-                                    src={EnviarXMLMobile}
-                                    alt=""
-                                    className="home-acesso-icone-mobile"
-                                />
-
-                                <span>Enviar XML</span>
-                            </button>
-                            )}
-
-                            {podeVerNotas && (
-                            <button
-                                type="button"
-                                className="home-acesso-botao"
-                                onClick={() => navigate("/notas-fiscais")}
-                            >
-                                <img
-                                    src={iconeDocumento}
-                                    alt=""
-                                    className="home-acesso-icone-desktop docAcessoRapido"
-                                />
-
-                                <img
-                                    src={ConsultarNFEmobile}
-                                    alt=""
-                                    className="home-acesso-icone-mobile"
-                                />
-
-                                <span>Consultar NF-e</span>
-                            </button>
-                            )}
-
-                            {ehAdministrador && (
-                            <button
-                                type="button"
-                                className="home-acesso-botao"
-                                onClick={() => navigate("/clientes")}
-                            >
-                                <img
-                                    src={iconeGrupo}
-                                    alt=""
-                                    className="home-acesso-icone-desktop"
-                                />
-
-                                <img
-                                    src={AddClienteMobile}
-                                    alt=""
-                                    className="home-acesso-icone-mobile"
-                                />
-
-                                <span>Consultar clientes</span>
-                            </button>
-                            )}
-
-                            {ehAdministrador && (
-                                <button
-                                    type="button"
-                                    className="home-acesso-botao"
-                                    onClick={() => navigate("/historico")}
-                                >
-                                    <img
-                                        src={TimeAcessoRapido}
-                                        alt=""
-                                        className="home-acesso-icone-desktop"
-                                    />
-
-                                    <img
-                                        src={HistoricoMobile}
-                                        alt=""
-                                        className="home-acesso-icone-mobile"
-                                    />
-
-                                    <span>Histórico de ações</span>
-                                </button>
-                            )}
+                            ))}
 
                         </section>
 
@@ -665,5 +827,7 @@ export default function Home() {
             </section>
 
         </main>
+
     );
+
 }

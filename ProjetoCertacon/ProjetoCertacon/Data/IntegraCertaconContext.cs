@@ -14,6 +14,8 @@ public partial class IntegraCertaconContext : DbContext
 
     public virtual DbSet<Artigo> Artigos { get; set; }
 
+    public virtual DbSet<GlossarioFiscal> GlossarioFiscais { get; set; }
+
     public virtual DbSet<ItemNotaFiscal> ItemNotaFiscals { get; set; }
 
     public virtual DbSet<LogAuditorium> LogAuditoria { get; set; }
@@ -30,8 +32,330 @@ public partial class IntegraCertaconContext : DbContext
 
     public virtual DbSet<UsuarioPerfil> UsuarioPerfils { get; set; }
 
+    public virtual DbSet<FavoritoArtigo> FavoritoArtigos { get; set; }
+
+    public virtual DbSet<HistoricoLeitura> HistoricoLeituras { get; set; }
+
+    public virtual DbSet<ObrigacaoFiscal> ObrigacaoFiscais { get; set; }
+
+    public virtual DbSet<CenarioTributario> CenarioTributarios { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        OnModelCreatingPartial(modelBuilder);
+        modelBuilder.Entity<CenarioTributario>(entity =>
+        {
+            entity.HasKey(e => e.CenarioTributarioId)
+                .HasName("PK_CENARIO_TRIBUTARIO");
+
+            entity.ToTable("CENARIO_TRIBUTARIO", tabela =>
+            {
+                tabela.HasCheckConstraint(
+                    "CK_CENARIO_TRIBUTARIO_NOME",
+                    "LEN(LTRIM(RTRIM([Nome]))) > 0"
+                );
+
+                tabela.HasCheckConstraint(
+                    "CK_CENARIO_TRIBUTARIO_ANO",
+                    "[AnoReferencia] BETWEEN 2026 AND 2100"
+                );
+
+                tabela.HasCheckConstraint(
+                    "CK_CENARIO_TRIBUTARIO_IBS_ESTADUAL",
+                    "[AliquotaIBSEstadual] BETWEEN 0 AND 100"
+                );
+
+                tabela.HasCheckConstraint(
+                    "CK_CENARIO_TRIBUTARIO_IBS_MUNICIPAL",
+                    "[AliquotaIBSMunicipal] BETWEEN 0 AND 100"
+                );
+
+                tabela.HasCheckConstraint(
+                    "CK_CENARIO_TRIBUTARIO_CBS",
+                    "[AliquotaCBS] BETWEEN 0 AND 100"
+                );
+            });
+
+            // =========================================
+            // ÍNDICES
+            // =========================================
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.Nome,
+                    e.AnoReferencia
+                },
+                "UQ_CENARIO_TRIBUTARIO_NOME_ANO"
+            ).IsUnique();
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.Ativo,
+                    e.AnoReferencia
+                },
+                "IX_CENARIO_TRIBUTARIO_ATIVO_ANO"
+            );
+
+            // =========================================
+            // PROPRIEDADES
+            // =========================================
+
+            entity.Property(e => e.CenarioTributarioId)
+                .HasDefaultValueSql("(newsequentialid())")
+                .HasColumnName("CenarioTributario_Id");
+
+            entity.Property(e => e.AutorUsuarioId)
+                .HasColumnName("AutorUsuario_Id");
+
+            entity.Property(e => e.Nome)
+                .HasMaxLength(150)
+                .IsRequired();
+
+            entity.Property(e => e.Descricao)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.AnoReferencia)
+                .IsRequired();
+
+            entity.Property(e => e.AliquotaIBSEstadual)
+                .HasPrecision(9, 6)
+                .IsRequired();
+
+            entity.Property(e => e.AliquotaIBSMunicipal)
+                .HasPrecision(9, 6)
+                .IsRequired();
+
+            entity.Property(e => e.AliquotaCBS)
+                .HasPrecision(9, 6)
+                .IsRequired();
+
+            entity.Property(e => e.Ativo)
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.DataCriacao)
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.Property(e => e.DataAtualizacao)
+                .HasColumnType("datetime2");
+
+            // =========================================
+            // RELACIONAMENTO COM USUARIO
+            // =========================================
+
+            entity.HasOne(d => d.AutorUsuario)
+                .WithMany(p => p.CenarioTributarios)
+                .HasForeignKey(d => d.AutorUsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_CENARIO_TRIBUTARIO_USUARIO"
+                );
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+        modelBuilder.Entity<ObrigacaoFiscal>(entity =>
+        {
+            entity.HasKey(e => e.ObrigacaoFiscalId)
+                .HasName("PK_OBRIGACAO_FISCAL");
+
+            entity.ToTable("OBRIGACAO_FISCAL", tabela =>
+            {
+                tabela.HasCheckConstraint(
+                    "CK_OBRIGACAO_FISCAL_TITULO",
+                    "LEN(LTRIM(RTRIM([Titulo]))) > 0"
+                );
+
+                tabela.HasCheckConstraint(
+                    "CK_OBRIGACAO_FISCAL_DESCRICAO",
+                    "LEN(LTRIM(RTRIM([Descricao]))) > 0"
+                );
+
+                tabela.HasCheckConstraint(
+                    "CK_OBRIGACAO_FISCAL_COMPETENCIA",
+                    "[Competencia] IS NULL OR DAY([Competencia]) = 1"
+                );
+            });
+
+            // =========================================
+            // ÍNDICES
+            // =========================================
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.Ativo,
+                    e.DataVencimento
+                },
+                "IX_OBRIGACAO_FISCAL_ATIVO_VENCIMENTO"
+            );
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.TemaId,
+                    e.DataVencimento
+                },
+                "IX_OBRIGACAO_FISCAL_TEMA_VENCIMENTO"
+            );
+
+            // =========================================
+            // PROPRIEDADES
+            // =========================================
+
+            entity.Property(e => e.ObrigacaoFiscalId)
+                .HasDefaultValueSql("(newsequentialid())")
+                .HasColumnName("ObrigacaoFiscal_Id");
+
+            entity.Property(e => e.AutorUsuarioId)
+                .HasColumnName("AutorUsuario_Id");
+
+            entity.Property(e => e.TemaId)
+                .HasColumnName("Tema_Id");
+
+            entity.Property(e => e.Titulo)
+                .HasMaxLength(150)
+                .IsRequired();
+
+            entity.Property(e => e.Descricao)
+                .HasColumnType("nvarchar(max)")
+                .IsRequired();
+
+            entity.Property(e => e.DataVencimento)
+                .HasColumnType("date");
+
+            entity.Property(e => e.Competencia)
+                .HasColumnType("date");
+
+            entity.Property(e => e.Ativo)
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.DataCriacao)
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.Property(e => e.DataAtualizacao)
+                .HasColumnType("datetime2");
+
+            // =========================================
+            // RELACIONAMENTO COM USUARIO
+            // =========================================
+
+            entity.HasOne(d => d.AutorUsuario)
+                .WithMany(p => p.ObrigacaoFiscais)
+                .HasForeignKey(d => d.AutorUsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_OBRIGACAO_FISCAL_USUARIO"
+                );
+
+            // =========================================
+            // RELACIONAMENTO COM TEMA
+            // =========================================
+
+            entity.HasOne(d => d.Tema)
+                .WithMany(p => p.ObrigacaoFiscais)
+                .HasForeignKey(d => d.TemaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_OBRIGACAO_FISCAL_TEMA"
+                );
+        });
+        modelBuilder.Entity<FavoritoArtigo>(entity =>
+        {
+            entity.HasKey(e => e.FavoritoArtigoId)
+                .HasName("PK_FAVORITO_ARTIGO");
+
+            entity.ToTable("FAVORITO_ARTIGO");
+
+            entity.HasIndex(
+                e => new { e.UsuarioId, e.ArtigoId },
+                "UQ_FAVORITO_ARTIGO")
+                .IsUnique();
+
+            entity.HasIndex(
+                e => new { e.UsuarioId, e.DataCriacao },
+                "IX_FAVORITO_ARTIGO_USUARIO_DATA")
+                .IsDescending(false, true);
+
+            entity.Property(e => e.FavoritoArtigoId)
+                .HasDefaultValueSql("(newsequentialid())")
+                .HasColumnName("FavoritoArtigo_Id");
+
+            entity.Property(e => e.UsuarioId)
+                .HasColumnName("Usuario_Id");
+
+            entity.Property(e => e.ArtigoId)
+                .HasColumnName("Artigo_Id");
+
+            entity.Property(e => e.DataCriacao)
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.Usuario)
+                .WithMany(p => p.FavoritoArtigos)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FAVORITO_ARTIGO_USUARIO");
+
+            entity.HasOne(d => d.Artigo)
+                .WithMany(p => p.FavoritoArtigos)
+                .HasForeignKey(d => d.ArtigoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FAVORITO_ARTIGO_ARTIGO");
+        });
+        modelBuilder.Entity<HistoricoLeitura>(entity =>
+        {
+            entity.HasKey(e => e.HistoricoLeituraId)
+                .HasName("PK_HISTORICO_LEITURA");
+
+            entity.ToTable("HISTORICO_LEITURA", tabela =>
+            {
+                tabela.HasCheckConstraint(
+                    "CK_HISTORICO_LEITURA_QUANTIDADE",
+                    "[QuantidadeAcessos] >= 1");
+            });
+
+            entity.HasIndex(
+                e => new { e.UsuarioId, e.ArtigoId },
+                "UQ_HISTORICO_LEITURA")
+                .IsUnique();
+
+            entity.HasIndex(
+                e => new { e.UsuarioId, e.DataUltimoAcesso },
+                "IX_HISTORICO_LEITURA_USUARIO_DATA")
+                .IsDescending(false, true);
+
+            entity.Property(e => e.HistoricoLeituraId)
+                .HasDefaultValueSql("(newsequentialid())")
+                .HasColumnName("HistoricoLeitura_Id");
+
+            entity.Property(e => e.UsuarioId)
+                .HasColumnName("Usuario_Id");
+
+            entity.Property(e => e.ArtigoId)
+                .HasColumnName("Artigo_Id");
+
+            entity.Property(e => e.DataPrimeiroAcesso)
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.Property(e => e.DataUltimoAcesso)
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.Property(e => e.QuantidadeAcessos)
+                .HasDefaultValue(1);
+
+            entity.HasOne(d => d.Usuario)
+                .WithMany(p => p.HistoricoLeituras)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HISTORICO_LEITURA_USUARIO");
+
+            entity.HasOne(d => d.Artigo)
+                .WithMany(p => p.HistoricoLeituras)
+                .HasForeignKey(d => d.ArtigoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HISTORICO_LEITURA_ARTIGO");
+        });
         modelBuilder.Entity<Artigo>(entity =>
         {
             entity.ToTable("ARTIGO");
@@ -258,7 +582,44 @@ public partial class IntegraCertaconContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_USUARIO_PERFIL_USUARIO");
         });
+        modelBuilder.Entity<GlossarioFiscal>(entity =>
+        {
+            entity.HasKey(e => e.GlossarioFiscalId)
+                .HasName("PK_GLOSSARIO_FISCAL");
 
+            entity.ToTable("GLOSSARIO_FISCAL");
+
+            entity.HasIndex(e => e.Termo, "UQ_GLOSSARIO_FISCAL_TERMO")
+                .IsUnique();
+
+            entity.Property(e => e.GlossarioFiscalId)
+                .HasDefaultValueSql("(newsequentialid())")
+                .HasColumnName("GlossarioFiscal_Id");
+
+            entity.Property(e => e.AutorUsuarioId)
+                .HasColumnName("AutorUsuario_Id");
+
+            entity.Property(e => e.Termo)
+                .HasMaxLength(100);
+
+            entity.Property(e => e.Significado)
+                .HasMaxLength(250);
+
+            entity.Property(e => e.Descricao)
+                .HasColumnType("nvarchar(max)");
+
+            entity.Property(e => e.Ativo)
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.DataCriacao)
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.AutorUsuario)
+                .WithMany(p => p.GlossarioFiscais)
+                .HasForeignKey(d => d.AutorUsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_GLOSSARIO_FISCAL_USUARIO");
+        });
         OnModelCreatingPartial(modelBuilder);
     }
 

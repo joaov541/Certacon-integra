@@ -1,108 +1,349 @@
-
 import "./Notasfiscais.css";
-import { useState, useEffect, useRef } from "react";
+
+import {
+    useState,
+    useEffect,
+    useRef,
+    useCallback
+} from "react";
+
 import { requisicaoApi } from "../../services/api";
 
-import CasaBranca from "../../assets/Icones/CasaBranca.png";
-import LivroBranco from "../../assets/Icones/LivroBranco.png";
-import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
-import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
-import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import SairBranco from "../../assets/Icones/SairBranco.png";
+import usePermissoes from "../../hooks/usePermissoes";
+import usePesquisaLayout from "../../hooks/usePesquisaLayout";
+
 import Lixeira from "../../assets/Icones/Lixeira.png";
-import LogoNome from "../../assets/Icones/LogoNome.png";
-import LogoNomeMobile from "../../assets/Icones/LogoNomeMobile.png";
 import Calendario from "../../assets/Icones/calendario.png";
 
-import Header from "../../components/Header/header";
-import HeaderDesktop from "../../components/Header/headerDesktop";
+const itensPorPagina = 4;
 
-import { Link, useNavigate } from "react-router-dom";
-
-// Perfis do usuário autenticado (controle visual; API valida o JWT).
-function obterPerfisUsuario() {
-    try {
-        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-        const perfisSalvos = JSON.parse(localStorage.getItem("perfis") || "[]");
-        return Array.isArray(usuario.perfis) && usuario.perfis.length
-            ? usuario.perfis
-            : Array.isArray(perfisSalvos) ? perfisSalvos : [];
-    } catch {
-        return [];
-    }
-}
+const statusFormatados = {
+    IMPORTADA: "Importada",
+    VALIDADA: "Validada",
+    REJEITADA: "Rejeitada",
+    PROCESSADO: "Processada",
+    PROCESSADA: "Processada",
+    PENDENTE: "Pendente",
+    PROCESSANDO: "Processando",
+    ERRO: "Erro",
+    ARQUIVADA: "Arquivada",
+    CANCELADA: "Cancelada",
+    AUTENTICADA: "Autenticada"
+};
 
 function NotasFiscais() {
 
-    const navigate = useNavigate();
+    // =========================================
+    // PERMISSÕES DINÂMICAS
+    // =========================================
 
-    // REFERÊNCIA DO INPUT DE ARQUIVO
+    const {
+        autenticado,
+        temPermissao,
+        carregando: carregandoPermissoes,
+        erro: erroPermissoes,
+        atualizar
+    } = usePermissoes();
+
+    const podeVerTodas =
+        autenticado &&
+        temPermissao("nota.ler.todas");
+
+    const podeVerProprias =
+        autenticado &&
+        temPermissao("nota.ler.proprias");
+
+    const podeVisualizar =
+        podeVerTodas || podeVerProprias;
+
+    const podeImportarXml =
+        autenticado &&
+        temPermissao("nota.importar");
+
+    const podeExcluir =
+        autenticado &&
+        temPermissao("nota.arquivar");
+
+    const acessoLiberado =
+        podeVisualizar &&
+        !carregandoPermissoes &&
+        !erroPermissoes;
+
+    // =========================================
+    // REFERÊNCIAS
+    // =========================================
+
     const inputArquivoRef = useRef(null);
 
-    // ESTADOS
+    const requisicaoAtualRef = useRef(0);
+
+    const operacaoRef = useRef(false);
+
+    // =========================================
+    // ESTADOS DA LISTAGEM
+    // =========================================
+
     const [notas, setNotas] = useState([]);
-    const [pesquisa, setPesquisa] = useState("");
-    const [cliente, setCliente] = useState("Todos");
-    const [status, setStatus] = useState("Todos");
 
-    const [dataInicio, setDataInicio] = useState("");
-    const [dataFim, setDataFim] = useState("");
-    const [buscaRealizada, setBuscaRealizada] = useState(false);
+    const [pesquisa, setPesquisa] =
+        useState("");
 
-    const [pagina, setPagina] = useState(1);
-    const [carregando, setCarregando] = useState(true);
-    const [erro, setErro] = useState("");
+    const [cliente, setCliente] =
+        useState("Todos");
 
+    const [status, setStatus] =
+        useState("Todos");
+
+    const [dataInicio, setDataInicio] =
+        useState("");
+
+    const [dataFim, setDataFim] =
+        useState("");
+
+    const [periodoAplicado, setPeriodoAplicado] =
+        useState({
+            inicio: "",
+            fim: ""
+        });
+
+    const [pagina, setPagina] =
+        useState(1);
+
+    const [carregando, setCarregando] =
+        useState(true);
+
+    const [erro, setErro] =
+        useState("");
+
+    const [erroPeriodo, setErroPeriodo] =
+        useState("");
+
+    // =========================================
     // ESTADOS DA IMPORTAÇÃO XML
-    const [importando, setImportando] = useState(false);
-    const [mensagemImportacao, setMensagemImportacao] = useState("");
-    const [erroImportacao, setErroImportacao] = useState("");
-
-    const itensPorPagina = 4;
-
-    // DADOS DO USUÁRIO LOGADO
-    const perfis = obterPerfisUsuario();
-    const podeExcluir = perfis.includes("Administrador");
-    const podeImportarXml = perfis.some(perfil => [
-        "Coordenador Fiscal",
-        "Analista SPED",
-        "Analista de Documentos Fiscais",
-        "Analista de Reforma Tributária",
-        "Cliente"
-    ].includes(perfil));
-
-
-    // =========================================
-    // CARREGAR NOTAS DA API
     // =========================================
 
-    async function carregarNotas() {
+    const [importando, setImportando] =
+        useState(false);
+
+    const [mensagemImportacao, setMensagemImportacao] =
+        useState("");
+
+    const [erroImportacao, setErroImportacao] =
+        useState("");
+
+    // =========================================
+    // ESTADOS DO ARQUIVAMENTO
+    // =========================================
+
+    const [arquivando, setArquivando] =
+        useState(null);
+
+    // =========================================
+    // SESSÃO ATUAL
+    // =========================================
+
+    const token =
+        localStorage.getItem("token");
+
+    // =========================================
+    // PESQUISA DO HEADER COMPARTILHADO
+    // =========================================
+
+    const alterarPesquisa = useCallback(valor => {
+
+        setPesquisa(valor);
+        setPagina(1);
+
+    }, []);
+
+    usePesquisaLayout(
+        pesquisa,
+        alterarPesquisa
+    );
+
+    // =========================================
+    // NORMALIZAÇÃO DOS DADOS
+    // =========================================
+
+    function obterIdNota(nota) {
+
+        return (
+            nota.notaFiscalId ??
+            nota.NotaFiscalId ??
+            nota.id
+        );
+
+    }
+
+    function obterCnpjDestinatario(nota) {
+
+        return (
+            nota.cnpjDestinatario ??
+            nota.cnpjdestinatario ??
+            nota.CnpjDestinatario ??
+            ""
+        );
+
+    }
+
+    function obterCnpjEmitente(nota) {
+
+        return (
+            nota.cnpjEmitente ??
+            nota.cnpjemitente ??
+            nota.CnpjEmitente ??
+            ""
+        );
+
+    }
+
+    function normalizarTexto(texto) {
+
+        return String(texto ?? "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
+
+    }
+
+    function normalizarDocumento(documento) {
+
+        return String(documento ?? "")
+            .replace(/[^a-zA-Z0-9]/g, "")
+            .toUpperCase();
+
+    }
+
+    function normalizarStatus(statusNota) {
+
+        return String(statusNota ?? "")
+            .trim()
+            .toUpperCase();
+
+    }
+
+    // =========================================
+    // CARREGAR NOTAS FISCAIS
+    // =========================================
+
+    const carregarNotas = useCallback(async () => {
+
+        const numeroRequisicao =
+            ++requisicaoAtualRef.current;
+
+        if (
+            !acessoLiberado ||
+            localStorage.getItem("token") !== token
+        ) {
+
+            setNotas([]);
+            setCarregando(false);
+
+            return false;
+
+        }
 
         try {
+
             setCarregando(true);
             setErro("");
 
-            const dados = await requisicaoApi("/api/NotasFiscais");
+            const dados = await requisicaoApi(
+                "/api/NotasFiscais"
+            );
 
-            setNotas(Array.isArray(dados) ? dados : []);
+            if (
+                numeroRequisicao !==
+                requisicaoAtualRef.current ||
+                localStorage.getItem("token") !== token
+            ) {
+
+                return false;
+
+            }
+
+            if (!Array.isArray(dados)) {
+
+                throw new Error(
+                    "A API retornou uma listagem inválida."
+                );
+
+            }
+
+            // A API é responsável por retornar
+            // somente as notas autorizadas ao usuário.
+
+            setNotas(dados);
+
+            return true;
 
         } catch (error) {
 
-            console.error("Erro ao carregar notas:", error);
+            if (
+                numeroRequisicao !==
+                requisicaoAtualRef.current
+            ) {
 
-            setErro(
-                error.message || "Não foi possível carregar as notas fiscais."
+                return false;
+
+            }
+
+            console.error(
+                "Erro ao carregar notas fiscais:",
+                error
             );
 
+            setNotas([]);
+
+            setErro(
+                error.message ||
+                "Não foi possível carregar as notas fiscais."
+            );
+
+            return false;
+
         } finally {
-            setCarregando(false);
+
+            if (
+                numeroRequisicao ===
+                requisicaoAtualRef.current
+            ) {
+
+                setCarregando(false);
+
+            }
+
         }
-    }
+
+    }, [
+        acessoLiberado,
+        token
+    ]);
 
     useEffect(() => {
-        carregarNotas();
-    }, []);
 
+        setNotas([]);
+        setPagina(1);
+
+        setCliente("Todos");
+        setStatus("Todos");
+
+        setMensagemImportacao("");
+        setErroImportacao("");
+
+        carregarNotas();
+
+        return () => {
+
+            requisicaoAtualRef.current += 1;
+
+        };
+
+    }, [
+        token,
+        carregarNotas
+    ]);
 
     // =========================================
     // IMPORTAR XML
@@ -110,84 +351,146 @@ function NotasFiscais() {
 
     async function importarXml(event) {
 
-        const arquivo = event.target.files?.[0];
+        const input = event.currentTarget;
 
-        if (!arquivo) return;
+        const arquivo = input.files?.[0];
+
+        // Limpa o input para permitir selecionar
+        // novamente o mesmo arquivo.
+
+        input.value = "";
+
+        if (
+            !arquivo ||
+            !acessoLiberado ||
+            !podeImportarXml ||
+            operacaoRef.current
+        ) {
+
+            return;
+
+        }
 
         setMensagemImportacao("");
         setErroImportacao("");
 
         // VALIDAR EXTENSÃO
-        if (!arquivo.name.toLowerCase().endsWith(".xml")) {
+
+        if (
+            !arquivo.name
+                .toLowerCase()
+                .endsWith(".xml")
+        ) {
 
             setErroImportacao(
                 "Selecione um arquivo com extensão .xml."
             );
 
-            event.target.value = "";
             return;
+
         }
 
-        // VALIDAR TAMANHO MÁXIMO DE 5 MB
+        // VALIDAR TAMANHO
+
+        if (arquivo.size === 0) {
+
+            setErroImportacao(
+                "O arquivo XML está vazio."
+            );
+
+            return;
+
+        }
+
         if (arquivo.size > 5_000_000) {
 
             setErroImportacao(
                 "O arquivo XML deve ter no máximo 5 MB."
             );
 
-            event.target.value = "";
             return;
+
         }
 
         // CRIAR FORMULÁRIO
-        const formulario = new FormData();
 
-        // O nome deve ser exatamente "arquivo"
-        // conforme o parâmetro IFormFile do controller.
-        formulario.append("arquivo", arquivo);
+        const formulario =
+            new FormData();
+
+        formulario.append(
+            "arquivo",
+            arquivo
+        );
 
         try {
 
+            operacaoRef.current = true;
             setImportando(true);
 
-            // ENVIAR XML PARA A API
-            const resultado = await requisicaoApi(
-                "/api/NotasFiscais/upload",
-                {
-                    method: "POST",
-                    body: formulario
-                }
+            const resultado =
+                await requisicaoApi(
+
+                    "/api/NotasFiscais/upload",
+
+                    {
+                        method: "POST",
+                        body: formulario
+                    }
+
+                );
+
+            if (
+                localStorage.getItem("token") !== token
+            ) {
+
+                return;
+
+            }
+
+            setMensagemImportacao(
+
+                resultado?.mensagem ||
+
+                "Nota fiscal importada com sucesso!"
+
             );
-
-            // ATUALIZAR LISTAGEM
-            const dados = await requisicaoApi("/api/NotasFiscais");
-
-            setNotas(Array.isArray(dados) ? dados : []);
 
             setPagina(1);
 
-            setMensagemImportacao(
-                resultado?.mensagem ||
-                "Nota fiscal importada com sucesso!"
-            );
+            // Atualiza a listagem somente após
+            // a importação ser confirmada pela API.
+
+            await carregarNotas();
 
         } catch (error) {
 
-            console.error("Erro ao importar XML:", error);
-
-            setErroImportacao(
-                error.message || "Não foi possível importar o XML."
+            console.error(
+                "Erro ao importar XML:",
+                error
             );
+
+            if (
+                localStorage.getItem("token") === token
+            ) {
+
+                setErroImportacao(
+
+                    error.message ||
+
+                    "Não foi possível importar o XML."
+
+                );
+
+            }
 
         } finally {
 
+            operacaoRef.current = false;
             setImportando(false);
 
-            // LIMPAR INPUT PARA PERMITIR SELECIONAR O MESMO ARQUIVO
-            event.target.value = "";
         }
-    }
 
+    }
 
     // =========================================
     // FORMATAR DATA
@@ -195,17 +498,29 @@ function NotasFiscais() {
 
     function formatarData(data) {
 
-        if (!data) return "Não informada";
+        if (!data) {
 
-        const partes = data.split("T")[0].split("-");
+            return "Não informada";
 
-        if (partes.length !== 3) return "Não informada";
+        }
+
+        const dataTexto =
+            String(data).split("T")[0];
+
+        const partes =
+            dataTexto.split("-");
+
+        if (partes.length !== 3) {
+
+            return "Não informada";
+
+        }
 
         const [ano, mes, dia] = partes;
 
         return `${dia}/${mes}/${ano}`;
-    }
 
+    }
 
     // =========================================
     // FORMATAR VALOR
@@ -213,541 +528,1362 @@ function NotasFiscais() {
 
     function formatarValor(valor) {
 
-        return Number(valor || 0).toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL"
-        });
+        const numero =
+            Number(valor ?? 0);
+
+        if (!Number.isFinite(numero)) {
+
+            return "Não informado";
+
+        }
+
+        return numero.toLocaleString(
+
+            "pt-BR",
+
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+
+        );
+
     }
 
+    // =========================================
+    // FORMATAR CNPJ NUMÉRICO OU ALFANUMÉRICO
+    // =========================================
+
+    function formatarCnpj(cnpj) {
+
+        const documento =
+            normalizarDocumento(cnpj);
+
+        if (documento.length !== 14) {
+
+            return cnpj || "Não informado";
+
+        }
+
+        return documento.replace(
+
+            /^(.{2})(.{3})(.{3})(.{4})(.{2})$/,
+
+            "$1.$2.$3/$4-$5"
+
+        );
+
+    }
 
     // =========================================
     // TRADUZIR STATUS
     // =========================================
 
-    function formatarStatus(status) {
+    function formatarStatus(statusNota) {
 
-        const situacao = (status || "").toUpperCase();
+        const situacao =
+            normalizarStatus(statusNota);
 
-        const statusFormatados = {
-            IMPORTADA: "Importada",
-            PROCESSADO: "Processada",
-            PENDENTE: "Pendente",
-            PROCESSANDO: "Processando",
-            ERRO: "Erro",
-            ARQUIVADA: "Arquivada",
-            CANCELADA: "Cancelada",
-            AUTENTICADA: "Autenticada"
-        };
+        return (
 
-        return statusFormatados[situacao] || status || "Não informado";
+            statusFormatados[situacao] ||
+
+            statusNota ||
+
+            "Não informado"
+
+        );
+
     }
-
 
     // =========================================
     // CLASSE VISUAL DO STATUS
     // =========================================
 
-    function classeStatus(status) {
+    function classeStatus(statusNota) {
 
-        const situacao = (status || "").toUpperCase();
+        const situacao =
+            normalizarStatus(statusNota);
 
         if (
-            situacao === "IMPORTADA" ||
-            situacao === "PROCESSADO" ||
-            situacao === "AUTENTICADA"
+
+            [
+                "IMPORTADA",
+                "VALIDADA",
+                "PROCESSADO",
+                "PROCESSADA",
+                "AUTENTICADA"
+            ].includes(situacao)
+
         ) {
+
             return "status-autenticada";
+
         }
 
         if (
-            situacao === "CANCELADA" ||
-            situacao === "ARQUIVADA" ||
-            situacao === "ERRO"
+
+            [
+                "CANCELADA",
+                "ARQUIVADA",
+                "REJEITADA",
+                "ERRO"
+            ].includes(situacao)
+
         ) {
+
             return "status-cancelada";
+
         }
 
         return "status-pendente";
-    }
 
+    }
 
     // =========================================
     // CLIENTES DISPONÍVEIS
     // =========================================
 
     const clientesDisponiveis = [
+
         ...new Set(
+
             notas
-                .map(nota => nota.cnpjdestinatario || nota.cnpjemitente)
+
+                .map(nota =>
+                    normalizarDocumento(
+                        obterCnpjDestinatario(nota)
+                    )
+                )
+
                 .filter(Boolean)
+
         )
+
+    ].sort();
+
+    // =========================================
+    // STATUS DISPONÍVEIS
+    // =========================================
+
+    const statusDisponiveis = [
+
+        ...new Set(
+
+            Object.values(statusFormatados)
+
+        )
+
     ];
 
-
     // =========================================
-    // FILTRAR NOTAS
+    // FILTRAR NOTAS FISCAIS
     // =========================================
 
-    const notasFiltradas = notas.filter(nota => {
+    const notasFiltradas = acessoLiberado
 
-        const chave = (nota.chaveAcesso || "").toLowerCase();
+        ? notas.filter(nota => {
 
-        const nomeCliente = (
-            nota.cnpjdestinatario || nota.cnpjemitente || ""
-        ).toLowerCase();
+            const textoPesquisa =
+                normalizarTexto(pesquisa);
 
-        const textoPesquisa = pesquisa.toLowerCase();
+            const documentoPesquisa =
+                normalizarDocumento(pesquisa);
 
-        const correspondePesquisa =
-            chave.includes(textoPesquisa) ||
-            nomeCliente.includes(textoPesquisa);
+            const chave =
+                normalizarTexto(nota.chaveAcesso);
 
-        const clienteNota =
-            nota.cnpjdestinatario || nota.cnpjemitente || "";
+            const destinatario =
+                obterCnpjDestinatario(nota);
 
-        const correspondeCliente =
-            cliente === "Todos" || clienteNota === cliente;
+            const emitente =
+                obterCnpjEmitente(nota);
 
-        const correspondeStatus =
-            status === "Todos" ||
-            formatarStatus(nota.status) === status;
+            const cnpjCliente =
+                normalizarDocumento(destinatario);
 
-        const dataNota = nota.dataEmissao
-            ? nota.dataEmissao.split("T")[0]
-            : "";
+            const nomeCliente =
+                normalizarTexto(
 
-        const correspondeData =
-            !buscaRealizada ||
-            (
-                (!dataInicio || dataNota >= dataInicio) &&
-                (!dataFim || dataNota <= dataFim)
+                    nota.razaoSocialDestinatario ??
+
+                    nota.nomeDestinatario ??
+
+                    nota.razaoSocial ??
+
+                    ""
+
+                );
+
+            const correspondePesquisa =
+
+                !textoPesquisa ||
+
+                chave.includes(textoPesquisa) ||
+
+                nomeCliente.includes(textoPesquisa) ||
+
+                normalizarTexto(
+                    nota.numero
+                ).includes(textoPesquisa) ||
+
+                normalizarTexto(
+                    destinatario
+                ).includes(textoPesquisa) ||
+
+                normalizarTexto(
+                    emitente
+                ).includes(textoPesquisa) ||
+
+                (
+
+                    Boolean(documentoPesquisa) &&
+
+                    (
+
+                        normalizarDocumento(
+                            destinatario
+                        ).includes(documentoPesquisa) ||
+
+                        normalizarDocumento(
+                            emitente
+                        ).includes(documentoPesquisa) ||
+
+                        normalizarDocumento(
+                            nota.chaveAcesso
+                        ).includes(documentoPesquisa)
+
+                    )
+
+                );
+
+            const correspondeCliente =
+
+                cliente === "Todos" ||
+
+                cnpjCliente === cliente;
+
+            const correspondeStatus =
+
+                status === "Todos" ||
+
+                formatarStatus(nota.status) === status;
+
+            const dataNota = nota.dataEmissao
+
+                ? String(nota.dataEmissao).split("T")[0]
+
+                : "";
+
+            const correspondeData =
+
+                (
+
+                    !periodoAplicado.inicio &&
+
+                    !periodoAplicado.fim
+
+                ) ||
+
+                (
+
+                    Boolean(dataNota) &&
+
+                    (
+
+                        !periodoAplicado.inicio ||
+
+                        dataNota >= periodoAplicado.inicio
+
+                    ) &&
+
+                    (
+
+                        !periodoAplicado.fim ||
+
+                        dataNota <= periodoAplicado.fim
+
+                    )
+
+                );
+
+            return (
+
+                correspondePesquisa &&
+
+                correspondeCliente &&
+
+                correspondeStatus &&
+
+                correspondeData
+
             );
 
-        return (
-            correspondePesquisa &&
-            correspondeCliente &&
-            correspondeStatus &&
-            correspondeData
-        );
-    });
+        })
 
+        : [];
 
     // =========================================
     // PAGINAÇÃO
     // =========================================
 
     const totalPaginas = Math.max(
+
         1,
-        Math.ceil(notasFiltradas.length / itensPorPagina)
+
+        Math.ceil(
+            notasFiltradas.length / itensPorPagina
+        )
+
     );
 
-    const notasPagina = notasFiltradas.slice(
-        (pagina - 1) * itensPorPagina,
-        pagina * itensPorPagina
-    );
+    const paginaAtual =
+        Math.min(pagina, totalPaginas);
 
+    const notasPagina =
+        notasFiltradas.slice(
+
+            (paginaAtual - 1) * itensPorPagina,
+
+            paginaAtual * itensPorPagina
+
+        );
 
     // =========================================
-    // BUSCAR POR PERÍODO
+    // APLICAR FILTRO DE PERÍODO
     // =========================================
 
     function buscarNotas() {
 
-        setBuscaRealizada(true);
+        setErroPeriodo("");
+
+        if (
+
+            dataInicio &&
+
+            dataFim &&
+
+            dataInicio > dataFim
+
+        ) {
+
+            setErroPeriodo(
+
+                "A data inicial não pode ser maior que a data final."
+
+            );
+
+            return;
+
+        }
+
+        setPeriodoAplicado({
+
+            inicio: dataInicio,
+
+            fim: dataFim
+
+        });
+
         setPagina(1);
+
     }
 
+    // =========================================
+    // LIMPAR FILTROS
+    // =========================================
+
+    function limparFiltros() {
+
+        setPesquisa("");
+        setCliente("Todos");
+        setStatus("Todos");
+
+        setDataInicio("");
+        setDataFim("");
+
+        setPeriodoAplicado({
+
+            inicio: "",
+            fim: ""
+
+        });
+
+        setErroPeriodo("");
+
+        setPagina(1);
+
+    }
 
     // =========================================
-    // ARQUIVAR NOTA
+    // ABRIR CALENDÁRIO
     // =========================================
 
-    async function excluirNota(id) {
+    function abrirCalendario(event) {
+
+        const input =
+            event.currentTarget.previousElementSibling;
+
+        if (!input) return;
+
+        try {
+
+            if (
+                typeof input.showPicker === "function"
+            ) {
+
+                input.showPicker();
+
+            } else {
+
+                input.focus();
+
+            }
+
+        } catch {
+
+            input.focus();
+
+        }
+
+    }
+
+    // =========================================
+    // ARQUIVAR NOTA FISCAL
+    // =========================================
+
+    async function excluirNota(nota) {
+
+        if (
+
+            !acessoLiberado ||
+
+            !podeExcluir ||
+
+            operacaoRef.current ||
+
+            normalizarStatus(nota.status) === "ARQUIVADA"
+
+        ) {
+
+            return;
+
+        }
+
+        const id =
+            obterIdNota(nota);
+
+        if (!id) {
+
+            alert(
+
+                "Não foi possível identificar a nota fiscal."
+
+            );
+
+            return;
+
+        }
 
         const confirmar = window.confirm(
+
             "Deseja realmente arquivar esta nota fiscal?"
+
         );
 
         if (!confirmar) return;
 
         try {
 
-            await requisicaoApi(`/api/NotasFiscais/${id}`, {
-                method: "DELETE"
-            });
+            operacaoRef.current = true;
+            setArquivando(id);
 
-            setNotas(lista =>
-                lista.map(nota =>
-                    nota.notaFiscalId === id
-                        ? { ...nota, status: "ARQUIVADA" }
-                        : nota
-                )
+            await requisicaoApi(
+
+                `/api/NotasFiscais/${id}`,
+
+                {
+                    method: "DELETE"
+                }
+
             );
 
-            alert("Nota fiscal arquivada com sucesso!");
+            if (
+                localStorage.getItem("token") !== token
+            ) {
+
+                return;
+
+            }
+
+            setNotas(lista =>
+
+                lista.map(item =>
+
+                    obterIdNota(item) === id
+
+                        ? {
+
+                            ...item,
+
+                            status: "ARQUIVADA"
+
+                        }
+
+                        : item
+
+                )
+
+            );
+
+            alert(
+
+                "Nota fiscal arquivada com sucesso!"
+
+            );
+
+            await carregarNotas();
 
         } catch (error) {
 
-            console.error("Erro ao arquivar nota:", error);
+            console.error(
+
+                "Erro ao arquivar nota fiscal:",
+
+                error
+
+            );
 
             alert(
-                error.message || "Não foi possível arquivar a nota."
+
+                error.message ||
+
+                "Não foi possível arquivar a nota."
+
             );
+
+        } finally {
+
+            operacaoRef.current = false;
+
+            setArquivando(null);
+
         }
+
     }
 
+    // =========================================
+    // CONTROLE DA LISTAGEM
+    // =========================================
+
+    const carregandoLista =
+
+        carregando ||
+
+        carregandoPermissoes;
+
+    const totalColunas =
+        podeExcluir ? 6 : 5;
+
+    const operacaoEmAndamento =
+
+        importando ||
+
+        arquivando !== null;
 
     // =========================================
-    // SAIR DO SISTEMA
-    // =========================================
-
-    function sairSistema() {
-
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        localStorage.removeItem("perfis");
-
-        navigate("/login", { replace: true });
-    }
-
-
-    // =========================================
-    // TELA
+    // RENDERIZAÇÃO
+    //
+    // O Sidebar e o Header são fornecidos
+    // exclusivamente pelo LayoutSistema.
     // =========================================
 
     return (
 
         <div className="pagina-notas">
 
-            <Sidebar sairSistema={sairSistema} />
-
             <main className="principal-notas">
-
-                <HeaderDesktop
-                    pesquisa={pesquisa}
-                    setPesquisa={setPesquisa}
-                />
-
-                <Header
-                    pesquisa={pesquisa}
-                    setPesquisa={setPesquisa}
-                />
 
                 <section className="conteudo-notas">
 
-                    <h1>Notas Fiscais</h1>
+                    <h1>
 
+                        Notas Fiscais
 
-                    {/* IMPORTAÇÃO DE XML */}
+                    </h1>
 
-                    {podeImportarXml && (
-                    <div className="area-importacao-notas">
+                    {/* CARREGAMENTO DAS PERMISSÕES */}
 
-                        <input
-                            type="file"
-                            accept=".xml,application/xml,text/xml"
-                            ref={inputArquivoRef}
-                            onChange={importarXml}
-                            hidden
-                        />
+                    {carregandoPermissoes ? (
 
-                        <button
-                            type="button"
-                            className="botao-importar-xml"
-                            onClick={() => inputArquivoRef.current?.click()}
-                            disabled={importando}
+                        <p role="status">
+
+                            Carregando permissões...
+
+                        </p>
+
+                    ) : erroPermissoes ? (
+
+                        <div
+                            className="mensagem-importacao falha"
+                            role="alert"
                         >
 
-                            {importando ? (
-                                "Importando XML..."
-                            ) : (
-                                <>
-                                    <span>+</span>
-                                    Importar XML
-                                </>
+                            <p>
+
+                                Não foi possível carregar
+                                suas permissões.
+
+                            </p>
+
+                            <button
+                                type="button"
+                                className="botao-buscar-notas"
+                                onClick={atualizar}
+                            >
+
+                                Tentar novamente
+
+                            </button>
+
+                        </div>
+
+                    ) : !podeVisualizar ? (
+
+                        <div
+                            className="mensagem-importacao falha"
+                            role="alert"
+                        >
+
+                            Você não possui permissão
+                            para visualizar notas fiscais.
+
+                        </div>
+
+                    ) : (
+
+                        <>
+
+                            {/* IMPORTAÇÃO DE XML */}
+
+                            {podeImportarXml && (
+
+                                <div className="area-importacao-notas">
+
+                                    <input
+                                        type="file"
+
+                                        accept=".xml,application/xml,text/xml"
+
+                                        ref={inputArquivoRef}
+
+                                        onChange={importarXml}
+
+                                        disabled={operacaoEmAndamento}
+
+                                        hidden
+                                    />
+
+                                    <button
+                                        type="button"
+
+                                        className="botao-importar-xml"
+
+                                        onClick={() =>
+
+                                            inputArquivoRef.current?.click()
+
+                                        }
+
+                                        disabled={
+                                            operacaoEmAndamento
+                                        }
+                                    >
+
+                                        {importando ? (
+
+                                            "Importando XML..."
+
+                                        ) : (
+
+                                            <>
+
+                                                <span>+</span>
+
+                                                Importar XML
+
+                                            </>
+
+                                        )}
+
+                                    </button>
+
+                                </div>
+
                             )}
 
-                        </button>
+                            {/* MENSAGEM DE SUCESSO */}
 
-                    </div>
-                    )}
+                            {mensagemImportacao && (
 
+                                <div
+                                    className="mensagem-importacao sucesso"
+                                    role="status"
+                                >
 
-                    {/* MENSAGEM DE SUCESSO */}
-
-                    {mensagemImportacao && (
-
-                        <div className="mensagem-importacao sucesso">
-                            {mensagemImportacao}
-                        </div>
-
-                    )}
-
-
-                    {/* MENSAGEM DE ERRO */}
-
-                    {erroImportacao && (
-
-                        <div className="mensagem-importacao falha">
-                            {erroImportacao}
-                        </div>
-
-                    )}
-
-
-                    {/* FILTROS */}
-
-                    <div className="filtros-notas">
-
-                        <div className="filtro-periodo">
-
-                            <label>Período</label>
-
-                            <div className="campo-periodo">
-
-                                <div className="campo-data-notas">
-
-                                    <input
-                                        type="date"
-                                        value={dataInicio}
-                                        onChange={(e) => setDataInicio(e.target.value)}
-                                    />
-
-                                    <img
-                                        src={Calendario}
-                                        alt="Selecionar data inicial"
-                                        onClick={(e) =>
-                                            e.currentTarget.previousElementSibling.showPicker?.()
-                                        }
-                                    />
+                                    {mensagemImportacao}
 
                                 </div>
 
-                                <span>-</span>
+                            )}
 
-                                <div className="campo-data-notas">
+                            {/* ERRO DE IMPORTAÇÃO */}
 
-                                    <input
-                                        type="date"
-                                        value={dataFim}
-                                        onChange={(e) => setDataFim(e.target.value)}
-                                    />
+                            {erroImportacao && (
 
-                                    <img
-                                        src={Calendario}
-                                        alt="Selecionar data final"
-                                        onClick={(e) =>
-                                            e.currentTarget.previousElementSibling.showPicker?.()
-                                        }
-                                    />
+                                <div
+                                    className="mensagem-importacao falha"
+                                    role="alert"
+                                >
+
+                                    {erroImportacao}
 
                                 </div>
+
+                            )}
+
+                            {/* PESQUISA */}
+
+                            <div className="pesquisa-lista-notas">
+
+                                <input
+                                    type="search"
+
+                                    placeholder="Buscar chave, CNPJ ou número da nota..."
+
+                                    aria-label="Pesquisar notas fiscais"
+
+                                    value={pesquisa}
+
+                                    onChange={event =>
+
+                                        alterarPesquisa(
+                                            event.target.value
+                                        )
+
+                                    }
+                                />
 
                             </div>
 
-                        </div>
+                            {/* FILTROS */}
 
+                            <div className="filtros-notas">
 
-                        {/* FILTRO CLIENTE */}
+                                {/* PERÍODO */}
 
-                        <div className="filtro-cliente">
+                                <div className="filtro-periodo">
 
-                            <label>Cliente</label>
+                                    <label>
 
-                            <select
-                                value={cliente}
-                                onChange={(e) => {
-                                    setCliente(e.target.value);
-                                    setPagina(1);
-                                }}
-                            >
+                                        Período
 
-                                <option value="Todos">Todos</option>
+                                    </label>
 
-                                {clientesDisponiveis.map(cnpj => (
+                                    <div className="campo-periodo">
 
-                                    <option key={cnpj} value={cnpj}>
-                                        {cnpj}
-                                    </option>
+                                        <div className="campo-data-notas">
 
-                                ))}
+                                            <input
+                                                type="date"
 
-                            </select>
+                                                aria-label="Data inicial"
 
-                        </div>
+                                                value={dataInicio}
 
+                                                onChange={event =>
+                                                    setDataInicio(
+                                                        event.target.value
+                                                    )
+                                                }
+                                            />
 
-                        {/* FILTRO STATUS */}
+                                            <button
+                                                type="button"
 
-                        <div className="filtro-status">
+                                                className="botao-calendario-notas"
 
-                            <label>Status</label>
+                                                title="Selecionar data inicial"
 
-                            <select
-                                value={status}
-                                onChange={(e) => {
-                                    setStatus(e.target.value);
-                                    setPagina(1);
-                                }}
-                            >
+                                                aria-label="Selecionar data inicial"
 
-                                <option value="Todos">Todos</option>
-                                <option value="Importada">Importada</option>
-                                <option value="Processada">Processada</option>
-                                <option value="Autenticada">Autenticada</option>
-                                <option value="Processando">Processando</option>
-                                <option value="Pendente">Pendente</option>
-                                <option value="Erro">Erro</option>
-                                <option value="Cancelada">Cancelada</option>
-                                <option value="Arquivada">Arquivada</option>
+                                                onClick={abrirCalendario}
+                                            >
 
-                            </select>
+                                                <img
+                                                    src={Calendario}
+                                                    alt=""
+                                                />
 
-                        </div>
+                                            </button>
 
-                    </div>
+                                        </div>
 
+                                        <span>-</span>
 
-                    {/* TABELA */}
+                                        <div className="campo-data-notas">
 
-                    <div className="tabela-notas-container">
+                                            <input
+                                                type="date"
 
-                        <table className="tabela-notas">
+                                                aria-label="Data final"
 
-                            <thead>
+                                                value={dataFim}
 
-                                <tr>
-                                    <th>Chave de acesso</th>
-                                    <th>Emissão</th>
-                                    <th>Cliente</th>
-                                    <th>Valor</th>
-                                    <th>Status</th>
-                                    {podeExcluir && <th>Ações</th>}
-                                </tr>
+                                                min={
+                                                    dataInicio || undefined
+                                                }
 
-                            </thead>
+                                                onChange={event =>
+                                                    setDataFim(
+                                                        event.target.value
+                                                    )
+                                                }
+                                            />
 
+                                            <button
+                                                type="button"
 
-                            <tbody>
+                                                className="botao-calendario-notas"
 
-                                {carregando ? (
+                                                title="Selecionar data final"
 
-                                    <tr>
-                                        <td colSpan={podeExcluir ? 6 : 5} className="nenhuma-nota">
-                                            Carregando notas fiscais...
-                                        </td>
-                                    </tr>
+                                                aria-label="Selecionar data final"
 
-                                ) : erro ? (
+                                                onClick={abrirCalendario}
+                                            >
 
-                                    <tr>
-                                        <td colSpan={podeExcluir ? 6 : 5} className="nenhuma-nota">
-                                            {erro}
-                                        </td>
-                                    </tr>
+                                                <img
+                                                    src={Calendario}
+                                                    alt=""
+                                                />
 
-                                ) : notasPagina.length > 0 ? (
+                                            </button>
 
-                                    notasPagina.map(nota => (
+                                        </div>
 
-                                        <tr key={nota.notaFiscalId}>
+                                    </div>
 
-                                            <td className="chave-nota">
-                                                {nota.chaveAcesso || "Não informada"}
-                                            </td>
+                                </div>
 
-                                            <td>
-                                                {formatarData(nota.dataEmissao)}
-                                            </td>
+                                {/* FILTRO CLIENTE */}
 
-                                            <td>
-                                                {nota.cnpjdestinatario || nota.cnpjemitente || "Não informado"}
-                                            </td>
+                                {podeVerTodas && (
 
-                                            <td>
-                                                {formatarValor(nota.valorTotal)}
-                                            </td>
+                                    <div className="filtro-cliente">
 
-                                            <td>
+                                        <label htmlFor="filtro-cliente-notas">
 
-                                                <span className={`status-nota ${classeStatus(nota.status)}`}>
-                                                    {formatarStatus(nota.status)}
-                                                </span>
+                                            Cliente
 
-                                            </td>
+                                        </label>
+
+                                        <select
+                                            id="filtro-cliente-notas"
+
+                                            value={cliente}
+
+                                            onChange={event => {
+
+                                                setCliente(
+                                                    event.target.value
+                                                );
+
+                                                setPagina(1);
+
+                                            }}
+                                        >
+
+                                            <option value="Todos">
+
+                                                Todos
+
+                                            </option>
+
+                                            {clientesDisponiveis.map(cnpj => (
+
+                                                <option
+                                                    key={cnpj}
+                                                    value={cnpj}
+                                                >
+
+                                                    {formatarCnpj(cnpj)}
+
+                                                </option>
+
+                                            ))}
+
+                                        </select>
+
+                                    </div>
+
+                                )}
+
+                                {/* FILTRO STATUS */}
+
+                                <div className="filtro-status">
+
+                                    <label htmlFor="filtro-status-notas">
+
+                                        Status
+
+                                    </label>
+
+                                    <select
+                                        id="filtro-status-notas"
+
+                                        value={status}
+
+                                        onChange={event => {
+
+                                            setStatus(
+                                                event.target.value
+                                            );
+
+                                            setPagina(1);
+
+                                        }}
+                                    >
+
+                                        <option value="Todos">
+
+                                            Todos
+
+                                        </option>
+
+                                        {statusDisponiveis.map(item => (
+
+                                            <option
+                                                key={item}
+                                                value={item}
+                                            >
+
+                                                {item}
+
+                                            </option>
+
+                                        ))}
+
+                                    </select>
+
+                                </div>
+
+                                {/* BOTÃO BUSCAR */}
+
+                                <button
+                                    type="button"
+
+                                    className="botao-buscar-notas"
+
+                                    onClick={buscarNotas}
+                                >
+
+                                    Buscar
+
+                                </button>
+
+                                {/* LIMPAR FILTROS */}
+
+                                <button
+                                    type="button"
+
+                                    className="botao-limpar-notas"
+
+                                    onClick={limparFiltros}
+                                >
+
+                                    Limpar
+
+                                </button>
+
+                            </div>
+
+                            {/* ERRO DE PERÍODO */}
+
+                            {erroPeriodo && (
+
+                                <div
+                                    className="mensagem-importacao falha"
+                                    role="alert"
+                                >
+
+                                    {erroPeriodo}
+
+                                </div>
+
+                            )}
+
+                            {/* ERRO AO CARREGAR NOTAS */}
+
+                            {erro && (
+
+                                <div
+                                    className="mensagem-importacao falha"
+                                    role="alert"
+                                >
+
+                                    <p>{erro}</p>
+
+                                    <button
+                                        type="button"
+
+                                        className="botao-buscar-notas"
+
+                                        onClick={carregarNotas}
+                                    >
+
+                                        Tentar novamente
+
+                                    </button>
+
+                                </div>
+
+                            )}
+
+                            {/* TOTAL DE REGISTROS */}
+
+                            {!carregandoLista && !erro && (
+
+                                <div className="total-notas">
+
+                                    {notasFiltradas.length}
+
+                                    {" "}
+
+                                    {notasFiltradas.length === 1
+
+                                        ? "nota fiscal encontrada"
+
+                                        : "notas fiscais encontradas"
+
+                                    }
+
+                                </div>
+
+                            )}
+
+                            {/* TABELA */}
+
+                            <div className="tabela-notas-container">
+
+                                <table className="tabela-notas">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Chave de acesso</th>
+
+                                            <th>Emissão</th>
+
+                                            <th>Cliente</th>
+
+                                            <th>Valor</th>
+
+                                            <th>Status</th>
 
                                             {podeExcluir && (
-                                                <td>
-                                                    {nota.status !== "ARQUIVADA" && (
-                                                        <button
-                                                            type="button"
-                                                            className="botao-excluir-nota"
-                                                            title="Arquivar nota fiscal"
-                                                            onClick={() => excluirNota(nota.notaFiscalId)}
-                                                        >
-                                                            <img src={Lixeira} alt="Arquivar" />
-                                                        </button>
-                                                    )}
-                                                </td>
+
+                                                <th>Ações</th>
+
                                             )}
 
                                         </tr>
 
-                                    ))
+                                    </thead>
 
-                                ) : (
+                                    <tbody>
 
-                                    <tr>
-                                        <td colSpan={podeExcluir ? 6 : 5} className="nenhuma-nota">
-                                            Nenhuma nota fiscal encontrada.
-                                        </td>
-                                    </tr>
+                                        {carregandoLista ? (
 
-                                )}
+                                            <tr>
 
-                            </tbody>
+                                                <td
+                                                    colSpan={totalColunas}
 
-                        </table>
+                                                    className="nenhuma-nota"
+                                                >
 
-                    </div>
+                                                    Carregando notas fiscais...
 
+                                                </td>
 
-                    {/* PAGINAÇÃO */}
+                                            </tr>
 
-                    {!carregando && !erro && notasFiltradas.length > 0 && (
+                                        ) : erro ? (
 
-                        <div className="paginacao-notas">
+                                            <tr>
 
-                            <button
-                                disabled={pagina === 1}
-                                onClick={() => setPagina(pagina - 1)}
-                            >
-                                Anterior
-                            </button>
+                                                <td
+                                                    colSpan={totalColunas}
 
-                            {Array.from(
-                                { length: totalPaginas },
-                                (_, i) => i + 1
-                            ).map(numero => (
+                                                    className="nenhuma-nota"
+                                                >
 
-                                <button
-                                    key={numero}
-                                    className={pagina === numero ? "pagina-ativa" : ""}
-                                    onClick={() => setPagina(numero)}
-                                >
-                                    {numero}
-                                </button>
+                                                    Não foi possível carregar
+                                                    as notas fiscais.
 
-                            ))}
+                                                </td>
 
-                            <button
-                                disabled={pagina === totalPaginas}
-                                onClick={() => setPagina(pagina + 1)}
-                            >
-                                &gt;
-                            </button>
+                                            </tr>
 
-                        </div>
+                                        ) : notasPagina.length > 0 ? (
+
+                                            notasPagina.map(nota => {
+
+                                                const id =
+                                                    obterIdNota(nota);
+
+                                                return (
+
+                                                    <tr key={id}>
+
+                                                        {/* CHAVE DE ACESSO */}
+
+                                                        <td className="chave-nota">
+
+                                                            {nota.chaveAcesso ||
+
+                                                                "Não informada"}
+
+                                                        </td>
+
+                                                        {/* DATA DE EMISSÃO */}
+
+                                                        <td>
+
+                                                            {formatarData(
+
+                                                                nota.dataEmissao
+
+                                                            )}
+
+                                                        </td>
+
+                                                        {/* CLIENTE */}
+
+                                                        <td>
+
+                                                            {formatarCnpj(
+
+                                                                obterCnpjDestinatario(nota)
+
+                                                            )}
+
+                                                        </td>
+
+                                                        {/* VALOR */}
+
+                                                        <td>
+
+                                                            {formatarValor(
+
+                                                                nota.valorTotal
+
+                                                            )}
+
+                                                        </td>
+
+                                                        {/* STATUS */}
+
+                                                        <td>
+
+                                                            <span
+                                                                className={`status-nota ${classeStatus(
+                                                                    nota.status
+                                                                )}`}
+                                                            >
+
+                                                                {formatarStatus(
+
+                                                                    nota.status
+
+                                                                )}
+
+                                                            </span>
+
+                                                        </td>
+
+                                                        {/* ARQUIVAR */}
+
+                                                        {podeExcluir && (
+
+                                                            <td>
+
+                                                                {normalizarStatus(
+
+                                                                    nota.status
+
+                                                                ) !== "ARQUIVADA" && (
+
+                                                                    <button
+                                                                        type="button"
+
+                                                                        className="botao-excluir-nota"
+
+                                                                        title={
+                                                                            arquivando === id
+
+                                                                                ? "Arquivando nota..."
+
+                                                                                : "Arquivar nota fiscal"
+                                                                        }
+
+                                                                        aria-label="Arquivar nota fiscal"
+
+                                                                        disabled={
+                                                                            operacaoEmAndamento
+                                                                        }
+
+                                                                        onClick={() =>
+                                                                            excluirNota(nota)
+                                                                        }
+                                                                    >
+
+                                                                        <img
+                                                                            src={Lixeira}
+                                                                            alt=""
+                                                                        />
+
+                                                                    </button>
+
+                                                                )}
+
+                                                            </td>
+
+                                                        )}
+
+                                                    </tr>
+
+                                                );
+
+                                            })
+
+                                        ) : (
+
+                                            <tr>
+
+                                                <td
+                                                    colSpan={totalColunas}
+
+                                                    className="nenhuma-nota"
+                                                >
+
+                                                    Nenhuma nota fiscal encontrada.
+
+                                                </td>
+
+                                            </tr>
+
+                                        )}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            {/* PAGINAÇÃO */}
+
+                            {!carregandoLista &&
+
+                                !erro &&
+
+                                notasFiltradas.length > 0 && (
+
+                                <div className="paginacao-notas">
+
+                                    <button
+                                        type="button"
+
+                                        disabled={
+                                            paginaAtual === 1
+                                        }
+
+                                        onClick={() =>
+
+                                            setPagina(
+                                                paginaAtual - 1
+                                            )
+
+                                        }
+                                    >
+
+                                        Anterior
+
+                                    </button>
+
+                                    {Array.from(
+
+                                        { length: totalPaginas },
+
+                                        (_, i) => i + 1
+
+                                    ).map(numero => (
+
+                                        <button
+                                            key={numero}
+
+                                            type="button"
+
+                                            className={
+
+                                                paginaAtual === numero
+
+                                                    ? "pagina-ativa"
+
+                                                    : ""
+
+                                            }
+
+                                            onClick={() =>
+                                                setPagina(numero)
+                                            }
+                                        >
+
+                                            {numero}
+
+                                        </button>
+
+                                    ))}
+
+                                    <button
+                                        type="button"
+
+                                        disabled={
+                                            paginaAtual === totalPaginas
+                                        }
+
+                                        aria-label="Próxima página"
+
+                                        onClick={() =>
+
+                                            setPagina(
+                                                paginaAtual + 1
+                                            )
+
+                                        }
+                                    >
+
+                                        {">"}
+
+                                    </button>
+
+                                </div>
+
+                            )}
+
+                        </>
 
                     )}
 
@@ -756,85 +1892,9 @@ function NotasFiscais() {
             </main>
 
         </div>
+
     );
-}
 
-
-// =========================================
-// MENU LATERAL
-// =========================================
-
-function Sidebar({ sairSistema }) {
-    const ehAdministrador = obterPerfisUsuario().includes("Administrador");
-
-    return (
-
-        <aside className="menu-notas">
-
-            <div className="logo-notas">
-
-                <picture>
-
-                    <source
-                        media="(max-width: 650px)"
-                        srcSet={LogoNomeMobile}
-                    />
-
-                    <img src={LogoNome} alt="Integra" />
-
-                </picture>
-
-            </div>
-
-
-            <nav className="navegacao-notas">
-
-                <Link to="/home" className="item-menu-notas">
-                    <img src={CasaBranca} alt="" />
-                    <span>Início</span>
-                </Link>
-
-                <Link to="/conteudos" className="item-menu-notas">
-                    <img src={LivroBranco} alt="" />
-                    <span>Conteúdos</span>
-                </Link>
-
-                <Link
-                    to="/notas-fiscais"
-                    className="item-menu-notas menu-notas-ativo"
-                >
-                    <img src={DoisDocumentosBranco} alt="" />
-                    <span>Notas Fiscais</span>
-                </Link>
-
-                {ehAdministrador && (
-                    <>
-                        <Link to="/clientes" className="item-menu-notas">
-                            <img src={ADDProfileBranco} alt="" />
-                            <span>Clientes</span>
-                        </Link>
-
-                        <Link to="/usuario" className="item-menu-notas">
-                            <img src={PessoaBranca} alt="" />
-                            <span>Usuários</span>
-                        </Link>
-                    </>
-                )}
-
-            </nav>
-
-
-            <button
-                type="button"
-                className="sair-notas"
-                onClick={sairSistema}
-            >
-                <img src={SairBranco} alt="" />
-                <span>Sair</span>
-            </button>
-
-        </aside>
-    );
 }
 
 export default NotasFiscais;

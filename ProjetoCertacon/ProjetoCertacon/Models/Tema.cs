@@ -17,5 +17,13 @@ public partial class Tema
 
     public DateTime? DataAtualizacao { get; set; }
 
-    public virtual ICollection<Artigo> Artigos { get; set; } = new List<Artigo>();
+    public virtual ICollection<Artigo> Artigos
+    { get; set; } = new List<Artigo>();
+
+    public virtual ICollection<PerfilPermissao> PerfilPermissoes
+    { get; set; } = new List<PerfilPermissao>();
+
+
+    public virtual ICollection<ObrigacaoFiscal> ObrigacaoFiscais { get; set; }
+    = new List<ObrigacaoFiscal>();
 }

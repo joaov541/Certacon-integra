@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -6,11 +5,15 @@ import LogoIntegra from "../../assets/Icones/LogoNomeMobile.png";
 import LupaPesquisa from "../../assets/Icones/LupaPesquisa.png";
 
 import { requisicaoApi } from "../../services/api";
+import usePermissoes from "../../hooks/usePermissoes";
 
 import "./header.css";
 
-function Header() {
+function Header({ mostrarPesquisa = true }) {
   const navigate = useNavigate();
+  const { autenticado, temAlgumaPermissao, carregando } = usePermissoes();
+  const podeLerArtigos = !autenticado || temAlgumaPermissao("artigo.ler.publico") || temAlgumaPermissao("artigo.ler.exclusivo");
+  const podeLerNotas = autenticado && (temAlgumaPermissao("nota.ler.todas") || temAlgumaPermissao("nota.ler.proprias"));
   const areaPesquisaRef = useRef(null);
 
   const [usuario, setUsuario] = useState(null);
@@ -99,7 +102,7 @@ function Header() {
   useEffect(() => {
     const termo = pesquisa.trim();
 
-    if (termo.length < 2) {
+    if (carregando || !mostrarPesquisa || termo.length < 2 || (!podeLerArtigos && !podeLerNotas)) {
       setResultadosArtigos([]);
       setResultadosNotas([]);
       setPesquisando(false);
@@ -113,8 +116,8 @@ function Header() {
 
       try {
         const respostas = await Promise.allSettled([
-          requisicaoApi("/api/Artigos"),
-          requisicaoApi("/api/NotasFiscais")
+          podeLerArtigos ? requisicaoApi("/api/Artigos") : Promise.resolve([]),
+          podeLerNotas ? requisicaoApi("/api/NotasFiscais") : Promise.resolve([])
         ]);
 
         if (!ativo) return;
@@ -177,7 +180,7 @@ function Header() {
       clearTimeout(temporizador);
     };
 
-  }, [pesquisa]);
+  }, [pesquisa, mostrarPesquisa, carregando, podeLerArtigos, podeLerNotas]);
 
   // ========================================
   // FECHAR AO CLICAR FORA
@@ -258,13 +261,13 @@ function Header() {
 
     const termo = pesquisa.trim();
 
-    if (!termo) return;
+    if (!termo || (!podeLerArtigos && !podeLerNotas)) return;
 
     setMostrarResultados(false);
 
     // Abre a tela de conteúdos com o filtro aplicado.
     navigate(
-      `/conteudos?busca=${encodeURIComponent(termo)}`
+      `${podeLerArtigos ? "/conteudos" : "/notas-fiscais"}?busca=${encodeURIComponent(termo)}`
     );
   }
 
@@ -332,6 +335,7 @@ function Header() {
 
       </div>
 
+      {mostrarPesquisa && (
       <div
         className="header-pesquisa-container"
         ref={areaPesquisaRef}
@@ -344,7 +348,7 @@ function Header() {
 
           <input
             type="search"
-            placeholder="Buscar conteúdos, notas fiscais, etc..."
+            placeholder={podeLerArtigos && podeLerNotas ? "Buscar conteúdos, notas fiscais..." : podeLerNotas ? "Buscar notas fiscais..." : "Buscar conteúdos..."}
             aria-label="Pesquisar no sistema"
             value={pesquisa}
             onChange={(event) => {
@@ -374,7 +378,7 @@ function Header() {
                   </p>
                 )}
 
-                {resultadosArtigos.length > 0 && (
+                {podeLerArtigos && resultadosArtigos.length > 0 && (
                   <div className="header-grupo-resultados">
 
                     <h3>Conteúdos tributários</h3>
@@ -396,7 +400,7 @@ function Header() {
                   </div>
                 )}
 
-                {resultadosNotas.length > 0 && (
+                {podeLerNotas && resultadosNotas.length > 0 && (
                   <div className="header-grupo-resultados">
 
                     <h3>Notas fiscais</h3>
@@ -430,6 +434,8 @@ function Header() {
         )}
 
       </div>
+
+      )}
 
     </header>
   );

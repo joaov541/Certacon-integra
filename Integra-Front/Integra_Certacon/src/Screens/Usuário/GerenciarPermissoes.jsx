@@ -1,0 +1,21 @@
+import { useEffect, useState } from 'react';
+import { requisicaoApi } from '../../services/api';
+import usePermissoes from '../../hooks/usePermissoes';
+
+function normalizarBusca(valor) {
+  return String(valor ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+export default function GerenciarPermissoes({ pesquisa = "" }){
+ const {atualizar}=usePermissoes();
+ const [perfis,setPerfis]=useState([]),[catalogo,setCatalogo]=useState([]),[temas,setTemas]=useState([]),[perfilId,setPerfilId]=useState(''),[permissaoId,setPermissaoId]=useState(''),[temaId,setTemaId]=useState(''),[vinculos,setVinculos]=useState([]),[erro,setErro]=useState(''),[mensagem,setMensagem]=useState(''),[ocupado,setOcupado]=useState(false),[carregando,setCarregando]=useState(false);
+ const corresponde = p => normalizarBusca([p.nome, p.codigo, p.descricao, p.tema || "Escopo geral"].join(" ")).includes(normalizarBusca(pesquisa));
+ const filtrados = vinculos.filter(corresponde);
+ const perfil=perfis.find(p=>p.perfilId===perfilId), permissao=catalogo.find(p=>p.permissaoId===permissaoId);
+ const artigo=permissao?.codigo.startsWith('artigo.');
+ const protegido=!perfil||['Administrador','Cliente'].includes(perfil.nome);
+ useEffect(()=>{let ativo=true;Promise.all(['/api/Perfis','/api/Permissoes','/api/Temas'].map(p=>requisicaoApi(p))).then(([p,c,t])=>{if(ativo){setPerfis(p);setCatalogo(c);setTemas(t);}}).catch(e=>{if(ativo)setErro(e.message);});return()=>{ativo=false;};},[]);
+ useEffect(()=>{let ativo=true;setVinculos([]);setMensagem('');setErro('');if(!perfilId){setCarregando(false);return;}setCarregando(true);requisicaoApi(`/api/Permissoes/perfil/${perfilId}`).then(v=>{if(ativo)setVinculos(v);}).catch(e=>{if(ativo)setErro(e.message);}).finally(()=>{if(ativo)setCarregando(false);});return()=>{ativo=false;};},[perfilId]);
+ async function alterar(remover){setOcupado(true);setErro('');setMensagem('');try{const base=`/api/Permissoes/perfil/${perfilId}`;const r=await requisicaoApi(remover?`${base}/${remover}`:base,remover?{method:'DELETE'}:{method:'POST',body:JSON.stringify({permissaoId,temaId:artigo&&temaId?temaId:null})});setVinculos(await requisicaoApi(base));setMensagem(r.mensagem);atualizar();}catch(e){setErro(e.message);}finally{setOcupado(false);}}
+ return <div className="rbac-painel"><h1>Gerenciar permissões</h1><div className="rbac-form"><label>Perfil<select value={perfilId} disabled={ocupado} onChange={e=>{setPerfilId(e.target.value);setPermissaoId('');setTemaId('');}}><option value="">Selecione um perfil</option>{perfis.map(p=><option key={p.perfilId} value={p.perfilId}>{p.nome}{!p.ativo?' (inativo)':''}</option>)}</select></label></div>{erro&&<p className="rbac-erro" role="alert">{erro}</p>}{mensagem&&<p role="status">{mensagem}</p>}{perfilId&&<>{protegido&&<p>Perfil reservado: permissões disponíveis somente para consulta.</p>}{!protegido&&perfil.ativo&&<form className="rbac-form" onSubmit={e=>{e.preventDefault();alterar(null);}}><h2>Atribuir permissão</h2><label>Permissão<select required value={permissaoId} disabled={ocupado} onChange={e=>{setPermissaoId(e.target.value);setTemaId('');}}><option value="">Selecione</option>{catalogo.filter(p=>p.ativo && (p.permissaoId === permissaoId || corresponde(p))).map(p=><option key={p.permissaoId} value={p.permissaoId}>{p.nome} — {p.codigo}</option>)}</select></label>{artigo&&<label>Escopo<select value={temaId} disabled={ocupado} onChange={e=>setTemaId(e.target.value)}><option value="">Todos os temas</option>{temas.filter(t=>t.ativo).map(t=><option key={t.temaId} value={t.temaId}>{t.nome}</option>)}</select></label>}<button className="rbac-btn principal" disabled={ocupado||carregando||!permissaoId}>Atribuir permissão</button></form>}<h2>Permissões vinculadas</h2>{carregando?<p>Carregando...</p>:vinculos.length===0?<p>Nenhuma permissão vinculada.</p>:filtrados.length===0?<p>Nenhuma permissão corresponde à pesquisa.</p>:filtrados.map(v=><div className="rbac-linha" key={v.perfilPermissaoId}><div><strong>{v.nome}</strong><p>{v.codigo}</p><p>{v.tema||'Escopo geral'}</p></div>{!protegido&&<button className="rbac-btn" disabled={ocupado||carregando} onClick={()=>{if(confirm(`Remover ${v.nome}?`))alterar(v.perfilPermissaoId);}}>Remover</button>}</div>)}</>}</div>;
+}

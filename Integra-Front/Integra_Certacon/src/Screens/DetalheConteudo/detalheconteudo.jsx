@@ -1,121 +1,695 @@
+import { useEffect, useState, useRef } from "react";
+
+import {
+  useNavigate,
+  useLocation,
+  useSearchParams
+} from "react-router-dom";
+
+import {
+  Bookmark,
+  BookmarkCheck,
+  LoaderCircle
+} from "lucide-react";
+
+import DOMPurify from "dompurify";
+
+import { requisicaoApi } from "../../services/api";
+import usePermissoes from "../../hooks/usePermissoes";
+
 import { classeCorTema } from "../../utils/coresTemas";
+
 import "../../styles/coresTemas.css";
 import "./detalheconteudo.css";
 
-import LogoNome from "../../assets/Icones/LogoNome.png";
-
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
-
-import CasaBranca from "../../assets/Icones/CasaBranca.png";
-import LivroBranco from "../../assets/Icones/LivroBranco.png";
-import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
-import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
-import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import SairBranco from "../../assets/Icones/SairBranco.png";
-
 import Pessoa from "../../assets/Icones/Pessoa.png";
 import Relogio from "../../assets/Icones/Relogio.png";
-import { useState } from "react";
-import Header from "../../components/Header/header";
-import HeaderDesktop from "../../components/Header/headerDesktop";
-import DOMPurify from "dompurify";
-function DetalheRevisao() {
 
+function DetalheConteudo() {
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Dados recebidos da tela anterior
-  const artigo = location.state?.conteudo;
-  const [baixandoArquivo, setBaixandoArquivo] = useState(false);
+  const [searchParams] = useSearchParams();
 
+  // =========================================
+  // PERMISSÕES DINÂMICAS
+  // =========================================
 
-  async function baixarArquivo() {
-    try {
-        setBaixandoArquivo(true);
+  const {
+    autenticado,
+    temPermissao,
+    carregando: carregandoPermissoes,
+    erro: erroPermissoes
+  } = usePermissoes();
 
-        const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-        const API_URL =
-            import.meta.env.VITE_API_URL ||
-            "https://localhost:7249";
+  const podeGerenciarFavoritos =
+    autenticado &&
+    !carregandoPermissoes &&
+    !erroPermissoes &&
+    temPermissao("favorito.gerenciar.proprios");
 
-        const resposta = await fetch(
-            `${API_URL}/api/Artigos/${artigo.id}/arquivo`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
+  const podeRegistrarHistorico =
+    autenticado &&
+    !carregandoPermissoes &&
+    !erroPermissoes &&
+    temPermissao("historico.leitura.gerenciar.proprio");
+
+  // =========================================
+  // IDENTIFICAR ARTIGO
+  // =========================================
+
+  const artigoRecebido = location.state?.conteudo;
+
+  const artigoId =
+    searchParams.get("id") ||
+    artigoRecebido?.artigoId ||
+    artigoRecebido?.id ||
+    null;
+
+  // =========================================
+  // ESTADOS
+  // =========================================
+
+  const [artigo, setArtigo] = useState(null);
+
+  const [carregando, setCarregando] = useState(true);
+
+  const [erro, setErro] = useState("");
+
+  const [baixandoArquivo, setBaixandoArquivo] =
+    useState(false);
+
+  // =========================================
+  // ESTADOS DOS FAVORITOS
+  // =========================================
+
+  const [favoritado, setFavoritado] = useState(false);
+
+  const [carregandoFavorito, setCarregandoFavorito] =
+    useState(true);
+
+  const [salvandoFavorito, setSalvandoFavorito] =
+    useState(false);
+
+  const [erroFavorito, setErroFavorito] =
+    useState("");
+
+  const [mensagemFavorito, setMensagemFavorito] =
+    useState("");
+
+  const [tentativaFavorito, setTentativaFavorito] =
+    useState(0);
+
+  const [chaveFavoritoCarregado, setChaveFavoritoCarregado] =
+    useState(null);
+
+  const favoritoEmProcessamento = useRef(null);
+
+  const historicoRegistrado = useRef(null);
+
+  const componenteAtivo = useRef(false);
+
+  const contextoAtual = useRef(null);
+
+  const chaveContexto = `${token || ""}:${artigoId || ""}`;
+
+  contextoAtual.current = chaveContexto;
+
+  useEffect(() => {
+
+    componenteAtivo.current = true;
+
+    return () => {
+      componenteAtivo.current = false;
+    };
+
+  }, []);
+
+  // =========================================
+  // CARREGAR ARTIGO DIRETAMENTE DA API
+  // =========================================
+
+  useEffect(() => {
+
+    let ativo = true;
+
+    setArtigo(null);
+    setErro("");
+
+    if (carregandoPermissoes) {
+      setCarregando(true);
+      return;
+    }
+
+    if (erroPermissoes) {
+
+      setCarregando(false);
+
+      setErro(
+        "Não foi possível verificar suas permissões."
+      );
+
+      return;
+    }
+
+    if (!artigoId) {
+
+      setCarregando(false);
+
+      setErro(
+        "Nenhum conteúdo foi selecionado."
+      );
+
+      return;
+    }
+
+    async function carregarArtigo() {
+
+      try {
+
+        setCarregando(true);
+
+        const dados = await requisicaoApi(
+          `/api/Artigos/${encodeURIComponent(artigoId)}`
         );
 
-        if (!resposta.ok) {
-            const mensagem = await resposta.text();
+        if (!ativo) return;
 
-            throw new Error(
-                mensagem || "Não foi possível baixar o documento."
+        if (!dados) {
+          throw new Error("Conteúdo não encontrado.");
+        }
+
+        const artigoNormalizado = {
+
+          artigoId:
+            dados.artigoId ??
+            dados.ArtigoId ??
+            artigoId,
+
+          titulo:
+            dados.titulo ??
+            dados.Titulo,
+
+          temaId:
+            dados.temaId ??
+            dados.TemaId,
+
+          tema:
+            dados.tema ??
+            dados.Tema,
+
+          autor:
+            dados.autor ??
+            dados.Autor,
+
+          resumo:
+            dados.resumo ??
+            dados.Resumo,
+
+          conteudo:
+            dados.conteudo ??
+            dados.Conteudo,
+
+          status:
+            dados.status ??
+            dados.Status,
+
+          visibilidade:
+            dados.visibilidade ??
+            dados.Visibilidade,
+
+          dataCriacao:
+            dados.dataCriacao ??
+            dados.DataCriacao,
+
+          dataPublicacao:
+            dados.dataPublicacao ??
+            dados.DataPublicacao,
+
+          nomeArquivo:
+            dados.nomeArquivo ??
+            dados.NomeArquivo,
+
+          tamanhoArquivo:
+            dados.tamanhoArquivo ??
+            dados.TamanhoArquivo,
+
+          temArquivo:
+            dados.temArquivo ??
+            dados.TemArquivo ??
+            Boolean(
+              dados.nomeArquivo ??
+              dados.NomeArquivo
+            ),
+
+          topicos:
+            dados.topicos ??
+            dados.Topicos ??
+            []
+        };
+
+        // =====================================
+        // VALIDAR PERMISSÃO DE LEITURA
+        // =====================================
+
+        const status = String(
+          artigoNormalizado.status || ""
+        ).trim().toUpperCase();
+
+        const visibilidade = String(
+          artigoNormalizado.visibilidade || ""
+        ).trim().toUpperCase();
+
+        const temaId = artigoNormalizado.temaId;
+
+        let permitido = false;
+
+        if (status === "PUBLICADO") {
+
+          if (
+            visibilidade === "PUBLICO" ||
+            visibilidade === "PUBLICA"
+          ) {
+
+            permitido =
+              !autenticado ||
+              temPermissao(
+                "artigo.ler.publico",
+                temaId
+              );
+
+          } else if (visibilidade === "EXCLUSIVO") {
+
+            permitido =
+              autenticado &&
+              temPermissao(
+                "artigo.ler.exclusivo",
+                temaId
+              );
+          }
+
+        } else if (
+          status &&
+          status !== "ARQUIVADO"
+        ) {
+
+          permitido =
+            autenticado &&
+            (
+              temPermissao(
+                "artigo.ler.rascunho",
+                temaId
+              ) ||
+
+              temPermissao(
+                "artigo.revisar",
+                temaId
+              )
             );
         }
 
-        const arquivoBlob = await resposta.blob();
+        if (!permitido) {
 
-        const url = window.URL.createObjectURL(arquivoBlob);
+          throw new Error(
+            "Você não possui permissão para visualizar este conteúdo."
+          );
+        }
 
-        const link = document.createElement("a");
+        setArtigo({
+          ...artigoNormalizado,
+          chaveContexto
+        });
 
-        link.href = url;
-        link.download = artigo.nomeArquivo || "documento";
+      } catch (error) {
 
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        if (!ativo) return;
 
-        window.URL.revokeObjectURL(url);
-
-    } catch (erro) {
-        console.error("Erro ao baixar documento:", erro);
-
-        alert(
-            erro.message || "Erro ao baixar o documento."
+        console.error(
+          "Erro ao carregar artigo:",
+          error
         );
 
-    } finally {
-        setBaixandoArquivo(false);
+        setArtigo(null);
+
+        setErro(
+          error.message ||
+          "Não foi possível carregar o conteúdo."
+        );
+
+      } finally {
+
+        if (ativo) {
+          setCarregando(false);
+        }
+      }
     }
-}
-  // As permissões visuais são lidas da sessão; a API valida a autorização real.
-  let perfis = [];
-  try {
-    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-    const perfisSalvos = JSON.parse(localStorage.getItem("perfis") || "[]");
-    perfis = Array.isArray(usuario.perfis) && usuario.perfis.length
-      ? usuario.perfis
-      : Array.isArray(perfisSalvos) ? perfisSalvos : [];
-  } catch {
-    perfis = [];
+
+    carregarArtigo();
+
+    return () => {
+      ativo = false;
+    };
+
+  }, [
+    artigoId,
+    token,
+    autenticado,
+    carregandoPermissoes,
+    erroPermissoes,
+    temPermissao,
+    chaveContexto
+  ]);
+
+  // =========================================
+  // VERIFICAR SE O ARTIGO ESTÁ PUBLICADO
+  // =========================================
+
+  const artigoAtual =
+    artigo &&
+    artigo.chaveContexto === chaveContexto;
+
+  const artigoPublicado =
+    Boolean(artigoAtual) &&
+    String(
+      artigo.status || ""
+    ).trim().toUpperCase() === "PUBLICADO";
+
+  const idArtigoCarregado = artigoAtual
+    ? artigo.artigoId
+    : null;
+
+  const exibirFavoritos =
+    podeGerenciarFavoritos &&
+    artigoPublicado &&
+    !carregando &&
+    !erro;
+
+  // =========================================
+  // CONSULTAR STATUS DO FAVORITO
+  // =========================================
+
+  useEffect(() => {
+
+    let ativo = true;
+
+    setFavoritado(false);
+    setErroFavorito("");
+    setMensagemFavorito("");
+    setSalvandoFavorito(false);
+    setChaveFavoritoCarregado(null);
+
+    if (!exibirFavoritos || !idArtigoCarregado) {
+
+      setCarregandoFavorito(false);
+
+      return;
+    }
+
+    async function consultarFavorito() {
+
+      try {
+
+        setCarregandoFavorito(true);
+
+        const dados = await requisicaoApi(
+          `/api/Favoritos/${encodeURIComponent(idArtigoCarregado)}/status`
+        );
+
+        if (
+          !ativo ||
+          contextoAtual.current !== chaveContexto ||
+          localStorage.getItem("token") !== token
+        ) return;
+
+        const status =
+          dados?.favoritado ??
+          dados?.Favoritado;
+
+        if (typeof status !== "boolean") {
+          throw new Error(
+            "Resposta inválida ao consultar favorito."
+          );
+        }
+
+        setFavoritado(status);
+
+        setChaveFavoritoCarregado(chaveContexto);
+
+      } catch (error) {
+
+        if (!ativo) return;
+
+        console.error(
+          "Erro ao consultar favorito:",
+          error
+        );
+
+        setErroFavorito(
+          "Não foi possível consultar o favorito."
+        );
+
+      } finally {
+
+        if (ativo) {
+          setCarregandoFavorito(false);
+        }
+      }
+    }
+
+    consultarFavorito();
+
+    return () => {
+      ativo = false;
+    };
+
+  }, [
+    exibirFavoritos,
+    idArtigoCarregado,
+    chaveContexto,
+    token,
+    tentativaFavorito
+  ]);
+
+  // =========================================
+  // FAVORITAR OU DESFAVORITAR ARTIGO
+  // =========================================
+
+  async function alternarFavorito() {
+
+    if (
+      !exibirFavoritos ||
+      !idArtigoCarregado ||
+      carregandoFavorito ||
+      salvandoFavorito ||
+      chaveFavoritoCarregado !== chaveContexto ||
+      favoritoEmProcessamento.current === chaveContexto ||
+      localStorage.getItem("token") !== token
+    ) return;
+
+    const chaveOperacao = chaveContexto;
+
+    favoritoEmProcessamento.current = chaveOperacao;
+
+    try {
+
+      setSalvandoFavorito(true);
+      setErroFavorito("");
+      setMensagemFavorito("");
+
+      const dados = await requisicaoApi(
+        `/api/Favoritos/${encodeURIComponent(idArtigoCarregado)}`,
+        {
+          method: favoritado
+            ? "DELETE"
+            : "POST"
+        }
+      );
+
+      if (
+        !componenteAtivo.current ||
+        contextoAtual.current !== chaveOperacao ||
+        localStorage.getItem("token") !== token
+      ) return;
+
+      const novoStatus =
+        dados?.favoritado ??
+        dados?.Favoritado;
+
+      if (typeof novoStatus !== "boolean") {
+
+        throw new Error(
+          "Não foi possível confirmar a alteração."
+        );
+      }
+
+      setFavoritado(novoStatus);
+
+      setMensagemFavorito(
+        novoStatus
+          ? "Artigo salvo nos seus favoritos."
+          : "Artigo removido dos seus favoritos."
+      );
+
+    } catch (error) {
+
+      if (
+        !componenteAtivo.current ||
+        contextoAtual.current !== chaveOperacao
+      ) return;
+
+      console.error(
+        "Erro ao alterar favorito:",
+        error
+      );
+
+      setErroFavorito(
+        error.message ||
+        "Não foi possível alterar o favorito."
+      );
+
+    } finally {
+
+      if (
+        favoritoEmProcessamento.current ===
+        chaveOperacao
+      ) {
+
+        favoritoEmProcessamento.current = null;
+      }
+
+      if (
+        componenteAtivo.current &&
+        contextoAtual.current === chaveOperacao
+      ) {
+
+        setSalvandoFavorito(false);
+      }
+    }
   }
 
-  const ehAdmin = perfis.includes("Administrador");
-  const podeVerNotas = [
-    "Coordenador Fiscal", "Analista SPED",
-    "Analista de Documentos Fiscais",
-    "Analista de Reforma Tributária", "Cliente"
-  ].some(perfil => perfis.includes(perfil));
+  // =========================================
+  // REGISTRAR HISTÓRICO AUTOMATICAMENTE
+  // =========================================
 
-  const menuItems = [
-    { label: "Início", icon: CasaBranca, path: "/home" },
-    { label: "Conteúdos", icon: LivroBranco, path: "/conteudos" },
-    ...(podeVerNotas ? [
-      { label: "Notas Fiscais", icon: DoisDocumentosBranco, path: "/notas-fiscais" }
-    ] : []),
-    ...(ehAdmin ? [
-      { label: "Clientes", icon: ADDProfileBranco, path: "/clientes" },
-      { label: "Usuários", icon: PessoaBranca, path: "/usuario" }
-    ] : [])
-  ];
+  useEffect(() => {
 
-  // Formatação dos status
+    if (
+      !podeRegistrarHistorico ||
+      !artigoPublicado ||
+      !idArtigoCarregado ||
+      carregando ||
+      erro ||
+      !token
+    ) return;
+
+    const chaveLeitura = chaveContexto;
+
+    // Evita registrar duas vezes durante
+    // a mesma abertura do artigo.
+
+    if (
+      historicoRegistrado.current === chaveLeitura
+    ) return;
+
+    historicoRegistrado.current = chaveLeitura;
+
+    async function registrarLeitura() {
+
+      try {
+
+        if (
+          localStorage.getItem("token") !== token
+        ) return;
+
+        await requisicaoApi(
+          `/api/HistoricoLeitura/${encodeURIComponent(idArtigoCarregado)}`,
+          {
+            method: "POST"
+          }
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao registrar histórico de leitura:",
+          error
+        );
+
+        if (
+          historicoRegistrado.current === chaveLeitura
+        ) {
+          historicoRegistrado.current = null;
+        }
+      }
+    }
+
+    registrarLeitura();
+
+  }, [
+    podeRegistrarHistorico,
+    artigoPublicado,
+    idArtigoCarregado,
+    carregando,
+    erro,
+    chaveContexto,
+    token
+  ]);
+
+  // =========================================
+  // MANTER ID NA URL
+  // =========================================
+
+  useEffect(() => {
+
+    if (
+      artigoId &&
+      !searchParams.get("id")
+    ) {
+
+      navigate(
+        `/conteudos/detalhes?id=${encodeURIComponent(artigoId)}`,
+        {
+          replace: true,
+          state: location.state
+        }
+      );
+    }
+
+  }, [
+    artigoId,
+    searchParams,
+    navigate,
+    location.state
+  ]);
+
+  // =========================================
+  // FORMATAÇÃO DE DATA
+  // =========================================
+
+  function formatarData(data) {
+
+    if (!data) {
+      return "Não informada";
+    }
+
+    const dataFormatada = new Date(data);
+
+    if (isNaN(dataFormatada.getTime())) {
+      return "Não informada";
+    }
+
+    return dataFormatada.toLocaleDateString(
+      "pt-BR"
+    );
+  }
+
+  // =========================================
+  // FORMATAÇÃO DO STATUS
+  // =========================================
+
   function formatarStatus(status) {
 
     const statusFormatados = {
@@ -127,10 +701,15 @@ function DetalheRevisao() {
       ARQUIVADO: "Arquivado"
     };
 
-    return statusFormatados[status] || status || "Não informado";
+    return statusFormatados[
+      String(status || "").toUpperCase()
+    ] || status || "Não informado";
   }
 
-  // Formatação da visibilidade
+  // =========================================
+  // FORMATAÇÃO DA VISIBILIDADE
+  // =========================================
+
   function formatarVisibilidade(visibilidade) {
 
     const visibilidades = {
@@ -140,177 +719,378 @@ function DetalheRevisao() {
     };
 
     return visibilidades[
-      (visibilidade || "").toUpperCase()
+      String(
+        visibilidade || ""
+      ).toUpperCase()
     ] || visibilidade || "Não informada";
   }
 
-  // Caso a tela seja aberta sem os dados do artigo
-  if (!artigo) {
+  // =========================================
+  // FORMATAÇÃO DO TAMANHO DO ARQUIVO
+  // =========================================
+
+  function formatarTamanho(tamanho) {
+
+    const bytes = Number(tamanho);
+
+    if (
+      tamanho == null ||
+      !Number.isFinite(bytes) ||
+      bytes < 0
+    ) {
+      return "";
+    }
+
+    if (bytes >= 1024 * 1024) {
+
+      return (
+        (bytes / (1024 * 1024)).toFixed(2) +
+        " MB"
+      );
+    }
 
     return (
-      <div className="pagina-revisao">
-
-        <aside className="menu-lateral">
-
-          <div className="logo">
-            <img src={LogoNome} alt="INTEGRA" />
-          </div>
-
-          <nav className="opcoes-menu">
-
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.label}
-                to={item.path}
-              >
-                <img src={item.icon} alt="" />
-                <span>{item.label}</span>
-              </NavLink>
-            ))}
-
-          </nav>
-
-          <button
-            className="botao-sair"
-            onClick={() => {
-              localStorage.removeItem("token");
-              localStorage.removeItem("usuario");
-              localStorage.removeItem("perfis");
-              navigate("/login", { replace: true });
-            }}
-          >
-            <img src={SairBranco} alt="" />
-            <span>Sair</span>
-          </button>
-
-        </aside>
-
-        <main className="conteudo-principal">
-
-          <section className="detalhe-revisao">
-
-            <h1>Conteúdo não encontrado</h1>
-
-            <p>
-              Não foram encontrados os dados deste artigo.
-              Volte à listagem e selecione um conteúdo para visualizar.
-            </p>
-
-            <button
-              className="botao-voltar"
-              onClick={() => navigate("/conteudos")}
-            >
-              <span className="seta-voltar">←</span>
-              <span>Voltar aos conteúdos</span>
-            </button>
-
-          </section>
-
-        </main>
-
-      </div>
+      (bytes / 1024).toFixed(2) +
+      " KB"
     );
-
   }
+
+  // =========================================
+  // BAIXAR DOCUMENTO
+  // =========================================
+
+  async function baixarArquivo() {
+
+    if (
+      !artigoAtual ||
+      !artigo.temArquivo ||
+      baixandoArquivo
+    ) {
+      return;
+    }
+
+    let urlTemporaria = null;
+
+    try {
+
+      setBaixandoArquivo(true);
+
+      const tokenAtual =
+        localStorage.getItem("token");
+
+      const API_URL = (
+        import.meta.env.VITE_API_URL ||
+        "https://localhost:7249"
+      ).replace(/\/+$/, "");
+
+      const headers = {};
+
+      if (tokenAtual) {
+
+        headers.Authorization =
+          `Bearer ${tokenAtual}`;
+      }
+
+      const resposta = await fetch(
+        `${API_URL}/api/Artigos/${encodeURIComponent(artigo.artigoId)}/arquivo`,
+        {
+          method: "GET",
+          headers
+        }
+      );
+
+      if (!resposta.ok) {
+
+        const mensagem =
+          await resposta.text();
+
+        throw new Error(
+          mensagem ||
+          "Não foi possível baixar o documento."
+        );
+      }
+
+      const arquivoBlob =
+        await resposta.blob();
+
+      urlTemporaria =
+        window.URL.createObjectURL(arquivoBlob);
+
+      const link =
+        document.createElement("a");
+
+      link.href = urlTemporaria;
+
+      link.download =
+        artigo.nomeArquivo ||
+        "documento";
+
+      document.body.appendChild(link);
+
+      link.click();
+      link.remove();
+
+    } catch (error) {
+
+      console.error(
+        "Erro ao baixar documento:",
+        error
+      );
+
+      alert(
+        error.message ||
+        "Erro ao baixar o documento."
+      );
+
+    } finally {
+
+      if (urlTemporaria) {
+
+        const url = urlTemporaria;
+
+        setTimeout(() => {
+
+          window.URL.revokeObjectURL(url);
+
+        }, 1000);
+      }
+
+      setBaixandoArquivo(false);
+    }
+  }
+
+  // =========================================
+  // VOLTAR PARA CONTEÚDOS
+  // =========================================
+
+  function voltar() {
+
+    if (
+      autenticado &&
+      location.state?.origem === "/conteudos/revisao"
+    ) {
+
+      navigate("/conteudos/revisao");
+
+      return;
+    }
+
+    if (
+      autenticado &&
+      location.state?.origem === "/minha-biblioteca" &&
+      (
+        podeGerenciarFavoritos ||
+        podeRegistrarHistorico
+      )
+    ) {
+
+      navigate("/minha-biblioteca");
+
+      return;
+    }
+
+    navigate(
+      autenticado
+        ? "/conteudos"
+        : "/portal"
+    );
+  }
+
+  // =========================================
+  // RENDERIZAÇÃO
+  // =========================================
 
   return (
 
-    <div className="pagina-revisao">
+    <div className="pagina-detalhe-conteudo">
 
-      {/* MENU LATERAL */}
+      <section className="detalhe-revisao">
 
-      <aside className="menu-lateral">
-
-        <div className="logo">
-          <img src={LogoNome} alt="INTEGRA" />
-        </div>
-
-        <nav className="opcoes-menu">
-
-          {menuItems.map((item) => (
-
-            <NavLink
-              key={item.label}
-              to={item.path}
-              className={({ isActive }) =>
-                item.label === "Conteúdos" &&
-                  window.location.pathname.startsWith("/conteudos")
-                  ? "menu-ativo"
-                  : isActive
-                    ? "menu-ativo"
-                    : ""
-              }
-            >
-
-              <img src={item.icon} alt="" />
-
-              <span>{item.label}</span>
-
-            </NavLink>
-
-          ))}
-
-        </nav>
+        {/* BOTÃO VOLTAR */}
 
         <button
-          className="botao-sair"
-          onClick={() => {
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("usuario");
-            localStorage.removeItem("perfis");
-
-            navigate("/login", { replace: true });
-
-          }}
+          type="button"
+          className="botao-voltar"
+          onClick={voltar}
         >
+          <span className="seta-voltar">
+            ←
+          </span>
 
-          <img src={SairBranco} alt="" />
-
-          <span>Sair</span>
-
+          <span>
+            Voltar
+          </span>
         </button>
 
-      </aside>
+        {/* CARREGAMENTO */}
 
-      <main className="conteudo-principal">
+        {carregando || carregandoPermissoes ? (
 
-        {/* Cabeçalhos compartilhados: foto, nome e perfil reais do usuário */}
-        <div className="detalhe-header-mobile">
-          <Header />
-        </div>
-        <div className="detalhe-header-desktop">
-          <HeaderDesktop />
-        </div>
+          <div
+            className="detalhe-carregando"
+            role="status"
+          >
+            Carregando conteúdo...
+          </div>
 
-        {/* CONTEÚDO */}
+        ) : erro || !artigoAtual ? (
 
-        <section className="detalhe-revisao">
-
-          <button
-            className="botao-voltar"
-            onClick={() => navigate(-1)}
+          <div
+            className="detalhe-erro"
+            role="alert"
           >
 
-            <span className="seta-voltar">←</span>
+            <h2>
+              Conteúdo indisponível
+            </h2>
 
-            <span>Voltar</span>
+            <p>
+              {erro ||
+                "Conteúdo não encontrado."}
+            </p>
 
-          </button>
+            <button
+              type="button"
+              className="detalhe-botao-retornar"
+              onClick={voltar}
+            >
+              Voltar aos conteúdos
+            </button>
+
+          </div>
+
+        ) : (
 
           <div className="area-artigo">
 
-            {/* ARTIGO */}
+            {/* ARTIGO PRINCIPAL */}
 
             <article className="artigo">
 
-              <h1>{artigo.titulo}</h1>
+              <h1>
+                {artigo.titulo || "Sem título"}
+              </h1>
 
-             <span
-    className={`categoria-artigo ${classeCorTema(artigo.tema)}`}
->
-    {artigo.tema || "Tema não informado"}
-</span>
+              {/* TEMA E FAVORITO */}
+
+              <div className="detalhe-acoes-artigo">
+
+                <span
+                  className={`categoria-artigo ${classeCorTema(
+                    artigo.tema
+                  )}`}
+                >
+                  {artigo.tema ||
+                    "Tema não informado"}
+                </span>
+
+                {exibirFavoritos && (
+
+                  <button
+                    type="button"
+                    className={`detalhe-botao-favorito ${
+                      favoritado &&
+                      chaveFavoritoCarregado === chaveContexto
+                        ? "detalhe-favorito-ativo"
+                        : ""
+                    }`}
+                    onClick={alternarFavorito}
+                    disabled={
+                      carregandoFavorito ||
+                      salvandoFavorito ||
+                      chaveFavoritoCarregado !== chaveContexto
+                    }
+                    aria-pressed={
+                      favoritado &&
+                      chaveFavoritoCarregado === chaveContexto
+                    }
+                  >
+
+                    {carregandoFavorito ||
+                      salvandoFavorito ? (
+
+                      <LoaderCircle
+                        size={19}
+                        className="detalhe-favorito-loading"
+                        aria-hidden="true"
+                      />
+
+                    ) : favoritado ? (
+
+                      <BookmarkCheck
+                        size={19}
+                        aria-hidden="true"
+                      />
+
+                    ) : (
+
+                      <Bookmark
+                        size={19}
+                        aria-hidden="true"
+                      />
+
+                    )}
+
+                    <span>
+
+                      {carregandoFavorito
+                        ? "Carregando..."
+                        : salvandoFavorito
+                          ? "Salvando..."
+                          : favoritado &&
+                            chaveFavoritoCarregado === chaveContexto
+                              ? "Favoritado"
+                              : "Favoritar"}
+
+                    </span>
+
+                  </button>
+
+                )}
+
+              </div>
+
+              {/* MENSAGEM DOS FAVORITOS */}
+
+              {exibirFavoritos && erroFavorito && (
+
+                <div
+                  className="detalhe-favorito-erro"
+                  role="alert"
+                >
+
+                  <span>{erroFavorito}</span>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTentativaFavorito(
+                        valor => valor + 1
+                      )
+                    }
+                    disabled={salvandoFavorito}
+                  >
+                    Tentar novamente
+                  </button>
+
+                </div>
+
+              )}
+
+              {exibirFavoritos &&
+                mensagemFavorito &&
+                !erroFavorito && (
+
+                  <p
+                    className="detalhe-favorito-mensagem"
+                    role="status"
+                  >
+                    {mensagemFavorito}
+                  </p>
+
+                )}
+
+              {/* DATA E AUTOR */}
 
               <div className="informacoes-artigo">
 
@@ -318,7 +1098,14 @@ function DetalheRevisao() {
 
                   <img src={Relogio} alt="" />
 
-                  Criado em {artigo.data || "Não informada"}
+                  {artigo.dataPublicacao
+                    ? "Publicado em "
+                    : "Criado em "}
+
+                  {formatarData(
+                    artigo.dataPublicacao ||
+                    artigo.dataCriacao
+                  )}
 
                 </span>
 
@@ -326,7 +1113,10 @@ function DetalheRevisao() {
 
                   <img src={Pessoa} alt="" />
 
-                  Por {artigo.autor || "Autor não informado"}
+                  Por{" "}
+
+                  {artigo.autor ||
+                    "Autor não informado"}
 
                 </span>
 
@@ -337,71 +1127,106 @@ function DetalheRevisao() {
               <div className="informacoes-artigo">
 
                 <span>
-                  <strong>Status:</strong>{" "}
+
+                  <strong>Status:</strong>
+
                   {formatarStatus(artigo.status)}
+
                 </span>
 
                 <span>
-                  <strong>Visibilidade:</strong>{" "}
-                  {formatarVisibilidade(artigo.visibilidade)}
+
+                  <strong>Visibilidade:</strong>
+
+                  {formatarVisibilidade(
+                    artigo.visibilidade
+                  )}
+
                 </span>
 
               </div>
 
-              {/* RESUMO, QUANDO EXISTIR */}
+              {/* RESUMO */}
+
               {artigo.resumo && (
+
                 <div className="resumo-artigo">
+
                   <h2>Resumo</h2>
+
                   <p>{artigo.resumo}</p>
+
                 </div>
+
               )}
 
-              {/* HTML produzido pelo editor, sanitizado para exibição segura */}
+              {/* CONTEÚDO FORMATADO */}
+
               <div className="texto-artigo">
+
                 <h2>Conteúdo</h2>
+
                 <div
                   className="conteudo-formatado"
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(
-                      artigo.conteudo || "Nenhum conteúdo informado."
+                      artigo.conteudo ||
+                      "Nenhum conteúdo informado."
                     )
                   }}
                 />
+
               </div>
-              
-{/* DOCUMENTO ANEXADO */}
 
-{artigo.temArquivo && artigo.nomeArquivo && (
+              {/* DOCUMENTO ANEXADO */}
 
-    <div className="documento-anexado">
+              {artigo.temArquivo && (
 
-        <h2>Documento anexado</h2>
+                <div className="documento-anexado">
 
-        <div className="documento-anexado-info">
+                  <h2>Documento anexado</h2>
 
-            <div>
-                <strong>{artigo.nomeArquivo}</strong>
+                  <div className="documento-anexado-info">
 
-                {artigo.tamanhoArquivo && (
-                    <span>
-                        {(artigo.tamanhoArquivo / 1024).toFixed(2)} KB
-                    </span>
-                )}
-            </div>
+                    <div>
 
-            <button
-                type="button"
-                onClick={baixarArquivo}
-                disabled={baixandoArquivo}
-            >
-                {baixandoArquivo ? "Baixando..." : "Baixar documento"}
-            </button>
+                      <strong>
+                        {artigo.nomeArquivo ||
+                          "Documento"}
+                      </strong>
 
-        </div>
+                      {artigo.tamanhoArquivo != null && (
 
-    </div>
+                        <span>
 
-)}
+                          {formatarTamanho(
+                            artigo.tamanhoArquivo
+                          )}
+
+                        </span>
+
+                      )}
+
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={baixarArquivo}
+                      disabled={baixandoArquivo}
+                    >
+
+                      {baixandoArquivo
+                        ? "Baixando..."
+                        : "Baixar documento"}
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              )}
+
               {/* TÓPICOS */}
 
               {Array.isArray(artigo.topicos) &&
@@ -413,13 +1238,15 @@ function DetalheRevisao() {
 
                     <ul>
 
-                      {artigo.topicos.map((topico, index) => (
+                      {artigo.topicos.map(
+                        (topico, index) => (
 
-                        <li key={index}>
-                          {topico}
-                        </li>
+                          <li key={index}>
+                            {topico}
+                          </li>
 
-                      ))}
+                        )
+                      )}
 
                     </ul>
 
@@ -433,7 +1260,11 @@ function DetalheRevisao() {
 
             <aside className="area-documentos">
 
-              <h2>Informações do conteúdo</h2>
+              <h2>
+                Informações do conteúdo
+              </h2>
+
+              {/* STATUS */}
 
               <div className="documento">
 
@@ -449,6 +1280,8 @@ function DetalheRevisao() {
 
               </div>
 
+              {/* VISIBILIDADE */}
+
               <div className="documento">
 
                 <div className="informacao-documento">
@@ -456,12 +1289,38 @@ function DetalheRevisao() {
                   <strong>Visibilidade</strong>
 
                   <span>
-                    {formatarVisibilidade(artigo.visibilidade)}
+
+                    {formatarVisibilidade(
+                      artigo.visibilidade
+                    )}
+
                   </span>
 
                 </div>
 
               </div>
+
+              {/* DATA DE CRIAÇÃO */}
+
+              {artigo.dataCriacao && (
+
+                <div className="documento">
+
+                  <div className="informacao-documento">
+
+                    <strong>Data de criação</strong>
+
+                    <span>
+                      {formatarData(artigo.dataCriacao)}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              )}
+
+              {/* DATA DE PUBLICAÇÃO */}
 
               {artigo.dataPublicacao && (
 
@@ -472,9 +1331,11 @@ function DetalheRevisao() {
                     <strong>Data de publicação</strong>
 
                     <span>
-                      {new Date(
+
+                      {formatarData(
                         artigo.dataPublicacao
-                      ).toLocaleDateString("pt-BR")}
+                      )}
+
                     </span>
 
                   </div>
@@ -483,18 +1344,48 @@ function DetalheRevisao() {
 
               )}
 
+              {/* FAVORITO */}
+
+              {exibirFavoritos &&
+                chaveFavoritoCarregado === chaveContexto && (
+
+                  <div className="documento">
+
+                    <div className="informacao-documento">
+
+                      <strong>Meus favoritos</strong>
+
+                      <span
+                        className={
+                          favoritado
+                            ? "detalhe-status-favoritado"
+                            : ""
+                        }
+                      >
+
+                        {favoritado
+                          ? "Artigo salvo"
+                          : "Artigo não salvo"}
+
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                )}
+
             </aside>
 
           </div>
 
-        </section>
+        )}
 
-      </main>
+      </section>
 
     </div>
 
   );
-
 }
 
-export default DetalheRevisao;
+export default DetalheConteudo;

@@ -1,929 +1,917 @@
-
-* {
-    box-sizing: border-box;
-}
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
 
 .pagina-novo-conteudo {
     --azul-integra: #1d2e68;
     --laranja-integra: #ff8500;
 
     display: flex;
+    flex-direction: column;
+
     width: 100%;
-    min-height: 100vh;
+    min-width: 0;
+    min-height: 100%;
+
     background: #f3f6fc;
-    font-family: Arial, sans-serif;
     color: #111;
+
+    font-family: Arial, sans-serif;
 }
 
-/* =====================================
-   MENU LATERAL DESKTOP
-===================================== */
-
-.menu-novo-conteudo {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 334px;
-    width: 334px;
-    min-width: 334px;
-    height: 100vh;
-    padding: 25px 20px;
-    background: var(--azul-integra);
-    color: #fff;
+.pagina-novo-conteudo * {
+    box-sizing: border-box;
 }
 
-.logo-novo-conteudo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 35px;
-}
-
-.logo-novo-conteudo .logo-desktop {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    object-fit: contain;
-}
-
-.logo-novo-conteudo .logo-mobile {
-    display: none !important;
-}
-
-.navegacao-novo-conteudo {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.item-menu-novo {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    padding: 9px 8px;
-    margin-left: 20px;
-    border: none;
-    border-radius: 5px;
-    background: transparent;
-    color: #fff;
-    font-family: inherit;
-    font-size: 14px;
-    text-align: left;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.item-menu-novo img {
-    display: block;
-    flex-shrink: 0;
-    width: 33px;
-    height: 33px;
-    object-fit: contain;
-}
-
-.item-menu-novo:hover,
-.item-menu-novo.menu-ativo-novo {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-.sair-novo-conteudo {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-top: auto;
-    margin-left: 20px;
-    padding: 10px 8px;
-    border: none;
-    background: transparent;
-    color: #fff;
-    font-family: inherit;
-    font-size: 14px;
-    text-align: left;
-    cursor: pointer;
-}
-
-.sair-novo-conteudo img {
-    width: 26px;
-    height: 26px;
-    object-fit: contain;
-}
-
-/* =====================================
+/* =========================================
    ÁREA PRINCIPAL
-===================================== */
+========================================= */
 
 .principal-novo-conteudo {
     display: flex;
     flex: 1;
     flex-direction: column;
-    min-width: 0;
-}
 
-/* =====================================
-   CONTROLE DOS HEADERS
-===================================== */
-
-.header-desktop {
-    display: block;
-    width: 100%;
-}
-
-.header-mobile {
-    display: none;
-    width: 100%;
-}
-
-/* =====================================
-   HEADER DESKTOP
-===================================== */
-
-.topo-novo-conteudo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 25px;
-    width: 100%;
-    min-height: 89px;
-    flex-shrink: 0;
-    padding: 15px 25px;
-    background: #fff;
-}
-
-.pesquisa-topo-novo {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex: 1;
-    min-width: 0;
-    max-width: 950px;
-    height: 37px;
-    padding: 0 24px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    background: #f4f7fb;
-}
-
-.header-pesquisa {
-    height: 35px;
-    gap: 12px;
-    padding: 0 15px;
-    border-radius: 10px;
-}
-
-.icone-lupa-header {
-    display: block;
-    flex-shrink: 0;
-    width: 23px;
-    height: 23px;
-    object-fit: contain;
-}
-
-.pesquisa-topo-novo input {
     width: 100%;
     min-width: 0;
-    height: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 12px;
-}
+    min-height: 0;
 
-.usuario-novo-conteudo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+    height: auto;
+    padding: 0;
 
-.foto-usuario-novo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: var(--azul-integra);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
+    overflow: visible;
 }
-
-.dados-usuario-novo {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    white-space: nowrap;
-}
-
-.dados-usuario-novo strong {
-    font-size: 14px;
-}
-
-.dados-usuario-novo span {
-    color: #888;
-    font-size: 12px;
-}
-
-/* =====================================
-   CONTEÚDO DA PÁGINA
-===================================== */
 
 .area-novo-conteudo {
     flex: 1;
+
+    width: 100%;
     min-width: 0;
+
     padding: 40px 35px;
 }
 
 .area-novo-conteudo h1 {
     margin: 0 0 30px;
-    font-size: 27px;
+
     color: var(--azul-integra);
+
+    font-size: 27px;
+    font-weight: 700;
 }
 
-/* =====================================
+/* =========================================
    FORMULÁRIO
-===================================== */
+========================================= */
 
 .formulario-conteudo1 {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(230px, 1fr);
+
+    grid-template-columns:
+        minmax(0, 1.5fr)
+        minmax(230px, 1fr);
+
     gap: 30px;
+
+    width: 100%;
 }
 
 .formulario-esquerda {
     display: flex;
     flex-direction: column;
+
     gap: 22px;
+
+    width: 100%;
     min-width: 0;
 }
 
-.campo-conteudo {
+.pagina-novo-conteudo .campo-conteudo {
     display: flex;
     flex-direction: column;
+
     gap: 9px;
+
+    width: 100%;
     min-width: 0;
 }
 
-.campo-conteudo label {
+.pagina-novo-conteudo .campo-conteudo label {
+    color: var(--azul-integra);
+
     font-size: 14px;
     font-weight: 600;
-    color: var(--azul-integra);
 }
 
-/* CAMPOS DE TEXTO */
+/* =========================================
+   CAMPOS DE TEXTO
+========================================= */
 
-.campo-conteudo input,
-.select-tema-container select {
+.pagina-novo-conteudo .campo-conteudo input,
+.pagina-novo-conteudo .select-tema-container select {
+
     width: 100%;
     height: 44px;
+
     padding: 0 12px;
+
     border: 1px solid #999;
     border-radius: 8px;
+
     outline: none;
+
     background: #fff;
+    color: #252525;
+
     font-family: inherit;
     font-size: 13px;
 }
 
-.campo-conteudo input:focus,
-.select-tema-container select:focus {
+.pagina-novo-conteudo .campo-conteudo input:focus,
+.pagina-novo-conteudo .select-tema-container select:focus {
+
     border-color: var(--azul-integra);
+
+    box-shadow:
+        0 0 0 2px rgba(29, 46, 104, 0.08);
 }
 
-/* =====================================
-   CAMPO TEMA
-===================================== */
+/* =========================================
+   SELETOR DE TEMA
+========================================= */
 
-.select-tema-container {
+.pagina-novo-conteudo .select-tema-container {
     position: relative;
+
     width: 100%;
 }
 
-.select-tema-container select {
+.pagina-novo-conteudo .select-tema-container select {
     display: block;
+
     padding-right: 40px;
+
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+
     cursor: pointer;
 }
 
-.icone-expandir-tema {
+.pagina-novo-conteudo .icone-expandir-tema {
     position: absolute;
+
     top: 50%;
     right: 12px;
+
     width: 18px;
     height: 18px;
+
     object-fit: contain;
+
     transform: translateY(-50%);
+
     pointer-events: none;
 }
 
-/* =====================================
+/* =========================================
    EDITOR DE TEXTO
-===================================== */
+========================================= */
 
-.editor-conteudo {
+.pagina-novo-conteudo .editor-conteudo {
     width: 100%;
+
     overflow: hidden;
+
     border: 1px solid #999;
     border-radius: 10px;
+
     background: #fff;
 }
 
-.barra-editor {
+.pagina-novo-conteudo .editor-conteudo:focus-within {
+    border-color: var(--azul-integra);
+}
+
+.pagina-novo-conteudo .barra-editor {
     display: flex;
+
     align-items: center;
+
     gap: 14px;
+
     min-height: 41px;
+
     padding: 0 12px;
+
     border-bottom: 1px solid #ddd;
 }
 
-.barra-editor button {
+.pagina-novo-conteudo .barra-editor button {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
     min-width: 20px;
+
     padding: 4px;
+
     border: none;
+    border-radius: 4px;
+
     background: transparent;
     color: #222;
+
     font-family: inherit;
     font-size: 17px;
+
     cursor: pointer;
 }
 
-.barra-editor button img {
+.pagina-novo-conteudo .barra-editor button img {
     display: block;
+
     width: 20px;
     height: 20px;
+
     object-fit: contain;
 }
 
-.barra-editor button:hover {
+.pagina-novo-conteudo .barra-editor button:hover {
+    background: #e8edf7;
     color: var(--azul-integra);
 }
 
-.area-texto {
+.pagina-novo-conteudo .area-texto {
     width: 100%;
     height: 150px;
+
     overflow-y: auto;
+
     padding: 15px;
+
     outline: none;
+
+    color: #252525;
+
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
+
     line-height: 1.5;
+
     text-align: left;
+
     overflow-wrap: anywhere;
 }
 
-.area-texto:empty::before {
+.pagina-novo-conteudo .area-texto:empty::before {
     content: attr(data-placeholder);
+
     color: #777;
+
     pointer-events: none;
 }
 
-/* =====================================
-   ENVIO DE ARQUIVO
-===================================== */
+.pagina-novo-conteudo .area-texto img {
+    max-width: 100%;
+    height: auto;
+}
 
-.area-arquivo {
+/* =========================================
+   ENVIO DE ARQUIVO
+========================================= */
+
+.pagina-novo-conteudo .area-arquivo {
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 12px;
+
     min-width: 0;
+
     padding-top: 27px;
 }
 
-.caixa-upload {
+.pagina-novo-conteudo .caixa-upload {
     display: flex;
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
+
+    width: 100%;
     min-height: 235px;
+
     padding: 25px 15px;
+
     border: 1px dashed #999;
     border-radius: 10px;
+
     background: #fff;
+
     text-align: center;
+
     cursor: pointer;
+
+    transition:
+        background 0.2s,
+        border-color 0.2s;
 }
 
-.caixa-upload:hover {
+.pagina-novo-conteudo .caixa-upload:hover {
     border-color: var(--azul-integra);
+
     background: #fafbff;
 }
 
-.icone-upload-imagem {
+.pagina-novo-conteudo .icone-upload-imagem {
     display: block;
+
     width: 46px;
     height: 46px;
+
     margin-bottom: 15px;
+
     object-fit: contain;
 }
 
-.caixa-upload p {
+.pagina-novo-conteudo .caixa-upload p {
     margin: 0 0 8px;
+
+    color: #767676;
+
     font-size: 14px;
     font-weight: 600;
-    color: #767676;
 }
 
-.caixa-upload > span {
+.pagina-novo-conteudo .caixa-upload > span {
     color: var(--azul-integra);
+
     font-size: 12px;
 }
 
-.informacoes-arquivo {
+.pagina-novo-conteudo .informacoes-arquivo {
     display: flex;
     flex-direction: column;
+
     gap: 7px;
+
     margin-top: 22px;
+
     color: var(--azul-integra);
+
     font-size: 11px;
 }
 
-.nome-arquivo {
+.pagina-novo-conteudo .nome-arquivo {
     max-width: 100%;
+
     margin-top: 18px;
+
     color: var(--azul-integra);
+
     font-size: 12px;
+
     overflow-wrap: anywhere;
 }
 
-.input-arquivo {
-    display: none;
+.pagina-novo-conteudo .input-arquivo {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    overflow: hidden;
+
+    clip-path: inset(50%);
 }
 
-/* =====================================
-   BOTÕES
-===================================== */
+/* REMOVER ARQUIVO SELECIONADO */
 
-.botoes-conteudo {
+.remover-arquivo-novo {
+    align-self: center;
+
+    padding: 8px 12px;
+
+    border: 1px solid #e0b7b7;
+    border-radius: 6px;
+
+    background: #fff;
+    color: #c02626;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.remover-arquivo-novo:hover {
+    background: #fff0f0;
+}
+
+/* DOCUMENTO ATUAL */
+
+.arquivo-atual-novo {
     display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: 1px solid #dce4f0;
+    border-radius: 8px;
+
+    background: #fff;
+
+    color: var(--azul-integra);
+
+    overflow-wrap: anywhere;
+}
+
+.arquivo-atual-novo strong {
+    font-size: 13px;
+}
+
+.arquivo-atual-novo span {
+    font-size: 12px;
+}
+
+.arquivo-atual-novo small {
+    color: #777;
+
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+/* =========================================
+   BOTÕES
+========================================= */
+
+.pagina-novo-conteudo .botoes-conteudo {
+    display: flex;
+
+    align-items: center;
     justify-content: flex-end;
+
+    flex-wrap: wrap;
+
     gap: 12px;
+
+    width: 100%;
+
     margin-top: 30px;
 }
 
-.botoes-conteudo button {
+.pagina-novo-conteudo .botoes-conteudo button {
     min-height: 40px;
+
     padding: 0 18px;
+
     border-radius: 8px;
+
     font-family: inherit;
     font-size: 13px;
+
     cursor: pointer;
+
+    transition:
+        background 0.2s,
+        opacity 0.2s;
 }
 
-/* BOTÃO VOLTAR */
+/* VOLTAR */
 
-.botao-voltar1 {
+.pagina-novo-conteudo .botao-voltar1 {
+    width: auto;
+    min-width: 91px;
+
+    height: 40px;
+
     padding: 0 18px;
+
     border: none;
-    border-radius: 4px;
-    background: #1d2e68;
-    color: #ffffff;
+    border-radius: 8px;
+
+    background: var(--azul-integra);
+    color: #fff;
+
     font-family: inherit;
     font-size: 12px;
     font-weight: 600;
+
     cursor: pointer;
-    transition: background 0.2s;
-    height: 40px;
-    width: 91px;
 }
 
-.botao-voltar1:hover {
+.pagina-novo-conteudo .botao-voltar1:hover {
     background: #e87500;
 }
 
-/* BOTÃO CANCELAR */
+/* CANCELAR */
 
-.botao-cancelar {
+.pagina-novo-conteudo .botao-cancelar {
     border: 2px solid #ff0000;
+
     background: #fff;
     color: #ff0000;
 }
 
-.botao-cancelar:hover {
+.pagina-novo-conteudo .botao-cancelar:hover {
     background: #c02626;
     color: #fff;
 }
 
-/* BOTÃO SALVAR RASCUNHO */
+/* SALVAR RASCUNHO */
 
-.botao-rascunho {
+.pagina-novo-conteudo .botao-rascunho {
     border: 1px solid var(--laranja-integra);
+
     background: var(--laranja-integra);
     color: #fff;
+
     font-weight: 600;
 }
 
-.botao-rascunho:hover {
+.pagina-novo-conteudo .botao-rascunho:hover {
     background: #e87500;
 }
 
-/* =====================================
-   TABLET
+/* =========================================
+   ELEMENTOS DESABILITADOS
+========================================= */
+
+.pagina-novo-conteudo button:disabled,
+.pagina-novo-conteudo select:disabled,
+.pagina-novo-conteudo input:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+/* =========================================
+   CARREGAMENTO E MENSAGENS
+========================================= */
+
+.novo-conteudo-carregando {
+    padding: 20px;
+
+    border: 1px solid #dce4f0;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #606a78;
+
+    font-size: 14px;
+}
+
+.novo-conteudo-erro {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    width: 100%;
+    max-width: 700px;
+
+    padding: 24px;
+
+    border: 1px solid #e8c1c1;
+    border-radius: 10px;
+
+    background: #fff5f5;
+}
+
+.novo-conteudo-erro h2 {
+    margin: 0;
+
+    color: #a52828;
+
+    font-size: 20px;
+}
+
+.novo-conteudo-erro p {
+    margin: 0;
+
+    color: #555;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =========================================
+   INTEGRAÇÃO COM LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .pagina-novo-conteudo {
+    width: 100%;
+    height: auto;
+
+    min-height: 100%;
+
+    overflow: visible;
+}
+
+.integra-layout .principal-novo-conteudo {
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+}
+
+.integra-layout .area-novo-conteudo {
+    position: relative;
+
+    width: 100%;
+    height: auto;
+
+    min-height: 0;
+
+    margin: 0;
+
+    overflow: visible;
+}
+
+/* =========================================
+   TABLETS
    701PX ATÉ 1200PX
-===================================== */
+========================================= */
 
 @media (min-width: 701px) and (max-width: 1200px) {
 
-    .menu-novo-conteudo {
-        flex: 0 0 210px;
-        width: 210px;
-        min-width: 210px;
+    .area-novo-conteudo {
+        padding: 25px 22px;
+    }
+
+    .area-novo-conteudo h1 {
+        font-size: 25px;
+    }
+
+    .formulario-conteudo1 {
+        grid-template-columns:
+            minmax(0, 1.5fr)
+            minmax(180px, 1fr);
+
+        gap: 18px;
+    }
+
+    .pagina-novo-conteudo .barra-editor {
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .pagina-novo-conteudo .caixa-upload {
         padding: 20px 10px;
     }
 
-    .logo-novo-conteudo {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 25px;
-    }
-
-    .logo-novo-conteudo .logo-desktop {
-        display: block !important;
-        width: 100%;
-        max-width: 190px;
-        height: auto;
-    }
-
-    .logo-novo-conteudo .logo-mobile {
-        display: none !important;
-    }
-
-    .navegacao-novo-conteudo {
-        gap: 16px;
-    }
-
-    .item-menu-novo {
-        gap: 9px;
-        margin-left: 4px;
-        padding: 8px 5px;
-        font-size: 13px;
-    }
-
-    .item-menu-novo img {
-        width: 28px;
-        height: 28px;
-    }
-
-    .sair-novo-conteudo {
-        margin-left: 4px;
-    }
 }
 
-/* =====================================
-   HEADER MOBILE
-===================================== */
+/* =========================================
+   TABLETS ESTREITOS
+========================================= */
 
-@media (max-width: 850px) {
+@media (min-width: 701px) and (max-width: 850px) {
 
-    .header-desktop {
-        display: none;
+    .formulario-conteudo1 {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .header-mobile {
-        display: block;
-        width: 100%;
-        flex-shrink: 0;
+    .pagina-novo-conteudo .area-arquivo {
+        padding-top: 0;
     }
 
-    .principal-novo-conteudo {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .pagina-novo-conteudo {
-        width: 100%;
-    }
 }
 
-/* =====================================
-   MENU INFERIOR MOBILE
-   ATÉ 700PX
-===================================== */
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 700px) {
 
-    .menu-novo-conteudo {
-        display: flex;
-        flex: 0 0 0;
-        width: 0;
-        min-width: 0;
-        height: 0;
-        padding: 0;
-        overflow: visible;
-        background: transparent;
-    }
-
-    .logo-novo-conteudo {
-        display: none !important;
-    }
-
-    .navegacao-novo-conteudo {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        z-index: 200;
-
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-
-        width: 100%;
-        height: 64px;
-
-        gap: 0;
-        padding: 5px 3px;
-
-        background: var(--azul-integra);
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.10);
-    }
-
-    .item-menu-novo {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        gap: 2px;
-
-        height: 100%;
-        min-width: 0;
-        margin: 0;
-        padding: 2px 0;
-
-        border-radius: 0;
-
-        color: #fff;
-        font-size: 9px;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    .item-menu-novo img {
-        display: block;
-        flex-shrink: 0;
-        width: 25px;
-        height: 25px;
-        object-fit: contain;
-    }
-
-    .item-menu-novo:hover {
-        background: transparent;
-    }
-
-    .item-menu-novo.menu-ativo-novo {
-        background: transparent;
-        color: var(--laranja-integra);
-        font-weight: 700;
-    }
-
-    .item-menu-novo.menu-ativo-novo img {
-        filter: brightness(0) saturate(100%) invert(56%) sepia(96%) saturate(1600%) hue-rotate(359deg) brightness(102%);
-    }
-
-    .sair-novo-conteudo {
-        display: none;
-    }
-
-    .principal-novo-conteudo {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .area-novo-conteudo {
-        padding-bottom: 85px;
-    }
-}
-
-/* =====================================
-   CELULARES
-===================================== */
-
-@media (max-width: 560px) {
-
     .pagina-novo-conteudo {
         display: flex;
         flex-direction: column;
+
         width: 100%;
-        min-height: 100vh;
-        padding: 0;
-        overflow-x: hidden;
+        height: auto;
+
+        min-height: 100%;
+
+        overflow: visible;
     }
 
     .principal-novo-conteudo {
-        display: flex;
-        flex-direction: column;
         width: 100%;
-        min-width: 0;
-        min-height: 100vh;
+
+        height: auto;
+        min-height: 0;
+
+        padding: 0;
     }
 
     .area-novo-conteudo {
         width: 100%;
-        padding: 18px 15px 85px;
+
+        padding: 20px 15px 25px;
     }
 
     .area-novo-conteudo h1 {
         margin-bottom: 20px;
-        font-size: 19px;
+
+        font-size: 22px;
     }
 
     .formulario-conteudo1 {
         display: flex;
         flex-direction: column;
+
         gap: 18px;
+
         width: 100%;
     }
 
     .formulario-esquerda {
-        display: flex;
-        flex-direction: column;
         gap: 22px;
+
         width: 100%;
     }
 
-    .campo-conteudo {
+    .pagina-novo-conteudo .campo-conteudo {
         gap: 6px;
+
         width: 100%;
     }
 
-    .campo-conteudo label {
+    .pagina-novo-conteudo .campo-conteudo label {
         font-size: 16px;
     }
 
-    .campo-conteudo input,
-    .select-tema-container select {
+    .pagina-novo-conteudo .campo-conteudo input,
+    .pagina-novo-conteudo .select-tema-container select {
         width: 100%;
         height: 40px;
-        padding: 0 12px;
+
         font-size: 13px;
     }
 
     /* EDITOR */
 
-    .editor-conteudo {
-        width: 100%;
-    }
-
-    .barra-editor {
-        display: flex;
+    .pagina-novo-conteudo .barra-editor {
         flex-wrap: wrap;
+
         gap: 7px;
+
         min-height: 35px;
+
         padding: 4px 8px;
     }
 
-    .barra-editor button {
+    .pagina-novo-conteudo .barra-editor button {
         min-width: 18px;
+
         padding: 2px;
     }
 
-    .barra-editor button img {
+    .pagina-novo-conteudo .barra-editor button img {
         width: 17px;
         height: 17px;
     }
 
-    .area-texto {
-        width: 100%;
+    .pagina-novo-conteudo .area-texto {
         height: 120px;
+
         padding: 10px;
+
         font-size: 13px;
     }
 
     /* UPLOAD */
 
-    .area-arquivo {
-        display: flex;
-        justify-content: center;
+    .pagina-novo-conteudo .area-arquivo {
+        align-items: center;
+
         width: 100%;
+
         padding: 0;
     }
 
-    .caixa-upload {
-        width: 175px;
-        min-height: 110px;
+    .pagina-novo-conteudo .caixa-upload {
+        width: 100%;
+        max-width: 260px;
+
+        min-height: 140px;
+
         padding: 12px 8px;
+
         border-radius: 8px;
     }
 
-    .icone-upload-imagem {
-        width: 28px;
-        height: 28px;
-        margin-bottom: 6px;
+    .pagina-novo-conteudo .icone-upload-imagem {
+        width: 30px;
+        height: 30px;
+
+        margin-bottom: 8px;
     }
 
-    .caixa-upload p {
+    .pagina-novo-conteudo .caixa-upload p {
         margin-bottom: 5px;
-        font-size: 10px;
+
+        font-size: 12px;
     }
 
-    .caixa-upload > span {
-        font-size: 10px;
+    .pagina-novo-conteudo .caixa-upload > span {
+        font-size: 11px;
     }
 
-    .informacoes-arquivo {
+    .pagina-novo-conteudo .informacoes-arquivo {
         gap: 4px;
-        margin-top: 8px;
-        font-size: 9px;
+
+        margin-top: 10px;
+
+        font-size: 10px;
     }
 
-    .nome-arquivo {
+    .pagina-novo-conteudo .nome-arquivo {
         margin-top: 8px;
-        font-size: 10px;
+
+        font-size: 11px;
     }
 
     /* BOTÕES */
 
-    .botoes-conteudo {
-        display: flex;
-        flex-wrap: wrap;
+    .pagina-novo-conteudo .botoes-conteudo {
         justify-content: space-between;
+
         gap: 10px;
-        width: 100%;
+
         margin-top: 25px;
     }
 
-    .botoes-conteudo button {
+    .pagina-novo-conteudo .botoes-conteudo button {
         min-height: 38px;
+
         padding: 0 15px;
+
         font-size: 11px;
     }
 
-    .botao-voltar1 {
-        order: 0;
+    .pagina-novo-conteudo .botao-voltar1 {
+        min-width: 70px;
     }
 
-    .botao-cancelar {
-        order: 1;
+    /* MENSAGENS */
+
+    .novo-conteudo-erro {
+        padding: 16px;
     }
 
-    .botao-rascunho {
-        order: 2;
+    .novo-conteudo-erro h2 {
+        font-size: 18px;
     }
+
 }
 
-/* =====================================
-   CELULARES MUITO ESTREITOS
-===================================== */
+/* =========================================
+   CELULARES ESTREITOS
+========================================= */
 
 @media (max-width: 380px) {
 
     .area-novo-conteudo {
-        padding: 15px 12px 85px;
+        padding: 15px 12px 20px;
     }
 
-    .area-texto {
+    .area-novo-conteudo h1 {
+        font-size: 20px;
+    }
+
+    .pagina-novo-conteudo .area-texto {
         height: 105px;
     }
 
-    .caixa-upload {
-        width: 155px;
+    .pagina-novo-conteudo .caixa-upload {
+        max-width: 220px;
     }
 
-    .botoes-conteudo {
+    .pagina-novo-conteudo .botoes-conteudo {
         gap: 7px;
     }
 
-    .botoes-conteudo button {
+    .pagina-novo-conteudo .botoes-conteudo button {
         padding: 0 10px;
+
         font-size: 10px;
     }
 
-    .navegacao-novo-conteudo {
-        height: 62px;
-    }
-
-    .item-menu-novo img {
-        width: 23px;
-        height: 23px;
-    }
-
-    .item-menu-novo {
-        font-size: 8px;
-    }
-
-    .dados-usuario-novo {
-        display: none;
-    }
-}
-
-/* =====================================
-   AJUSTE FINAL DO HEADER NO TABLET
-   MANTÉM O HEADER DESKTOP
-   ESCONDE O HEADER MOBILE
-===================================== */
-
-@media (min-width: 701px) and (max-width: 1200px) {
-
-    .header-mobile {
-        display: none !important;
-    }
-
-    .header-desktop {
-        display: block !important;
-    }
 }

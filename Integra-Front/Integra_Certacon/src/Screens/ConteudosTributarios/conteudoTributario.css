@@ -1656,3 +1656,206 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
+
+/* Integração com Sidebar compartilhado e ações por artigo. */
+@media (max-width: 700px) {
+    .pagina-conteudos .principal-conteudos { padding-bottom: 64px; }
+    .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel > td.coluna-acoes {
+        position: static; grid-column: 2 / -1; grid-row: auto;
+        max-width: 100%; width: 100% !important;
+        justify-content: flex-end; margin-top: 6px;
+    }
+    .pagina-conteudos .tabela-conteudos .acoes-artigo { flex-wrap: wrap; }
+}
+@media (max-width: 380px) {
+    .pagina-conteudos .principal-conteudos { padding-bottom: 62px; }
+}
+/* =========================================
+   INTEGRAÇÃO COM O LAYOUT COMPARTILHADO
+========================================= */
+
+.integra-layout .pagina-conteudos {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+
+    overflow: visible;
+
+    background: #f3f6fc;
+}
+
+.integra-layout .principal-conteudos {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+}
+
+.integra-layout .area-lista-conteudos {
+    position: relative;
+
+    flex: 1;
+
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    margin: 0;
+    padding: 40px 35px;
+
+    overflow: visible;
+}
+
+/* ERRO DE PERMISSÕES */
+
+.erro-permissoes-conteudos {
+    margin-bottom: 20px;
+    padding: 16px;
+
+    border: 1px solid #e8b6b6;
+    border-radius: 8px;
+
+    background: #fff3f3;
+    color: #a52828;
+
+    font-size: 14px;
+}
+
+.erro-permissoes-conteudos p {
+    margin: 0 0 12px;
+}
+
+.erro-permissoes-conteudos button {
+    padding: 8px 14px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #1d2e68;
+    color: #fff;
+
+    cursor: pointer;
+}
+
+/* AÇÕES DOS ARTIGOS */
+
+.integra-layout .acoes-artigo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.integra-layout .acoes-artigo button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =========================================
+   TABLETS
+========================================= */
+
+@media (min-width: 701px) and (max-width: 1200px) {
+
+    .integra-layout .area-lista-conteudos {
+        padding: 25px 22px;
+    }
+
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .integra-layout .pagina-conteudos {
+        height: auto;
+        min-height: 100%;
+        overflow: visible;
+    }
+
+    .integra-layout .principal-conteudos {
+        height: auto;
+        min-height: 0;
+
+        padding: 0;
+
+        overflow: visible;
+    }
+
+    .integra-layout .area-lista-conteudos {
+        margin-top: 0;
+
+        padding: 12px 14px 25px;
+
+        overflow: visible;
+    }
+
+    .integra-layout .titulo-conteudos {
+        margin-top: 15px;
+    }
+
+    .integra-layout .pesquisa-lista-conteudos {
+        display: flex;
+
+        grid-column: 1 / -1;
+
+        height: 36px;
+    }
+
+    /* STATUS */
+
+    .integra-layout .celula-status {
+        grid-column: 1 / -1;
+
+        margin-top: 8px;
+        padding-left: 45px;
+    }
+
+    /* AÇÕES DOS ARTIGOS */
+
+    .integra-layout .tabela-conteudos .coluna-acoes {
+        position: static;
+
+        grid-column: 1 / -1;
+        grid-row: auto;
+
+        width: 100%;
+
+        margin-top: 8px;
+    }
+
+    .integra-layout .acoes-artigo {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+
+        width: 100%;
+
+        gap: 8px;
+    }
+
+    .integra-layout .acoes-artigo button {
+        min-height: 28px;
+    }
+
+    .integra-layout .tabela-conteudos .sem-conteudos {
+        grid-column: 1 / -1;
+    }
+
+}

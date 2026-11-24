@@ -15,5 +15,9 @@ public partial class Perfil
 
     public DateTime DataCriacao { get; set; }
 
-    public virtual ICollection<UsuarioPerfil> UsuarioPerfils { get; set; } = new List<UsuarioPerfil>();
+    public virtual ICollection<UsuarioPerfil> UsuarioPerfils
+    { get; set; } = new List<UsuarioPerfil>();
+
+    public virtual ICollection<PerfilPermissao> PerfilPermissoes
+    { get; set; } = new List<PerfilPermissao>();
 }

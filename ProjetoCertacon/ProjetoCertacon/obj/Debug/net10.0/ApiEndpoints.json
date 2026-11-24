@@ -1,5 +1,146 @@
 [
   {
+    "ContainingType": "ProjetoCertacon.Controllers.AgendaFiscalController",
+    "Method": "Listar",
+    "RelativePath": "api/AgendaFiscal",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "mes",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ano",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "temaId",
+        "Type": "System.Nullable\u00601[[System.Guid, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "pesquisa",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.AgendaFiscalController",
+    "Method": "Cadastrar",
+    "RelativePath": "api/AgendaFiscal",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.ObrigacaoFiscalRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.AgendaFiscalController",
+    "Method": "ConsultarPorId",
+    "RelativePath": "api/AgendaFiscal/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.AgendaFiscalController",
+    "Method": "Editar",
+    "RelativePath": "api/AgendaFiscal/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.ObrigacaoFiscalRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.AgendaFiscalController",
+    "Method": "AlterarStatus",
+    "RelativePath": "api/AgendaFiscal/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.ObrigacaoFiscalStatusRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.AgendaFiscalController",
+    "Method": "Gerenciar",
+    "RelativePath": "api/AgendaFiscal/gerenciar",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "mes",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ano",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "temaId",
+        "Type": "System.Nullable\u00601[[System.Guid, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ativo",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "pesquisa",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
     "Method": "GetArtigos",
     "RelativePath": "api/Artigos",
@@ -17,6 +158,27 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.ArtigoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ArtigosController",
+    "Method": "EditarArtigo",
+    "RelativePath": "api/Artigos/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
       {
         "Name": "dados",
         "Type": "ProjetoCertacon.Controllers.ArtigoRequest",
@@ -351,6 +513,180 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ProjetoCertacon.Controllers.ChavesController",
+    "Method": "Consultar",
+    "RelativePath": "api/Chaves/{chave}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "chave",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ClientesController",
+    "Method": "Listar",
+    "RelativePath": "api/Clientes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ClientesController",
+    "Method": "Consultar",
+    "RelativePath": "api/Clientes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ClientesController",
+    "Method": "Editar",
+    "RelativePath": "api/Clientes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.ClienteEditarRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ClientesController",
+    "Method": "Excluir",
+    "RelativePath": "api/Clientes/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ClientesController",
+    "Method": "AlterarStatus",
+    "RelativePath": "api/Clientes/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.UsuarioStatusRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.ClientesController",
+    "Method": "ValidarCnpj",
+    "RelativePath": "api/Clientes/validar-cnpj",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cnpj",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.FavoritosController",
+    "Method": "Listar",
+    "RelativePath": "api/Favoritos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.FavoritosController",
+    "Method": "Adicionar",
+    "RelativePath": "api/Favoritos/{artigoId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.FavoritosController",
+    "Method": "Remover",
+    "RelativePath": "api/Favoritos/{artigoId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.FavoritosController",
+    "Method": "ConsultarStatus",
+    "RelativePath": "api/Favoritos/{artigoId}/status",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProjetoCertacon.Controllers.FotoPerfilController",
     "Method": "Obter",
     "RelativePath": "api/FotoPerfil",
@@ -384,6 +720,179 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.GlossarioController",
+    "Method": "Listar",
+    "RelativePath": "api/Glossario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pesquisa",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "letra",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.GlossarioController",
+    "Method": "Criar",
+    "RelativePath": "api/Glossario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.GlossarioRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.GlossarioController",
+    "Method": "Consultar",
+    "RelativePath": "api/Glossario/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.GlossarioController",
+    "Method": "Editar",
+    "RelativePath": "api/Glossario/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.GlossarioRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.GlossarioController",
+    "Method": "AlterarStatus",
+    "RelativePath": "api/Glossario/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.GlossarioStatusRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.GlossarioController",
+    "Method": "Gerenciar",
+    "RelativePath": "api/Glossario/gerenciar",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pesquisa",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "letra",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ativo",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.HistoricoLeituraController",
+    "Method": "Listar",
+    "RelativePath": "api/HistoricoLeitura",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.HistoricoLeituraController",
+    "Method": "LimparHistorico",
+    "RelativePath": "api/HistoricoLeitura",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.HistoricoLeituraController",
+    "Method": "RegistrarAcesso",
+    "RelativePath": "api/HistoricoLeitura/{artigoId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.HistoricoLeituraController",
+    "Method": "Remover",
+    "RelativePath": "api/HistoricoLeitura/{artigoId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -429,13 +938,55 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ProjetoCertacon.Controllers.MinhasPermissoesController",
+    "Method": "Listar",
+    "RelativePath": "api/MinhasPermissoes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.MinhasPermissoesController",
+    "Method": "Verificar",
+    "RelativePath": "api/MinhasPermissoes/verificar",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "codigo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "temaId",
+        "Type": "System.Nullable\u00601[[System.Guid, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProjetoCertacon.Controllers.NotasFiscaisController",
     "Method": "Listar",
     "RelativePath": "api/NotasFiscais",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "inicio",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "fim",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -503,6 +1054,295 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ProjetoCertacon.Controllers.PerfisController",
+    "Method": "Listar",
+    "RelativePath": "api/Perfis",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PerfisController",
+    "Method": "Criar",
+    "RelativePath": "api/Perfis",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.PerfilCadastroRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PerfisController",
+    "Method": "Consultar",
+    "RelativePath": "api/Perfis/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PerfisController",
+    "Method": "Editar",
+    "RelativePath": "api/Perfis/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.PerfilCadastroRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PerfisController",
+    "Method": "Excluir",
+    "RelativePath": "api/Perfis/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PerfisController",
+    "Method": "AlterarStatus",
+    "RelativePath": "api/Perfis/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.PerfilStatusRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PermissoesController",
+    "Method": "Listar",
+    "RelativePath": "api/Permissoes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PermissoesController",
+    "Method": "ListarPorPerfil",
+    "RelativePath": "api/Permissoes/perfil/{perfilId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "perfilId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PermissoesController",
+    "Method": "Atribuir",
+    "RelativePath": "api/Permissoes/perfil/{perfilId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "perfilId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.VinculoPermissaoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.PermissoesController",
+    "Method": "Remover",
+    "RelativePath": "api/Permissoes/perfil/{perfilId}/{vinculoId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "perfilId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "vinculoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.SimuladorTributarioController",
+    "Method": "Calcular",
+    "RelativePath": "api/SimuladorTributario/calcular",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.SimulacaoTributariaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.SimuladorTributarioController",
+    "Method": "ListarCenarios",
+    "RelativePath": "api/SimuladorTributario/cenarios",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ano",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "pesquisa",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.SimuladorTributarioController",
+    "Method": "Cadastrar",
+    "RelativePath": "api/SimuladorTributario/cenarios",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.CenarioTributarioRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.SimuladorTributarioController",
+    "Method": "Editar",
+    "RelativePath": "api/SimuladorTributario/cenarios/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.CenarioTributarioRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.SimuladorTributarioController",
+    "Method": "AlterarStatus",
+    "RelativePath": "api/SimuladorTributario/cenarios/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.CenarioTributarioStatusRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.SimuladorTributarioController",
+    "Method": "Gerenciar",
+    "RelativePath": "api/SimuladorTributario/gerenciar",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ano",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ativo",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "pesquisa",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProjetoCertacon.Controllers.TemasController",
     "Method": "GetTemas",
     "RelativePath": "api/Temas",
@@ -510,6 +1350,96 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.TemasController",
+    "Method": "Criar",
+    "RelativePath": "api/Temas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.TemaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.TemasController",
+    "Method": "Consultar",
+    "RelativePath": "api/Temas/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.TemasController",
+    "Method": "Editar",
+    "RelativePath": "api/Temas/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.TemaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.TemasController",
+    "Method": "Excluir",
+    "RelativePath": "api/Temas/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.TemasController",
+    "Method": "AlterarStatus",
+    "RelativePath": "api/Temas/{id}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.TemaStatusRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

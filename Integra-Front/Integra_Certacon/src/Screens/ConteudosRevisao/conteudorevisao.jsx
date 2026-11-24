@@ -1,6 +1,12 @@
+import {
+    useState,
+    useEffect,
+    useCallback,
+    useRef
+} from "react";
 
-import { useState, useEffect } from "react";
-import "./conteudorevisao.css";
+import { useNavigate } from "react-router-dom";
+
 import {
     Check,
     Pencil,
@@ -8,45 +14,42 @@ import {
     Eye,
     Send
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
 
 import { requisicaoApi } from "../../services/api";
 
-import CasaBranca from "../../assets/Icones/CasaBranca.png";
-import LivroBranco from "../../assets/Icones/LivroBranco.png";
-import DoisDocumentosBranco from "../../assets/Icones/DoisDocumentosBranco.png";
-import ADDProfileBranco from "../../assets/Icones/ADDProfileBranco.png";
-import PessoaBranca from "../../assets/Icones/PessoaBranca.png";
-import SairBranco from "../../assets/Icones/SairBranco.png";
-import LogoNome from "../../assets/Icones/LogoNome.png";
+import usePermissoes from "../../hooks/usePermissoes";
+import usePesquisaLayout from "../../hooks/usePesquisaLayout";
 
-import Header from "../../components/Header/header";
-
-// Perfis do usuário autenticado (apenas para exibição da interface).
-// A autorização real continua sendo validada na API.
-function obterPerfisLogados() {
-    try {
-        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-        const armazenados = JSON.parse(localStorage.getItem("perfis") || "[]");
-        return Array.isArray(usuario.perfis) && usuario.perfis.length > 0
-            ? usuario.perfis
-            : Array.isArray(armazenados) ? armazenados : [];
-    } catch {
-        return [];
-    }
-}
-
-const PERFIS_FISCAIS = [
-    "Coordenador Fiscal",
-    "Analista SPED",
-    "Analista de Documentos Fiscais",
-    "Analista de Reforma Tributária",
-    "Cliente"
-];
+import "./conteudorevisao.css";
 
 const itensPorPagina = 5;
 
+const abas = [
+    { chave: "Pendente", titulo: "Pendentes" },
+    { chave: "Aprovado", titulo: "Aprovados" },
+    { chave: "Rejeitado", titulo: "Rejeitados" }
+];
+
 function ConteudoRevisao() {
+
+    const navigate = useNavigate();
+
+    // =========================================
+    // PERMISSÕES DINÂMICAS
+    // =========================================
+
+    const {
+        autenticado,
+        temPermissao,
+        temAlgumaPermissao,
+        carregando: carregandoPermissoes,
+        erro: erroPermissoes,
+        atualizar
+    } = usePermissoes();
+
+    const podeRevisar =
+        autenticado &&
+        temAlgumaPermissao("artigo.revisar");
 
     // =========================================
     // ESTADOS
@@ -58,25 +61,129 @@ function ConteudoRevisao() {
         Rejeitado: []
     });
 
-    const [abaAtiva, setAbaAtiva] = useState("Pendente");
+    const [abaAtiva, setAbaAtiva] =
+        useState("Pendente");
 
     const [pagina, setPagina] = useState(1);
 
     const [pesquisa, setPesquisa] = useState("");
 
-    const [carregando, setCarregando] = useState(true);
+    const [carregando, setCarregando] =
+        useState(true);
 
     const [erro, setErro] = useState("");
 
-    const [acaoEmAndamento, setAcaoEmAndamento] = useState(null);
+    const [acaoEmAndamento, setAcaoEmAndamento] =
+        useState(null);
 
-    const navigate = useNavigate();
+    const executandoAcaoRef = useRef(false);
+
+    const requisicaoAtualRef = useRef(0);
+
+    const token = localStorage.getItem("token");
 
     // =========================================
-    // CARREGAR CONTEÚDOS DA API
+    // IDENTIFICAR USUÁRIO AUTENTICADO
     // =========================================
 
-    async function carregarConteudos() {
+    let usuarioId = null;
+
+    try {
+
+        const usuario = JSON.parse(
+            localStorage.getItem("usuario") || "{}"
+        );
+
+        usuarioId =
+            usuario.usuarioId ??
+            usuario.UsuarioId ??
+            usuario.id ??
+            null;
+
+    } catch {
+        usuarioId = null;
+    }
+
+    // =========================================
+    // PESQUISA DO LAYOUT COMPARTILHADO
+    // =========================================
+
+    const alterarPesquisa = useCallback(valor => {
+
+        setPesquisa(valor);
+        setPagina(1);
+
+    }, []);
+
+    usePesquisaLayout(
+        pesquisa,
+        alterarPesquisa
+    );
+
+    // =========================================
+    // NORMALIZAÇÃO
+    // =========================================
+
+    function normalizarTexto(texto) {
+
+        return String(texto || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
+
+    }
+
+    function normalizarStatus(status) {
+
+        return String(status || "")
+            .trim()
+            .toUpperCase();
+
+    }
+
+    function obterTemaId(item) {
+
+        return item.temaId ??
+            item.TemaId ??
+            null;
+
+    }
+
+    function obterArtigoId(item) {
+
+        return item.artigoId ??
+            item.ArtigoId ??
+            item.id;
+
+    }
+
+    // =========================================
+    // CARREGAR CONTEÚDOS
+    // =========================================
+
+    const carregarConteudos = useCallback(async () => {
+
+        const numeroRequisicao =
+            ++requisicaoAtualRef.current;
+
+        if (
+            !podeRevisar ||
+            carregandoPermissoes ||
+            erroPermissoes
+        ) {
+
+            setConteudos({
+                Pendente: [],
+                Aprovado: [],
+                Rejeitado: []
+            });
+
+            setCarregando(false);
+
+            return;
+
+        }
 
         try {
 
@@ -100,23 +207,42 @@ function ConteudoRevisao() {
 
                 ]);
 
+            if (
+                numeroRequisicao !==
+                requisicaoAtualRef.current
+            ) {
+
+                return;
+
+            }
+
             setConteudos({
 
-                Pendente: Array.isArray(pendentes)
-                    ? pendentes
-                    : [],
+                Pendente:
+                    Array.isArray(pendentes)
+                        ? pendentes
+                        : [],
 
-                Aprovado: Array.isArray(aprovados)
-                    ? aprovados
-                    : [],
+                Aprovado:
+                    Array.isArray(aprovados)
+                        ? aprovados
+                        : [],
 
-                Rejeitado: Array.isArray(rejeitados)
-                    ? rejeitados
-                    : []
+                Rejeitado:
+                    Array.isArray(rejeitados)
+                        ? rejeitados
+                        : []
 
             });
 
         } catch (error) {
+
+            if (
+                numeroRequisicao !==
+                requisicaoAtualRef.current
+            ) {
+                return;
+            }
 
             console.error(
                 "Erro ao carregar conteúdos para revisão:",
@@ -130,29 +256,182 @@ function ConteudoRevisao() {
 
         } finally {
 
-            setCarregando(false);
+            if (
+                numeroRequisicao ===
+                requisicaoAtualRef.current
+            ) {
+
+                setCarregando(false);
+
+            }
 
         }
 
-    }
+    }, [
+        podeRevisar,
+        carregandoPermissoes,
+        erroPermissoes
+    ]);
 
     useEffect(() => {
 
+        setConteudos({
+            Pendente: [],
+            Aprovado: [],
+            Rejeitado: []
+        });
+
         carregarConteudos();
 
-    }, []);
+        return () => {
+
+            requisicaoAtualRef.current += 1;
+
+        };
+
+    }, [
+        token,
+        carregarConteudos
+    ]);
 
     // =========================================
-    // CONTAGENS
+    // PERMISSÕES ESPECÍFICAS POR ARTIGO
     // =========================================
+
+    function podeRevisarArtigo(item) {
+
+        return (
+            podeRevisar &&
+            !carregandoPermissoes &&
+            !erroPermissoes &&
+            temPermissao(
+                "artigo.revisar",
+                obterTemaId(item)
+            )
+        );
+
+    }
+
+    function ehAutorDoArtigo(item) {
+
+        const autorId =
+            item.autorUsuarioId ??
+            item.AutorUsuarioId ??
+            item.autorId ??
+            null;
+
+        if (!usuarioId || !autorId) {
+            return false;
+        }
+
+        return (
+            String(usuarioId).toLowerCase() ===
+            String(autorId).toLowerCase()
+        );
+
+    }
+
+    function estaEmRevisao(item) {
+
+        return normalizarStatus(
+            item.status ?? item.Status
+        ) === "EM_REVISAO";
+
+    }
+
+    function estaAprovado(item) {
+
+        return normalizarStatus(
+            item.status ?? item.Status
+        ) === "APROVADO";
+
+    }
+
+    function podeAprovarArtigo(item) {
+
+        return (
+            podeRevisarArtigo(item) &&
+            estaEmRevisao(item) &&
+            !ehAutorDoArtigo(item) &&
+            temPermissao(
+                "artigo.aprovar",
+                obterTemaId(item)
+            )
+        );
+
+    }
+
+    function podeRejeitarArtigo(item) {
+
+        return (
+            podeRevisarArtigo(item) &&
+            estaEmRevisao(item) &&
+            !ehAutorDoArtigo(item) &&
+            temPermissao(
+                "artigo.rejeitar",
+                obterTemaId(item)
+            )
+        );
+
+    }
+
+    function podeSolicitarAjustes(item) {
+
+        return (
+            podeRevisarArtigo(item) &&
+            estaEmRevisao(item) &&
+            !ehAutorDoArtigo(item) &&
+            temPermissao(
+                "artigo.solicitar.ajustes",
+                obterTemaId(item)
+            )
+        );
+
+    }
+
+    function podePublicarArtigo(item) {
+
+        return (
+            podeRevisarArtigo(item) &&
+            estaAprovado(item) &&
+            temPermissao(
+                "artigo.publicar",
+                obterTemaId(item)
+            )
+        );
+
+    }
+
+    // =========================================
+    // CONTEÚDOS AUTORIZADOS
+    // =========================================
+
+    const conteudosPermitidos = {
+
+        Pendente: conteudos.Pendente.filter(
+            podeRevisarArtigo
+        ),
+
+        Aprovado: conteudos.Aprovado.filter(
+            podeRevisarArtigo
+        ),
+
+        Rejeitado: conteudos.Rejeitado.filter(
+            podeRevisarArtigo
+        )
+
+    };
 
     const contagens = {
 
-        Pendente: conteudos.Pendente.length,
+        Pendente:
+            conteudosPermitidos.Pendente.length,
 
-        Aprovado: conteudos.Aprovado.length,
+        Aprovado:
+            conteudosPermitidos.Aprovado.length,
 
-        Rejeitado: conteudos.Rejeitado.length
+        Rejeitado:
+            conteudosPermitidos.Rejeitado.length
 
     };
 
@@ -162,7 +441,9 @@ function ConteudoRevisao() {
 
     function formatarData(data) {
 
-        if (!data) return "Não informada";
+        if (!data) {
+            return "Não informada";
+        }
 
         const dataFormatada = new Date(data);
 
@@ -170,7 +451,9 @@ function ConteudoRevisao() {
             return "Não informada";
         }
 
-        return dataFormatada.toLocaleDateString("pt-BR");
+        return dataFormatada.toLocaleDateString(
+            "pt-BR"
+        );
 
     }
 
@@ -178,23 +461,28 @@ function ConteudoRevisao() {
     // PESQUISA
     // =========================================
 
-    const listaFiltrada = conteudos[abaAtiva].filter((item) => {
+    const listaFiltrada =
+        conteudosPermitidos[abaAtiva].filter(item => {
 
-        const texto = pesquisa.toLowerCase();
+            const texto =
+                normalizarTexto(pesquisa);
 
-        const titulo = (item.titulo || "").toLowerCase();
+            const titulo =
+                normalizarTexto(item.titulo);
 
-        const tema = (item.tema || "").toLowerCase();
+            const tema =
+                normalizarTexto(item.tema);
 
-        const autor = (item.autor || "").toLowerCase();
+            const autor =
+                normalizarTexto(item.autor);
 
-        return (
-            titulo.includes(texto) ||
-            tema.includes(texto) ||
-            autor.includes(texto)
-        );
+            return (
+                titulo.includes(texto) ||
+                tema.includes(texto) ||
+                autor.includes(texto)
+            );
 
-    });
+        });
 
     // =========================================
     // PAGINAÇÃO
@@ -202,10 +490,15 @@ function ConteudoRevisao() {
 
     const totalPaginas = Math.max(
         1,
-        Math.ceil(listaFiltrada.length / itensPorPagina)
+        Math.ceil(
+            listaFiltrada.length / itensPorPagina
+        )
     );
 
-    const paginaAtual = Math.min(pagina, totalPaginas);
+    const paginaAtual = Math.min(
+        pagina,
+        totalPaginas
+    );
 
     const listaPaginada = listaFiltrada.slice(
 
@@ -218,56 +511,89 @@ function ConteudoRevisao() {
     function mudarAba(status) {
 
         setAbaAtiva(status);
-
         setPagina(1);
-
         setPesquisa("");
 
     }
 
     // =========================================
-    // APROVAR ARTIGO
+    // EXECUTAR AÇÕES DE REVISÃO
     // =========================================
 
-    async function aprovarConteudo(id) {
+    async function executarAcao(
+        item,
+        endpoint,
+        verificarPermissao,
+        mensagemSucesso,
+        comentario
+    ) {
 
-        const comentario = window.prompt(
-            "Digite um comentário para o histórico da revisão (opcional):"
-        );
+        if (
+            executandoAcaoRef.current ||
+            !verificarPermissao(item)
+        ) {
 
-        if (comentario === null) return;
+            return;
+
+        }
+
+        const artigoId = obterArtigoId(item);
+
+        if (!artigoId) {
+
+            alert(
+                "Não foi possível identificar o artigo."
+            );
+
+            return;
+
+        }
 
         try {
 
-            setAcaoEmAndamento(id);
+            executandoAcaoRef.current = true;
+
+            setAcaoEmAndamento(artigoId);
+
+            const opcoes = {
+                method: "POST"
+            };
+
+            if (comentario !== undefined) {
+
+                opcoes.body = JSON.stringify({
+                    comentario
+                });
+
+            }
 
             const resposta = await requisicaoApi(
-                `/api/Artigos/${id}/aprovar`,
-                {
-                    method: "POST",
-                    body: JSON.stringify({
-                        comentario: comentario.trim() || null
-                    })
-                }
+                `/api/Artigos/${artigoId}/${endpoint}`,
+                opcoes
             );
 
             alert(
                 resposta?.mensagem ||
-                "Conteúdo aprovado com sucesso!"
+                mensagemSucesso
             );
 
             await carregarConteudos();
 
         } catch (error) {
 
-            console.error("Erro ao aprovar conteúdo:", error);
+            console.error(
+                "Erro ao executar ação de revisão:",
+                error
+            );
 
             alert(
                 error.message ||
-                "Não foi possível aprovar o conteúdo."
+                "Não foi possível realizar a operação."
             );
 
         } finally {
+
+            executandoAcaoRef.current = false;
 
             setAcaoEmAndamento(null);
 
@@ -276,10 +602,42 @@ function ConteudoRevisao() {
     }
 
     // =========================================
+    // APROVAR ARTIGO
+    // =========================================
+
+    async function aprovarConteudo(item) {
+
+        if (!podeAprovarArtigo(item)) return;
+
+        const comentario = window.prompt(
+            "Digite um comentário para o histórico da revisão (opcional):"
+        );
+
+        if (comentario === null) return;
+
+        await executarAcao(
+
+            item,
+
+            "aprovar",
+
+            podeAprovarArtigo,
+
+            "Conteúdo aprovado com sucesso!",
+
+            comentario.trim() || null
+
+        );
+
+    }
+
+    // =========================================
     // REJEITAR ARTIGO
     // =========================================
 
-    async function rejeitarConteudo(id) {
+    async function rejeitarConteudo(item) {
+
+        if (!podeRejeitarArtigo(item)) return;
 
         const comentario = window.prompt(
             "Informe o motivo da rejeição:"
@@ -297,41 +655,19 @@ function ConteudoRevisao() {
 
         }
 
-        try {
+        await executarAcao(
 
-            setAcaoEmAndamento(id);
+            item,
 
-            const resposta = await requisicaoApi(
-                `/api/Artigos/${id}/rejeitar`,
-                {
-                    method: "POST",
-                    body: JSON.stringify({
-                        comentario: comentario.trim()
-                    })
-                }
-            );
+            "rejeitar",
 
-            alert(
-                resposta?.mensagem ||
-                "Conteúdo rejeitado."
-            );
+            podeRejeitarArtigo,
 
-            await carregarConteudos();
+            "Conteúdo rejeitado.",
 
-        } catch (error) {
+            comentario.trim()
 
-            console.error("Erro ao rejeitar conteúdo:", error);
-
-            alert(
-                error.message ||
-                "Não foi possível rejeitar o conteúdo."
-            );
-
-        } finally {
-
-            setAcaoEmAndamento(null);
-
-        }
+        );
 
     }
 
@@ -339,7 +675,9 @@ function ConteudoRevisao() {
     // SOLICITAR AJUSTES
     // =========================================
 
-    async function solicitarAjustes(id) {
+    async function solicitarAjustes(item) {
+
+        if (!podeSolicitarAjustes(item)) return;
 
         const comentario = window.prompt(
             "Descreva os ajustes que o autor precisa realizar:"
@@ -357,52 +695,29 @@ function ConteudoRevisao() {
 
         }
 
-        try {
+        await executarAcao(
 
-            setAcaoEmAndamento(id);
+            item,
 
-            const resposta = await requisicaoApi(
-                `/api/Artigos/${id}/solicitar-ajustes`,
-                {
-                    method: "POST",
-                    body: JSON.stringify({
-                        comentario: comentario.trim()
-                    })
-                }
-            );
+            "solicitar-ajustes",
 
-            alert(
-                resposta?.mensagem ||
-                "Ajustes solicitados ao autor."
-            );
+            podeSolicitarAjustes,
 
-            await carregarConteudos();
+            "Ajustes solicitados ao autor.",
 
-        } catch (error) {
+            comentario.trim()
 
-            console.error(
-                "Erro ao solicitar ajustes:",
-                error
-            );
-
-            alert(
-                error.message ||
-                "Não foi possível solicitar os ajustes."
-            );
-
-        } finally {
-
-            setAcaoEmAndamento(null);
-
-        }
+        );
 
     }
 
     // =========================================
-    // PUBLICAR ARTIGO APROVADO
+    // PUBLICAR ARTIGO
     // =========================================
 
-    async function publicarConteudo(id) {
+    async function publicarConteudo(item) {
+
+        if (!podePublicarArtigo(item)) return;
 
         const confirmar = window.confirm(
             "Deseja publicar este conteúdo? Ele ficará disponível conforme sua visibilidade."
@@ -410,463 +725,672 @@ function ConteudoRevisao() {
 
         if (!confirmar) return;
 
-        try {
+        await executarAcao(
 
-            setAcaoEmAndamento(id);
+            item,
 
-            const resposta = await requisicaoApi(
-                `/api/Artigos/${id}/publicar`,
-                {
-                    method: "POST"
-                }
-            );
+            "publicar",
 
-            alert(
-                resposta?.mensagem ||
-                "Conteúdo publicado com sucesso!"
-            );
+            podePublicarArtigo,
 
-            await carregarConteudos();
+            "Conteúdo publicado com sucesso!"
 
-        } catch (error) {
-
-            console.error("Erro ao publicar conteúdo:", error);
-
-            alert(
-                error.message ||
-                "Não foi possível publicar o conteúdo."
-            );
-
-        } finally {
-
-            setAcaoEmAndamento(null);
-
-        }
+        );
 
     }
 
     // =========================================
-    // VISUALIZAR CONTEÚDO
+    // VISUALIZAR ARTIGO
     // =========================================
 
-   function visualizarConteudo(item) {
+    function visualizarConteudo(item) {
 
-    console.log("DADOS COMPLETOS DO ARTIGO:", item);
+        if (!podeRevisarArtigo(item)) return;
 
-    navigate("/conteudos/detalhes", {
+        const artigoId = obterArtigoId(item);
 
-        state: {
+        if (!artigoId) return;
 
-            conteudo: {
+        navigate(
+            `/conteudos/detalhes?id=${encodeURIComponent(artigoId)}`,
+            {
 
-                id: item.artigoId,
-                artigoId: item.artigoId,
-                titulo: item.titulo,
-                tema: item.tema,
-                data: formatarData(item.dataCriacao),
-                dataPublicacao: item.dataPublicacao,
-                autor: item.autor,
-                resumo: item.resumo,
-                conteudo: item.conteudo,
-                visibilidade: item.visibilidade,
-                status: item.status,
+                state: {
 
-                nomeArquivo: item.nomeArquivo,
-                tamanhoArquivo: item.tamanhoArquivo,
-                temArquivo: item.temArquivo
+                    origem: "/conteudos/revisao",
+
+                    conteudo: {
+
+                        ...item,
+
+                        id: artigoId,
+
+                        artigoId,
+
+                        temaId: obterTemaId(item),
+
+                        data: formatarData(
+                            item.dataCriacao
+                        )
+
+                    }
+
+                }
 
             }
+        );
 
-        }
+    }
 
-    });
-
-}
     // =========================================
-    // AÇÕES POR ARTIGO
+    // BOTÕES DE AÇÕES
     // =========================================
 
-   
-function botoesAcoes(item) {
+    function botoesAcoes(item) {
 
-    const ocupado = acaoEmAndamento === item.artigoId;
+        const ocupado =
+            acaoEmAndamento !== null;
 
-    return (
+        return (
 
-        <div className="revisao-acoes-status">
+            <div className="revisao-acoes-status">
 
-            {abaAtiva === "Pendente" && (
+                {/* APROVAR */}
 
-                <>
+                {abaAtiva === "Pendente" &&
+                    podeAprovarArtigo(item) && (
 
-                    {/* APROVAR */}
                     <button
+                        type="button"
                         className="revisao-botao-aprovar"
                         title="Aprovar conteúdo"
                         aria-label="Aprovar conteúdo"
                         disabled={ocupado}
+
                         onClick={() =>
-                            aprovarConteudo(item.artigoId)
+                            aprovarConteudo(item)
                         }
                     >
-                        <Check size={18} strokeWidth={2.5} />
+
+                        <Check
+                            size={18}
+                            strokeWidth={2.5}
+                        />
+
                     </button>
 
-                    {/* SOLICITAR AJUSTES */}
+                )}
+
+                {/* SOLICITAR AJUSTES */}
+
+                {abaAtiva === "Pendente" &&
+                    podeSolicitarAjustes(item) && (
+
                     <button
+                        type="button"
                         className="revisao-botao-ajustes"
                         title="Solicitar ajustes"
                         aria-label="Solicitar ajustes"
                         disabled={ocupado}
+
                         onClick={() =>
-                            solicitarAjustes(item.artigoId)
+                            solicitarAjustes(item)
                         }
                     >
-                        <Pencil size={17} strokeWidth={2} />
+
+                        <Pencil
+                            size={17}
+                            strokeWidth={2}
+                        />
+
                     </button>
 
-                    {/* REJEITAR */}
+                )}
+
+                {/* REJEITAR */}
+
+                {abaAtiva === "Pendente" &&
+                    podeRejeitarArtigo(item) && (
+
                     <button
+                        type="button"
                         className="revisao-botao-rejeitar"
                         title="Rejeitar conteúdo"
                         aria-label="Rejeitar conteúdo"
                         disabled={ocupado}
+
                         onClick={() =>
-                            rejeitarConteudo(item.artigoId)
+                            rejeitarConteudo(item)
                         }
                     >
-                        <X size={19} strokeWidth={2.5} />
+
+                        <X
+                            size={19}
+                            strokeWidth={2.5}
+                        />
+
                     </button>
 
-                </>
+                )}
 
-            )}
+                {/* PUBLICAR */}
 
-            {abaAtiva === "Aprovado" && (
+                {abaAtiva === "Aprovado" &&
+                    podePublicarArtigo(item) && (
 
-                <button
-                    type="button"
-                    className="revisao-botao-publicar"
-                    title={ocupado ? "Publicando conteúdo..." : "Publicar conteúdo"}
-                    aria-label={ocupado ? "Publicando conteúdo" : "Publicar conteúdo"}
-                    disabled={ocupado}
-                    onClick={() =>
-                        publicarConteudo(item.artigoId)
-                    }
-                >
-                    <Send size={18} strokeWidth={2} aria-hidden="true" />
-                </button>
+                    <button
+                        type="button"
+                        className="revisao-botao-publicar"
+                        title="Publicar conteúdo"
+                        aria-label="Publicar conteúdo"
+                        disabled={ocupado}
 
-            )}
+                        onClick={() =>
+                            publicarConteudo(item)
+                        }
+                    >
 
-            {/* VISUALIZAR */}
-            <button
-                className="revisao-botao-visualizar"
-                title="Visualizar conteúdo"
-                aria-label="Visualizar conteúdo"
-                onClick={() => visualizarConteudo(item)}
-            >
-                <Eye size={18} strokeWidth={2} />
-            </button>
+                        <Send
+                            size={18}
+                            strokeWidth={2}
+                        />
 
-        </div>
+                    </button>
 
-    );
+                )}
 
-}
+                {/* VISUALIZAR */}
+
+                {podeRevisarArtigo(item) && (
+
+                    <button
+                        type="button"
+                        className="revisao-botao-visualizar"
+                        title="Visualizar conteúdo"
+                        aria-label="Visualizar conteúdo"
+                        disabled={ocupado}
+
+                        onClick={() =>
+                            visualizarConteudo(item)
+                        }
+                    >
+
+                        <Eye
+                            size={18}
+                            strokeWidth={2}
+                        />
+
+                    </button>
+
+                )}
+
+            </div>
+
+        );
+
+    }
 
     // =========================================
-    // TELA
+    // ESTADO DA LISTAGEM
+    // =========================================
+
+    const carregandoLista =
+        carregando ||
+        carregandoPermissoes;
+
+    const erroLista =
+        erroPermissoes
+            ? "Não foi possível carregar suas permissões."
+            : erro;
+
+    const mensagemLista =
+        carregandoLista
+            ? "Carregando conteúdos..."
+            : erroLista
+                ? erroLista
+                : "Nenhum conteúdo encontrado.";
+
+    // =========================================
+    // RENDERIZAÇÃO
+    //
+    // Sidebar e Header são fornecidos
+    // pelo LayoutSistema.
     // =========================================
 
     return (
 
         <div className="revisao-pagina">
 
-            <Sidebar />
-
             <main className="revisao-principal">
-
-                <Header />
 
                 <section className="revisao-conteudo">
 
                     <h1 className="revisao-titulo">
+
                         Conteúdos para revisão
+
                     </h1>
 
-                    {/* ABAS */}
+                    {/* CARREGANDO PERMISSÕES */}
 
-                    <div className="revisao-abas">
+                    {carregandoPermissoes ? (
 
-                        <button
-                            className={
-                                abaAtiva === "Pendente"
-                                    ? "aba-revisao ativa"
-                                    : "aba-revisao"
-                            }
-                            onClick={() => mudarAba("Pendente")}
+                        <p role="status">
+
+                            Carregando permissões...
+
+                        </p>
+
+                    ) : erroPermissoes ? (
+
+                        <div
+                            className="revisao-erro"
+                            role="alert"
                         >
-                            Pendentes ({contagens.Pendente})
-                        </button>
 
-                        <button
-                            className={
-                                abaAtiva === "Aprovado"
-                                    ? "aba-revisao ativa"
-                                    : "aba-revisao"
-                            }
-                            onClick={() => mudarAba("Aprovado")}
-                        >
-                            Aprovados ({contagens.Aprovado})
-                        </button>
-
-                        <button
-                            className={
-                                abaAtiva === "Rejeitado"
-                                    ? "aba-revisao ativa"
-                                    : "aba-revisao"
-                            }
-                            onClick={() => mudarAba("Rejeitado")}
-                        >
-                            Rejeitados ({contagens.Rejeitado})
-                        </button>
-
-                    </div>
-
-                    {/* PESQUISA */}
-
-                    <div className="revisao-pesquisa">
-
-                        <input
-                            type="text"
-                            placeholder="Buscar por título, tema ou autor..."
-                            value={pesquisa}
-                            onChange={(e) => {
-                                setPesquisa(e.target.value);
-                                setPagina(1);
-                            }}
-                        />
-
-                    </div>
-
-                    {/* TABELA DESKTOP */}
-
-                    <div className="revisao-tabela-container">
-
-                        <table className="revisao-tabela">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>Título</th>
-
-                                    <th>Tema</th>
-
-                                    <th>Data de criação</th>
-
-                                    <th>Autor</th>
-
-                                    <th className="revisao-coluna-acoes">
-                                        Ações
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                {carregando ? (
-
-                                    <tr>
-                                        <td colSpan="5" className="revisao-vazio">
-                                            Carregando conteúdos...
-                                        </td>
-                                    </tr>
-
-                                ) : erro ? (
-
-                                    <tr>
-                                        <td colSpan="5" className="revisao-vazio">
-                                            {erro}
-                                        </td>
-                                    </tr>
-
-                                ) : listaPaginada.length > 0 ? (
-
-                                    listaPaginada.map((item) => (
-
-                                        <tr key={item.artigoId}>
-
-                                            <td>{item.titulo}</td>
-
-                                            <td>
-                                                <span className="revisao-etiqueta">
-                                                    {item.tema}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                {formatarData(item.dataCriacao)}
-                                            </td>
-
-                                            <td>{item.autor}</td>
-
-                                            <td className="revisao-coluna-acoes">
-
-                                                {botoesAcoes(item)}
-
-                                            </td>
-
-                                        </tr>
-
-                                    ))
-
-                                ) : (
-
-                                    <tr>
-                                        <td colSpan="5" className="revisao-vazio">
-                                            Nenhum conteúdo encontrado.
-                                        </td>
-                                    </tr>
-
-                                )}
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                    {/* CARTÕES MOBILE */}
-
-                    <div className="revisao-cartoes">
-
-                        {carregando ? (
-
-                            <p className="revisao-vazio-mobile">
-                                Carregando conteúdos...
+                            <p>
+                                Não foi possível carregar
+                                suas permissões.
                             </p>
-
-                        ) : erro ? (
-
-                            <p className="revisao-vazio-mobile">
-                                {erro}
-                            </p>
-
-                        ) : listaPaginada.length > 0 ? (
-
-                            listaPaginada.map((item) => (
-
-                                <article
-                                    className="revisao-cartao"
-                                    key={item.artigoId}
-                                >
-
-                                    <div className="cartao-campo cartao-titulo">
-
-                                        <strong>Título</strong>
-
-                                        <span>{item.titulo}</span>
-
-                                    </div>
-
-                                    <div className="cartao-campo cartao-data">
-
-                                        <strong>Data de criação</strong>
-
-                                        <span>
-                                            {formatarData(item.dataCriacao)}
-                                        </span>
-
-                                    </div>
-
-                                    <div className="cartao-campo cartao-tema">
-
-                                        <strong>Tema</strong>
-
-                                        <span className="revisao-etiqueta">
-                                            {item.tema}
-                                        </span>
-
-                                    </div>
-
-                                    <div className="cartao-campo cartao-autor">
-
-                                        <strong>Autor</strong>
-
-                                        <span>{item.autor}</span>
-
-                                    </div>
-
-                                    <div className="cartao-acoes">
-
-                                        {botoesAcoes(item)}
-
-                                    </div>
-
-                                </article>
-
-                            ))
-
-                        ) : (
-
-                            <p className="revisao-vazio-mobile">
-                                Nenhum conteúdo encontrado.
-                            </p>
-
-                        )}
-
-                    </div>
-
-                    {/* PAGINAÇÃO */}
-
-                    {!carregando && !erro && (
-
-                        <div className="revisao-paginacao">
 
                             <button
-                                disabled={paginaAtual === 1}
-                                onClick={() =>
-                                    setPagina(paginaAtual - 1)
-                                }
-                                aria-label="Página anterior"
+                                type="button"
+                                onClick={atualizar}
                             >
-                                {"<"}
-                            </button>
 
-                            {Array.from(
-                                { length: totalPaginas },
-                                (_, indice) => indice + 1
-                            ).map((numero) => (
+                                Tentar novamente
 
-                                <button
-                                    key={numero}
-                                    className={
-                                        paginaAtual === numero
-                                            ? "pagina-ativa"
-                                            : ""
-                                    }
-                                    onClick={() => setPagina(numero)}
-                                >
-                                    {numero}
-                                </button>
-
-                            ))}
-
-                            <button
-                                disabled={paginaAtual === totalPaginas}
-                                onClick={() =>
-                                    setPagina(paginaAtual + 1)
-                                }
-                                aria-label="Próxima página"
-                            >
-                                {">"}
                             </button>
 
                         </div>
+
+                    ) : !podeRevisar ? (
+
+                        <div
+                            className="revisao-erro"
+                            role="alert"
+                        >
+
+                            <h2>Acesso negado</h2>
+
+                            <p>
+
+                                Você não possui permissão
+                                para revisar conteúdos.
+
+                            </p>
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    navigate("/home")
+                                }
+                            >
+
+                                Voltar ao início
+
+                            </button>
+
+                        </div>
+
+                    ) : (
+
+                        <>
+
+                            {/* ABAS */}
+
+                            <div className="revisao-abas">
+
+                                {abas.map(aba => (
+
+                                    <button
+                                        key={aba.chave}
+                                        type="button"
+
+                                        className={
+                                            abaAtiva === aba.chave
+                                                ? "aba-revisao ativa"
+                                                : "aba-revisao"
+                                        }
+
+                                        onClick={() =>
+                                            mudarAba(aba.chave)
+                                        }
+                                    >
+
+                                        {aba.titulo}{" "}
+
+                                        ({contagens[aba.chave]})
+
+                                    </button>
+
+                                ))}
+
+                            </div>
+
+                            {/* PESQUISA */}
+
+                            <div className="revisao-pesquisa">
+
+                                <input
+                                    type="search"
+
+                                    placeholder="Buscar por título, tema ou autor..."
+
+                                    aria-label="Pesquisar conteúdos para revisão"
+
+                                    value={pesquisa}
+
+                                    onChange={event =>
+                                        alterarPesquisa(
+                                            event.target.value
+                                        )
+                                    }
+                                />
+
+                            </div>
+
+                            {/* ERRO DA API */}
+
+                            {erro && (
+
+                                <div
+                                    className="revisao-erro"
+                                    role="alert"
+                                >
+
+                                    <p>{erro}</p>
+
+                                    <button
+                                        type="button"
+                                        onClick={carregarConteudos}
+                                    >
+
+                                        Tentar novamente
+
+                                    </button>
+
+                                </div>
+
+                            )}
+
+                            {/* TABELA DESKTOP */}
+
+                            <div className="revisao-tabela-container">
+
+                                <table className="revisao-tabela">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Título</th>
+
+                                            <th>Tema</th>
+
+                                            <th>Data de criação</th>
+
+                                            <th>Autor</th>
+
+                                            <th className="revisao-coluna-acoes">
+
+                                                Ações
+
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        {carregandoLista ||
+                                        erroLista ||
+                                        listaPaginada.length === 0 ? (
+
+                                            <tr>
+
+                                                <td
+                                                    colSpan={5}
+                                                    className="revisao-vazio"
+                                                >
+
+                                                    {mensagemLista}
+
+                                                </td>
+
+                                            </tr>
+
+                                        ) : (
+
+                                            listaPaginada.map(item => (
+
+                                                <tr
+                                                    key={obterArtigoId(item)}
+                                                >
+
+                                                    <td>
+                                                        {item.titulo}
+                                                    </td>
+
+                                                    <td>
+
+                                                        <span className="revisao-etiqueta">
+
+                                                            {item.tema ||
+                                                                "Não informado"}
+
+                                                        </span>
+
+                                                    </td>
+
+                                                    <td>
+
+                                                        {formatarData(
+                                                            item.dataCriacao
+                                                        )}
+
+                                                    </td>
+
+                                                    <td>
+
+                                                        {item.autor ||
+                                                            "Não informado"}
+
+                                                    </td>
+
+                                                    <td className="revisao-coluna-acoes">
+
+                                                        {botoesAcoes(item)}
+
+                                                    </td>
+
+                                                </tr>
+
+                                            ))
+
+                                        )}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            {/* CARTÕES MOBILE */}
+
+                            <div className="revisao-cartoes">
+
+                                {carregandoLista ||
+                                erroLista ||
+                                listaPaginada.length === 0 ? (
+
+                                    <p className="revisao-vazio-mobile">
+
+                                        {mensagemLista}
+
+                                    </p>
+
+                                ) : (
+
+                                    listaPaginada.map(item => (
+
+                                        <article
+                                            key={obterArtigoId(item)}
+
+                                            className="revisao-cartao"
+                                        >
+
+                                            <div className="cartao-campo cartao-titulo">
+
+                                                <strong>Título</strong>
+
+                                                <span>{item.titulo}</span>
+
+                                            </div>
+
+                                            <div className="cartao-campo cartao-data">
+
+                                                <strong>
+
+                                                    Data de criação
+
+                                                </strong>
+
+                                                <span>
+
+                                                    {formatarData(
+                                                        item.dataCriacao
+                                                    )}
+
+                                                </span>
+
+                                            </div>
+
+                                            <div className="cartao-campo cartao-tema">
+
+                                                <strong>Tema</strong>
+
+                                                <span className="revisao-etiqueta">
+
+                                                    {item.tema ||
+                                                        "Não informado"}
+
+                                                </span>
+
+                                            </div>
+
+                                            <div className="cartao-campo cartao-autor">
+
+                                                <strong>Autor</strong>
+
+                                                <span>
+
+                                                    {item.autor ||
+                                                        "Não informado"}
+
+                                                </span>
+
+                                            </div>
+
+                                            <div className="cartao-acoes">
+
+                                                {botoesAcoes(item)}
+
+                                            </div>
+
+                                        </article>
+
+                                    ))
+
+                                )}
+
+                            </div>
+
+                            {/* PAGINAÇÃO */}
+
+                            {!carregandoLista &&
+                                !erroLista &&
+                                listaFiltrada.length > 0 && (
+
+                                <div className="revisao-paginacao">
+
+                                    <button
+                                        type="button"
+
+                                        disabled={
+                                            paginaAtual === 1
+                                        }
+
+                                        aria-label="Página anterior"
+
+                                        onClick={() =>
+                                            setPagina(
+                                                paginaAtual - 1
+                                            )
+                                        }
+                                    >
+
+                                        {"<"}
+
+                                    </button>
+
+                                    {Array.from(
+
+                                        { length: totalPaginas },
+
+                                        (_, indice) =>
+                                            indice + 1
+
+                                    ).map(numero => (
+
+                                        <button
+                                            key={numero}
+
+                                            type="button"
+
+                                            className={
+                                                paginaAtual === numero
+                                                    ? "pagina-ativa"
+                                                    : ""
+                                            }
+
+                                            onClick={() =>
+                                                setPagina(numero)
+                                            }
+                                        >
+
+                                            {numero}
+
+                                        </button>
+
+                                    ))}
+
+                                    <button
+                                        type="button"
+
+                                        disabled={
+                                            paginaAtual === totalPaginas
+                                        }
+
+                                        aria-label="Próxima página"
+
+                                        onClick={() =>
+                                            setPagina(
+                                                paginaAtual + 1
+                                            )
+                                        }
+                                    >
+
+                                        {">"}
+
+                                    </button>
+
+                                </div>
+
+                            )}
+
+                        </>
 
                     )}
 
@@ -875,125 +1399,6 @@ function botoesAcoes(item) {
             </main>
 
         </div>
-
-    );
-
-}
-
-
-// =========================================
-// MENU LATERAL
-// =========================================
-
-function Sidebar() {
-
-    const navigate = useNavigate();
-
-    const perfis = obterPerfisLogados();
-
-    const itensMenu = [
-
-        {
-            nome: "Início",
-            icone: CasaBranca,
-            caminho: "/home"
-        },
-
-        {
-            nome: "Conteúdos",
-            icone: LivroBranco,
-            caminho: "/conteudos"
-        },
-
-        {
-            nome: "Notas Fiscais",
-            icone: DoisDocumentosBranco,
-            caminho: "/notas-fiscais"
-        },
-
-        {
-            nome: "Clientes",
-            icone: ADDProfileBranco,
-            caminho: "/clientes"
-        },
-
-        {
-            nome: "Usuários",
-            icone: PessoaBranca,
-            caminho: "/usuario"
-        }
-
-    ].filter(item =>
-        item.caminho === "/home" ||
-        item.caminho === "/conteudos" ||
-        (item.caminho === "/notas-fiscais" && PERFIS_FISCAIS.some(perfil => perfis.includes(perfil))) ||
-        ((item.caminho === "/clientes" || item.caminho === "/usuario") && perfis.includes("Administrador"))
-    );
-
-    return (
-
-        <aside className="revisao-sidebar">
-
-            <div className="revisao-logo">
-
-                <img src={LogoNome} alt="Integra" />
-
-            </div>
-
-            <nav className="revisao-menu">
-
-                {itensMenu.map((item) => (
-
-                    <NavLink
-                        to={item.caminho}
-                        key={item.nome}
-                        className={({ isActive }) =>
-
-                            item.nome === "Conteúdos" &&
-                            window.location.pathname.startsWith("/conteudos")
-
-                                ? "revisao-menu-item revisao-menu-ativo"
-
-                                : isActive
-                                    ? "revisao-menu-item revisao-menu-ativo"
-                                    : "revisao-menu-item"
-
-                        }
-                    >
-
-                        <img
-                            src={item.icone}
-                            alt=""
-                        />
-
-                        <span>{item.nome}</span>
-
-                    </NavLink>
-
-                ))}
-
-            </nav>
-
-            <button
-                className="revisao-sair"
-                onClick={() => {
-
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("usuario");
-                    localStorage.removeItem("perfis");
-
-                    navigate("/login", { replace: true });
-
-                }}
-            >
-
-                <img src={SairBranco} alt="" />
-
-                <span>Sair</span>
-
-            </button>
-
-        </aside>
 
     );
 

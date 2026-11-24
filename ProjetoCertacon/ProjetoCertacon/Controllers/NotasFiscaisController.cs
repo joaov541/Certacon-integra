@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoCertacon.Data;
@@ -21,18 +20,27 @@ public class NotasFiscaisController : ControllerBase
     private readonly ArmazenamentoXmlService _armazenamento;
     private readonly ValidacaoNfeService _validacaoNfe;
     private readonly ILogger<NotasFiscaisController> _logger;
+    private readonly PermissaoService _permissoes;
+    private readonly ValidacaoCnpjService _cnpj;
+    private readonly AuditoriaService _auditoria;
 
     public NotasFiscaisController(
         ILogger<NotasFiscaisController> logger,
         IntegraCertaconContext context,
         ArmazenamentoXmlService armazenamento,
-        ValidacaoNfeService validacaoNfe)
+        ValidacaoNfeService validacaoNfe,
+        PermissaoService permissoes,
+        ValidacaoCnpjService cnpj,
+        AuditoriaService auditoria)
 
     {
         _logger = logger;
         _context = context;
         _armazenamento = armazenamento;
         _validacaoNfe = validacaoNfe;
+        _permissoes = permissoes;
+        _cnpj = cnpj;
+        _auditoria = auditoria;
     }
 
 
@@ -41,15 +49,17 @@ public class NotasFiscaisController : ControllerBase
     /// </summary>
     /// <returns>retorna codigo 200</returns>
     [HttpGet]
-    public async Task<IActionResult> Listar()
+    public async Task<IActionResult> Listar([FromQuery] DateTime? inicio = null, [FromQuery] DateTime? fim = null)
     {
-        var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var (consulta, erro) = await ConsultarNotasPermitidas();
+        if (erro != null) return erro;
 
-        if (!Guid.TryParse(usuarioId, out var id))
-            return Unauthorized();
+        if (inicio.HasValue && fim.HasValue && inicio.Value.Date > fim.Value.Date)
+            return BadRequest("Período inválido.");
+        if (inicio.HasValue) consulta = consulta!.Where(n => n.DataEmissao >= inicio.Value.Date);
+        if (fim.HasValue) consulta = consulta!.Where(n => n.DataEmissao.HasValue && n.DataEmissao.Value.Date <= fim.Value.Date);
 
-        var notas = await _context.NotaFiscals
-     .Where(n => n.UsuarioId == id)
+        var notas = await consulta!.AsNoTracking()
      .OrderByDescending(n => n.DataEnvio)
      .Select(n => new
      {
@@ -86,14 +96,11 @@ public class NotasFiscaisController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Consultar(Guid id)
     {
-        var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var (consulta, erro) = await ConsultarNotasPermitidas();
+        if (erro != null) return erro;
 
-        if (!Guid.TryParse(usuarioId, out var idUsuario))
-            return Unauthorized();
-
-        var nota = await _context.NotaFiscals
-            .Where(n => n.NotaFiscalId == id &&
-                        n.UsuarioId == idUsuario)
+        var nota = await consulta!.AsNoTracking()
+            .Where(n => n.NotaFiscalId == id)
             .Select(n => new
             {
                 n.NotaFiscalId,
@@ -132,11 +139,15 @@ public class NotasFiscaisController : ControllerBase
     /// </summary>
     /// <returns>retorna 204 no content</returns>
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> ExcluirNota(Guid id)
     {
-        var nota = await _context.NotaFiscals
-            .FirstOrDefaultAsync(n => n.NotaFiscalId == id);
+        var usuarioId = _permissoes.ObterUsuarioId(User);
+        if (!usuarioId.HasValue) return Unauthorized();
+        if (!await _permissoes.TemPermissaoAsync(User, "nota.arquivar"))
+            return Forbid();
+        var (consulta, erro) = await ConsultarNotasPermitidas();
+        if (erro != null) return erro;
+        var nota = await consulta!.FirstOrDefaultAsync(n => n.NotaFiscalId == id);
 
         if (nota == null)
             return NotFound("Nota fiscal não encontrada.");
@@ -146,6 +157,7 @@ public class NotasFiscaisController : ControllerBase
         try
         {
             await _context.SaveChangesAsync();
+            await RegistrarAuditoria(usuarioId.Value, "NOTA_FISCAL_ARQUIVADA", nota.NotaFiscalId);
 
             return Ok(new
             {
@@ -171,16 +183,13 @@ public class NotasFiscaisController : ControllerBase
     [HttpDelete("{id:guid}/xml")]
     public async Task<IActionResult> ExcluirXml(Guid id)
     {
-        var usuarioId = User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
-
-        if (!Guid.TryParse(usuarioId, out var idUsuario))
-            return Unauthorized();
-
-        var nota = await _context.NotaFiscals
-            .FirstOrDefaultAsync(n =>
-                n.NotaFiscalId == id &&
-                n.UsuarioId == idUsuario);
+        var usuarioId = _permissoes.ObterUsuarioId(User);
+        if (!usuarioId.HasValue) return Unauthorized();
+        if (!await _permissoes.TemPermissaoAsync(User, "nota.arquivar"))
+            return Forbid();
+        var (consulta, erro) = await ConsultarNotasPermitidas();
+        if (erro != null) return erro;
+        var nota = await consulta!.FirstOrDefaultAsync(n => n.NotaFiscalId == id);
 
         if (nota == null)
             return NotFound("Nota fiscal não encontrada.");
@@ -195,9 +204,10 @@ public class NotasFiscaisController : ControllerBase
             // Primeiro remove a referência ao arquivo no banco.
             nota.CaminhoArquivo = null;
             await _context.SaveChangesAsync();
+            await RegistrarAuditoria(usuarioId.Value, "NOTA_FISCAL_XML_EXCLUIDO", nota.NotaFiscalId);
 
             // Depois tenta remover o arquivo físico.
-            if (System.IO.File.Exists(caminhoArquivo))
+            if (_armazenamento.CaminhoPermitido(caminhoArquivo) && System.IO.File.Exists(caminhoArquivo))
             {
                 try
                 {
@@ -240,7 +250,7 @@ public class NotasFiscaisController : ControllerBase
 
         try
         {
-            if (System.IO.File.Exists(caminho))
+            if (_armazenamento.CaminhoPermitido(caminho) && System.IO.File.Exists(caminho))
                 System.IO.File.Delete(caminho);
         }
         catch (IOException ex)
@@ -265,10 +275,14 @@ public class NotasFiscaisController : ControllerBase
         IFormFile arquivo,
         CancellationToken cancellationToken)
     {
-        var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (!Guid.TryParse(usuarioId, out var idUsuario))
-            return Unauthorized();
+        var usuarioId = _permissoes.ObterUsuarioId(User);
+        if (!usuarioId.HasValue) return Unauthorized();
+        var idUsuario = usuarioId.Value;
+        if (!await _permissoes.TemPermissaoAsync(User, "nota.importar"))
+            return Forbid();
+        bool acessoTodas = await _permissoes.TemPermissaoAsync(User, "nota.ler.todas");
+        if (!acessoTodas && !await _permissoes.TemPermissaoAsync(User, "nota.ler.proprias"))
+            return Forbid();
 
         if (arquivo == null || arquivo.Length == 0)
             return BadRequest("Selecione um arquivo XML.");
@@ -355,24 +369,31 @@ public class NotasFiscaisController : ControllerBase
         if (chaveProtocolo != null && chaveProtocolo != chave)
             return BadRequest("A chave do protocolo é diferente da chave da NF-e.");
 
-        var cnpjEmitente = (
-       emit.Element(ns + "CNPJ")?.Value
-       ?? emit.Element(ns + "CPF")?.Value
-   )?.Trim().ToUpperInvariant();
+        var cnpjEmitente = _cnpj.Normalizar(emit.Element(ns + "CNPJ")?.Value);
+        var cnpjDestinatario = _cnpj.Normalizar(dest?.Element(ns + "CNPJ")?.Value);
 
-        var cnpjDestinatario = (
-            dest?.Element(ns + "CNPJ")?.Value
-            ?? dest?.Element(ns + "CPF")?.Value
-        )?.Trim().ToUpperInvariant();
-
-        if (string.IsNullOrWhiteSpace(cnpjEmitente))
-            return BadRequest("O XML não possui CNPJ ou CPF do emitente.");
-
-        if (cnpjEmitente.Length != 14)
-            return BadRequest("O documento do emitente deve ter 14 caracteres para esta estrutura.");
+        if (!_cnpj.Valido(cnpjEmitente) || !_cnpj.Valido(cnpjDestinatario))
+            return BadRequest("Informe CNPJs válidos do emitente e destinatário. CPF não faz parte deste fluxo empresarial.");
 
         if (chave.Substring(6, 14) != cnpjEmitente)
-            return BadRequest("O documento do emitente não corresponde à chave de acesso.");
+            return BadRequest("O CNPJ do emitente não corresponde à chave de acesso.");
+
+        if (!acessoTodas)
+        {
+            var cnpjUsuario = await ObterCnpjUsuario(idUsuario);
+            if (!_cnpj.Valido(cnpjUsuario) || cnpjUsuario != cnpjDestinatario)
+                return Forbid();
+        }
+
+        // O vínculo é com a empresa destinatária, nunca com o colaborador que enviou.
+        var clienteId = await _context.UsuarioPerfils.AsNoTracking()
+            .Where(up => up.Perfil.Ativo && up.Perfil.Nome == "Cliente" &&
+                up.Usuario.Ativo && up.Usuario.Cnpj == cnpjDestinatario)
+            .OrderBy(up => up.UsuarioId)
+            .Select(up => (Guid?)up.UsuarioId)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (!clienteId.HasValue)
+            return BadRequest("Não existe cliente ativo cadastrado para o CNPJ destinatário.");
 
         var numero = ide.Element(ns + "nNF")?.Value;
         var serie = ide.Element(ns + "serie")?.Value;
@@ -484,7 +505,7 @@ public class NotasFiscaisController : ControllerBase
             var nota = new NotaFiscal
             {
                 NotaFiscalId = Guid.NewGuid(),
-                UsuarioId = idUsuario,
+                UsuarioId = clienteId.Value,
                 Numero = numero!,
                 Serie = serie,
                 ChaveAcesso = chave,
@@ -500,6 +521,7 @@ public class NotasFiscaisController : ControllerBase
 
             _context.NotaFiscals.Add(nota);
             await _context.SaveChangesAsync(cancellationToken);
+            await RegistrarAuditoria(idUsuario, "NOTA_FISCAL_IMPORTADA", nota.NotaFiscalId);
             await transacao.CommitAsync(cancellationToken);
 
             return CreatedAtAction(
@@ -521,7 +543,7 @@ public class NotasFiscaisController : ControllerBase
         {
             await transacao.RollbackAsync(cancellationToken);
 
-            if (caminhoArquivo != null && System.IO.File.Exists(caminhoArquivo))
+            if (caminhoArquivo != null && _armazenamento.CaminhoPermitido(caminhoArquivo) && System.IO.File.Exists(caminhoArquivo))
                 ExcluirArquivo(caminhoArquivo);
 
             var erroDetalhado = ex.GetBaseException().Message;
@@ -533,7 +555,7 @@ public class NotasFiscaisController : ControllerBase
             return Conflict(new
             {
                 mensagem = "Erro ao gravar a nota fiscal.",
-                detalhe = erroDetalhado
+                detalhe = "Verifique os dados ou se a chave já foi importada."
             });
         }
 
@@ -556,5 +578,32 @@ public class NotasFiscaisController : ControllerBase
 
             throw;
         }
+    }
+
+    private async Task<string> ObterCnpjUsuario(Guid id)
+    {
+        var cnpj = await _context.Usuarios.AsNoTracking()
+            .Where(u => u.UsuarioId == id && u.Ativo)
+            .Select(u => u.Cnpj).FirstOrDefaultAsync();
+        return _cnpj.Normalizar(cnpj);
+    }
+
+    private async Task<(IQueryable<NotaFiscal>? Consulta, IActionResult? Erro)> ConsultarNotasPermitidas()
+    {
+        var id = _permissoes.ObterUsuarioId(User);
+        if (!id.HasValue) return (null, Unauthorized());
+        if (await _permissoes.TemPermissaoAsync(User, "nota.ler.todas"))
+            return (_context.NotaFiscals, null);
+        if (!await _permissoes.TemPermissaoAsync(User, "nota.ler.proprias"))
+            return (null, Forbid());
+        var cnpj = await ObterCnpjUsuario(id.Value);
+        if (!_cnpj.Valido(cnpj)) return (null, Forbid());
+        return (_context.NotaFiscals.Where(n => n.Cnpjdestinatario == cnpj), null);
+    }
+
+    private async Task RegistrarAuditoria(Guid usuarioId, string acao, Guid notaId)
+    {
+        await _auditoria.RegistrarAsync(usuarioId, acao, "NOTA_FISCAL", notaId,
+            HttpContext.Connection.RemoteIpAddress?.ToString(), acao);
     }
 }

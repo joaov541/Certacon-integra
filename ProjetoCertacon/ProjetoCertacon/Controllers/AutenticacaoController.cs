@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using ProjetoCertacon.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,78 +16,20 @@ namespace ProjetoCertacon.Controllers
     [Route("api/[controller]")]
     public class AutenticacaoController : ControllerBase
     {
-        // Remove a máscara e converte para letras maiúsculas
-        private static string NormalizarCnpj(string cnpj)
-        {
-            return Regex.Replace(cnpj, @"[^a-zA-Z0-9]", "")
-                .ToUpperInvariant();
-        }
-
-        // Calcula um dígito verificador pelo módulo 11
-        private static int CalcularDigitoCnpj(
-            string cnpj,
-            int[] pesos)
-        {
-            int soma = 0;
-
-            for (int i = 0; i < pesos.Length; i++)
-            {
-                int valor = cnpj[i] - 48;
-                soma += valor * pesos[i];
-            }
-
-            int resto = soma % 11;
-
-            return resto < 2 ? 0 : 11 - resto;
-        }
-
-        // Verifica formato e dígitos verificadores
-        private static bool CnpjValido(string cnpj)
-        {
-            if (!Regex.IsMatch(cnpj, @"^[A-Z0-9]{12}[0-9]{2}$"))
-                return false;
-
-            int[] pesosPrimeiroDigito =
-            {
-        5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2
-    };
-
-            int primeiroDigito = CalcularDigitoCnpj(
-                cnpj.Substring(0, 12),
-                pesosPrimeiroDigito
-            );
-
-            string baseSegundoDigito =
-                cnpj.Substring(0, 12) + primeiroDigito;
-
-            int[] pesosSegundoDigito =
-            {
-        6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2
-    };
-
-            int segundoDigito = CalcularDigitoCnpj(
-                baseSegundoDigito,
-                pesosSegundoDigito
-            );
-
-            string digitosCalculados =
-                primeiroDigito.ToString() +
-                segundoDigito.ToString();
-
-            return cnpj.Substring(12, 2) == digitosCalculados;
-        }
         private readonly IntegraCertaconContext _context;
         private readonly IPasswordHasher<Usuario> _passwordHasher;
         private readonly IConfiguration _configuration;
+        private readonly ValidacaoCnpjService _cnpj;
 
         public AutenticacaoController(
             IntegraCertaconContext context,
             IPasswordHasher<Usuario> passwordHasher,
-            IConfiguration configuration)
+            IConfiguration configuration, ValidacaoCnpjService cnpj)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _configuration = configuration;
+            _cnpj = cnpj;
         }
 
 
@@ -111,9 +53,9 @@ namespace ProjetoCertacon.Controllers
             var email = dados.Email.Trim().ToLowerInvariant();
 
             // Normaliza o CNPJ sem remover as letras
-            var cnpj = NormalizarCnpj(dados.CNPJ);
+            var cnpj = _cnpj.Normalizar(dados.CNPJ);
 
-            if (!CnpjValido(cnpj))
+            if (!_cnpj.Valido(cnpj))
                 return BadRequest("O CNPJ informado é inválido.");
 
             if (dados.Senha.Length < 8)
@@ -194,9 +136,9 @@ namespace ProjetoCertacon.Controllers
             // Cliente entra com CNPJ
             if (!identificador.Contains('@'))
             {
-                var cnpj = NormalizarCnpj(identificador);
+                var cnpj = _cnpj.Normalizar(identificador);
 
-                if (!CnpjValido(cnpj))
+                if (!_cnpj.Valido(cnpj))
                     return Unauthorized("CNPJ ou senha inválidos.");
 
                 usuario = await _context.Usuarios
@@ -211,8 +153,8 @@ namespace ProjetoCertacon.Controllers
                         _context.Perfils,
                         up => up.PerfilId,
                         p => p.PerfilId,
-                        (up, p) => p.Nome)
-                    .AnyAsync(p => p == "Cliente");
+                        (up, p) => new { p.Nome, p.Ativo })
+                    .AnyAsync(p => p.Nome == "Cliente" && p.Ativo);
 
                 if (!ehCliente)
                     return Unauthorized("CNPJ ou senha inválidos.");
@@ -234,10 +176,10 @@ namespace ProjetoCertacon.Controllers
                         _context.Perfils,
                         up => up.PerfilId,
                         p => p.PerfilId,
-                        (up, p) => p.Nome)
-                    .AnyAsync(p => p == "Cliente");
+                        (up, p) => new { p.Nome, p.Ativo })
+                    .AnyAsync(p => p.Nome == "Cliente" && p.Ativo);
 
-                if (ehCliente)
+                if (ehCliente || !string.IsNullOrWhiteSpace(usuario.Cnpj))
                     return Unauthorized(
                         "Clientes devem entrar usando o CNPJ.");
             }

@@ -1,53 +1,25 @@
-﻿
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace ProjetoCertacon.Services;
 
 public class ValidacaoNfeService
 {
+    private readonly ValidacaoCnpjService _cnpj;
+    public ValidacaoNfeService(ValidacaoCnpjService cnpj) => _cnpj = cnpj;
+
     public bool ChaveValida(string chave)
     {
-        // Verifica se a chave foi informada.
-        if (string.IsNullOrWhiteSpace(chave))
-            return false;
-
-        // Normaliza letras minúsculas para maiúsculas.
+        if (string.IsNullOrWhiteSpace(chave)) return false;
         chave = chave.Trim().ToUpperInvariant();
-
-        // A chave deve possuir 44 caracteres.
-        // As 12 primeiras posições do CNPJ podem conter letras.
-        if (!Regex.IsMatch(
-            chave,
-            @"^[0-9]{6}[A-Z0-9]{12}[0-9]{26}$"))
-        {
-            return false;
-        }
-
-        int soma = 0;
-        int peso = 2;
-
-        // Calcula o dígito verificador usando os primeiros 43 caracteres.
+        if (!Regex.IsMatch(chave, @"\A[0-9]{6}[A-Z0-9]{12}[0-9]{26}\z")) return false;
+        if (!_cnpj.Valido(chave.Substring(6, 14))) return false;
+        int soma = 0, peso = 2;
         for (int i = 42; i >= 0; i--)
         {
-            // Converte o caractere usando ASCII - 48.
-            int valor = chave[i] - 48;
-
-            soma += valor * peso;
-
-            peso++;
-
-            if (peso > 9)
-                peso = 2;
+            soma += (chave[i] - 48) * peso;
+            peso = peso == 9 ? 2 : peso + 1;
         }
-
-        // Calcula o módulo 11.
         int resto = soma % 11;
-
-        int digito = resto == 0 || resto == 1
-            ? 0
-            : 11 - resto;
-
-        // Compara com o último caractere da chave.
-        return digito == chave[43] - 48;
+        return (resto < 2 ? 0 : 11 - resto) == chave[43] - '0';
     }
 }

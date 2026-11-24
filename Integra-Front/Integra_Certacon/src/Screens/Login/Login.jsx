@@ -1,6 +1,6 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import "./Login.css";
 
 import { realizarLogin } from "../../services/api";
@@ -13,6 +13,7 @@ import iconeGrupo from "../../assets/Icones/GrupoPessoasLaranja.png";
 import LogoMobile from "../../assets/Icones/LogoMobile.png";
 import EmailCinza from "../../assets/Icones/EmailCinza.png";
 import ChaveSenha from "../../assets/Icones/ChaveSenha.png";
+import ConsultarNFEmobile from "../../assets/Icones/ConsultarNFEmobile.png";
 
 function Login() {
     const navigate = useNavigate();
@@ -36,13 +37,10 @@ function Login() {
         try {
             setCarregando(true);
 
-            // Envia os dados para a API
             const dados = await realizarLogin(cnpj, senha);
 
-            // Armazena o token JWT
             localStorage.setItem("token", dados.token);
 
-            // Armazena os dados do usuário
             localStorage.setItem(
                 "usuario",
                 JSON.stringify({
@@ -53,20 +51,19 @@ function Login() {
                 })
             );
 
-            // Armazena também os perfis separadamente
             localStorage.setItem(
                 "perfis",
                 JSON.stringify(dados.perfis)
             );
 
-            // Direciona para a página inicial
             navigate("/home");
 
         } catch (error) {
             console.error("Erro ao realizar login:", error);
 
             setErro(
-                error.message || "Não foi possível conectar ao servidor."
+                error.message ||
+                "Não foi possível conectar ao servidor."
             );
 
         } finally {
@@ -90,11 +87,13 @@ function Login() {
             <section className="login-apresentacao">
 
                 <div className="marca-integra">
+
                     <img
                         src={logoIntegra}
                         alt="Integra"
                         className="logo-integra"
                     />
+
                 </div>
 
                 <div className="texto-apresentacao">
@@ -116,30 +115,39 @@ function Login() {
                 <div className="vantagens">
 
                     <div className="vantagem">
+
                         <img src={iconeEscudo} alt="" />
+
                         <span>
                             Conteúdo
                             <br />
                             confiável
                         </span>
+
                     </div>
 
                     <div className="vantagem">
+
                         <img src={iconeDocumento} alt="" />
+
                         <span>
                             Informação
                             <br />
                             atualizada
                         </span>
+
                     </div>
 
                     <div className="vantagem">
+
                         <img src={iconeGrupo} alt="" />
+
                         <span>
                             Acesso
                             <br />
                             por perfil
                         </span>
+
                     </div>
 
                 </div>
@@ -155,11 +163,13 @@ function Login() {
                     {/* LOGO MOBILE */}
 
                     <div className="marca-mobile">
+
                         <img
                             src={LogoMobile}
                             alt="Integra"
                             className="logo-mobile"
                         />
+
                     </div>
 
                     {/* CABEÇALHO */}
@@ -199,7 +209,7 @@ function Login() {
                                     type="text"
                                     placeholder="Digite o identificador"
                                     value={cnpj}
-                                    onChange={(event) =>
+                                    onChange={event =>
                                         setCnpj(event.target.value)
                                     }
                                     autoComplete="username"
@@ -231,7 +241,7 @@ function Login() {
                                     type="password"
                                     placeholder="Digite a senha"
                                     value={senha}
-                                    onChange={(event) =>
+                                    onChange={event =>
                                         setSenha(event.target.value)
                                     }
                                     autoComplete="current-password"
@@ -253,15 +263,17 @@ function Login() {
                         {/* MENSAGEM DE ERRO */}
 
                         {erro && (
+
                             <p
                                 className="login-erro"
                                 role="alert"
                             >
                                 {erro}
                             </p>
+
                         )}
 
-                        {/* ENTRAR */}
+                        {/* BOTÃO ENTRAR */}
 
                         <button
                             type="submit"
@@ -276,12 +288,14 @@ function Login() {
                     {/* DIVISOR */}
 
                     <div className="divisor">
+
                         <span></span>
                         <small>ou</small>
                         <span></span>
+
                     </div>
 
-                    {/* CRIAR CONTA */}
+                    {/* CADASTRO */}
 
                     <button
                         type="button"
@@ -290,6 +304,31 @@ function Login() {
                     >
                         Criar uma conta
                     </button>
+
+                    {/* CONSULTA NF-E SEM LOGIN */}
+
+                    <Link
+                        to="/consultar-chave"
+                        className="link-consultar-nfe"
+                    >
+
+                        <img
+                            src={ConsultarNFEmobile}
+                            alt=""
+                        />
+
+                        Consultar NF-e sem login
+
+                    </Link>
+
+                    {/* PORTAL PÚBLICO */}
+
+                    <Link
+                        to="/portal"
+                        className="link-consultar-nfe"
+                    >
+                        Explorar conteúdos públicos
+                    </Link>
 
                 </div>
 

@@ -1,7 +1,19 @@
+import {
+  Routes,
+  Route,
+  Navigate,
+  Outlet
+} from "react-router-dom";
 
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import RotaProtegida from "./RotaProtegida";
+import LayoutSistema from "../layouts/LayoutSistema";
+import usePermissoes from "../hooks/usePermissoes";
 
-// Telas
+// TELAS
+import SimuladorTributario from "../Screens/SimuladorTributario/SimuladorTributario";
+import AgendaFiscal from "../Screens/AgendaFiscal/AgendaFiscal";
+import MinhaBiblioteca from "../Screens/MinhaBiblioteca/MinhaBiblioteca";
+import AreaCidadao from "../Screens/AreaCidadao/AreaCidadao";
 import Cadastro from "../Screens/Cadastro/cadastro";
 import ConteudoRevisao from "../Screens/ConteudosRevisao/conteudorevisao";
 import ConteudoTributario from "../Screens/ConteudosTributarios/conteudoTributario";
@@ -15,221 +27,283 @@ import Login from "../Screens/Login/Login";
 import NotasFiscais from "../Screens/NotasFiscais/Notasfiscais";
 import NovoConteudo from "../Screens/NovoConteudo/NovoConteudo";
 import Usuario from "../Screens/Usuário/usuario";
+import ConsultaChave from "../Screens/ConsultaChave/ConsultaChave";
+import PortalPublico from "../Screens/PortalPublico/PortalPublico";
 
-// ==========================================
-// PERFIS OFICIAIS DO PROJETO CERTACON
-// ==========================================
+// NOVO BÔNUS
 
-const PERFIS = {
-  ADMIN: "Administrador",
-  COORDENADOR: "Coordenador Fiscal",
-  SPED: "Analista SPED",
-  DOCUMENTOS: "Analista de Documentos Fiscais",
-  REFORMA: "Analista de Reforma Tributária",
-  CLIENTE: "Cliente",
-};
+import GlossarioFiscal from "../Screens/GlossarioFiscal/GlossarioFiscal";
 
-const ANALISTAS = [
-  PERFIS.SPED,
-  PERFIS.DOCUMENTOS,
-  PERFIS.REFORMA,
-];
+// =========================================
+// LAYOUT OPCIONAL
+// =========================================
 
-const CRIADORES = [
-  PERFIS.COORDENADOR,
-  ...ANALISTAS,
-];
+function LayoutOpcional() {
+  const { autenticado } = usePermissoes();
 
-const FISCAIS = [
-  PERFIS.COORDENADOR,
-  ...ANALISTAS,
-  PERFIS.CLIENTE,
-];
-
-// ==========================================
-// CONSULTAR PERFIS DO USUÁRIO
-// ==========================================
-
-function obterPerfis() {
-  try {
-    const usuario = JSON.parse(
-      localStorage.getItem("usuario") || "{}"
+  if (autenticado) {
+    return (
+      <RotaProtegida>
+        <LayoutSistema />
+      </RotaProtegida>
     );
-
-    const perfisSalvos = JSON.parse(
-      localStorage.getItem("perfis") || "[]"
-    );
-
-    if (Array.isArray(usuario.perfis)) {
-      return usuario.perfis;
-    }
-
-    if (Array.isArray(perfisSalvos)) {
-      return perfisSalvos;
-    }
-
-    return [];
-  } catch {
-    return [];
-  }
-}
-
-// ==========================================
-// COMPONENTE DE PROTEÇÃO DE ROTAS
-// ==========================================
-
-function RotaProtegida({ perfisPermitidos = [] }) {
-  const token = localStorage.getItem("token");
-
-  // Sem login
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  const perfisUsuario = obterPerfis();
-
-  // Se a rota não exige perfil específico,
-  // basta estar autenticado.
-  if (perfisPermitidos.length === 0) {
-    return <Outlet />;
-  }
-
-  const autorizado = perfisPermitidos.some(
-    (perfil) => perfisUsuario.includes(perfil)
-  );
-
-  if (!autorizado) {
-    return <Navigate to="/home" replace />;
   }
 
   return <Outlet />;
 }
 
-// ==========================================
+// =========================================
 // ROTAS
-// ==========================================
+// =========================================
 
 function AppRoutes() {
   return (
     <Routes>
 
-      {/* ROTA INICIAL */}
-      <Route
-        path="/"
-        element={<Navigate to="/login" replace />}
-      />
+      {/* ROTAS PÚBLICAS */}
 
-      {/* ACESSO PÚBLICO */}
+      <Route path="/" element={<PortalPublico />} />
+      <Route path="/portal" element={<PortalPublico />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
 
-      {/* CONTEÚDOS PÚBLICOS E EXCLUSIVOS
-          A API deve filtrar conforme a autenticação.
-      */}
-      <Route
-        path="/conteudos"
-        element={<ConteudoTributario />}
-      />
+      {/* ROTAS PÚBLICAS E AUTENTICADAS */}
 
-      <Route
-        path="/conteudos/detalhes"
-        element={<DetalheConteudo />}
-      />
+      <Route element={<LayoutOpcional />}>
 
-      {/* ROTAS PARA TODOS OS USUÁRIOS LOGADOS */}
+        <Route
+          path="/conteudos/detalhes"
+          element={<DetalheConteudo />}
+        />
+
+        <Route
+          path="/consultar-chave"
+          element={<ConsultaChave />}
+        />
+
+        <Route
+          path="/glossario"
+          element={<GlossarioFiscal />}
+        />
+
+        <Route
+          path="/area-cidadao"
+          element={<AreaCidadao />}
+        />
+
+      </Route>
+      {/* ROTAS PROTEGIDAS */}
+
       <Route element={<RotaProtegida />}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/perfil" element={<EditarPerfil />} />
-      </Route>
 
-      {/* ADMINISTRADOR */}
-      <Route
-        element={
-          <RotaProtegida
-            perfisPermitidos={[PERFIS.ADMIN]}
+        <Route element={<LayoutSistema />}>
+
+          <Route
+            path="/home"
+            element={<Home />}
           />
-        }
-      >
-        <Route path="/usuario" element={<Usuario />} />
-        <Route
-          path="/clientes"
-          element={<GerenciarClientes />}
-        />
-      </Route>
 
-      {/* COORDENADOR E ANALISTAS
-          Podem criar e editar conteúdos,
-          respeitando os temas permitidos na API.
-      */}
-      <Route
-        element={
-          <RotaProtegida
-            perfisPermitidos={CRIADORES}
+          <Route
+            path="/conteudos"
+            element={<ConteudoTributario />}
           />
-        }
-      >
-        <Route
-          path="/conteudos/novo"
-          element={<NovoConteudo />}
-        />
-        <Route
-          path="/conteudos/editar/:id"
-          element={<NovoConteudo />}
-        />
-      </Route>
 
-      {/* REVISÃO DE CONTEÚDOS
-          Somente Coordenador Fiscal.
-      */}
-      <Route
-        element={
-          <RotaProtegida
-            perfisPermitidos={[PERFIS.COORDENADOR]}
+          <Route
+            path="/perfil"
+            element={<EditarPerfil />}
           />
-        }
-      >
-        <Route
-          path="/conteudos/revisao"
-          element={<ConteudoRevisao />}
-        />
+
+
+          {/* SIMULADOR DA REFORMA TRIBUTÁRIA */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={[
+                  "simulador.calcular",
+                  "simulador.gerenciar"
+                ]}
+              />
+            }
+          >
+
+            <Route
+              path="/simulador-tributario"
+              element={<SimuladorTributario />}
+            />
+
+          </Route>
+          {/* AGENDA FISCAL */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={[
+                  "agenda.ler",
+                  "agenda.gerenciar"
+                ]}
+              />
+            }
+          >
+
+            <Route
+              path="/agenda-fiscal"
+              element={<AgendaFiscal />}
+            />
+
+          </Route>
+
+          {/* MINHA BIBLIOTECA */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={[
+                  "favorito.gerenciar.proprios",
+                  "historico.leitura.gerenciar.proprio"
+                ]}
+              />
+            }
+          >
+
+            <Route
+              path="/minha-biblioteca"
+              element={<MinhaBiblioteca />}
+            />
+
+          </Route>
+          {/* CRIAR CONTEÚDO */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={["artigo.criar"]}
+                aceitarQualquerTema
+              />
+            }
+          >
+            <Route
+              path="/conteudos/novo"
+              element={<NovoConteudo />}
+            />
+          </Route>
+
+          {/* EDITAR CONTEÚDO */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={["artigo.editar"]}
+                aceitarQualquerTema
+              />
+            }
+          >
+            <Route
+              path="/conteudos/editar/:id"
+              element={<NovoConteudo />}
+            />
+          </Route>
+
+          {/* REVISAR CONTEÚDOS */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={["artigo.revisar"]}
+                aceitarQualquerTema
+              />
+            }
+          >
+            <Route
+              path="/conteudos/revisao"
+              element={<ConteudoRevisao />}
+            />
+          </Route>
+
+          {/* NOTAS FISCAIS */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={[
+                  "nota.ler.todas",
+                  "nota.ler.proprias"
+                ]}
+              />
+            }
+          >
+            <Route
+              path="/notas-fiscais"
+              element={<NotasFiscais />}
+            />
+          </Route>
+
+          {/* ENVIAR XML */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={["nota.importar"]}
+              />
+            }
+          >
+            <Route
+              path="/enviar-xml"
+              element={<EnvioArquivoXML />}
+            />
+          </Route>
+
+          {/* GERENCIAR CLIENTES */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={["cliente.gerenciar"]}
+              />
+            }
+          >
+            <Route
+              path="/clientes"
+              element={<GerenciarClientes />}
+            />
+          </Route>
+
+          {/* GERENCIAR USUÁRIOS */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={["usuario.gerenciar"]}
+              />
+            }
+          >
+            <Route
+              path="/usuario"
+              element={<Usuario />}
+            />
+          </Route>
+
+          {/* HISTÓRICO DE AÇÕES */}
+
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={["auditoria.ler"]}
+              />
+            }
+          >
+            <Route
+              path="/historico"
+              element={<HistoricoAcoes />}
+            />
+          </Route>
+
+        </Route>
+
       </Route>
 
-      {/* NOTAS FISCAIS E XML */}
-      <Route
-        element={
-          <RotaProtegida
-            perfisPermitidos={FISCAIS}
-          />
-        }
-      >
-        <Route
-          path="/notas-fiscais"
-          element={<NotasFiscais />}
-        />
-        <Route
-          path="/enviar-xml"
-          element={<EnvioArquivoXML />}
-        />
-      </Route>
+      {/* ROTA NÃO ENCONTRADA */}
 
-      {/* HISTÓRICO DE AÇÕES
-          Mantido para Administrador enquanto
-          a autorização da API não for ampliada.
-      */}
-      <Route
-        element={
-          <RotaProtegida
-            perfisPermitidos={[PERFIS.ADMIN]}
-          />
-        }
-      >
-        <Route
-          path="/historico"
-          element={<HistoricoAcoes />}
-        />
-      </Route>
-
-      {/* PÁGINA NÃO ENCONTRADA */}
       <Route
         path="*"
         element={<Navigate to="/login" replace />}

@@ -39,4 +39,9 @@ public partial class Artigo
     public string? TipoConteudo { get; set; }
 
     public long? TamanhoArquivo { get; set; }
+    public virtual ICollection<FavoritoArtigo> FavoritoArtigos { get; set; }
+    = new List<FavoritoArtigo>();
+
+    public virtual ICollection<HistoricoLeitura> HistoricoLeituras { get; set; }
+        = new List<HistoricoLeitura>();
 }

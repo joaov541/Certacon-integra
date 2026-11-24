@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +18,20 @@ namespace ProjetoCertacon.Controllers
         private readonly IntegraCertaconContext _context;
         private readonly AuditoriaService _auditoria;
         private readonly IWebHostEnvironment _ambiente;
+        private readonly PermissaoService _permissao;
 
         private const long TamanhoMaximoArquivo = 10 * 1024 * 1024;
 
         public ArtigosController(
             IntegraCertaconContext context,
             AuditoriaService auditoria,
-            IWebHostEnvironment ambiente)
+            IWebHostEnvironment ambiente,
+            PermissaoService permissao)
         {
             _context = context;
             _auditoria = auditoria;
             _ambiente = ambiente;
+            _permissao = permissao;
         }
 
         // ============================================================
@@ -49,43 +51,8 @@ namespace ProjetoCertacon.Controllers
             if (artigo.Status == "ARQUIVADO")
                 return NotFound("Este conteúdo não está disponível.");
 
-            bool autenticado = User.Identity?.IsAuthenticated == true;
-
-            bool adminOuCoordenador =
-                User.IsInRole("Administrador") ||
-                User.IsInRole("Coordenador Fiscal");
-
-            var usuarioId = ObterUsuarioId();
-
-            bool ehAutor =
-                usuarioId.HasValue &&
-                artigo.AutorUsuarioId == usuarioId.Value;
-
-            // Artigos aprovados ou publicados respeitam a visibilidade.
-            if (artigo.Status == "PUBLICADO" || artigo.Status == "APROVADO")
-            {
-                if (artigo.Visibilidade == "EXCLUSIVO" && !autenticado)
-                {
-                    return Unauthorized(
-                        "Faça login para acessar este documento.");
-                }
-
-                if (artigo.Visibilidade != "PUBLICO" &&
-                    artigo.Visibilidade != "EXCLUSIVO")
-                {
-                    return Forbid();
-                }
-            }
-            else
-            {
-                // Conteúdos não publicados só podem ser acessados
-                // pelo autor ou por Administrador/Coordenador.
-                if (!autenticado)
-                    return Unauthorized();
-
-                if (!ehAutor && !adminOuCoordenador)
-                    return Forbid();
-            }
+            var bloqueio = await VerificarLeituraAsync(artigo.Status, artigo.Visibilidade, artigo.TemaId);
+            if (bloqueio != null) return bloqueio;
 
             if (string.IsNullOrWhiteSpace(artigo.CaminhoArquivo) ||
                 string.IsNullOrWhiteSpace(artigo.NomeArquivo))
@@ -117,7 +84,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpPost("{id:guid}/arquivo")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
+        [Authorize]
         [Consumes("multipart/form-data")]
         [RequestSizeLimit(11 * 1024 * 1024)]
         public async Task<IActionResult> EnviarArquivo(
@@ -157,33 +124,17 @@ namespace ProjetoCertacon.Controllers
             if (artigo == null)
                 return NotFound("Artigo não encontrado.");
 
-            bool adminOuCoordenador =
-                User.IsInRole("Administrador") ||
-                User.IsInRole("Coordenador Fiscal");
-
-            bool ehAutor =
-                artigo.AutorUsuarioId == usuarioId.Value;
-
-            if (!ehAutor && !adminOuCoordenador)
+            if (!await PodeAlterarAsync(artigo, "artigo.editar", usuarioId.Value))
                 return Forbid();
 
-            if (artigo.Status == "ARQUIVADO")
-            {
-                return BadRequest(
-                    "Não é possível anexar arquivo a um artigo arquivado.");
-            }
-
             if (artigo.Status != "RASCUNHO" &&
-                !(adminOuCoordenador &&
-                  artigo.Status == "EM_REVISAO"))
-            {
-                return BadRequest(
-                    "Não é possível alterar o arquivo neste status.");
-            }
+                !(artigo.Status == "EM_REVISAO" &&
+                  await _permissao.TemPermissaoAsync(User, "artigo.revisar", artigo.TemaId)))
+                return BadRequest("Não é possível alterar o arquivo neste status.");
 
             var pasta = Path.Combine(
                 _ambiente.ContentRootPath,
-                "wwwroot",
+                "App_Data",
                 "arquivos",
                 "artigos"
             );
@@ -199,6 +150,7 @@ namespace ProjetoCertacon.Controllers
             );
 
             var caminhoRelativo = Path.Combine(
+                "App_Data",
                 "arquivos",
                 "artigos",
                 nomeInterno
@@ -223,10 +175,13 @@ namespace ProjetoCertacon.Controllers
 
                 artigo.CaminhoArquivo = caminhoRelativo;
 
-                artigo.TipoConteudo =
-                    string.IsNullOrWhiteSpace(arquivo.ContentType)
-                        ? "application/octet-stream"
-                        : arquivo.ContentType;
+                artigo.TipoConteudo = extensao switch
+                {
+                    ".pdf" => "application/pdf",
+                    ".doc" => "application/msword",
+                    ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    _ => "application/octet-stream"
+                };
 
                 artigo.TamanhoArquivo = arquivo.Length;
                 artigo.DataAtualizacao = DateTime.UtcNow;
@@ -255,6 +210,9 @@ namespace ProjetoCertacon.Controllers
                 }
             }
 
+            await _auditoria.RegistrarAsync(usuarioId.Value, "ARTIGO_ARQUIVO_ENVIADO", "ARTIGO",
+                artigo.ArtigoId, HttpContext.Connection.RemoteIpAddress?.ToString(), "Anexo atualizado: " + artigo.Titulo);
+
             return Ok(new
             {
                 mensagem = "Arquivo enviado com sucesso.",
@@ -272,7 +230,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpGet("revisados/{status}")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize]
         public async Task<IActionResult> GetArtigosRevisados(
             string status)
         {
@@ -281,7 +239,9 @@ namespace ProjetoCertacon.Controllers
             if (status != "APROVADO" && status != "REJEITADO")
                 return BadRequest("Status inválido.");
 
-            var artigos = await _context.Artigos
+            var consulta = await FiltrarPorPermissaoAsync(_context.Artigos.AsNoTracking(), "artigo.revisar");
+            if (consulta == null) return Forbid();
+            var artigos = await consulta
                 .Where(a => a.Status == status)
                 .OrderByDescending(a => a.DataAtualizacao)
                 .Select(a => new
@@ -299,7 +259,8 @@ namespace ProjetoCertacon.Controllers
                     a.TamanhoArquivo,
                     TemArquivo = a.CaminhoArquivo != null,
                     Tema = a.Tema.Nome,
-                    Autor = a.AutorUsuario.Nome
+                    Autor = a.AutorUsuario.Nome,
+                    a.TemaId
                 })
                 .ToListAsync();
 
@@ -312,7 +273,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpGet("meus-artigos")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
+        [Authorize]
         public async Task<IActionResult> GetMeusArtigos()
         {
             var usuarioId = ObterUsuarioId();
@@ -320,7 +281,9 @@ namespace ProjetoCertacon.Controllers
             if (usuarioId == null)
                 return Unauthorized("Usuário do token inválido.");
 
-            var artigos = await _context.Artigos
+            var consulta = await FiltrarPorPermissaoAsync(_context.Artigos.AsNoTracking(), "artigo.ler.rascunho");
+            if (consulta == null) return Forbid();
+            var artigos = await consulta
                 .Where(a => a.AutorUsuarioId == usuarioId.Value)
                 .OrderByDescending(a => a.DataCriacao)
                 .Select(a => new
@@ -347,23 +310,30 @@ namespace ProjetoCertacon.Controllers
         }
 
         // ============================================================
-        // LISTAR ARTIGOS APROVADOS OU PUBLICADOS
+        // LISTAR ARTIGOS PUBLICADOS
         // GET: api/Artigos
         // ============================================================
 
         [HttpGet]
         public async Task<IActionResult> GetArtigos()
         {
-            // Aprovados também ficam disponíveis na aba Todos os conteúdos.
-            var consulta = _context.Artigos
-                .AsNoTracking()
-                .Where(a => a.Status == "APROVADO" || a.Status == "PUBLICADO");
+            var consulta = _context.Artigos.AsNoTracking()
+                .Where(a => a.Status == "PUBLICADO");
 
             if (User.Identity?.IsAuthenticated == true)
             {
+                var usuarioId = ObterUsuarioId();
+                if (!usuarioId.HasValue) return Unauthorized();
+                var permissoes = await _permissao.ListarPermissoesAsync(usuarioId.Value);
+                var publicos = permissoes.Where(p => p.Codigo == "artigo.ler.publico").ToList();
+                var exclusivos = permissoes.Where(p => p.Codigo == "artigo.ler.exclusivo").ToList();
+                var todosPublicos = publicos.Any(p => p.TemaId == null);
+                var todosExclusivos = exclusivos.Any(p => p.TemaId == null);
+                var temasPublicos = publicos.Where(p => p.TemaId.HasValue).Select(p => p.TemaId!.Value).ToList();
+                var temasExclusivos = exclusivos.Where(p => p.TemaId.HasValue).Select(p => p.TemaId!.Value).ToList();
                 consulta = consulta.Where(a =>
-                    a.Visibilidade == "PUBLICO" ||
-                    a.Visibilidade == "EXCLUSIVO");
+                    (a.Visibilidade == "PUBLICO" && (todosPublicos || temasPublicos.Contains(a.TemaId))) ||
+                    (a.Visibilidade == "EXCLUSIVO" && (todosExclusivos || temasExclusivos.Contains(a.TemaId))));
             }
             else
             {
@@ -387,7 +357,8 @@ namespace ProjetoCertacon.Controllers
                     a.TamanhoArquivo,
                     TemArquivo = a.CaminhoArquivo != null,
                     Tema = a.Tema.Nome,
-                    Autor = a.AutorUsuario.Nome
+                    Autor = a.AutorUsuario.Nome,
+                    a.TemaId
                 })
                 .ToListAsync();
 
@@ -400,12 +371,13 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpPost]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
+        [Authorize]
         public async Task<IActionResult> CriarArtigo(
             [FromBody] ArtigoRequest dados)
         {
             if (string.IsNullOrWhiteSpace(dados.Titulo) ||
-                string.IsNullOrWhiteSpace(dados.Conteudo))
+                string.IsNullOrWhiteSpace(dados.Conteudo) ||
+                dados.Titulo.Trim().Length > 200 || (dados.Resumo?.Length ?? 0) > 500)
             {
                 return BadRequest(
                     "Preencha o título e o conteúdo.");
@@ -426,10 +398,10 @@ namespace ProjetoCertacon.Controllers
             var tema = await _context.Temas
                 .FirstOrDefaultAsync(t => t.TemaId == dados.TemaId);
 
-            if (tema == null)
-                return BadRequest("O tema informado não existe.");
+            if (tema == null || !tema.Ativo)
+                return BadRequest("O tema informado não existe ou está inativo.");
 
-            if (!PodeCriarNoTema(tema.Nome))
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.criar", tema.TemaId))
                 return Forbid();
 
             var artigo = new Artigo
@@ -473,6 +445,38 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
 
+        [HttpPut("{id:guid}")]
+        [Authorize]
+        public async Task<IActionResult> EditarArtigo(Guid id, [FromBody] ArtigoRequest dados)
+        {
+            var usuarioId = ObterUsuarioId();
+            if (!usuarioId.HasValue) return Unauthorized();
+            var artigo = await _context.Artigos.FirstOrDefaultAsync(a => a.ArtigoId == id);
+            if (artigo == null) return NotFound("Artigo não encontrado.");
+            if (!await PodeAlterarAsync(artigo, "artigo.editar", usuarioId.Value)) return Forbid();
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.editar", dados.TemaId)) return Forbid();
+            if (artigo.Status != "RASCUNHO" &&
+                !(artigo.Status == "EM_REVISAO" && await _permissao.TemPermissaoAsync(User, "artigo.revisar", artigo.TemaId)))
+                return BadRequest("Não é possível editar o artigo neste status.");
+            if (!await _context.Temas.AnyAsync(t => t.TemaId == dados.TemaId && t.Ativo))
+                return BadRequest("Tema inexistente ou inativo.");
+            if (string.IsNullOrWhiteSpace(dados.Titulo) || string.IsNullOrWhiteSpace(dados.Conteudo) ||
+                dados.Titulo.Trim().Length > 200 || (dados.Resumo?.Length ?? 0) > 500)
+                return BadRequest("Título ou conteúdo inválido, ou tamanho excedido.");
+            if (dados.Visibilidade != "PUBLICO" && dados.Visibilidade != "EXCLUSIVO")
+                return BadRequest("Visibilidade inválida.");
+            artigo.TemaId = dados.TemaId;
+            artigo.Titulo = dados.Titulo.Trim();
+            artigo.Resumo = dados.Resumo;
+            artigo.Conteudo = dados.Conteudo;
+            artigo.Visibilidade = dados.Visibilidade;
+            artigo.DataAtualizacao = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            await _auditoria.RegistrarAsync(usuarioId.Value, "ARTIGO_EDITADO", "ARTIGO", artigo.ArtigoId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(), "Artigo editado: " + artigo.Titulo);
+            return Ok(new { mensagem = "Artigo atualizado com sucesso.", artigo.ArtigoId, artigo.Titulo, artigo.Status });
+        }
+
         // ============================================================
         // BUSCAR ARTIGO POR ID
         // GET: api/Artigos/{id}
@@ -508,32 +512,8 @@ namespace ProjetoCertacon.Controllers
             if (artigo == null || artigo.Status == "ARQUIVADO")
                 return NotFound("Artigo não encontrado.");
 
-            bool autenticado = User.Identity?.IsAuthenticated == true;
-            bool disponivel = artigo.Status == "PUBLICADO" || artigo.Status == "APROVADO";
-
-            if (disponivel)
-            {
-                if (artigo.Visibilidade == "PUBLICO")
-                    return Ok(artigo);
-
-                if (artigo.Visibilidade == "EXCLUSIVO")
-                    return autenticado ? Ok(artigo) : Unauthorized();
-
-                return Forbid();
-            }
-
-            // Rascunhos e conteúdos em revisão só podem ser consultados
-            // pelo autor ou por Administrador/Coordenador Fiscal.
-            if (!autenticado)
-                return Unauthorized();
-
-            var usuarioId = ObterUsuarioId();
-            bool adminOuCoordenador =
-                User.IsInRole("Administrador") ||
-                User.IsInRole("Coordenador Fiscal");
-
-            if (artigo.AutorUsuarioId != usuarioId && !adminOuCoordenador)
-                return Forbid();
+            var bloqueio = await VerificarLeituraAsync(artigo.Status, artigo.Visibilidade, artigo.TemaId);
+            if (bloqueio != null) return bloqueio;
 
             return Ok(artigo);
         }
@@ -544,7 +524,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
+        [Authorize]
         public async Task<IActionResult> ExcluirArtigo(Guid id)
         {
             var usuarioId = ObterUsuarioId();
@@ -561,18 +541,12 @@ namespace ProjetoCertacon.Controllers
             if (artigo.Status == "ARQUIVADO")
                 return BadRequest("O artigo já está arquivado.");
 
-            bool adminOuCoordenador =
-                User.IsInRole("Administrador") ||
-                User.IsInRole("Coordenador Fiscal");
-
-            bool ehAutor =
-                artigo.AutorUsuarioId == usuarioId.Value;
-
-            if (!adminOuCoordenador &&
-                (!ehAutor || artigo.Status != "RASCUNHO"))
-            {
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.arquivar", artigo.TemaId))
                 return Forbid();
-            }
+
+            bool revisa = await _permissao.TemPermissaoAsync(User, "artigo.revisar", artigo.TemaId);
+            if (!revisa && (artigo.AutorUsuarioId != usuarioId.Value || artigo.Status != "RASCUNHO"))
+                return Forbid();
 
             artigo.Status = "ARQUIVADO";
             artigo.DataAtualizacao = DateTime.UtcNow;
@@ -602,7 +576,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpPost("{id:guid}/enviar-revisao")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal,Analista SPED,Analista de Documentos Fiscais,Analista de Reforma Tributária")]
+        [Authorize]
         public async Task<IActionResult> EnviarParaRevisao(Guid id)
         {
             var artigo = await _context.Artigos
@@ -616,14 +590,8 @@ namespace ProjetoCertacon.Controllers
             if (autorId == null)
                 return Unauthorized("Usuário do token inválido.");
 
-            bool ehAdministrador =
-                User.IsInRole("Administrador");
-
-            if (artigo.AutorUsuarioId != autorId.Value &&
-                !ehAdministrador)
-            {
+            if (!await PodeAlterarAsync(artigo, "artigo.enviar.revisao", autorId.Value))
                 return Forbid();
-            }
 
             if (artigo.Status != "RASCUNHO")
             {
@@ -635,6 +603,10 @@ namespace ProjetoCertacon.Controllers
             artigo.DataAtualizacao = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            await _auditoria.RegistrarAsync(autorId.Value, "ARTIGO_ENVIADO_REVISAO", "ARTIGO",
+                artigo.ArtigoId, HttpContext.Connection.RemoteIpAddress?.ToString(),
+                "Artigo enviado para revisão: " + artigo.Titulo);
 
             return Ok(new
             {
@@ -651,10 +623,12 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpGet("pendentes-revisao")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize]
         public async Task<IActionResult> GetArtigosPendentes()
         {
-            var artigos = await _context.Artigos
+            var consulta = await FiltrarPorPermissaoAsync(_context.Artigos.AsNoTracking(), "artigo.revisar");
+            if (consulta == null) return Forbid();
+            var artigos = await consulta
                 .Where(a => a.Status == "EM_REVISAO")
                 .OrderByDescending(a => a.DataAtualizacao)
                 .Select(a => new
@@ -669,7 +643,8 @@ namespace ProjetoCertacon.Controllers
                     a.TamanhoArquivo,
                     TemArquivo = a.CaminhoArquivo != null,
                     Tema = a.Tema.Nome,
-                    Autor = a.AutorUsuario.Nome
+                    Autor = a.AutorUsuario.Nome,
+                    a.TemaId
                 })
                 .ToListAsync();
 
@@ -682,7 +657,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpPost("{id:guid}/aprovar")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize]
         public async Task<IActionResult> AprovarArtigo(
             Guid id,
             [FromBody] RevisaoRequest dados)
@@ -692,6 +667,9 @@ namespace ProjetoCertacon.Controllers
 
             if (artigo == null)
                 return NotFound("Artigo não encontrado.");
+
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.aprovar", artigo.TemaId))
+                return Forbid();
 
             if (artigo.Status != "EM_REVISAO")
             {
@@ -742,7 +720,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpPost("{id:guid}/rejeitar")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize]
         public async Task<IActionResult> RejeitarArtigo(
             Guid id,
             [FromBody] RevisaoRequest dados)
@@ -758,6 +736,9 @@ namespace ProjetoCertacon.Controllers
 
             if (artigo == null)
                 return NotFound("Artigo não encontrado.");
+
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.rejeitar", artigo.TemaId))
+                return Forbid();
 
             if (artigo.Status != "EM_REVISAO")
             {
@@ -808,7 +789,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpPost("{id:guid}/solicitar-ajustes")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize]
         public async Task<IActionResult> SolicitarAjustes(
             Guid id,
             [FromBody] RevisaoRequest dados)
@@ -824,6 +805,9 @@ namespace ProjetoCertacon.Controllers
 
             if (artigo == null)
                 return NotFound("Artigo não encontrado.");
+
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.solicitar.ajustes", artigo.TemaId))
+                return Forbid();
 
             if (artigo.Status != "EM_REVISAO")
             {
@@ -874,14 +858,13 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpGet("{id:guid}/historico")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize]
         public async Task<IActionResult> GetHistorico(Guid id)
         {
-            var artigoExiste = await _context.Artigos
-                .AnyAsync(a => a.ArtigoId == id);
-
-            if (!artigoExiste)
-                return NotFound("Artigo não encontrado.");
+            var artigo = await _context.Artigos.AsNoTracking().FirstOrDefaultAsync(a => a.ArtigoId == id);
+            if (artigo == null) return NotFound("Artigo não encontrado.");
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.revisar", artigo.TemaId))
+                return Forbid();
 
             var historico = await _context.RevisaoArtigos
                 .Where(r => r.ArtigoId == id)
@@ -908,7 +891,7 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
 
         [HttpPost("{id:guid}/publicar")]
-        [Authorize(Roles = "Administrador,Coordenador Fiscal")]
+        [Authorize]
         public async Task<IActionResult> PublicarArtigo(Guid id)
         {
             var usuarioId = ObterUsuarioId();
@@ -921,6 +904,9 @@ namespace ProjetoCertacon.Controllers
 
             if (artigo == null)
                 return NotFound("Artigo não encontrado.");
+
+            if (!await _permissao.TemPermissaoAsync(User, "artigo.publicar", artigo.TemaId))
+                return Forbid();
 
             if (artigo.Status != "APROVADO")
             {
@@ -957,46 +943,41 @@ namespace ProjetoCertacon.Controllers
         // MÉTODOS AUXILIARES
         // ============================================================
 
-        private bool PodeCriarNoTema(string nomeTema)
+        private Guid? ObterUsuarioId() => _permissao.ObterUsuarioId(User);
+
+        private async Task<bool> PodeAlterarAsync(Artigo artigo, string codigo, Guid usuarioId)
         {
-            if (User.IsInRole("Administrador") ||
-                User.IsInRole("Coordenador Fiscal"))
-            {
-                return true;
-            }
-
-            if (User.IsInRole("Analista SPED") &&
-                (nomeTema == "SPED EFD" ||
-                 nomeTema == "EFD-Contribuições"))
-            {
-                return true;
-            }
-
-            if (User.IsInRole("Analista de Documentos Fiscais") &&
-                (nomeTema == "NF-e" ||
-                 nomeTema == "NFP" ||
-                 nomeTema == "XML"))
-            {
-                return true;
-            }
-
-            if (User.IsInRole("Analista de Reforma Tributária") &&
-                nomeTema == "Reforma Tributária")
-            {
-                return true;
-            }
-
-            return false;
+            if (!await _permissao.TemPermissaoAsync(User, codigo, artigo.TemaId)) return false;
+            return artigo.AutorUsuarioId == usuarioId ||
+                await _permissao.TemPermissaoAsync(User, "artigo.revisar", artigo.TemaId);
         }
 
-        private Guid? ObterUsuarioId()
+        private async Task<IActionResult?> VerificarLeituraAsync(string status, string visibilidade, Guid temaId)
         {
-            var id = User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+            if (status == "ARQUIVADO") return NotFound();
+            bool autenticado = User.Identity?.IsAuthenticated == true;
+            if (status == "PUBLICADO")
+            {
+                if (visibilidade != "PUBLICO" && visibilidade != "EXCLUSIVO") return Forbid();
+                if (!autenticado) return visibilidade == "PUBLICO" ? null : Unauthorized();
+                var codigo = visibilidade == "PUBLICO" ? "artigo.ler.publico" : "artigo.ler.exclusivo";
+                return await _permissao.TemPermissaoAsync(User, codigo, temaId) ? null : Forbid();
+            }
+            if (!autenticado) return Unauthorized();
+            if (await _permissao.TemPermissaoAsync(User, "artigo.ler.rascunho", temaId) ||
+                await _permissao.TemPermissaoAsync(User, "artigo.revisar", temaId)) return null;
+            return Forbid();
+        }
 
-            return Guid.TryParse(id, out var usuarioId)
-                ? usuarioId
-                : null;
+        private async Task<IQueryable<Artigo>?> FiltrarPorPermissaoAsync(IQueryable<Artigo> consulta, string codigo)
+        {
+            var usuarioId = ObterUsuarioId();
+            if (!usuarioId.HasValue) return null;
+            var permissoes = (await _permissao.ListarPermissoesAsync(usuarioId.Value))
+                .Where(p => p.Codigo == codigo).ToList();
+            if (permissoes.Any(p => p.TemaId == null)) return consulta;
+            var temas = permissoes.Where(p => p.TemaId.HasValue).Select(p => p.TemaId!.Value).ToList();
+            return temas.Count == 0 ? null : consulta.Where(a => temas.Contains(a.TemaId));
         }
 
         private RevisaoArtigo CriarRevisao(
@@ -1019,45 +1000,22 @@ namespace ProjetoCertacon.Controllers
             };
         }
 
-        // Garante que o caminho do arquivo permaneça dentro de wwwroot.
+        // Aceita anexos antigos e novos, somente dentro das pastas de artigos.
         private string? ObterCaminhoSeguroArquivo(string caminhoRelativo)
         {
-            if (string.IsNullOrWhiteSpace(caminhoRelativo))
-                return null;
-
-            var raiz = Path.GetFullPath(
-                Path.Combine(
-                    _ambiente.ContentRootPath,
-                    "wwwroot"
-                )
-            );
-
-            var caminhoCompleto = Path.GetFullPath(
-                Path.Combine(
-                    raiz,
-                    caminhoRelativo.Replace(
-                        '/',
-                        Path.DirectorySeparatorChar
-                    )
-                )
-            );
-
-            var caminhoRelativoCalculado = Path.GetRelativePath(
-                raiz,
-                caminhoCompleto
-            );
-
-            if (Path.IsPathRooted(caminhoRelativoCalculado) ||
-                caminhoRelativoCalculado == ".." ||
-                caminhoRelativoCalculado.StartsWith(
-                    ".." + Path.DirectorySeparatorChar,
-                    StringComparison.Ordinal))
-            {
-                return null;
-            }
-
-            return caminhoCompleto;
+            if (string.IsNullOrWhiteSpace(caminhoRelativo)) return null;
+            var relativo = caminhoRelativo.Replace('\\', '/');
+            var partes = relativo.Split('/');
+            bool novo = partes.Length == 4 && partes[0] == "App_Data" && partes[1] == "arquivos" && partes[2] == "artigos";
+            bool antigo = partes.Length == 3 && partes[0] == "arquivos" && partes[1] == "artigos";
+            if (!novo && !antigo) return null;
+            var nome = partes[^1];
+            if (string.IsNullOrWhiteSpace(nome) || nome == "." || nome == ".." || nome.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) return null;
+            var privado = Path.Combine(_ambiente.ContentRootPath, "App_Data", "arquivos", "artigos", nome);
+            if (novo || System.IO.File.Exists(privado)) return privado;
+            return Path.Combine(_ambiente.ContentRootPath, "wwwroot", "arquivos", "artigos", nome);
         }
+
     }
 
     // ================================================================

@@ -13,21 +13,25 @@ namespace ProjetoCertacon.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Administrador")]
+[Authorize]
 public class UsuariosController : ControllerBase
 {
     private readonly IntegraCertaconContext _context;
     private readonly IPasswordHasher<Usuario> _passwordHasher;
     private readonly AuditoriaService _auditoria;
+    private readonly PermissaoService _permissao;
+    private readonly ValidacaoCnpjService _cnpj;
 
     public UsuariosController(
         IntegraCertaconContext context,
         IPasswordHasher<Usuario> passwordHasher,
-        AuditoriaService auditoria)
+        AuditoriaService auditoria, PermissaoService permissao, ValidacaoCnpjService cnpj)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _auditoria = auditoria;
+        _permissao = permissao;
+        _cnpj = cnpj;
     }
 
     // REGISTRA AÇÃO NA AUDITORIA
@@ -52,74 +56,14 @@ public class UsuariosController : ControllerBase
             detalhes);
     }
 
-    // NORMALIZA O CNPJ: REMOVE PONTUAÇÃO E CONVERTE PARA MAIÚSCULO
-    private static string NormalizarCnpj(string cnpj)
-    {
-        return Regex.Replace(cnpj, @"[^a-zA-Z0-9]", "")
-            .ToUpperInvariant();
-    }
-
-    // CALCULA UM DÍGITO VERIFICADOR DO CNPJ
-    private static int CalcularDigitoCnpj(
-        string cnpj,
-        int[] pesos)
-    {
-        int soma = 0;
-
-        for (int i = 0; i < pesos.Length; i++)
-        {
-            int valor = cnpj[i] - 48;
-            soma += valor * pesos[i];
-        }
-
-        int resto = soma % 11;
-
-        return resto < 2 ? 0 : 11 - resto;
-    }
-
-    // VALIDA O CNPJ NUMÉRICO OU ALFANUMÉRICO
-    private static bool CnpjValido(string cnpj)
-    {
-        if (!Regex.IsMatch(cnpj, @"^[A-Z0-9]{12}[0-9]{2}$"))
-            return false;
-
-        // Impede sequências repetidas
-        if (cnpj.Distinct().Count() == 1)
-            return false;
-
-        int[] pesosPrimeiroDigito =
-        {
-            5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2
-        };
-
-        int primeiroDigito = CalcularDigitoCnpj(
-            cnpj.Substring(0, 12),
-            pesosPrimeiroDigito);
-
-        string baseSegundoDigito =
-            cnpj.Substring(0, 12) + primeiroDigito;
-
-        int[] pesosSegundoDigito =
-        {
-            6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2
-        };
-
-        int segundoDigito = CalcularDigitoCnpj(
-            baseSegundoDigito,
-            pesosSegundoDigito);
-
-        string digitosCalculados =
-            $"{primeiroDigito}{segundoDigito}";
-
-        return cnpj.Substring(12, 2) == digitosCalculados;
-    }
-
     /// <summary>
     /// Lista os usuários
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> Listar()
     {
+        if (!await _permissao.TemPermissaoAsync(User, "usuario.gerenciar"))
+            return Forbid();
         var usuarios = await _context.Usuarios
             .Include(u => u.UsuarioPerfils)
                 .ThenInclude(up => up.Perfil)
@@ -149,10 +93,12 @@ public class UsuariosController : ControllerBase
     public async Task<IActionResult> CadastrarColaborador(
         [FromBody] UsuarioRequest dados)
     {
+        if (!await _permissao.TemPermissaoAsync(User, "usuario.gerenciar"))
+            return Forbid();
         if (string.IsNullOrWhiteSpace(dados.Nome) ||
             string.IsNullOrWhiteSpace(dados.Email) ||
             string.IsNullOrWhiteSpace(dados.Senha) ||
-            string.IsNullOrWhiteSpace(dados.Perfil))
+            (string.IsNullOrWhiteSpace(dados.Perfil) && (dados.Perfis == null || dados.Perfis.Count == 0)))
         {
             return BadRequest("Preencha todos os campos obrigatórios.");
         }
@@ -162,14 +108,12 @@ public class UsuariosController : ControllerBase
         if (await _context.Usuarios.AnyAsync(u => u.Email == email))
             return BadRequest("Este e-mail já está cadastrado.");
 
-        var perfil = await _context.Perfils
-            .FirstOrDefaultAsync(p => p.Nome == dados.Perfil && p.Ativo);
-
-        if (perfil == null)
-            return BadRequest("Perfil não encontrado ou inativo.");
-
-        if (perfil.Nome == "Cliente")
-            return BadRequest("Selecione um perfil interno.");
+        if (!await _permissao.TemPermissaoAsync(User, "permissao.gerenciar")) return Forbid();
+        if (dados.Senha.Length < 8) return BadRequest("A senha deve possuir pelo menos 8 caracteres.");
+        var nomes = (dados.Perfis ?? new List<string> { dados.Perfil }).Select(n => n.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        var perfis = await _context.Perfils.Where(p => p.Ativo && nomes.Contains(p.Nome)).ToListAsync();
+        if (nomes.Count == 0 || perfis.Count != nomes.Count || perfis.Any(p => p.Nome == "Cliente"))
+            return BadRequest("Selecione perfis internos ativos e válidos.");
 
         var usuario = new Usuario
         {
@@ -185,13 +129,14 @@ public class UsuariosController : ControllerBase
 
         _context.Usuarios.Add(usuario);
 
-        _context.UsuarioPerfils.Add(new UsuarioPerfil
-        {
-            UsuarioPerfilId = Guid.NewGuid(),
-            UsuarioId = usuario.UsuarioId,
-            PerfilId = perfil.PerfilId,
-            DataAtribuicao = DateTime.Now
-        });
+        foreach (var perfil in perfis)
+            _context.UsuarioPerfils.Add(new UsuarioPerfil
+            {
+                UsuarioPerfilId = Guid.NewGuid(),
+                UsuarioId = usuario.UsuarioId,
+                PerfilId = perfil.PerfilId,
+                DataAtribuicao = DateTime.Now
+            });
 
         await _context.SaveChangesAsync();
 
@@ -206,7 +151,8 @@ public class UsuariosController : ControllerBase
             usuario.UsuarioId,
             usuario.Nome,
             usuario.Email,
-            Perfil = perfil.Nome
+            Perfil = perfis.First().Nome,
+            Perfis = perfis.Select(p => p.Nome).ToList()
         });
     }
 
@@ -218,6 +164,8 @@ public class UsuariosController : ControllerBase
         Guid id,
         UsuarioAtualizarRequest dados)
     {
+        if (!await _permissao.TemPermissaoAsync(User, "usuario.gerenciar"))
+            return Forbid();
         if (string.IsNullOrWhiteSpace(dados.Nome) ||
             string.IsNullOrWhiteSpace(dados.Email))
         {
@@ -225,7 +173,7 @@ public class UsuariosController : ControllerBase
         }
 
         var usuario = await _context.Usuarios
-            .Include(u => u.UsuarioPerfils)
+            .Include(u => u.UsuarioPerfils).ThenInclude(up => up.Perfil)
             .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
         if (usuario == null)
@@ -242,9 +190,9 @@ public class UsuariosController : ControllerBase
         // NORMALIZAÇÃO E VALIDAÇÃO DO CNPJ
         var cnpj = string.IsNullOrWhiteSpace(dados.Cnpj)
             ? null
-            : NormalizarCnpj(dados.Cnpj);
+            : _cnpj.Normalizar(dados.Cnpj);
 
-        if (cnpj != null && !CnpjValido(cnpj))
+        if (cnpj != null && !_cnpj.Valido(cnpj))
         {
             return BadRequest(
                 $"CNPJ inválido. Valor recebido: '{dados.Cnpj}'. " +
@@ -259,23 +207,25 @@ public class UsuariosController : ControllerBase
             return BadRequest("Este CNPJ já está cadastrado.");
         }
 
-        Perfil? perfil = null;
+        var cliente = usuario.UsuarioPerfils.Any(up => up.Perfil.Nome == "Cliente");
+        if (cliente && (cnpj == null || cnpj != usuario.Cnpj))
+            return BadRequest("O CNPJ do cliente não pode ser removido ou alterado nesta rota.");
+        if (!cliente && cnpj != null) return BadRequest("Colaboradores não possuem CNPJ.");
+        if (cliente && !await _permissao.TemPermissaoAsync(User, "cliente.gerenciar")) return Forbid();
 
-        if (!string.IsNullOrWhiteSpace(dados.Perfil))
+        List<Perfil>? novosPerfis = null;
+        if (dados.Perfis != null || !string.IsNullOrWhiteSpace(dados.Perfil))
         {
-            perfil = await _context.Perfils
-                .FirstOrDefaultAsync(p =>
-                    p.Nome == dados.Perfil && p.Ativo);
-
-            if (perfil == null)
-                return BadRequest("Perfil não encontrado ou inativo.");
-
-            if (perfil.Nome == "Cliente" &&
-                usuario.UsuarioPerfils.Any(up =>
-                    up.Perfil != null && up.Perfil.Nome != "Cliente"))
+            var nomes = (dados.Perfis ?? new List<string> { dados.Perfil! }).Select(n => n.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            // O campo legado Perfil não remove outros perfis quando apenas repete um vínculo atual.
+            if (dados.Perfis != null || !usuario.UsuarioPerfils.Any(up => up.Perfil.Nome == dados.Perfil))
             {
-                // A troca de perfil continua sendo permitida
-                // conforme a regra existente do sistema.
+                if (!await _permissao.TemPermissaoAsync(User, "permissao.gerenciar")) return Forbid();
+                novosPerfis = await _context.Perfils.Where(p => p.Ativo && nomes.Contains(p.Nome)).ToListAsync();
+                if (nomes.Count == 0 || novosPerfis.Count != nomes.Count ||
+                    (cliente ? novosPerfis.Count != 1 || novosPerfis[0].Nome != "Cliente" : novosPerfis.Any(p => p.Nome == "Cliente")))
+                    return BadRequest("Perfis inválidos para este tipo de conta.");
+                if (_permissao.ObterUsuarioId(User) == id) return BadRequest("Não altere os próprios perfis por esta rota.");
             }
         }
 
@@ -285,17 +235,12 @@ public class UsuariosController : ControllerBase
         usuario.Cnpj = cnpj;
         usuario.TelefoneContato = dados.TelefoneContato?.Trim();
 
-        if (perfil != null)
+        if (novosPerfis != null)
         {
-            _context.UsuarioPerfils.RemoveRange(usuario.UsuarioPerfils);
-
-            _context.UsuarioPerfils.Add(new UsuarioPerfil
-            {
-                UsuarioPerfilId = Guid.NewGuid(),
-                UsuarioId = usuario.UsuarioId,
-                PerfilId = perfil.PerfilId,
-                DataAtribuicao = DateTime.Now
-            });
+            var ids = novosPerfis.Select(p => p.PerfilId).ToHashSet();
+            _context.UsuarioPerfils.RemoveRange(usuario.UsuarioPerfils.Where(up => !ids.Contains(up.PerfilId)).ToList());
+            foreach (var perfil in novosPerfis.Where(p => !usuario.UsuarioPerfils.Any(up => up.PerfilId == p.PerfilId)))
+                _context.UsuarioPerfils.Add(new UsuarioPerfil { UsuarioPerfilId = Guid.NewGuid(), UsuarioId = id, PerfilId = perfil.PerfilId, DataAtribuicao = DateTime.Now });
         }
 
         await _context.SaveChangesAsync();
@@ -325,12 +270,16 @@ public class UsuariosController : ControllerBase
         Guid id,
         UsuarioStatusRequest dados)
     {
+        if (!await _permissao.TemPermissaoAsync(User, "usuario.gerenciar"))
+            return Forbid();
         var usuario = await _context.Usuarios
             .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
         if (usuario == null)
             return NotFound("Usuário não encontrado.");
 
+        if (!dados.Ativo && _permissao.ObterUsuarioId(User) == id) return BadRequest("Não desative a própria conta.");
+        if (await _context.UsuarioPerfils.AnyAsync(up => up.UsuarioId == id && up.Perfil.Nome == "Cliente") && !await _permissao.TemPermissaoAsync(User, "cliente.gerenciar")) return Forbid();
         usuario.Ativo = dados.Ativo;
 
         await _context.SaveChangesAsync();
@@ -354,12 +303,16 @@ public class UsuariosController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Excluir(Guid id)
     {
+        if (!await _permissao.TemPermissaoAsync(User, "usuario.gerenciar"))
+            return Forbid();
         var usuario = await _context.Usuarios
             .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
         if (usuario == null)
             return NotFound("Usuário não encontrado.");
 
+        if (_permissao.ObterUsuarioId(User) == id) return BadRequest("Não desative a própria conta.");
+        if (await _context.UsuarioPerfils.AnyAsync(up => up.UsuarioId == id && up.Perfil.Nome == "Cliente") && !await _permissao.TemPermissaoAsync(User, "cliente.gerenciar")) return Forbid();
         usuario.Ativo = false;
 
         await _context.SaveChangesAsync();
@@ -384,6 +337,7 @@ public class UsuarioRequest
     public string Email { get; set; } = "";
     public string Senha { get; set; } = "";
     public string Perfil { get; set; } = "";
+    public List<string>? Perfis { get; set; }
     public string? RazaoSocial { get; set; }
     public string? Cnpj { get; set; }
     public string? TelefoneContato { get; set; }
@@ -397,6 +351,7 @@ public class UsuarioAtualizarRequest
     public string? Cnpj { get; set; }
     public string? TelefoneContato { get; set; }
     public string? Perfil { get; set; }
+    public List<string>? Perfis { get; set; }
 }
 
 public class UsuarioStatusRequest

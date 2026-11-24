@@ -32,4 +32,21 @@ public partial class Usuario
     public virtual ICollection<RevisaoArtigo> RevisaoArtigos { get; set; } = new List<RevisaoArtigo>();
 
     public virtual ICollection<UsuarioPerfil> UsuarioPerfils { get; set; } = new List<UsuarioPerfil>();
+
+    public virtual ICollection<GlossarioFiscal> GlossarioFiscais { get; set; }
+    = new List<GlossarioFiscal>();
+
+
+    public virtual ICollection<FavoritoArtigo> FavoritoArtigos { get; set; }
+    = new List<FavoritoArtigo>();
+
+    public virtual ICollection<HistoricoLeitura> HistoricoLeituras { get; set; }
+        = new List<HistoricoLeitura>();
+
+
+    public virtual ICollection<ObrigacaoFiscal> ObrigacaoFiscais { get; set; }
+    = new List<ObrigacaoFiscal>();
+
+    public virtual ICollection<CenarioTributario> CenarioTributarios { get; set; }
+    = new List<CenarioTributario>();
 }

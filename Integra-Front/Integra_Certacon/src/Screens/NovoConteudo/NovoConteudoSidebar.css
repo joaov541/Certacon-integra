@@ -1,0 +1,11 @@
+/* Complemento para o menu compartilhado. */
+@media (max-width: 700px) {
+  .pagina-novo-conteudo .principal-novo-conteudo {
+    min-height: 0;
+    min-width: 0;
+    padding-bottom: 64px;
+  }
+}
+@media (max-width: 380px) {
+  .pagina-novo-conteudo .principal-novo-conteudo { padding-bottom: 62px; }
+}

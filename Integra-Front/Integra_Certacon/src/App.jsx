@@ -1,10 +1,8 @@
-import AppRoutes from './routes/AppRoutes'
+import AppRoutes from './routes/AppRoutes';
+import { PermissoesProvider } from './context/PermissoesContext';
 
 function App() {
-  return (
-    <AppRoutes />
-    
-  )
+  return <PermissoesProvider><AppRoutes /></PermissoesProvider>;
 }
 
-export default App
+export default App;
