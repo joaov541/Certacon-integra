@@ -1,4 +1,5 @@
 import "./Notasfiscais.css";
+import { useSearchParams } from "react-router-dom";
 
 import {
     useState,
@@ -32,6 +33,8 @@ const statusFormatados = {
 };
 
 function NotasFiscais() {
+
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // =========================================
     // PERMISSÕES DINÂMICAS
@@ -74,6 +77,27 @@ function NotasFiscais() {
     // =========================================
 
     const inputArquivoRef = useRef(null);
+    const dialogRef = useRef(null);
+    const montadoRef = useRef(false);
+    const [aba, setAba] = useState("notas");
+    const [modal, setModal] = useState(false);
+    const [fila, setFila] = useState([]);
+    const [arrastando, setArrastando] = useState(false);
+    const [progresso, setProgresso] = useState({ atual: 0, total: 0 });
+    const [excluindoXml, setExcluindoXml] = useState(null);
+    const acessoRef = useRef(false);
+    acessoRef.current = acessoLiberado && podeImportarXml;
+
+    useEffect(() => {
+        montadoRef.current = true;
+        return () => { montadoRef.current = false; };
+    }, []);
+
+    useEffect(() => {
+        const dialog = dialogRef.current;
+        if (modal && dialog && !dialog.open) dialog.showModal();
+        if (!modal && dialog?.open) dialog.close();
+    }, [modal, acessoLiberado, podeImportarXml]);
 
     const requisicaoAtualRef = useRef(0);
 
@@ -331,6 +355,10 @@ function NotasFiscais() {
 
         setMensagemImportacao("");
         setErroImportacao("");
+        setFila([]);
+        setModal(false);
+        setAba("notas");
+        setProgresso({ atual: 0, total: 0 });
 
         carregarNotas();
 
@@ -349,147 +377,107 @@ function NotasFiscais() {
     // IMPORTAR XML
     // =========================================
 
-    async function importarXml(event) {
-
-        const input = event.currentTarget;
-
-        const arquivo = input.files?.[0];
-
-        // Limpa o input para permitir selecionar
-        // novamente o mesmo arquivo.
-
-        input.value = "";
-
-        if (
-            !arquivo ||
-            !acessoLiberado ||
-            !podeImportarXml ||
-            operacaoRef.current
-        ) {
-
-            return;
-
+    function selecionarArquivos(lista) {
+        if (!acessoRef.current || operacaoRef.current) return;
+        const erros = [];
+        const novos = [];
+        const chaves = new Set(fila.map(item => item.chave));
+        for (const arquivo of Array.from(lista || [])) {
+            const chave = `${arquivo.name}|${arquivo.size}|${arquivo.lastModified}`;
+            if (!arquivo.name.toLowerCase().endsWith(".xml") || !arquivo.size || arquivo.size > 5000000) {
+                erros.push(`${arquivo.name}: selecione um XML não vazio de até 5 MB.`);
+            } else if (chaves.has(chave)) {
+                erros.push(`${arquivo.name}: já está na fila.`);
+            } else {
+                chaves.add(chave);
+                novos.push({ id: crypto.randomUUID(), chave, nome: arquivo.name, arquivo, status: "Pendente", detalhe: "" });
+            }
         }
-
+        setFila(atual => [...atual, ...novos]);
+        setErroImportacao(erros.join(" "));
         setMensagemImportacao("");
+        if (inputArquivoRef.current) inputArquivoRef.current.value = "";
+    }
+
+    function sessaoValida() {
+        return montadoRef.current && localStorage.getItem("token") === token;
+    }
+
+    async function importarXml() {
+        if (!acessoRef.current || operacaoRef.current) return;
+        const pendentes = fila.filter(item => item.arquivo && ["Pendente", "Erro"].includes(item.status));
+        if (!pendentes.length) return;
+        operacaoRef.current = true;
+        setImportando(true);
         setErroImportacao("");
-
-        // VALIDAR EXTENSÃO
-
-        if (
-            !arquivo.name
-                .toLowerCase()
-                .endsWith(".xml")
-        ) {
-
-            setErroImportacao(
-                "Selecione um arquivo com extensão .xml."
-            );
-
-            return;
-
-        }
-
-        // VALIDAR TAMANHO
-
-        if (arquivo.size === 0) {
-
-            setErroImportacao(
-                "O arquivo XML está vazio."
-            );
-
-            return;
-
-        }
-
-        if (arquivo.size > 5_000_000) {
-
-            setErroImportacao(
-                "O arquivo XML deve ter no máximo 5 MB."
-            );
-
-            return;
-
-        }
-
-        // CRIAR FORMULÁRIO
-
-        const formulario =
-            new FormData();
-
-        formulario.append(
-            "arquivo",
-            arquivo
-        );
-
+        setMensagemImportacao("");
+        setProgresso({ atual: 0, total: pendentes.length });
+        let sucessos = 0;
+        let falhas = 0;
+        let atual = 0;
+        const atualizarItem = (id, dados) => {
+            if (sessaoValida() && acessoRef.current) setFila(lista => lista.map(item => item.id === id ? { ...item, ...dados } : item));
+        };
         try {
-
-            operacaoRef.current = true;
-            setImportando(true);
-
-            const resultado =
-                await requisicaoApi(
-
-                    "/api/NotasFiscais/upload",
-
-                    {
-                        method: "POST",
-                        body: formulario
-                    }
-
-                );
-
-            if (
-                localStorage.getItem("token") !== token
-            ) {
-
-                return;
-
+            for (const item of pendentes) {
+                if (!sessaoValida() || !acessoRef.current) break;
+                atualizarItem(item.id, { status: "Enviando", detalhe: "" });
+                try {
+                    const body = new FormData();
+                    body.append("arquivo", item.arquivo, item.nome);
+                    const resposta = await requisicaoApi("/api/NotasFiscais/upload", { method: "POST", body });
+                    sucessos++;
+                    atualizarItem(item.id, { status: "Importado", arquivo: null, detalhe: resposta?.mensagem || "Importado com sucesso." });
+                } catch (error) {
+                    falhas++;
+                    atualizarItem(item.id, { status: "Erro", detalhe: error.message || "Não foi possível importar o XML." });
+                }
+                atual++;
+                if (sessaoValida() && acessoRef.current) setProgresso({ atual, total: pendentes.length });
             }
-
-            setMensagemImportacao(
-
-                resultado?.mensagem ||
-
-                "Nota fiscal importada com sucesso!"
-
-            );
-
-            setPagina(1);
-
-            // Atualiza a listagem somente após
-            // a importação ser confirmada pela API.
-
-            await carregarNotas();
-
-        } catch (error) {
-
-            console.error(
-                "Erro ao importar XML:",
-                error
-            );
-
-            if (
-                localStorage.getItem("token") === token
-            ) {
-
-                setErroImportacao(
-
-                    error.message ||
-
-                    "Não foi possível importar o XML."
-
-                );
-
+            if (sessaoValida() && acessoRef.current) {
+                setPagina(1);
+                if (sucessos) await carregarNotas();
+                if (!sessaoValida() || !acessoRef.current) return;
+                setMensagemImportacao(sucessos ? `${sucessos} arquivo(s) importado(s).` : "");
+                setErroImportacao(falhas ? `${falhas} arquivo(s) com erro. Confira a fila e tente novamente.` : "");
             }
-
         } finally {
-
             operacaoRef.current = false;
-            setImportando(false);
-
+            if (montadoRef.current) setImportando(false);
         }
+    }
 
+    async function excluirXml(nota) {
+        if (!acessoLiberado || !podeImportarXml || !podeExcluir || operacaoRef.current) return;
+        const id = obterIdNota(nota);
+        if (!id || !window.confirm("Excluir o XML armazenado? O registro da nota fiscal será preservado.")) return;
+        operacaoRef.current = true;
+        setExcluindoXml(id);
+        setErroImportacao("");
+        setMensagemImportacao("");
+        try {
+            await requisicaoApi(`/api/NotasFiscais/${id}/xml`, { method: "DELETE" });
+            if (!sessaoValida()) return;
+            setMensagemImportacao("XML excluído. A nota fiscal foi preservada.");
+            await carregarNotas();
+        } catch (error) {
+            if (sessaoValida()) setErroImportacao(error.message || "Não foi possível excluir o XML.");
+        } finally {
+            operacaoRef.current = false;
+            if (montadoRef.current) setExcluindoXml(null);
+        }
+    }
+
+    function fecharModal() {
+        if (operacaoRef.current) return;
+        setArrastando(false);
+        setModal(false);
+    }
+
+    function tamanhoXml(bytes) {
+        if (bytes == null) return "—";
+        return bytes >= 1000000 ? `${(bytes / 1000000).toFixed(1)} MB` : `${Math.max(1, Math.ceil(bytes / 1000))} KB`;
     }
 
     // =========================================
@@ -1054,13 +1042,7 @@ function NotasFiscais() {
 
             );
 
-            alert(
-
-                error.message ||
-
-                "Não foi possível arquivar a nota."
-
-            );
+            if (sessaoValida()) alert(error.message || "Não foi possível arquivar a nota.");
 
         } finally {
 
@@ -1087,9 +1069,37 @@ function NotasFiscais() {
 
     const operacaoEmAndamento =
 
-        importando ||
+        importando || arquivando !== null || excluindoXml !== null;
 
-        arquivando !== null;
+    // Abre o modal quando o acesso vem do Dashboard ou da rota antiga.
+    useEffect(() => {
+        if (
+            !token ||
+            !acessoLiberado ||
+            !podeImportarXml ||
+            operacaoEmAndamento ||
+            searchParams.get("importar") !== "xml"
+        ) return;
+
+        setModal(true);
+
+        // Consome o parâmetro para não reabrir o modal ao fechá-lo.
+        const proximos = new URLSearchParams(searchParams);
+        proximos.delete("importar");
+        setSearchParams(proximos, { replace: true });
+    }, [token, acessoLiberado, podeImportarXml, operacaoEmAndamento, searchParams, setSearchParams]);
+
+    const xmls = acessoLiberado ? notas.filter(nota => nota.possuiXml ?? nota.PossuiXml ?? false) : [];
+    const nomeXml = nota => nota.nomeArquivo ?? nota.NomeArquivo ?? `nfe_${nota.numero || obterIdNota(nota)}.xml`;
+    const xmlsFiltrados = xmls.filter(nota => normalizarTexto(`${nomeXml(nota)} ${obterCnpjDestinatario(nota)} ${nota.chaveAcesso || ""}`).includes(normalizarTexto(pesquisa)));
+    const quantidadeFila = fila.filter(item => item.arquivo && ["Pendente", "Erro"].includes(item.status)).length;
+    const pendencias = notas.filter(nota => ["PENDENTE", "PROCESSANDO", "ERRO", "REJEITADA"].includes(normalizarStatus(nota.status))).length;
+
+    function mudarAba(valor) {
+        setAba(valor);
+        setPesquisa("");
+        setPagina(1);
+    }
 
     // =========================================
     // RENDERIZAÇÃO
@@ -1111,6 +1121,7 @@ function NotasFiscais() {
                         Notas Fiscais
 
                     </h1>
+                    <p className="nf-subtitulo">Central de documentos e arquivos fiscais.</p>
 
                     {/* CARREGAMENTO DAS PERMISSÕES */}
 
@@ -1164,94 +1175,54 @@ function NotasFiscais() {
 
                         <>
 
-                            {/* IMPORTAÇÃO DE XML */}
-
-                            {podeImportarXml && (
-
-                                <div className="area-importacao-notas">
-
-                                    <input
-                                        type="file"
-
-                                        accept=".xml,application/xml,text/xml"
-
-                                        ref={inputArquivoRef}
-
-                                        onChange={importarXml}
-
-                                        disabled={operacaoEmAndamento}
-
-                                        hidden
-                                    />
-
-                                    <button
-                                        type="button"
-
-                                        className="botao-importar-xml"
-
-                                        onClick={() =>
-
-                                            inputArquivoRef.current?.click()
-
-                                        }
-
-                                        disabled={
-                                            operacaoEmAndamento
-                                        }
-                                    >
-
-                                        {importando ? (
-
-                                            "Importando XML..."
-
-                                        ) : (
-
-                                            <>
-
-                                                <span>+</span>
-
-                                                Importar XML
-
-                                            </>
-
-                                        )}
-
-                                    </button>
-
+                            <div className="nf-resumo" aria-label="Resumo dos documentos">
+                                <div><strong>{carregandoLista || erro ? "—" : notas.length}</strong><span>Notas fiscais</span></div>
+                                <div><strong>{carregandoLista || erro ? "—" : xmls.length}</strong><span>XMLs armazenados</span></div>
+                                <div><strong>{carregandoLista || erro ? "—" : pendencias}</strong><span>Pendências e erros</span></div>
+                            </div>
+                            <div className="nf-barra">
+                                <div className="nf-abas" aria-label="Documentos fiscais">
+                                    <button type="button" aria-pressed={aba === "notas"} onClick={() => mudarAba("notas")}>Notas fiscais</button>
+                                    <button type="button" aria-pressed={aba === "xml"} onClick={() => mudarAba("xml")}>Arquivos XML</button>
                                 </div>
-
-                            )}
-
-                            {/* MENSAGEM DE SUCESSO */}
-
-                            {mensagemImportacao && (
-
-                                <div
-                                    className="mensagem-importacao sucesso"
-                                    role="status"
-                                >
-
-                                    {mensagemImportacao}
-
+                                {podeImportarXml && <button type="button" className="botao-importar-xml" disabled={operacaoEmAndamento} onClick={() => setModal(true)}>+ Importar XML{quantidadeFila ? ` (${quantidadeFila})` : ""}</button>}
+                            </div>
+                            {!modal && mensagemImportacao && <div className="mensagem-importacao sucesso" role="status">{mensagemImportacao}</div>}
+                            {!modal && erroImportacao && <div className="mensagem-importacao falha" role="alert">{erroImportacao}</div>}
+                            {podeImportarXml && <dialog ref={dialogRef} className="nf-dialog" aria-labelledby="nf-modal-titulo" onCancel={event => { event.preventDefault(); fecharModal(); }}>
+                                <div className="nf-dialog-topo">
+                                    <div><h2 id="nf-modal-titulo">Importar arquivos XML</h2><p>Selecione os documentos e acompanhe o processamento.</p></div>
+                                    <button type="button" className="nf-fechar" aria-label="Fechar importação" disabled={operacaoEmAndamento} onClick={fecharModal}>×</button>
                                 </div>
-
-                            )}
-
-                            {/* ERRO DE IMPORTAÇÃO */}
-
-                            {erroImportacao && (
-
-                                <div
-                                    className="mensagem-importacao falha"
-                                    role="alert"
-                                >
-
-                                    {erroImportacao}
-
+                                <input ref={inputArquivoRef} type="file" accept=".xml,application/xml,text/xml" multiple hidden disabled={operacaoEmAndamento} onChange={event => selecionarArquivos(event.target.files)} />
+                                <div className={`nf-upload ${arrastando ? "nf-arrastando" : ""}`} onDragOver={event => { event.preventDefault(); if (!operacaoEmAndamento) setArrastando(true); }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget)) setArrastando(false); }} onDrop={event => { event.preventDefault(); setArrastando(false); selecionarArquivos(event.dataTransfer.files); }}>
+                                    <div><strong>{arrastando ? "Solte os arquivos aqui" : "Arraste e solte seus XMLs"}</strong><small>Até 5 MB por arquivo · Seleção múltipla</small></div>
+                                    <button type="button" className="botao-buscar-notas" disabled={operacaoEmAndamento} onClick={() => inputArquivoRef.current?.click()}>Selecionar</button>
                                 </div>
-
-                            )}
-
+                                {mensagemImportacao && <div className="mensagem-importacao sucesso" role="status">{mensagemImportacao}</div>}
+                                {erroImportacao && <div className="mensagem-importacao falha" role="alert">{erroImportacao}</div>}
+                                {importando && <div className="nf-progresso" role="status"><span>Processados: {progresso.atual} de {progresso.total}</span><progress aria-label="Arquivos processados" max={progresso.total || 1} value={progresso.atual}/></div>}
+                                <div className="nf-fila" aria-label="Fila de importação">
+                                    {!fila.length && <p className="nf-vazio">Nenhum arquivo selecionado.</p>}
+                                    {fila.map(item => <div className="nf-arquivo" key={item.id}>
+                                        <div><strong>{item.nome}</strong>{item.detalhe && <small>{item.detalhe}</small>}</div>
+                                        <span className={`nf-status nf-${item.status.toLowerCase()}`}>{item.status}</span>
+                                        <button type="button" className="nf-fechar" aria-label={`Remover ${item.nome} da fila`} disabled={operacaoEmAndamento} onClick={() => setFila(lista => lista.filter(x => x.id !== item.id))}>×</button>
+                                    </div>)}
+                                </div>
+                                <div className="nf-dialog-rodape"><button type="button" className="botao-limpar-notas" disabled={operacaoEmAndamento} onClick={fecharModal}>Fechar</button><button type="button" className="botao-importar-xml" disabled={operacaoEmAndamento || !quantidadeFila} onClick={importarXml}>{importando ? "Importando..." : `Importar arquivos (${quantidadeFila})`}</button></div>
+                            </dialog>}
+                            {aba === "xml" ? <div className="nf-xml-painel">
+                                <div className="pesquisa-lista-notas"><input type="search" aria-label="Pesquisar XMLs armazenados" placeholder="Buscar arquivo, chave ou CNPJ..." value={pesquisa} onChange={event => alterarPesquisa(event.target.value)}/></div>
+                                <div className="nf-xml-lista">
+                                    <div className="nf-xml-titulo">Arquivos armazenados <span>{carregandoLista || erro ? "—" : xmlsFiltrados.length}</span></div>
+                                    {carregandoLista ? <p className="nf-vazio" role="status">Carregando arquivos...</p> : erro ? <div className="nf-vazio" role="alert">{erro} <button type="button" className="botao-buscar-notas" onClick={carregarNotas}>Tentar novamente</button></div> : !xmlsFiltrados.length ? <p className="nf-vazio">Nenhum XML encontrado.</p> : xmlsFiltrados.map(nota => <div className="nf-arquivo nf-armazenado" key={obterIdNota(nota)}>
+                                        <div><strong>{nomeXml(nota)}</strong><small>{formatarCnpj(obterCnpjDestinatario(nota))} · {tamanhoXml(nota.tamanhoArquivo ?? nota.TamanhoArquivo)}</small></div>
+                                        <span className="nf-status nf-importado">Armazenado</span>
+                                        {podeImportarXml && podeExcluir && <button type="button" className="botao-excluir-nota" title="Excluir somente o XML" aria-label={`Excluir XML ${nomeXml(nota)}`} disabled={operacaoEmAndamento} onClick={() => excluirXml(nota)}><img src={Lixeira} alt=""/></button>}
+                                    </div>)}
+                                </div>
+                            </div> : <>
                             {/* PESQUISA */}
 
                             <div className="pesquisa-lista-notas">
@@ -1883,6 +1854,7 @@ function NotasFiscais() {
 
                             )}
 
+                            </>}
                         </>
 
                     )}

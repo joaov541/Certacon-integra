@@ -132,7 +132,7 @@
 
 .revisao-pagina .revisao-pesquisa input {
     width: 100%;
-    max-width: 420px;
+    max-width: none;
 
     min-height: 42px;
 
@@ -164,7 +164,7 @@
 
     overflow-x: auto;
 
-    padding: 0 20px;
+    padding: 0;
 }
 
 .revisao-pagina .revisao-tabela {

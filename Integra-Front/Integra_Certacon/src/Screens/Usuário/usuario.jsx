@@ -1609,6 +1609,12 @@ function Usuario() {
 
                         <>
 
+                            <header className="uw-cabecalho">
+                                <span>ADMINISTRAÇÃO DO SISTEMA</span>
+                                <h1>Gerenciamento de acessos</h1>
+                                <p>Organize usuários, perfis, permissões e temas do portal.</p>
+                            </header>
+
                             {/* ABAS DE GERENCIAMENTO */}
 
                             <div
@@ -1684,6 +1690,9 @@ function Usuario() {
 
                                     autoComplete="off"
                                 />
+                                {pesquisa && (
+                                    <button type="button" className="uw-limpar" aria-label="Limpar pesquisa" onClick={() => alterarPesquisa("")}>×</button>
+                                )}
 
                             </div>
 
@@ -1737,7 +1746,7 @@ function Usuario() {
 
                                     <div className="cabecalho-usuarios">
 
-                                        <h1>Usuários</h1>
+                                        <h2>Usuários cadastrados</h2>
 
                                         {podeAtribuirPerfis && (
 
@@ -1760,6 +1769,23 @@ function Usuario() {
                                         )}
 
                                     </div>
+
+                                    <section className="uw-indicadores" aria-label="Resumo de usuários" aria-busy={carregando}>
+                                        {[
+                                            ["Total de usuários", usuarios.length, "total"],
+                                            ["Ativos", usuarios.filter(u => u.ativo).length, "ativo"],
+                                            ["Desativados", usuarios.filter(u => !u.ativo).length, "inativo"]
+                                        ].map(([titulo, quantidade, tipo]) => (
+                                            <div key={tipo} className={`uw-indicador uw-${tipo}`}>
+                                                <span>{titulo}</span>
+                                                {carregando ? (
+                                                    <span className="uw-skeleton" role="status" aria-label="Carregando" />
+                                                ) : (
+                                                    <strong>{erroUsuarios ? "—" : quantidade.toLocaleString("pt-BR")}</strong>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </section>
 
                                     {/* ERROS */}
 
@@ -1883,15 +1909,20 @@ function Usuario() {
 
                                                 ) : usuariosExibidos.length > 0 ? (
 
-                                                    usuariosExibidos.map(usuario => (
+                                                    usuariosExibidos.map((usuario, indice) => (
 
-                                                        <tr key={usuario.usuarioId}>
+                                                        <tr key={usuario.usuarioId} className="uw-linha" style={{ "--uw-atraso": `${indice * 45}ms` }}>
 
                                                             {/* NOME */}
 
                                                             <td>
 
-                                                                {usuario.nome}
+                                                                <div className="uw-identidade">
+                                                                    <span className="uw-avatar" aria-hidden="true">
+                                                                        {String(usuario.nome || "?").trim().split(/\s+/).slice(0, 2).map(parte => parte.charAt(0)).join("").toUpperCase() || "?"}
+                                                                    </span>
+                                                                    <strong>{usuario.nome}</strong>
+                                                                </div>
 
                                                                 {mesmoId(
 

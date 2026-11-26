@@ -346,3 +346,5 @@ C:\Users\44788197855\Desktop\Certacon-integra\ProjetoCertacon\ProjetoCertacon\ob
 C:\Users\44788197855\Desktop\Certacon-integra\ProjetoCertacon\ProjetoCertacon\obj\Debug\net10.0\ProjetoCertacon.genruntimeconfig.cache
 C:\Users\44788197855\Desktop\Certacon-integra\ProjetoCertacon\ProjetoCertacon\obj\Debug\net10.0\ref\ProjetoCertacon.dll
 C:\Users\44788197855\Desktop\Certacon-integra\ProjetoCertacon\ProjetoCertacon\bin\Debug\net10.0\ProjetoCertacon.staticwebassets.runtime.json
+C:\Users\44788197855\Desktop\Certacon-integra\ProjetoCertacon\ProjetoCertacon\bin\Debug\net10.0\MailKit.dll
+C:\Users\44788197855\Desktop\Certacon-integra\ProjetoCertacon\ProjetoCertacon\bin\Debug\net10.0\MimeKit.Core.dll

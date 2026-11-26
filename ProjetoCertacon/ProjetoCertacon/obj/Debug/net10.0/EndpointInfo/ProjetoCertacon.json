@@ -2119,6 +2119,99 @@
         }
       }
     },
+    "/api/RecuperacaoSenha/solicitar": {
+      "post": {
+        "tags": [
+          "RecuperacaoSenha"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitarRecuperacaoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitarRecuperacaoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitarRecuperacaoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RecuperacaoSenha/validar": {
+      "post": {
+        "tags": [
+          "RecuperacaoSenha"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidarRecuperacaoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidarRecuperacaoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidarRecuperacaoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RecuperacaoSenha/redefinir": {
+      "post": {
+        "tags": [
+          "RecuperacaoSenha"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedefinirSenhaRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedefinirSenhaRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedefinirSenhaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/SimuladorTributario/cenarios": {
       "get": {
         "tags": [
@@ -2934,6 +3027,32 @@
         },
         "additionalProperties": false
       },
+      "RedefinirSenhaRequest": {
+        "required": [
+          "confirmarSenha",
+          "novaSenha",
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "maxLength": 64,
+            "minLength": 64,
+            "type": "string"
+          },
+          "novaSenha": {
+            "maxLength": 128,
+            "minLength": 8,
+            "type": "string"
+          },
+          "confirmarSenha": {
+            "maxLength": 128,
+            "minLength": 8,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "RevisaoRequest": {
         "type": "object",
         "properties": {
@@ -2955,6 +3074,21 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitarRecuperacaoRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "maxLength": 254,
+            "minLength": 0,
+            "type": "string",
+            "format": "email"
           }
         },
         "additionalProperties": false
@@ -3069,6 +3203,20 @@
         },
         "additionalProperties": false
       },
+      "ValidarRecuperacaoRequest": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "maxLength": 64,
+            "minLength": 64,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "VinculoPermissaoRequest": {
         "type": "object",
         "properties": {
@@ -3156,6 +3304,9 @@
     },
     {
       "name": "Permissoes"
+    },
+    {
+      "name": "RecuperacaoSenha"
     },
     {
       "name": "SimuladorTributario"

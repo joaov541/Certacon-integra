@@ -644,7 +644,9 @@ namespace ProjetoCertacon.Controllers
                     TemArquivo = a.CaminhoArquivo != null,
                     Tema = a.Tema.Nome,
                     Autor = a.AutorUsuario.Nome,
-                    a.TemaId
+                    a.TemaId,
+                    a.Status,
+                    a.AutorUsuarioId,
                 })
                 .ToListAsync();
 

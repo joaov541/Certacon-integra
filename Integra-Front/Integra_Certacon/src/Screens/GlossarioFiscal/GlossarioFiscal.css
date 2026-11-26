@@ -7,6 +7,8 @@
     --gl-laranja: #ff8500;
     --gl-fundo: #f4f7fb;
     --gl-borda: #dce3ee;
+    --gl-transicao: 0.28s ease;
+    --gl-laranja-suave: #fff0de;
 
     width: 100%;
     min-width: 0;
@@ -14,6 +16,7 @@
 
     background: var(--gl-fundo);
     color: #252a33;
+
     font-family: Arial, sans-serif;
 }
 
@@ -29,39 +32,160 @@
 }
 
 /* =========================================
+   ANIMAÇÕES - BIBLIOTECA DIGITAL
+========================================= */
+
+@keyframes glPaperReveal {
+
+    from {
+        opacity: 0;
+        transform: scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+@keyframes glAbrirLivro {
+
+    0% {
+        opacity: 0.4;
+        transform: perspective(300px) rotateY(-65deg);
+    }
+
+    70% {
+        opacity: 1;
+        transform: perspective(300px) rotateY(8deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: perspective(300px) rotateY(0);
+    }
+
+}
+
+@keyframes glSublinhado {
+
+    from {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+}
+
+@keyframes glFormularioReveal {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+@keyframes glSelecaoLetra {
+
+    from {
+        box-shadow:
+            0 0 0 4px rgba(29, 46, 104, 0.12);
+    }
+
+    to {
+        box-shadow:
+            0 0 0 0 rgba(29, 46, 104, 0);
+    }
+
+}
+
+@keyframes glFadeSuave {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+@keyframes glGirar {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* =========================================
    CABEÇALHO PÚBLICO
 ========================================= */
 
 .gl-pagina .gl-topo-publico {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     flex-wrap: wrap;
+
     gap: 20px;
+
     padding: 18px 5%;
+
     background: var(--gl-azul);
+
+    animation:
+        glFadeSuave 0.45s ease-out;
 }
 
 .gl-pagina .gl-topo-publico img {
     display: block;
+
     width: 220px;
     max-width: 100%;
+
+    transition:
+        transform var(--gl-transicao);
+}
+
+.gl-pagina .gl-topo-publico > a:hover img {
+    transform: scale(1.025);
 }
 
 .gl-pagina .gl-topo-publico nav {
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 20px;
 }
 
 .gl-pagina .gl-topo-publico a {
-    color: #fff;
+    color: #ffffff;
+
     font-size: 14px;
     text-decoration: none;
+
+    transition:
+        color var(--gl-transicao);
 }
 
-.gl-pagina .gl-topo-publico a:hover {
-    text-decoration: underline;
+.gl-pagina .gl-topo-publico nav a:hover {
+    color: #ffb45e;
 }
 
 /* =========================================
@@ -71,134 +195,304 @@
 .gl-pagina .gl-conteudo {
     width: 100%;
     max-width: 1400px;
+
     min-width: 0;
+
     margin: 0 auto;
     padding: 30px;
 }
 
+/* =========================================
+   BOTÃO VOLTAR
+========================================= */
+
 .gl-pagina .gl-voltar {
     display: inline-flex;
+
     width: fit-content;
+
     margin-bottom: 20px;
+
     color: #447fbe;
+
     font-size: 13px;
     font-weight: 600;
+
     text-decoration: none;
+
+    transition:
+        color var(--gl-transicao),
+        transform var(--gl-transicao);
 }
 
 .gl-pagina .gl-voltar:hover {
     color: var(--gl-laranja);
+
+    transform: translateX(-3px);
 }
 
 /* =========================================
-   TÍTULO
+   CABEÇALHO DO GLOSSÁRIO
 ========================================= */
 
 .gl-pagina .gl-cabecalho {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     flex-wrap: wrap;
+
     gap: 20px;
+
     margin-bottom: 26px;
+
+    animation:
+        glFadeSuave 0.5s ease-out;
 }
 
 .gl-pagina .gl-titulo-area {
     display: flex;
+
     align-items: center;
+
     gap: 13px;
+
     min-width: 0;
 }
 
+/* =========================================
+   ÍCONE DO LIVRO
+========================================= */
+
 .gl-pagina .gl-icone-titulo {
+    position: relative;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    border-radius: 9px;
-    background: #e3eaf8;
+
+    width: 54px;
+    height: 54px;
+
+    border: 1px solid #d5dfef;
+    border-radius: 12px;
+
+    background: linear-gradient(
+        145deg,
+        #e3eaf8,
+        #f3f6fc
+    );
+
     color: var(--gl-azul);
+
+    box-shadow:
+        0 3px 10px rgba(29, 46, 104, 0.06);
+
+    transition:
+        background var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
 
+.gl-pagina .gl-icone-titulo > svg {
+    transform-origin: center;
+
+    animation:
+        glAbrirLivro 0.85s ease-out 0.15s backwards;
+}
+
+.gl-pagina .gl-icone-titulo:hover {
+    background: #dce6f7;
+
+    box-shadow:
+        0 4px 15px rgba(29, 46, 104, 0.12);
+}
+
+/* =========================================
+   TÍTULO E SUBTÍTULO
+========================================= */
+
 .gl-pagina .gl-cabecalho h1 {
-    margin: 0 0 7px;
+    position: relative;
+
+    width: fit-content;
+
+    margin: 0 0 8px;
+    padding-bottom: 9px;
+
     color: var(--gl-azul);
+
     font-size: 30px;
     font-weight: 700;
 }
 
+/* SUBLINHADO ANIMADO */
+
+.gl-pagina .gl-cabecalho h1::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 48px;
+    height: 3px;
+
+    border-radius: 4px;
+
+    background: var(--gl-laranja);
+
+    transform-origin: left center;
+
+    animation:
+        glSublinhado 0.65s ease-out 0.25s backwards;
+}
+
 .gl-pagina .gl-cabecalho p {
     margin: 0;
+
     color: #68758a;
+
     font-size: 14px;
+
     line-height: 1.5;
 }
 
 /* =========================================
-   BOTÕES
+   BOTÕES GERAIS
 ========================================= */
 
 .gl-pagina .gl-botao-primario,
 .gl-pagina .gl-botao-secundario {
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
+
     gap: 8px;
+
     min-height: 41px;
+
     padding: 10px 17px;
+
     border: 1px solid var(--gl-azul);
     border-radius: 7px;
+
     font-size: 13px;
     font-weight: 600;
+
     cursor: pointer;
-    transition: background 0.2s;
+
+    transition:
+        background var(--gl-transicao),
+        border-color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
+
+/* BOTÃO PRIMÁRIO */
 
 .gl-pagina .gl-botao-primario {
     background: var(--gl-azul);
-    color: #fff;
+    color: #ffffff;
 }
 
 .gl-pagina .gl-botao-primario:hover:not(:disabled) {
     background: #30458d;
+
+    box-shadow:
+        0 3px 10px rgba(29, 46, 104, 0.15);
 }
 
+/* BOTÃO SECUNDÁRIO */
+
 .gl-pagina .gl-botao-secundario {
-    background: #fff;
+    background: #ffffff;
     color: var(--gl-azul);
 }
 
 .gl-pagina .gl-botao-secundario:hover:not(:disabled) {
     background: #edf2fa;
+
+    border-color: #9daed0;
 }
 
 /* =========================================
-   ABAS
+   ABAS DE NAVEGAÇÃO
 ========================================= */
 
 .gl-pagina .gl-abas {
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 8px;
+
     margin-bottom: 22px;
+
     border-bottom: 1px solid var(--gl-borda);
 }
 
 .gl-pagina .gl-abas button {
+    position: relative;
+
     padding: 13px 18px;
+
     border: none;
     border-bottom: 3px solid transparent;
+
     background: transparent;
     color: #758196;
+
     font-size: 14px;
     font-weight: 600;
+
     cursor: pointer;
+
+    transition:
+        color var(--gl-transicao),
+        background var(--gl-transicao);
+}
+
+/* INDICADOR ANIMADO DA ABA */
+
+.gl-pagina .gl-abas button::after {
+    content: "";
+
+    position: absolute;
+
+    right: 0;
+    bottom: -3px;
+    left: 0;
+
+    height: 3px;
+
+    border-radius: 3px 3px 0 0;
+
+    background: var(--gl-laranja);
+
+    transform: scaleX(0);
+
+    transition:
+        transform var(--gl-transicao);
+
+    pointer-events: none;
 }
 
 .gl-pagina .gl-abas button.gl-aba-ativa {
-    border-bottom-color: var(--gl-laranja);
+    color: var(--gl-azul);
+}
+
+.gl-pagina .gl-abas button.gl-aba-ativa::after {
+    transform: scaleX(1);
+}
+
+.gl-pagina .gl-abas button:hover:not(:disabled) {
+    background: rgba(29, 46, 104, 0.035);
+
     color: var(--gl-azul);
 }
 
@@ -208,26 +502,38 @@
 
 .gl-pagina .gl-mensagem {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     margin-bottom: 18px;
     padding: 14px 16px;
+
     border: 1px solid;
     border-radius: 8px;
+
     font-size: 13px;
+
     line-height: 1.5;
+
     overflow-wrap: anywhere;
+
+    animation:
+        glFormularioReveal 0.3s ease-out;
 }
 
 .gl-pagina .gl-sucesso {
     background: #e8f7ee;
     color: #236b42;
+
     border-color: #b6ddc5;
 }
 
 .gl-pagina .gl-erro {
     background: #fff1f1;
     color: #a52b2b;
+
     border-color: #ebc1c1;
 }
 
@@ -235,64 +541,122 @@
     flex: 1;
 }
 
+.gl-pagina .gl-mensagem > svg {
+    flex-shrink: 0;
+}
+
 .gl-pagina .gl-mensagem button {
     display: flex;
+
     align-items: center;
+
     padding: 3px;
+
     border: none;
+
     background: transparent;
     color: inherit;
+
     cursor: pointer;
 }
 
 /* =========================================
-   FORMULÁRIO
+   FORMULÁRIO ADMINISTRATIVO
 ========================================= */
 
 .gl-pagina .gl-formulario {
     margin-bottom: 24px;
     padding: 24px;
+
     border: 1px solid var(--gl-borda);
+    border-top: 3px solid var(--gl-azul);
     border-radius: 10px;
-    background: #fff;
+
+    background: #ffffff;
+
     scroll-margin-top: 20px;
+
+    box-shadow:
+        0 4px 16px rgba(29, 46, 104, 0.06);
+
+    animation:
+        glFormularioReveal 0.35s ease-out;
 }
 
 .gl-pagina .gl-formulario-topo {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     gap: 12px;
+
     margin-bottom: 22px;
 }
 
 .gl-pagina .gl-formulario-topo h2 {
     margin: 0;
+
     color: var(--gl-azul);
+
     font-size: 21px;
 }
 
+/* BOTÃO FECHAR */
+
 .gl-pagina .gl-fechar {
     display: flex;
+
     align-items: center;
+
     padding: 6px;
+
     border: none;
     border-radius: 5px;
+
     background: #edf2fa;
     color: var(--gl-azul);
+
     cursor: pointer;
+
+    transition:
+        background var(--gl-transicao);
 }
+
+.gl-pagina .gl-fechar > svg {
+    transition:
+        transform var(--gl-transicao);
+}
+
+.gl-pagina .gl-fechar:hover:not(:disabled) {
+    background: #dfe7f5;
+}
+
+.gl-pagina .gl-fechar:hover:not(:disabled) > svg {
+    transform: rotate(90deg);
+}
+
+/* =========================================
+   GRID DO FORMULÁRIO
+========================================= */
 
 .gl-pagina .gl-form-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 2fr);
+
     gap: 18px;
 }
 
 .gl-pagina .gl-campo {
     display: flex;
+
     flex-direction: column;
+
     gap: 8px;
+
     min-width: 0;
 }
 
@@ -302,37 +666,63 @@
 
 .gl-pagina .gl-campo label {
     color: var(--gl-azul);
+
     font-size: 13px;
     font-weight: 600;
 }
+
+/* INPUTS E TEXTAREA */
 
 .gl-pagina .gl-campo input,
 .gl-pagina .gl-campo textarea {
     width: 100%;
     min-width: 0;
+
     padding: 12px;
+
     border: 1px solid #cbd4e2;
     border-radius: 7px;
+
     outline: none;
-    background: #fff;
+
+    background: #ffffff;
     color: #30394a;
+
     font-size: 14px;
+
+    transition:
+        border-color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
 
 .gl-pagina .gl-campo textarea {
     min-height: 120px;
+
     resize: vertical;
+
     line-height: 1.6;
 }
 
 .gl-pagina .gl-campo input:focus,
 .gl-pagina .gl-campo textarea:focus {
     border-color: var(--gl-azul);
+
+    box-shadow:
+        0 0 0 3px rgba(29, 46, 104, 0.07);
+}
+
+.gl-pagina .gl-campo input:disabled,
+.gl-pagina .gl-campo textarea:disabled {
+    background: #f4f6fa;
+
+    cursor: not-allowed;
 }
 
 .gl-pagina .gl-campo small {
     color: #768297;
+
     font-size: 11px;
+
     text-align: right;
 }
 
@@ -340,64 +730,121 @@
     margin: 18px 0 0;
 }
 
+/* AÇÕES DO FORMULÁRIO */
+
 .gl-pagina .gl-form-acoes {
     display: flex;
+
     justify-content: flex-end;
+
     flex-wrap: wrap;
+
     gap: 10px;
+
     margin-top: 20px;
 }
 
 /* =========================================
-   FILTROS
+   PAINEL DE FILTROS
 ========================================= */
 
 .gl-pagina .gl-filtros {
     margin-bottom: 25px;
     padding: 20px;
+
     border: 1px solid var(--gl-borda);
-    border-radius: 10px;
-    background: #fff;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(29, 46, 104, 0.035);
+
+    animation:
+        glPaperReveal 0.45s ease-out 0.1s backwards;
 }
 
 .gl-pagina .gl-filtros-linha {
     display: flex;
+
     align-items: center;
+
     flex-wrap: wrap;
+
     gap: 12px;
 }
 
+/* =========================================
+   BARRA DE PESQUISA
+========================================= */
+
 .gl-pagina .gl-pesquisa {
     display: flex;
+
     align-items: center;
+
     flex: 1;
+
     gap: 10px;
+
     min-width: 180px;
     min-height: 43px;
+
     padding: 0 12px;
+
     border: 1px solid #d5deec;
     border-radius: 7px;
+
     background: #f1f5fa;
     color: #7e8ca2;
+
+    transition:
+        background var(--gl-transicao),
+        border-color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
 
 .gl-pagina .gl-pesquisa:focus-within {
     border-color: var(--gl-azul);
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(29, 46, 104, 0.07);
 }
 
 .gl-pagina .gl-pesquisa > svg {
     flex-shrink: 0;
+
+    transition:
+        color var(--gl-transicao),
+        transform var(--gl-transicao);
+}
+
+.gl-pagina .gl-pesquisa:focus-within > svg {
+    color: var(--gl-azul);
+
+    transform: scale(1.08);
 }
 
 .gl-pagina .gl-pesquisa input {
     width: 100%;
     min-width: 0;
+
     height: 42px;
+
     border: none;
+
     outline: none;
+
     background: transparent;
     color: #30394a;
+
     font-size: 13px;
+}
+
+.gl-pagina .gl-pesquisa input::placeholder {
+    color: #8490a2;
 }
 
 .gl-pagina .gl-pesquisa input::-webkit-search-cancel-button {
@@ -406,40 +853,99 @@
 
 .gl-pagina .gl-pesquisa button {
     display: flex;
+
     align-items: center;
+
     padding: 0;
+
     border: none;
+
     background: transparent;
     color: #758196;
+
     cursor: pointer;
+
+    transition:
+        color var(--gl-transicao);
 }
+
+.gl-pagina .gl-pesquisa button:hover {
+    color: #a52b2b;
+}
+
+/* =========================================
+   FILTRO DE STATUS
+========================================= */
 
 .gl-pagina .gl-filtros select {
     min-height: 42px;
+
     max-width: 100%;
+
     padding: 0 12px;
+
     border: 1px solid #d5deec;
     border-radius: 7px;
-    background: #fff;
+
+    background: #ffffff;
     color: var(--gl-azul);
+
     font-size: 13px;
+
+    transition:
+        border-color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
+
+.gl-pagina .gl-filtros select:focus {
+    border-color: var(--gl-azul);
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(29, 46, 104, 0.07);
+}
+
+/* =========================================
+   BOTÃO ATUALIZAR
+========================================= */
 
 .gl-pagina .gl-atualizar {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     width: 42px;
     height: 42px;
+
     border: 1px solid var(--gl-borda);
     border-radius: 7px;
-    background: #fff;
+
+    background: #ffffff;
     color: var(--gl-azul);
+
     cursor: pointer;
+
+    transition:
+        background var(--gl-transicao),
+        border-color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
+}
+
+.gl-pagina .gl-atualizar > svg {
+    transition:
+        transform 0.5s ease;
 }
 
 .gl-pagina .gl-atualizar:hover:not(:disabled) {
     background: #e8eef8;
+
+    border-color: #b7c7e0;
+}
+
+.gl-pagina .gl-atualizar:hover:not(:disabled) > svg {
+    transform: rotate(90deg);
 }
 
 /* =========================================
@@ -448,130 +954,336 @@
 
 .gl-pagina .gl-alfabeto {
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 6px;
+
     margin-top: 18px;
     padding-top: 18px;
+
     border-top: 1px solid #e7ebf2;
 }
 
 .gl-pagina .gl-alfabeto button {
+    position: relative;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     min-width: 30px;
     height: 32px;
+
     padding: 0 7px;
+
     border: 1px solid #dce3ee;
     border-radius: 5px;
-    background: #fff;
+
+    background: #ffffff;
     color: var(--gl-azul);
+
     font-size: 12px;
     font-weight: 600;
+
     cursor: pointer;
+
+    transition:
+        background var(--gl-transicao),
+        border-color var(--gl-transicao),
+        color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
 
 .gl-pagina .gl-alfabeto button:first-child {
     min-width: 58px;
 }
 
-.gl-pagina .gl-alfabeto button:hover {
-    background: #e8eef8;
+/* HOVER NAS LETRAS */
+
+.gl-pagina .gl-alfabeto button:hover:not(.gl-letra-ativa) {
+    background: var(--gl-laranja-suave);
+
+    border-color: #ffd4a4;
+
+    color: #a65a00;
 }
+
+/* LETRA SELECIONADA */
 
 .gl-pagina .gl-alfabeto button.gl-letra-ativa {
     border-color: var(--gl-azul);
+
     background: var(--gl-azul);
-    color: #fff;
+    color: #ffffff;
+
+    animation:
+        glSelecaoLetra 0.4s ease-out;
 }
 
 /* =========================================
-   LISTAGEM
+   CABEÇALHO DA LISTAGEM
 ========================================= */
 
 .gl-pagina .gl-listagem-topo {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     flex-wrap: wrap;
+
     gap: 10px;
+
     margin-bottom: 16px;
+
+    animation:
+        glFadeSuave 0.35s ease-out;
 }
 
 .gl-pagina .gl-listagem-topo h2 {
     margin: 0;
+
     color: var(--gl-azul);
+
     font-size: 19px;
 }
 
+/* CONTADOR DE RESULTADOS */
+
 .gl-pagina .gl-listagem-topo > span {
-    color: #768297;
+    padding: 6px 11px;
+
+    border: 1px solid #dce3ee;
+    border-radius: 20px;
+
+    background: #eaf0fa;
+    color: #526079;
+
     font-size: 12px;
+
+    font-variant-numeric: tabular-nums;
 }
 
 /* =========================================
-   GRID DE TERMOS
+   GRID DOS TERMOS
 ========================================= */
 
 .gl-pagina .gl-grid-termos {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
     align-items: stretch;
+
     gap: 16px;
 }
 
+/* =========================================
+   CARDS - BIBLIOTECA DIGITAL
+========================================= */
+
 .gl-pagina .gl-card-termo {
+    position: relative;
+
     display: flex;
+
     flex-direction: column;
+
     min-width: 0;
     min-height: 185px;
+
     padding: 20px;
+
     border: 1px solid var(--gl-borda);
     border-left: 4px solid var(--gl-azul);
-    border-radius: 9px;
-    background: #fff;
-    box-shadow: 0 3px 10px rgba(29, 46, 104, 0.04);
-    transition: box-shadow 0.2s;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(29, 46, 104, 0.04);
+
+    animation:
+        glPaperReveal 0.4s ease-out backwards;
+
+    transition:
+        border-color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
 
-.gl-pagina .gl-card-termo:hover {
-    box-shadow: 0 5px 14px rgba(29, 46, 104, 0.10);
+/* =========================================
+   ENTRADA SEQUENCIAL DOS CARDS
+========================================= */
+
+.gl-pagina .gl-card-termo:nth-child(1) {
+    animation-delay: 0ms;
 }
+
+.gl-pagina .gl-card-termo:nth-child(2) {
+    animation-delay: 45ms;
+}
+
+.gl-pagina .gl-card-termo:nth-child(3) {
+    animation-delay: 90ms;
+}
+
+.gl-pagina .gl-card-termo:nth-child(4) {
+    animation-delay: 135ms;
+}
+
+.gl-pagina .gl-card-termo:nth-child(5) {
+    animation-delay: 180ms;
+}
+
+.gl-pagina .gl-card-termo:nth-child(6) {
+    animation-delay: 225ms;
+}
+
+/* =========================================
+   MARCADOR DE PÁGINA ANIMADO
+========================================= */
+
+.gl-pagina .gl-card-termo::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    right: 16px;
+
+    width: 14px;
+    height: 27px;
+
+    background: var(--gl-laranja);
+
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        50% 76%,
+        0 100%
+    );
+
+    transform: scaleY(0);
+    transform-origin: top center;
+
+    opacity: 0;
+
+    transition:
+        transform 0.32s ease,
+        opacity 0.2s ease;
+
+    pointer-events: none;
+}
+
+/* =========================================
+   INTERAÇÃO COM OS CARDS
+========================================= */
+
+.gl-pagina .gl-card-termo:hover,
+.gl-pagina .gl-card-termo:focus-within {
+    border-color: #c5d1e4;
+    border-left-color: var(--gl-laranja);
+
+    box-shadow:
+        0 6px 20px rgba(29, 46, 104, 0.09);
+}
+
+.gl-pagina .gl-card-termo:hover::after,
+.gl-pagina .gl-card-termo:focus-within::after {
+    opacity: 1;
+
+    transform: scaleY(1);
+}
+
+/* =========================================
+   CABEÇALHO DO CARD
+========================================= */
 
 .gl-pagina .gl-card-topo {
     display: flex;
+
     align-items: flex-start;
     justify-content: space-between;
+
     flex-wrap: wrap;
+
     gap: 12px;
+
     margin-bottom: 12px;
+    padding-right: 20px;
 }
+
+/* =========================================
+   SIGLA DO TERMO FISCAL
+========================================= */
 
 .gl-pagina .gl-sigla {
     max-width: 100%;
+
     padding: 7px 12px;
-    border-radius: 5px;
+
+    border: 1px solid transparent;
+    border-radius: 7px;
+
     background: #e8eef9;
     color: var(--gl-azul);
+
     font-size: 17px;
     font-weight: 700;
+
     overflow-wrap: anywhere;
+
+    transition:
+        background var(--gl-transicao),
+        border-color var(--gl-transicao),
+        color var(--gl-transicao);
 }
+
+/* DESTAQUE EDITORIAL */
+
+.gl-pagina .gl-card-termo:hover .gl-sigla,
+.gl-pagina .gl-card-termo:focus-within .gl-sigla {
+    background: var(--gl-laranja-suave);
+
+    border-color: #ffe0b7;
+
+    color: #a65a00;
+}
+
+/* =========================================
+   SIGNIFICADO DO TERMO
+========================================= */
 
 .gl-pagina .gl-card-termo h3 {
     margin: 0 0 10px;
+
     color: var(--gl-azul);
+
     font-size: 15px;
     font-weight: 600;
-    line-height: 1.5;
+
+    line-height: 1.6;
+
     overflow-wrap: anywhere;
 }
 
+/* =========================================
+   DESCRIÇÃO - CONFORTO DE LEITURA
+========================================= */
+
 .gl-pagina .gl-card-termo > p {
     margin: 0;
-    color: #5c687b;
+
+    color: #526079;
+
     font-size: 13px;
-    line-height: 1.7;
+
+    line-height: 1.8;
+
     white-space: pre-wrap;
     overflow-wrap: anywhere;
 }
@@ -582,10 +1294,17 @@
 
 .gl-pagina .gl-status {
     flex-shrink: 0;
+
     padding: 5px 9px;
+
     border-radius: 5px;
+
     font-size: 11px;
     font-weight: 600;
+
+    transition:
+        background var(--gl-transicao),
+        color var(--gl-transicao);
 }
 
 .gl-pagina .gl-status-ativo {
@@ -598,62 +1317,126 @@
     color: #697587;
 }
 
+/* =========================================
+   CARDS INATIVOS
+========================================= */
+
 .gl-pagina .gl-card-inativo {
     border-left-color: #929cad;
+
     background: #fafbfc;
 }
 
+.gl-pagina .gl-card-inativo:hover,
+.gl-pagina .gl-card-inativo:focus-within {
+    border-left-color: #929cad;
+}
+
+.gl-pagina .gl-card-inativo::after {
+    background: #929cad;
+}
+
+.gl-pagina .gl-card-inativo:hover .gl-sigla,
+.gl-pagina .gl-card-inativo:focus-within .gl-sigla {
+    background: #eceff3;
+
+    border-color: #dce3ee;
+
+    color: #697587;
+}
+
 /* =========================================
-   AÇÕES ADMINISTRATIVAS
+   RODAPÉ DOS CARDS
 ========================================= */
 
 .gl-pagina .gl-card-rodape {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     flex-wrap: wrap;
+
     gap: 12px;
+
     margin-top: auto;
     padding-top: 20px;
 }
 
 .gl-pagina .gl-autor {
     flex: 1;
+
     min-width: 0;
+
     color: #8590a1;
+
     font-size: 11px;
+
     overflow-wrap: anywhere;
 }
 
+/* =========================================
+   AÇÕES ADMINISTRATIVAS
+========================================= */
+
 .gl-pagina .gl-card-acoes {
     display: flex;
+
     gap: 8px;
 }
 
 .gl-pagina .gl-card-acoes button {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     width: 34px;
     height: 34px;
+
     border: none;
     border-radius: 6px;
+
     cursor: pointer;
+
+    transition:
+        background var(--gl-transicao),
+        filter var(--gl-transicao);
 }
+
+.gl-pagina .gl-card-acoes button > svg {
+    transition:
+        transform var(--gl-transicao);
+}
+
+/* EDITAR */
 
 .gl-pagina .gl-editar {
     background: #e5edf9;
     color: #315ba8;
 }
 
+.gl-pagina .gl-editar:hover:not(:disabled) > svg {
+    transform: rotate(-12deg);
+}
+
+/* DESATIVAR */
+
 .gl-pagina .gl-desativar {
     background: #ffe8e8;
     color: #b43a3a;
 }
 
+/* ATIVAR */
+
 .gl-pagina .gl-ativar {
     background: #e1f4e8;
     color: #24804c;
+}
+
+.gl-pagina .gl-ativar:hover:not(:disabled) > svg,
+.gl-pagina .gl-desativar:hover:not(:disabled) > svg {
+    transform: scale(1.12);
 }
 
 .gl-pagina .gl-card-acoes button:hover:not(:disabled) {
@@ -666,45 +1449,75 @@
 
 .gl-pagina .gl-estado-vazio {
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
+
     gap: 12px;
+
     min-height: 220px;
+
     padding: 30px 20px;
+
     border: 1px solid var(--gl-borda);
     border-radius: 10px;
-    background: #fff;
+
+    background: #ffffff;
     color: #7e8ca2;
+
     text-align: center;
+
+    animation:
+        glFadeSuave 0.35s ease-out;
+}
+
+.gl-pagina .gl-estado-vazio > svg {
+    width: 60px;
+    height: 60px;
+
+    padding: 10px;
+
+    border-radius: 14px;
+
+    background: #edf2fa;
+    color: var(--gl-azul);
 }
 
 .gl-pagina .gl-estado-vazio h3 {
     margin: 0;
+
     color: var(--gl-azul);
+
     font-size: 18px;
 }
 
 .gl-pagina .gl-estado-vazio p {
     margin: 0;
+
     color: #768297;
+
     font-size: 13px;
+
     line-height: 1.6;
 }
+
+/* =========================================
+   SPINNER DE CARREGAMENTO
+========================================= */
 
 .gl-pagina .gl-spinner {
     width: 32px;
     height: 32px;
+
     border: 3px solid #e1e7f1;
     border-top-color: var(--gl-azul);
-    border-radius: 50%;
-    animation: gl-girar 0.8s linear infinite;
-}
 
-@keyframes gl-girar {
-    to {
-        transform: rotate(360deg);
-    }
+    border-radius: 50%;
+
+    animation:
+        glGirar 0.8s linear infinite;
 }
 
 /* =========================================
@@ -713,32 +1526,64 @@
 
 .gl-pagina .gl-paginacao {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     flex-wrap: wrap;
+
     gap: 7px;
+
     margin: 26px 0;
 }
 
 .gl-pagina .gl-paginacao button {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     width: 35px;
     height: 35px;
+
     border: 1px solid var(--gl-borda);
     border-radius: 5px;
-    background: #fff;
+
+    background: #ffffff;
     color: var(--gl-azul);
+
     font-size: 13px;
     font-weight: 600;
+
     cursor: pointer;
+
+    transition:
+        background var(--gl-transicao),
+        color var(--gl-transicao),
+        border-color var(--gl-transicao),
+        box-shadow var(--gl-transicao);
 }
+
+/* HOVER DA PAGINAÇÃO */
+
+.gl-pagina .gl-paginacao button:hover:not(:disabled):not(.gl-pagina-ativa) {
+    background: var(--gl-laranja-suave);
+
+    border-color: #ffd4a4;
+
+    color: #a65a00;
+}
+
+/* PÁGINA SELECIONADA */
 
 .gl-pagina .gl-paginacao button.gl-pagina-ativa {
     border-color: var(--gl-azul);
+
     background: var(--gl-azul);
-    color: #fff;
+    color: #ffffff;
+
+    box-shadow:
+        0 3px 8px rgba(29, 46, 104, 0.15);
 }
 
 /* =========================================
@@ -747,24 +1592,36 @@
 
 .gl-pagina .gl-aviso {
     display: flex;
+
     align-items: flex-start;
+
     gap: 11px;
+
     margin-top: 24px;
     padding: 15px;
+
     border: 1px solid #d7e2f3;
+    border-left: 3px solid var(--gl-azul);
     border-radius: 8px;
+
     background: #eaf1fa;
     color: #526079;
+
+    animation:
+        glFadeSuave 0.5s ease-out;
 }
 
 .gl-pagina .gl-aviso > svg {
     flex-shrink: 0;
+
     color: var(--gl-azul);
 }
 
 .gl-pagina .gl-aviso p {
     margin: 0;
+
     font-size: 12px;
+
     line-height: 1.6;
 }
 
@@ -774,6 +1631,7 @@
 
 .gl-pagina button:disabled {
     opacity: 0.5;
+
     cursor: not-allowed;
 }
 
@@ -783,38 +1641,40 @@
     outline-offset: 3px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .gl-pagina .gl-spinner {
-        animation: none;
-    }
-}
-
 /* =========================================
-   LAYOUT COMPARTILHADO
+   INTEGRAÇÃO COM LAYOUT COMPARTILHADO
 ========================================= */
 
 .integra-layout .gl-pagina {
     width: 100%;
     min-width: 0;
+
     min-height: 100%;
     height: auto;
+
     overflow: visible;
 }
 
 .integra-layout .gl-pagina .gl-conteudo {
     position: relative;
+
     inset: auto;
+
     min-width: 0;
     min-height: 0;
+
     height: auto;
+
     overflow: visible;
 }
 
 /* =========================================
    TABLETS
+   701px ATÉ 1200px
 ========================================= */
 
 @media (min-width: 701px) and (max-width: 1200px) {
+
     .gl-pagina .gl-conteudo {
         padding: 24px 20px;
     }
@@ -823,8 +1683,20 @@
         font-size: 26px;
     }
 
+    .gl-pagina .gl-icone-titulo {
+        width: 48px;
+        height: 48px;
+    }
+
     .gl-pagina .gl-card-termo {
         padding: 16px;
+    }
+
+    .gl-pagina .gl-card-termo::after {
+        right: 12px;
+
+        width: 12px;
+        height: 24px;
     }
 
     .gl-pagina .gl-filtros {
@@ -834,23 +1706,37 @@
     .gl-pagina .gl-pesquisa {
         flex-basis: 100%;
     }
+
 }
 
+/* =========================================
+   TABLETS MENORES
+   701px ATÉ 900px
+========================================= */
+
 @media (min-width: 701px) and (max-width: 900px) {
+
     .gl-pagina .gl-grid-termos {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns:
+            minmax(0, 1fr);
     }
 
     .gl-pagina .gl-form-grid {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns:
+            minmax(0, 1fr);
     }
+
 }
 
 /* =========================================
    MOBILE
+   ATÉ 700px
 ========================================= */
 
 @media (max-width: 700px) {
+
+    /* CABEÇALHO PÚBLICO */
+
     .gl-pagina .gl-topo-publico {
         padding: 15px 18px;
     }
@@ -867,27 +1753,47 @@
         font-size: 12px;
     }
 
+    /* CONTEÚDO */
+
     .gl-pagina .gl-conteudo {
         padding: 20px 14px 25px;
     }
 
+    /* CABEÇALHO */
+
     .gl-pagina .gl-cabecalho {
         gap: 15px;
+
         margin-bottom: 20px;
     }
 
     .gl-pagina .gl-titulo-area {
         align-items: flex-start;
+
         gap: 10px;
     }
 
     .gl-pagina .gl-icone-titulo {
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
+
+        border-radius: 10px;
+    }
+
+    .gl-pagina .gl-icone-titulo > svg {
+        width: 23px;
+        height: 23px;
     }
 
     .gl-pagina .gl-cabecalho h1 {
+        padding-bottom: 8px;
+
         font-size: 24px;
+    }
+
+    .gl-pagina .gl-cabecalho h1::after {
+        width: 36px;
+        height: 2px;
     }
 
     .gl-pagina .gl-cabecalho p {
@@ -898,15 +1804,21 @@
         width: 100%;
     }
 
+    /* ABAS */
+
     .gl-pagina .gl-abas {
         gap: 0;
     }
 
     .gl-pagina .gl-abas button {
         flex: 1;
+
         padding: 12px 8px;
+
         font-size: 12px;
     }
+
+    /* FILTROS */
 
     .gl-pagina .gl-filtros {
         padding: 13px;
@@ -918,57 +1830,104 @@
 
     .gl-pagina .gl-pesquisa {
         flex-basis: 100%;
+
         min-width: 0;
     }
 
     .gl-pagina .gl-filtros select {
         flex: 1;
+
         min-width: 130px;
+
         font-size: 12px;
     }
 
     .gl-pagina .gl-filtros .gl-botao-secundario {
         flex: 1;
+
         font-size: 12px;
     }
 
+    /* FILTRO ALFABÉTICO */
+
     .gl-pagina .gl-alfabeto {
         gap: 5px;
+
         padding-top: 13px;
         margin-top: 13px;
     }
 
     .gl-pagina .gl-alfabeto button {
         min-width: 28px;
+
         height: 30px;
+
         font-size: 11px;
     }
 
+    /* GRID DOS TERMOS */
+
     .gl-pagina .gl-grid-termos {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns:
+            minmax(0, 1fr);
+
         gap: 13px;
     }
 
+    /* CARDS */
+
     .gl-pagina .gl-card-termo {
         min-height: 0;
+
         padding: 16px;
+
+        border-radius: 10px;
     }
+
+    .gl-pagina .gl-card-termo::after {
+        right: 12px;
+
+        width: 11px;
+        height: 22px;
+    }
+
+    .gl-pagina .gl-card-topo {
+        padding-right: 15px;
+    }
+
+    /* LISTAGEM */
 
     .gl-pagina .gl-listagem-topo h2 {
         font-size: 17px;
     }
 
+    .gl-pagina .gl-listagem-topo > span {
+        padding: 5px 8px;
+
+        font-size: 10px;
+    }
+
+    /* SIGLA */
+
     .gl-pagina .gl-sigla {
         font-size: 16px;
     }
+
+    /* SIGNIFICADO */
 
     .gl-pagina .gl-card-termo h3 {
         font-size: 14px;
     }
 
+    /* DESCRIÇÃO */
+
     .gl-pagina .gl-card-termo > p {
         font-size: 13px;
+
+        line-height: 1.75;
     }
+
+    /* FORMULÁRIO */
 
     .gl-pagina .gl-formulario {
         padding: 16px;
@@ -979,12 +1938,15 @@
     }
 
     .gl-pagina .gl-form-grid {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns:
+            minmax(0, 1fr);
     }
 
     .gl-pagina .gl-form-acoes button {
         flex: 1;
     }
+
+    /* PAGINAÇÃO */
 
     .gl-pagina .gl-paginacao {
         gap: 5px;
@@ -994,9 +1956,16 @@
         width: 32px;
         height: 32px;
     }
+
 }
 
+/* =========================================
+   CELULARES ESTREITOS
+   ATÉ 380px
+========================================= */
+
 @media (max-width: 380px) {
+
     .gl-pagina .gl-conteudo {
         padding: 17px 10px 22px;
     }
@@ -1017,4 +1986,67 @@
         width: 29px;
         height: 30px;
     }
+
+}
+
+/* =========================================
+   DISPOSITIVOS SEM MOUSE
+========================================= */
+
+@media (hover: none) {
+
+    .gl-pagina .gl-card-termo::after {
+        display: none;
+    }
+
+    .gl-pagina .gl-card-topo {
+        padding-right: 0;
+    }
+
+    .gl-pagina .gl-card-termo:hover {
+        border-color: var(--gl-borda);
+        border-left-color: var(--gl-azul);
+    }
+
+    .gl-pagina .gl-card-termo:hover:not(:focus-within) .gl-sigla {
+        background: #e8eef9;
+
+        border-color: transparent;
+
+        color: var(--gl-azul);
+    }
+
+    .gl-pagina .gl-card-inativo:hover {
+        border-left-color: #929cad;
+    }
+
+    .gl-pagina .gl-card-inativo:hover:not(:focus-within) .gl-sigla {
+        background: #eceff3;
+
+        color: #697587;
+    }
+
+}
+
+/* =========================================
+   ACESSIBILIDADE
+   REDUÇÃO DE MOVIMENTOS
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .gl-pagina *,
+    .gl-pagina *::before,
+    .gl-pagina *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .gl-pagina .gl-voltar:hover,
+    .gl-pagina .gl-topo-publico > a:hover img,
+    .gl-pagina .gl-pesquisa:focus-within > svg,
+    .gl-pagina button:hover > svg {
+        transform: none !important;
+    }
+
 }

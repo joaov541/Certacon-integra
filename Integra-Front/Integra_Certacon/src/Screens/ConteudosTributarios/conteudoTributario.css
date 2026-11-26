@@ -1859,3 +1859,898 @@
     }
 
 }
+
+/* =========================================
+   AÇÕES DOS MEUS CONTEÚDOS
+========================================= */
+
+.pagina-conteudos .tabela-conteudos .acoes-artigo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Estilo base também cobre botões sem classe específica. */
+.pagina-conteudos .tabela-conteudos .acoes-artigo button,
+.pagina-conteudos .tabela-conteudos button.excluir-conteudo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 7px 12px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: #e6edff;
+    color: #315ba8;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagina-conteudos .tabela-conteudos .acoes-artigo button:hover:not(:disabled) {
+    background: #d6e2ff;
+}
+
+/* Enviar para revisão */
+.pagina-conteudos .tabela-conteudos .acoes-artigo button.acao-enviar-revisao,
+.pagina-conteudos .tabela-conteudos .acoes-artigo button[title*="enviar" i],
+.pagina-conteudos .tabela-conteudos .acoes-artigo button[aria-label*="enviar" i],
+.pagina-conteudos .tabela-conteudos .acoes-artigo button:nth-child(2):not(.excluir-conteudo):not(.acao-editar-artigo) {
+    background: #e1f5e9;
+    color: #21834b;
+}
+
+.pagina-conteudos .tabela-conteudos .acoes-artigo button.acao-enviar-revisao:hover:not(:disabled),
+.pagina-conteudos .tabela-conteudos .acoes-artigo button[title*="enviar" i]:hover:not(:disabled),
+.pagina-conteudos .tabela-conteudos .acoes-artigo button[aria-label*="enviar" i]:hover:not(:disabled),
+.pagina-conteudos .tabela-conteudos .acoes-artigo button:nth-child(2):not(.excluir-conteudo):not(.acao-editar-artigo):hover:not(:disabled) {
+    background: #c9ecd7;
+}
+
+/* Arquivar conteúdo */
+.pagina-conteudos .tabela-conteudos .acoes-artigo button.excluir-conteudo,
+.pagina-conteudos .tabela-conteudos button.excluir-conteudo {
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    background: #ffe5e5;
+    color: #c03939;
+}
+
+.pagina-conteudos .tabela-conteudos .acoes-artigo button.excluir-conteudo:hover:not(:disabled),
+.pagina-conteudos .tabela-conteudos button.excluir-conteudo:hover:not(:disabled) {
+    background: #ffd0d0;
+}
+
+.pagina-conteudos .tabela-conteudos .excluir-conteudo img {
+    display: block;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: invert(28%) sepia(55%) saturate(1800%) hue-rotate(335deg);
+}
+
+.pagina-conteudos .tabela-conteudos .acoes-artigo button:disabled,
+.pagina-conteudos .tabela-conteudos button.excluir-conteudo:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.pagina-conteudos .tabela-conteudos .acoes-artigo button:focus-visible,
+.pagina-conteudos .tabela-conteudos button.excluir-conteudo:focus-visible {
+    outline: 2px solid #ff8500;
+    outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+    .pagina-conteudos .tabela-conteudos .acoes-artigo {
+        justify-content: flex-end;
+        gap: 6px;
+    }
+
+    .pagina-conteudos .tabela-conteudos .acoes-artigo button {
+        min-height: 34px;
+        padding: 6px 9px;
+        font-size: 11px;
+    }
+
+    .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel > td.coluna-acoes {
+        position: static;
+        grid-column: 1 / -1;
+        max-width: 100%;
+        justify-content: flex-end;
+        padding-top: 8px !important;
+        border-top: 1px solid #dce3ee;
+    }
+}
+/* =========================================
+   ALINHAMENTO DOS BOTÕES DE AÇÕES
+========================================= */
+
+@media (min-width: 701px) {
+
+    .pagina-conteudos .tabela-conteudos .coluna-acoes {
+
+        width: 210px;
+        min-width: 210px;
+
+        padding: 10px 12px;
+
+        vertical-align: middle;
+        text-align: center !important;
+
+    }
+
+    .pagina-conteudos .acoes-artigo {
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        width: 100%;
+
+    }
+
+    .pagina-conteudos .acoes-artigo button {
+
+        flex-shrink: 0;
+
+        min-height: 34px;
+
+        margin: 0;
+
+        white-space: nowrap;
+
+    }
+
+    .pagina-conteudos .acoes-artigo .excluir-conteudo {
+
+        width: 34px;
+        height: 34px;
+
+        padding: 7px;
+
+    }
+
+    /* Permitir quebra de títulos muito longos */
+
+    .pagina-conteudos .tabela-conteudos .celula-titulo {
+
+        white-space: normal;
+        overflow-wrap: anywhere;
+
+        line-height: 1.5;
+
+    }
+
+}
+
+/* =========================================
+   ALINHAMENTO MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .pagina-conteudos .acoes-artigo {
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        align-items: center;
+        justify-content: flex-end;
+
+        gap: 8px;
+
+    }
+
+}
+/* =========================================
+   BIBLIOTECA TRIBUTÁRIA — CLEAN EXPERIENCE
+   Ajustes locais, sem modificar coresTemas.css
+========================================= */
+.pagina-conteudos {
+    --ct-borda: #dfe5ef;
+    --ct-texto: #354052;
+    --ct-curva: cubic-bezier(.22, 1, .36, 1);
+}
+.pagina-conteudos .titulo-conteudos {
+    animation: ctEntrada .45s var(--ct-curva) backwards;
+}
+.pagina-conteudos .ct-eyebrow {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 10px;
+    letter-spacing: 1.3px;
+    font-weight: 700;
+    color: #68758a;
+}
+.pagina-conteudos .titulo-conteudos p {
+    color: #64748b;
+    line-height: 1.5;
+}
+.pagina-conteudos .titulo-conteudos > div::after {
+    content: "";
+    display: block;
+    width: 38px;
+    height: 3px;
+    margin-top: 13px;
+    border-radius: 4px;
+    background: #ff8500;
+    transform-origin: left;
+    animation: ctLinha .55s var(--ct-curva) backwards;
+}
+.pagina-conteudos .filtros-conteudos {
+    margin-bottom: 14px;
+    gap: 12px;
+    animation: ctEntrada .45s var(--ct-curva) .08s backwards;
+}
+.pagina-conteudos .pesquisa-lista-conteudos,
+.pagina-conteudos .seletor-conteudos select {
+    border-color: var(--ct-borda);
+    transition: border-color .2s, box-shadow .2s;
+}
+.pagina-conteudos .pesquisa-lista-conteudos:focus-within,
+.pagina-conteudos .seletor-conteudos select:focus {
+    border-color: #8397bf;
+    box-shadow: 0 0 0 3px #1d2e680c;
+}
+.pagina-conteudos .ct-barra-resultados {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 14px;
+    color: #64748b;
+    font-size: 12px;
+}
+.pagina-conteudos .ct-controles,
+.pagina-conteudos .ct-modos {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.pagina-conteudos .ct-modos {
+    padding: 3px;
+    border: 1px solid var(--ct-borda);
+    border-radius: 8px;
+    background: #eaf0f8;
+}
+.pagina-conteudos .ct-modos button,
+.pagina-conteudos .ct-limpar {
+    border: 0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    background: transparent;
+    color: #315584;
+    font: inherit;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+.pagina-conteudos .ct-modos button[aria-pressed="true"] {
+    background: #fff;
+    color: #1d2e68;
+    box-shadow: 0 1px 4px #1d2e6812;
+    font-weight: 700;
+}
+.pagina-conteudos .ct-limpar:hover {
+    background: #e7edf7;
+}
+.pagina-conteudos .ct-titulo-link {
+    display: inline-block;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #1d2e68;
+    font: inherit;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+.pagina-conteudos .ct-titulo-link:hover {
+    color: #315fa8;
+    text-decoration: underline;
+}
+.pagina-conteudos button:focus-visible {
+    outline: 2px solid #d97800;
+    outline-offset: 2px;
+}
+.pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel {
+    animation: ctEntrada .35s var(--ct-curva) var(--ct-atraso, 0ms) backwards;
+}
+.pagina-conteudos .tabela-conteudos tbody td {
+    transition: background .2s;
+}
+.pagina-conteudos .tabela-conteudos .acoes-artigo button,
+.pagina-conteudos .adicionar-conteudo {
+    transition: background .2s, box-shadow .2s, color .2s, transform .2s;
+}
+.pagina-conteudos .ct-skeleton {
+    display: grid;
+    gap: 12px;
+    margin: 8px auto 18px;
+    max-width: 650px;
+}
+.pagina-conteudos .ct-skeleton span {
+    height: 38px;
+    border-radius: 7px;
+    background: linear-gradient(100deg, #e8edf5 25%, #f7f9fc 50%, #e8edf5 75%);
+    background-size: 200% 100%;
+    animation: ctSkeleton 1.5s linear infinite;
+}
+@keyframes ctEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes ctLinha {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+@keyframes ctSkeleton {
+    to {
+        background-position: -200% 0;
+    }
+}
+@media (min-width: 701px) {
+    .pagina-conteudos.ct-lista .tabela-conteudos {
+        border: 1px solid var(--ct-borda);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 3px 12px #1d2e6806;
+    }
+    .pagina-conteudos.ct-lista .tabela-conteudos th {
+        background: #eaf0f8;
+        font-size: 12px;
+    }
+    .pagina-conteudos.ct-lista .tabela-conteudos tbody td {
+        height: 62px;
+        border-bottom-color: #e9edf4;
+    }
+    .pagina-conteudos.ct-lista .tabela-conteudos tbody tr:nth-child(even) td {
+        background: #fafbfd;
+    }
+    .pagina-conteudos.ct-lista .tabela-conteudos tbody tr:hover td {
+        background: #f0f4fa;
+    }
+}
+/* Grade opcional no desktop; cartões naturais no celular. */
+@media (min-width: 701px) {
+    .pagina-conteudos.ct-grade .tabela-conteudos table,
+    .pagina-conteudos.ct-grade .tabela-conteudos tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        background: transparent;
+    }
+    .pagina-conteudos.ct-grade .tabela-conteudos thead {
+        display: none;
+    }
+    .pagina-conteudos.ct-grade .tabela-conteudos tbody {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+        gap: 14px;
+    }
+    .pagina-conteudos.ct-grade .tabela-conteudos tbody tr:has(.sem-conteudos) {
+        grid-column: 1 / -1;
+        display: block;
+    }
+    .pagina-conteudos.ct-grade .tabela-conteudos tbody tr.linha-conteudo-clicavel {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        min-width: 0;
+        padding: 18px;
+        border: 1px solid var(--ct-borda);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 3px 12px #1d2e6806;
+    }
+    .pagina-conteudos.ct-grade .tabela-conteudos tbody tr.linha-conteudo-clicavel > td {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        padding: 0;
+        border: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        background: transparent;
+    }
+    .pagina-conteudos.ct-grade .tabela-conteudos .celula-titulo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .pagina-conteudos.ct-grade .icone-card-conteudo {
+        display: block;
+        flex-shrink: 0;
+        width: 38px;
+        height: 38px;
+        padding: 7px;
+        border-radius: 9px;
+        background: #e8eef9;
+        object-fit: contain;
+    }
+    .pagina-conteudos.ct-grade .celula-data,
+    .pagina-conteudos.ct-grade .celula-autor {
+        color: #64748b;
+        font-size: 12px;
+    }
+    .pagina-conteudos.ct-grade .tabela-conteudos tbody tr.linha-conteudo-clicavel > td.coluna-acoes {
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid #edf0f5;
+    }
+    .pagina-conteudos.ct-grade .acoes-artigo {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+}
+@media (max-width: 700px) {
+    .pagina-conteudos .ct-modos {
+        display: none;
+    }
+    .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel {
+        border: 1px solid var(--ct-borda);
+        background: #fff;
+        margin-bottom: 12px;
+        padding: 14px 12px;
+        row-gap: 5px;
+        box-shadow: 0 3px 10px #1d2e6806;
+    }
+    .pagina-conteudos .tabela-conteudos tbody tr.linha-conteudo-clicavel > td.coluna-acoes {
+        position: static;
+        grid-column: 1 / -1;
+        grid-row: auto;
+        max-width: 100%;
+        margin-top: 7px;
+        padding-top: 9px !important;
+        border-top: 1px solid #edf0f5;
+    }
+    .pagina-conteudos .tabela-conteudos .celula-titulo strong {
+        font-size: 14px;
+        line-height: 1.4;
+        color: #1d2e68;
+    }
+    .pagina-conteudos .tabela-conteudos .celula-data,
+    .pagina-conteudos .tabela-conteudos .celula-autor {
+        color: #64748b;
+    }
+}
+@media (hover: hover) {
+    .pagina-conteudos .adicionar-conteudo:hover,
+    .pagina-conteudos .acoes-artigo button:hover:not(:disabled) {
+        transform: translateY(-1px);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .pagina-conteudos *,
+    .pagina-conteudos *::before,
+    .pagina-conteudos *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =========================================
+   SMART LIBRARY
+   EFEITO DE VOLUME 3D NOS CARDS
+========================================= */
+
+/* ANIMAÇÃO DE ENTRADA */
+
+@keyframes ctEntradaVolume {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+/* =========================================
+   VISUALIZAÇÃO EM GRADE - DESKTOP
+========================================= */
+
+@media (min-width: 701px) {
+
+    /* PERSPECTIVA DA GRADE */
+
+    .pagina-conteudos.ct-grade .tabela-conteudos {
+        overflow: visible;
+    }
+
+    .pagina-conteudos.ct-grade .tabela-conteudos tbody {
+        perspective: 1200px;
+
+        gap: 22px;
+
+        padding: 8px 5px 22px;
+    }
+
+    /* =====================================
+       CARD COM PROFUNDIDADE
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .tabela-conteudos tbody
+    tr.linha-conteudo-clicavel {
+
+        position: relative;
+
+        isolation: isolate;
+
+        border: 1px solid #dfe5ef;
+
+        border-radius: 13px;
+
+        background: linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 60%,
+            #f7f9fd 100%
+        );
+
+        box-shadow:
+            0 3px 8px rgba(29, 46, 104, 0.05),
+            0 3px 0 #e1e7f0;
+
+        transform-origin: center center;
+
+        animation:
+            ctEntradaVolume
+            0.55s
+            cubic-bezier(0.22, 1, 0.36, 1)
+            var(--ct-atraso, 0ms)
+            backwards;
+
+        transition:
+            transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.4s ease,
+            border-color 0.35s ease,
+            background 0.35s ease;
+
+    }
+
+    /* =====================================
+       CAMADA DE ILUMINAÇÃO
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .linha-conteudo-clicavel::before {
+
+        content: "";
+
+        position: absolute;
+
+        inset: 0;
+
+        z-index: -1;
+
+        border-radius: inherit;
+
+        background: linear-gradient(
+            125deg,
+            rgba(255, 255, 255, 0.85),
+            transparent 45%,
+            rgba(220, 230, 246, 0.35)
+        );
+
+        opacity: 0;
+
+        pointer-events: none;
+
+        transition:
+            opacity 0.4s ease;
+
+    }
+
+    /* =====================================
+       LINHA LUMINOSA INFERIOR
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .linha-conteudo-clicavel::after {
+
+        content: "";
+
+        position: absolute;
+
+        left: 18px;
+        right: 18px;
+        bottom: 0;
+
+        height: 2px;
+
+        border-radius: 8px;
+
+        background: linear-gradient(
+            90deg,
+            transparent,
+            #ff8500,
+            transparent
+        );
+
+        opacity: 0;
+
+        transform: scaleX(0);
+
+        transform-origin: center;
+
+        pointer-events: none;
+
+        transition:
+            transform 0.4s ease,
+            opacity 0.4s ease;
+
+    }
+
+    /* =====================================
+       ANIMAÇÃO DO ÍCONE
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .icone-card-conteudo {
+
+        transition:
+            transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.4s ease;
+
+    }
+
+    /* =====================================
+       TÍTULO DO CONTEÚDO
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .ct-titulo-link {
+
+        transition:
+            color 0.3s ease;
+
+    }
+
+    /* =====================================
+       ETIQUETA DO TEMA
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .etiqueta-tema {
+
+        transition:
+            transform 0.35s ease,
+            box-shadow 0.35s ease;
+
+    }
+
+    /* =====================================
+       FOCO PELO TECLADO
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .tabela-conteudos tbody
+    tr.linha-conteudo-clicavel:focus-within {
+
+        border-color: #b9c9e1;
+
+        box-shadow:
+            0 10px 22px rgba(29, 46, 104, 0.12),
+            0 4px 0 #dce4f0;
+
+    }
+
+}
+
+/* =========================================
+   EFEITO DE ELEVAÇÃO AO PASSAR O MOUSE
+========================================= */
+
+@media (min-width: 701px) and (hover: hover) {
+
+    .pagina-conteudos.ct-grade
+    .tabela-conteudos tbody
+    tr.linha-conteudo-clicavel:hover {
+
+        z-index: 5;
+
+        transform:
+            translateY(-8px)
+            scale(1.025)
+            rotateX(4deg);
+
+        border-color: #b9c9e1;
+
+        background: linear-gradient(
+            145deg,
+            #ffffff,
+            #f9fbff
+        );
+
+        box-shadow:
+            0 18px 30px rgba(29, 46, 104, 0.14),
+            0 7px 0 #dbe3f0,
+            0 3px 6px rgba(29, 46, 104, 0.08);
+
+    }
+
+    /* ATIVAR ILUMINAÇÃO */
+
+    .pagina-conteudos.ct-grade
+    .linha-conteudo-clicavel:hover::before {
+
+        opacity: 1;
+
+    }
+
+    /* ATIVAR LINHA LARANJA */
+
+    .pagina-conteudos.ct-grade
+    .linha-conteudo-clicavel:hover::after {
+
+        opacity: 1;
+
+        transform: scaleX(1);
+
+    }
+
+    /* ÍCONE GANHA PROFUNDIDADE */
+
+    .pagina-conteudos.ct-grade
+    .linha-conteudo-clicavel:hover
+    .icone-card-conteudo {
+
+        transform:
+            translateY(-3px)
+            scale(1.10);
+
+        box-shadow:
+            0 5px 12px rgba(29, 46, 104, 0.12);
+
+    }
+
+    /* DESTAQUE DO TÍTULO */
+
+    .pagina-conteudos.ct-grade
+    .linha-conteudo-clicavel:hover
+    .ct-titulo-link {
+
+        color: #315fa8;
+
+    }
+
+    /* ELEVAÇÃO DA ETIQUETA */
+
+    .pagina-conteudos.ct-grade
+    .linha-conteudo-clicavel:hover
+    .etiqueta-tema {
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 3px 7px rgba(29, 46, 104, 0.06);
+
+    }
+
+    /* =====================================
+       EFEITO AO PRESSIONAR O CARD
+    ===================================== */
+
+    .pagina-conteudos.ct-grade
+    .tabela-conteudos tbody
+    tr.linha-conteudo-clicavel:active {
+
+        transform:
+            translateY(-2px)
+            scale(0.99);
+
+        box-shadow:
+            0 5px 12px rgba(29, 46, 104, 0.10),
+            0 2px 0 #dbe3f0;
+
+        transition-duration: 0.15s;
+
+    }
+
+}
+
+/* =========================================
+   EFEITO DE VOLUME NO MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .pagina-conteudos
+    .tabela-conteudos tbody
+    tr.linha-conteudo-clicavel {
+
+        box-shadow:
+            0 4px 10px rgba(29, 46, 104, 0.05),
+            0 3px 0 #e0e6ef;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+
+    }
+
+    .pagina-conteudos
+    .tabela-conteudos tbody
+    tr.linha-conteudo-clicavel:active {
+
+        transform: scale(0.985);
+
+        border-color: #b9c9e1;
+
+        box-shadow:
+            0 2px 5px rgba(29, 46, 104, 0.08);
+
+    }
+
+}
+
+/* =========================================
+   ACESSIBILIDADE
+   REDUÇÃO DE MOVIMENTOS
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .pagina-conteudos
+    .linha-conteudo-clicavel,
+
+    .pagina-conteudos
+    .linha-conteudo-clicavel::before,
+
+    .pagina-conteudos
+    .linha-conteudo-clicavel::after,
+
+    .pagina-conteudos
+    .linha-conteudo-clicavel .icone-card-conteudo,
+
+    .pagina-conteudos
+    .linha-conteudo-clicavel .etiqueta-tema {
+
+        animation: none !important;
+
+        transition: none !important;
+
+        transform: none !important;
+
+    }
+
+}
+

@@ -1337,6 +1337,54 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ProjetoCertacon.Controllers.RecuperacaoSenhaController",
+    "Method": "Redefinir",
+    "RelativePath": "api/RecuperacaoSenha/redefinir",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.RedefinirSenhaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.RecuperacaoSenhaController",
+    "Method": "Solicitar",
+    "RelativePath": "api/RecuperacaoSenha/solicitar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.SolicitarRecuperacaoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.RecuperacaoSenhaController",
+    "Method": "Validar",
+    "RelativePath": "api/RecuperacaoSenha/validar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.ValidarRecuperacaoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProjetoCertacon.Controllers.SimuladorTributarioController",
     "Method": "Calcular",
     "RelativePath": "api/SimuladorTributario/calcular",

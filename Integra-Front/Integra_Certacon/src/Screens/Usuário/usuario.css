@@ -1483,3 +1483,459 @@
     }
 
 }
+/* =========================================
+   ADMIN WORKSPACE — ACABAMENTO VISUAL
+========================================= */
+
+@keyframes uwEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes uwFade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes uwCarregamento {
+    to {
+        background-position: -200% 0;
+    }
+}
+
+.pagina-usuarios .uw-cabecalho {
+    margin-bottom: 24px;
+    animation: uwEntrada .35s ease-out;
+}
+
+.pagina-usuarios .uw-cabecalho > span {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+.pagina-usuarios .uw-cabecalho h1 {
+    margin: 8px 0;
+    color: var(--azul-integra);
+    font-size: clamp(23px, 2.6vw, 32px);
+    line-height: 1.25;
+}
+
+.pagina-usuarios .uw-cabecalho p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.pagina-usuarios .uw-cabecalho::after {
+    content: "";
+    display: block;
+    width: 38px;
+    height: 3px;
+    margin-top: 14px;
+    border-radius: 4px;
+    background: var(--laranja-integra);
+}
+
+.pagina-usuarios .rbac-abas {
+    padding: 5px;
+    gap: 5px;
+    border: 1px solid #dfe5ef;
+    border-radius: 11px;
+    background: #eaf0f8;
+}
+
+.pagina-usuarios .rbac-abas button {
+    position: relative;
+    flex: 1;
+    min-height: 42px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: #526176;
+    font-weight: 600;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.pagina-usuarios .rbac-abas button.ativa,
+.pagina-usuarios .rbac-abas button.ativa:hover {
+    background: #fff;
+    color: var(--azul-integra);
+    box-shadow: 0 2px 6px #1d2e6810;
+}
+
+.pagina-usuarios .rbac-abas button::after {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    border-radius: 4px;
+    background: var(--laranja-integra);
+    transform: scaleX(0);
+    transition: transform .25s ease;
+}
+
+.pagina-usuarios .rbac-abas button.ativa::after {
+    transform: scaleX(1);
+}
+
+.pagina-usuarios .pesquisa-usuarios {
+    max-width: none;
+    height: 44px;
+    border-color: #dfe5ef;
+    border-radius: 9px;
+    background: #fff;
+    box-shadow: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.pagina-usuarios .pesquisa-usuarios:focus-within {
+    box-shadow: 0 0 0 3px #1d2e6810;
+}
+
+.pagina-usuarios .uw-limpar {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 6px;
+    background: #edf2fa;
+    color: #526176;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.pagina-usuarios .cabecalho-usuarios h2 {
+    margin: 0;
+    color: var(--azul-integra);
+    font-size: 21px;
+}
+
+.pagina-usuarios .uw-indicadores {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.pagina-usuarios .uw-indicador {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 15px;
+    border: 1px solid #dfe5ef;
+    border-radius: 11px;
+    background: #fff;
+    box-shadow: 0 3px 10px #1d2e6806;
+    animation: uwEntrada .4s ease-out backwards;
+}
+
+.pagina-usuarios .uw-indicador:nth-child(2) {
+    animation-delay: 60ms;
+}
+
+.pagina-usuarios .uw-indicador:nth-child(3) {
+    animation-delay: 120ms;
+}
+
+.pagina-usuarios .uw-indicador > span:first-child {
+    color: #526176;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.pagina-usuarios .uw-indicador > strong {
+    color: var(--azul-integra);
+    font-size: 29px;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.pagina-usuarios .uw-ativo > strong {
+    color: #21804e;
+}
+
+.pagina-usuarios .uw-inativo > strong {
+    color: #865050;
+}
+
+.pagina-usuarios .uw-skeleton {
+    width: 60px;
+    max-width: 100%;
+    height: 33px;
+    border-radius: 6px;
+    background: linear-gradient(100deg, #e7ecf4 25%, #f5f7fb 50%, #e7ecf4 75%);
+    background-size: 200% 100%;
+    animation: uwCarregamento 1.5s linear infinite;
+}
+
+.pagina-usuarios .uw-identidade {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    text-align: left;
+}
+
+.pagina-usuarios .uw-identidade strong {
+    color: #253451;
+    font-size: inherit;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.pagina-usuarios .uw-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e9eef9;
+    color: var(--azul-integra);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.pagina-usuarios .tabela-usuarios .uw-linha {
+    animation: uwEntrada .35s ease-out var(--uw-atraso, 0ms) backwards;
+}
+
+.pagina-usuarios .tabela-usuarios tbody td {
+    color: #465367;
+    transition: background .2s ease;
+}
+
+.pagina-usuarios .status-usuario {
+    gap: 5px;
+    font-weight: 600;
+}
+
+.pagina-usuarios .status-usuario::before {
+    content: "";
+    flex-shrink: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.pagina-usuarios .status-ativo {
+    background: #e5f4eb;
+    color: #216b43;
+}
+
+.pagina-usuarios .status-desativado {
+    background: #f7eaea;
+    color: #963e3e;
+}
+
+.pagina-usuarios .acoes-usuario button,
+.pagina-usuarios .botao-novo-usuario,
+.pagina-usuarios .rbac-btn,
+.pagina-usuarios .paginacao-usuarios button {
+    transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.pagina-usuarios .acoes-usuario button[title="Desativar usuário"]:hover:not(:disabled) {
+    background: #fce7e7;
+}
+
+.pagina-usuarios .paginacao-usuarios button {
+    border-color: #dfe5ef;
+    color: var(--azul-integra);
+}
+
+.pagina-usuarios .paginacao-usuarios button.pagina-ativa {
+    color: #fff;
+    background: var(--azul-integra);
+}
+
+.pagina-usuarios .rbac-form,
+.pagina-usuarios .rbac-linha {
+    border-color: #dfe5ef;
+    border-radius: 11px;
+    box-shadow: 0 3px 10px #1d2e6806;
+}
+
+.pagina-usuarios .rbac-painel {
+    animation: uwFade .3s ease-out;
+}
+
+.pagina-usuarios .rbac-linha {
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.pagina-usuarios .fundo-modal-usuario {
+    background: rgba(19, 31, 62, .48);
+    animation: uwFade .2s ease-out;
+}
+
+.pagina-usuarios .modal-usuario {
+    border: 1px solid #dfe5ef;
+    border-radius: 14px;
+    box-shadow: 0 16px 48px #17265030;
+    animation: uwEntrada .25s ease-out;
+}
+
+.pagina-usuarios .modal-usuario > input,
+.pagina-usuarios .modal-usuario > select,
+.pagina-usuarios .rbac-form input:not([type="checkbox"]):not([type="radio"]),
+.pagina-usuarios .rbac-form select,
+.pagina-usuarios .rbac-form textarea {
+    border-color: #d3dce9;
+    border-radius: 8px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.pagina-usuarios .modal-usuario > input:focus,
+.pagina-usuarios .modal-usuario > select:focus,
+.pagina-usuarios .rbac-form input:focus,
+.pagina-usuarios .rbac-form select:focus,
+.pagina-usuarios .rbac-form textarea:focus {
+    border-color: var(--azul-integra);
+    box-shadow: 0 0 0 3px #1d2e6810;
+}
+
+.pagina-usuarios .rbac-checks {
+    border-color: #dfe5ef;
+    border-radius: 9px;
+}
+
+.pagina-usuarios .rbac-checks label {
+    padding: 7px;
+    border-radius: 6px;
+    transition: background .2s ease;
+}
+
+.pagina-usuarios .rbac-checks label:has(input:checked) {
+    background: #edf2fa;
+}
+
+@media (min-width: 701px) {
+    .pagina-usuarios .tabela-usuarios {
+        border: 1px solid #dfe5ef;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 3px 12px #1d2e6807;
+    }
+    .pagina-usuarios .tabela-usuarios table {
+        min-width: 760px;
+    }
+    .pagina-usuarios .tabela-usuarios thead th:nth-child(n) {
+        height: 46px;
+        border: 0;
+        border-bottom: 1px solid #dfe5ef;
+        border-radius: 0;
+        background: #eaf0f8;
+        font-size: 12px;
+    }
+    .pagina-usuarios .tabela-usuarios tbody tr td:nth-child(n) {
+        height: 64px;
+        border: 0;
+        border-bottom: 1px solid #edf0f5;
+        border-radius: 0;
+        background: #fff;
+    }
+    .pagina-usuarios .tabela-usuarios tbody tr:nth-child(even) td:nth-child(n) {
+        background: #fafbfd;
+    }
+    .pagina-usuarios .tabela-usuarios tbody tr:last-child td:nth-child(n) {
+        border-bottom: 0;
+    }
+    .pagina-usuarios .tabela-usuarios tbody tr.uw-linha:focus-within td:nth-child(n) {
+        background: #edf3fc;
+    }
+    .pagina-usuarios .tabela-usuarios th:nth-child(1) {
+        width: 21%;
+    }
+    .pagina-usuarios .tabela-usuarios th:nth-child(2) {
+        width: 23%;
+    }
+    .pagina-usuarios .tabela-usuarios th:nth-child(6) {
+        width: 10%;
+    }
+    .pagina-usuarios .tabela-usuarios th:nth-child(3) {
+        width: 18%;
+    }
+    .pagina-usuarios .acoes-usuario button {
+        margin: 0 1px;
+    }
+}
+
+@media (min-width: 701px) and (hover: hover) {
+    .pagina-usuarios .tabela-usuarios tbody tr.uw-linha:hover td:nth-child(n) {
+        background: #edf3fc;
+    }
+    .pagina-usuarios .tabela-usuarios tbody tr.uw-linha:hover td:first-child {
+        box-shadow: inset 3px 0 var(--laranja-integra);
+    }
+}
+
+@media (hover: hover) {
+    .pagina-usuarios .acoes-usuario button:hover:not(:disabled),
+    .pagina-usuarios .botao-novo-usuario:hover:not(:disabled) {
+        transform: translateY(-2px);
+    }
+    .pagina-usuarios .rbac-linha:hover {
+        border-color: #c5d2e7;
+        box-shadow: 0 5px 14px #1d2e680d;
+    }
+}
+
+@media (max-width: 700px) {
+    .pagina-usuarios .uw-indicadores {
+        gap: 7px;
+    }
+    .pagina-usuarios .uw-indicador {
+        padding: 10px;
+    }
+    .pagina-usuarios .uw-indicador > span:first-child {
+        font-size: 10px;
+    }
+    .pagina-usuarios .uw-indicador > strong {
+        font-size: 23px;
+    }
+    .pagina-usuarios .tabela-usuarios tbody tr {
+        border-color: #dfe5ef;
+        box-shadow: 0 3px 12px #1d2e6808;
+    }
+    .pagina-usuarios .uw-identidade {
+        flex-wrap: wrap;
+    }
+    .pagina-usuarios .uw-avatar {
+        width: 29px;
+        height: 29px;
+    }
+    .pagina-usuarios .cabecalho-usuarios h2 {
+        font-size: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pagina-usuarios *,
+    .pagina-usuarios *::before,
+    .pagina-usuarios *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+    .pagina-usuarios .acoes-usuario button:hover,
+    .pagina-usuarios .botao-novo-usuario:hover {
+        transform: none;
+    }
+}

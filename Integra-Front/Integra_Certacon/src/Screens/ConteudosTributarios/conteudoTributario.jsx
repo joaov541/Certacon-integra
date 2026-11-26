@@ -54,6 +54,7 @@ function ConteudoTributario() {
         useState("publicados");
 
     const [pesquisa, setPesquisa] = useState("");
+    const [visualizacao, setVisualizacao] = useState("lista");
 
     const [temaSelecionado, setTemaSelecionado] =
         useState("Todos");
@@ -810,7 +811,7 @@ function ConteudoTributario() {
 
     return (
 
-        <div className="pagina-conteudos">
+        <div className={`pagina-conteudos ct-${visualizacao}`}>
 
             <main className="principal-conteudos">
 
@@ -822,13 +823,13 @@ function ConteudoTributario() {
 
                         <div>
 
+                            <span className="ct-eyebrow">BIBLIOTECA TRIBUTÁRIA</span>
                             <h1>
                                 Conteúdos Tributários
                             </h1>
 
                             <p>
-                                Explore conteúdos por tema,
-                                mantenha-se conectado
+                                Explore conteúdos por tema e mantenha-se atualizado.
                             </p>
 
                         </div>
@@ -959,7 +960,8 @@ function ConteudoTributario() {
 
                             <input
                                 type="text"
-                                placeholder="Buscar por título ou palavra-chave"
+                                aria-label="Buscar conteúdos"
+                                 placeholder="Buscar por título ou palavra-chave"
                                 value={pesquisa}
                                 onChange={event =>
                                     setPesquisa(
@@ -975,7 +977,8 @@ function ConteudoTributario() {
                         <div className="seletor-conteudos">
 
                             <select
-                                value={temaSelecionado}
+                                aria-label="Filtrar por tema"
+                                 value={temaSelecionado}
                                 onChange={event =>
                                     setTemaSelecionado(
                                         event.target.value
@@ -1012,7 +1015,8 @@ function ConteudoTributario() {
                         <div className="seletor-conteudos">
 
                             <select
-                                value={ordem}
+                                aria-label="Ordenar conteúdos"
+                                 value={ordem}
                                 onChange={event =>
                                     setOrdem(
                                         event.target.value
@@ -1041,7 +1045,25 @@ function ConteudoTributario() {
 
                     {/* TABELA */}
 
-                    <div className="tabela-conteudos">
+                    <div className="ct-barra-resultados">
+                        <span role="status">
+                            {carregandoLista ? "Carregando conteúdos…" : erroPermissoes || erroLista ? "Conteúdos indisponíveis" : `${listaFiltrada.length} de ${listaAtual.length} conteúdos`}
+                        </span>
+                        <div className="ct-controles">
+                            {(pesquisa || temaSelecionado !== "Todos" || ordem !== "recentes") && (
+                                <button type="button" className="ct-limpar" onClick={() => {
+                                    setPesquisa("");
+                                    setTemaSelecionado("Todos");
+                                    setOrdem("recentes");
+                                }}>Limpar filtros</button>
+                            )}
+                            <div className="ct-modos" role="group" aria-label="Visualização">
+                                <button type="button" aria-pressed={visualizacao === "lista"} onClick={() => setVisualizacao("lista")}>☰ Lista</button>
+                                <button type="button" aria-pressed={visualizacao === "grade"} onClick={() => setVisualizacao("grade")}>▦ Grade</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="tabela-conteudos" aria-busy={carregandoLista}>
 
                         <table
                             className={
@@ -1098,8 +1120,10 @@ function ConteudoTributario() {
                                             className="sem-conteudos"
                                         >
 
-                                            Carregando conteúdos...
-
+                                            <div className="ct-skeleton" aria-hidden="true">
+                                                 {[0, 1, 2].map(i => <span key={i} />)}
+                                             </div>
+                                             <span role="status">Carregando conteúdos...</span>
                                         </td>
 
                                     </tr>
@@ -1123,11 +1147,12 @@ function ConteudoTributario() {
 
                                 ) : listaFiltrada.length > 0 ? (
 
-                                    listaFiltrada.map(artigo => (
+                                    listaFiltrada.map((artigo, indice) => (
 
                                         <tr
                                             key={artigo.artigoId}
                                             className="linha-conteudo-clicavel"
+                                            style={{ "--ct-atraso": `${Math.min(indice, 6) * 35}ms` }}
 
                                             onClick={() =>
                                                 abrirDetalhes(artigo)
@@ -1144,9 +1169,12 @@ function ConteudoTributario() {
                                                     className="icone-card-conteudo"
                                                 />
 
-                                                <strong>
-                                                    {artigo.titulo}
-                                                </strong>
+                                                <button type="button" className="ct-titulo-link" onClick={event => {
+                                                    event.stopPropagation();
+                                                    abrirDetalhes(artigo);
+                                                }}>
+                                                    <strong>{artigo.titulo}</strong>
+                                                </button>
 
                                             </td>
 

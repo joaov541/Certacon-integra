@@ -7,6 +7,8 @@ using ProjetoCertacon.Data;
 using ProjetoCertacon.Models;
 using ProjetoCertacon.Services;
 using System.Text;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +87,69 @@ builder.Services.AddScoped<PermissaoService>();
 builder.Services.AddSingleton<LimiteConsultaChavesService>();
 builder.Services.AddScoped<SimuladorTributarioService>();
 builder.Services.AddHttpClient<GroqService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<RecuperacaoSenhaService>();
+// =========================================
+// LIMITAÇÃO DE REQUISIÇÕES
+// =========================================
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode =
+        StatusCodes.Status429TooManyRequests;
+
+    // Solicitações de recuperação por IP.
+
+    options.AddPolicy(
+        "recuperacao-senha",
+        httpContext =>
+        {
+            var ip = httpContext.Connection
+                .RemoteIpAddress?.ToString()
+                ?? "desconhecido";
+
+            return RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: ip,
+                factory: _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+
+                    Window = TimeSpan.FromMinutes(15),
+
+                    QueueLimit = 0,
+
+                    AutoReplenishment = true
+                }
+            );
+        }
+    );
+
+    // Validação e redefinição de senha por IP.
+
+    options.AddPolicy(
+        "validacao-recuperacao",
+        httpContext =>
+        {
+            var ip = httpContext.Connection
+                .RemoteIpAddress?.ToString()
+                ?? "desconhecido";
+
+            return RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: ip,
+                factory: _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 15,
+
+                    Window = TimeSpan.FromMinutes(5),
+
+                    QueueLimit = 0,
+
+                    AutoReplenishment = true
+                }
+            );
+        }
+    );
+});
 // =========================================
 // INTELIGÊNCIA ARTIFICIAL
 // =========================================

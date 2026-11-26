@@ -1,26 +1,35 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import {
+    BookOpen,
+    Receipt,
+    ClipboardCheck,
+    ArrowUpRight,
+    ChevronRight,
+    ArrowRight,
+    RefreshCw,
+    CalendarDays,
+    AlertCircle,
+    FileText,
+    LayoutDashboard
+} from "lucide-react";
+
 import "./Home.css";
 
 import { requisicaoApi } from "../../services/api";
 import usePermissoes from "../../hooks/usePermissoes";
 
-// COMPONENTES COMPARTILHADOS
-
-
-
-// ÍCONES DO DASHBOARD
+// ÍCONES DESKTOP
 
 import iconeDocumento from "../../assets/Icones/ArquivoAcessoRapido.png";
 import iconeExpandir from "../../assets/Icones/SetaAcessoRapido.png";
 import iconeUpload from "../../assets/Icones/BaixarArqvAcssRapido.png";
 import iconeGrupo from "../../assets/Icones/PessoaAcessoRapido.png";
-import arquivoHome from "../../assets/Icones/ArquivoDashboard.png";
 import DoisDocumentos from "../../assets/Icones/DoisDocumentos.png";
 import TimeAcessoRapido from "../../assets/Icones/TimeAcessoRapido.png";
 
-// ÍCONES TABLET E MOBILE
+// ÍCONES MOBILE
 
 import AddClienteMobile from "../../assets/Icones/AddClienteMobile.png";
 import NovoConteudoMobile from "../../assets/Icones/NovoConteudoMobile.png";
@@ -28,13 +37,177 @@ import HistoricoMobile from "../../assets/Icones/HistoricoMobile.png";
 import ConsultarNFEmobile from "../../assets/Icones/ConsultarNFEmobile.png";
 import EnviarXMLMobile from "../../assets/Icones/EnviarXMLMobile.png";
 
+// =========================================
+// SKELETON - CONTADOR
+// =========================================
+
+function SkeletonContador() {
+
+    return (
+        <span
+            className="home-skeleton home-skeleton-contador"
+            aria-hidden="true"
+        />
+    );
+
+}
+
+// =========================================
+// SKELETON - LISTAGEM DE CONTEÚDOS
+// =========================================
+
+function SkeletonConteudo() {
+
+    return (
+
+        <div
+            className="home-skeleton-listagem"
+            aria-hidden="true"
+        >
+
+            {Array.from({ length: 3 }, (_, indice) => (
+
+                <div
+                    className="home-skeleton-item"
+                    key={indice}
+                >
+
+                    <div className="home-skeleton home-skeleton-icone" />
+
+                    <div className="home-skeleton-textos">
+
+                        <span className="home-skeleton home-skeleton-titulo" />
+
+                        <span className="home-skeleton home-skeleton-subtitulo" />
+
+                    </div>
+
+                    <span className="home-skeleton home-skeleton-tag" />
+
+                </div>
+
+            ))}
+
+        </div>
+
+    );
+
+}
+
+// =========================================
+// CARD DE RESUMO
+// =========================================
+
+function CardResumo({
+    card,
+    carregando,
+    indisponivel,
+    aoClicar
+}) {
+
+    const Icone = card.icone;
+
+    return (
+
+        <button
+            type="button"
+            className={`home-card home-card-${card.tipo}`}
+            onClick={aoClicar}
+            aria-busy={carregando}
+        >
+
+            {/* CABEÇALHO DO CARD */}
+
+            <div className="home-card-topo">
+
+                <div className="home-card-icone">
+
+                    <Icone
+                        size={25}
+                        strokeWidth={1.8}
+                        aria-hidden="true"
+                    />
+
+                </div>
+
+                <ArrowUpRight
+                    size={19}
+                    className="home-card-seta"
+                    aria-hidden="true"
+                />
+
+            </div>
+
+            {/* INFORMAÇÕES */}
+
+            <div className="home-card-info">
+
+                <p>{card.titulo}</p>
+
+                {carregando ? (
+
+                    <SkeletonContador />
+
+                ) : (
+
+                    <strong
+                        key={`${card.tipo}-${indisponivel}-${card.quantidade}`}
+                        className="home-contador"
+                    >
+
+                        {indisponivel
+                            ? "—"
+                            : card.quantidade.toLocaleString("pt-BR")}
+
+                    </strong>
+
+                )}
+
+            </div>
+
+            {/* RODAPÉ DO CARD */}
+
+            <div className="home-card-rodape">
+
+                <span
+                    className={
+                        `home-card-crescimento ${card.classeEtiqueta}`
+                    }
+                >
+
+                    <span className="home-card-ponto" />
+
+                    {indisponivel
+                        ? "Indisponível"
+                        : card.etiqueta}
+
+                </span>
+
+                <span className="home-card-detalhes">
+
+                    Ver detalhes
+
+                </span>
+
+            </div>
+
+        </button>
+
+    );
+
+}
+
+// =========================================
+// COMPONENTE PRINCIPAL
+// =========================================
+
 export default function Home() {
 
     const navigate = useNavigate();
 
-    // =========================================
+    // =====================================
     // PERMISSÕES DINÂMICAS
-    // =========================================
+    // =====================================
 
     const {
         temPermissao,
@@ -44,18 +217,22 @@ export default function Home() {
         atualizar
     } = usePermissoes();
 
-    // =========================================
+    // =====================================
     // USUÁRIO AUTENTICADO
-    // =========================================
+    // =====================================
 
     let usuario = {};
 
     try {
+
         usuario = JSON.parse(
             localStorage.getItem("usuario") || "{}"
         ) || {};
+
     } catch {
+
         usuario = {};
+
     }
 
     const nomeUsuario =
@@ -63,9 +240,9 @@ export default function Home() {
 
     const token = localStorage.getItem("token");
 
-    // =========================================
+    // =====================================
     // CONTROLE DE ACESSOS
-    // =========================================
+    // =====================================
 
     const podeGerenciarClientes =
         temPermissao("cliente.gerenciar");
@@ -86,25 +263,35 @@ export default function Home() {
     const podeVerHistorico =
         temPermissao("auditoria.ler");
 
-    // A consulta de chave NF-e é pública.
-    // Não necessita de uma permissão específica.
-
-    // =========================================
+    // =====================================
     // ESTADOS DO DASHBOARD
-    // =========================================
+    // =====================================
 
     const [artigos, setArtigos] = useState([]);
     const [notas, setNotas] = useState([]);
     const [pendentes, setPendentes] = useState([]);
 
-    const [carregando, setCarregando] = useState(true);
+    const [carregando, setCarregando] =
+        useState(true);
 
     const [erroDashboard, setErroDashboard] =
         useState("");
 
-    // =========================================
-    // CARREGAMENTO DO DASHBOARD
-    // =========================================
+    const [falhas, setFalhas] = useState({
+        artigos: false,
+        notas: false,
+        pendentes: false
+    });
+
+    const [versaoConsulta, setVersaoConsulta] =
+        useState(0);
+
+    const [ultimaAtualizacao, setUltimaAtualizacao] =
+        useState(null);
+
+    // =====================================
+    // CARREGAR DADOS DO DASHBOARD
+    // =====================================
 
     useEffect(() => {
 
@@ -112,15 +299,27 @@ export default function Home() {
 
         setErroDashboard("");
 
-        if (!token || carregandoPermissoes || erroPermissoes) {
+        setFalhas({
+            artigos: false,
+            notas: false,
+            pendentes: false
+        });
+
+        setUltimaAtualizacao(null);
+
+        setArtigos([]);
+        setNotas([]);
+        setPendentes([]);
+
+        if (
+            !token ||
+            carregandoPermissoes ||
+            erroPermissoes
+        ) {
 
             setCarregando(
                 Boolean(token && carregandoPermissoes)
             );
-
-            setArtigos([]);
-            setNotas([]);
-            setPendentes([]);
 
             return;
 
@@ -130,16 +329,19 @@ export default function Home() {
 
             setCarregando(true);
 
-            setArtigos([]);
-            setNotas([]);
-            setPendentes([]);
-
             const erros = [];
+
+            const falhasConsulta = {
+                artigos: false,
+                notas: false,
+                pendentes: false
+            };
+
             const tarefas = [];
 
-            // =====================================
+            // =================================
             // CONTEÚDOS PUBLICADOS
-            // =====================================
+            // =================================
 
             tarefas.push(
 
@@ -149,11 +351,15 @@ export default function Home() {
 
                         if (!ativo) return;
 
-                        setArtigos(
-                            Array.isArray(dados)
-                                ? dados
-                                : []
-                        );
+                        if (!Array.isArray(dados)) {
+
+                            throw new Error(
+                                "Formato de resposta inesperado."
+                            );
+
+                        }
+
+                        setArtigos(dados);
 
                     })
 
@@ -166,6 +372,8 @@ export default function Home() {
                             error
                         );
 
+                        falhasConsulta.artigos = true;
+
                         erros.push(
                             "Não foi possível carregar os conteúdos."
                         );
@@ -174,9 +382,9 @@ export default function Home() {
 
             );
 
-            // =====================================
+            // =================================
             // NOTAS FISCAIS
-            // =====================================
+            // =================================
 
             if (podeVerNotas) {
 
@@ -188,11 +396,15 @@ export default function Home() {
 
                             if (!ativo) return;
 
-                            setNotas(
-                                Array.isArray(dados)
-                                    ? dados
-                                    : []
-                            );
+                            if (!Array.isArray(dados)) {
+
+                                throw new Error(
+                                    "Formato de resposta inesperado."
+                                );
+
+                            }
+
+                            setNotas(dados);
 
                         })
 
@@ -205,6 +417,8 @@ export default function Home() {
                                 error
                             );
 
+                            falhasConsulta.notas = true;
+
                             erros.push(
                                 "Não foi possível carregar as notas fiscais."
                             );
@@ -215,9 +429,9 @@ export default function Home() {
 
             }
 
-            // =====================================
+            // =================================
             // CONTEÚDOS EM REVISÃO
-            // =====================================
+            // =================================
 
             if (podeRevisar) {
 
@@ -231,11 +445,15 @@ export default function Home() {
 
                             if (!ativo) return;
 
-                            setPendentes(
-                                Array.isArray(dados)
-                                    ? dados
-                                    : []
-                            );
+                            if (!Array.isArray(dados)) {
+
+                                throw new Error(
+                                    "Formato de resposta inesperado."
+                                );
+
+                            }
+
+                            setPendentes(dados);
 
                         })
 
@@ -247,6 +465,8 @@ export default function Home() {
                                 "Erro ao carregar revisões:",
                                 error
                             );
+
+                            falhasConsulta.pendentes = true;
 
                             erros.push(
                                 "Não foi possível carregar os conteúdos em revisão."
@@ -262,7 +482,16 @@ export default function Home() {
 
             if (!ativo) return;
 
+            setFalhas(falhasConsulta);
+
             setErroDashboard(erros.join(" "));
+
+            if (erros.length === 0) {
+
+                setUltimaAtualizacao(new Date());
+
+            }
+
             setCarregando(false);
 
         }
@@ -270,7 +499,9 @@ export default function Home() {
         carregarDashboard();
 
         return () => {
+
             ativo = false;
+
         };
 
     }, [
@@ -278,49 +509,91 @@ export default function Home() {
         carregandoPermissoes,
         erroPermissoes,
         podeVerNotas,
-        podeRevisar
+        podeRevisar,
+        versaoConsulta
     ]);
 
-    // =========================================
+    // =====================================
+    // ATUALIZAR DASHBOARD
+    // =====================================
+
+    function atualizarDashboard() {
+
+        if (
+            !token ||
+            carregando ||
+            carregandoPermissoes ||
+            erroPermissoes
+        ) {
+
+            return;
+
+        }
+
+        setCarregando(true);
+
+        setVersaoConsulta(
+            anterior => anterior + 1
+        );
+
+    }
+
+    // =====================================
     // CONTEÚDOS MAIS RECENTES
-    // =========================================
+    // =====================================
 
     const ultimosArtigos = [...artigos]
 
         .sort((a, b) => {
 
             return (
+
                 new Date(b.dataPublicacao || 0) -
                 new Date(a.dataPublicacao || 0)
+
             );
 
         })
 
         .slice(0, 3);
 
-    // =========================================
+    // =====================================
     // FORMATAÇÃO DE DATAS
-    // =========================================
+    // =====================================
 
     function formatarData(data) {
 
         if (!data) {
+
             return "Data não informada";
+
         }
 
         const dataFormatada = new Date(data);
 
         if (isNaN(dataFormatada.getTime())) {
+
             return "Data não informada";
+
         }
 
         return dataFormatada.toLocaleDateString("pt-BR");
 
     }
 
-    // =========================================
+    const dataHoje = new Intl.DateTimeFormat(
+        "pt-BR",
+        {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    ).format(new Date());
+
+    // =====================================
     // ABRIR DETALHES DO CONTEÚDO
-    // =========================================
+    // =====================================
 
     function abrirConteudo(artigo) {
 
@@ -346,28 +619,9 @@ export default function Home() {
 
     }
 
-    // =========================================
-    // NAVEGAÇÃO PELO TECLADO
-    // =========================================
-
-    function navegarComTeclado(event, acao) {
-
-        if (
-            event.key === "Enter" ||
-            event.key === " "
-        ) {
-
-            event.preventDefault();
-
-            acao();
-
-        }
-
-    }
-
-    // =========================================
+    // =====================================
     // ACESSOS RÁPIDOS DINÂMICOS
-    // =========================================
+    // =====================================
 
     const acessosRapidos = [
 
@@ -389,10 +643,10 @@ export default function Home() {
 
         {
             titulo: "Enviar XML",
-            rota: "/enviar-xml",
+            rota: "/notas-fiscais?importar=xml",
             iconeDesktop: iconeUpload,
             iconeMobile: EnviarXMLMobile,
-            permitido: podeEnviarXml
+            permitido: podeEnviarXml && podeVerNotas && !carregandoPermissoes && !erroPermissoes
         },
 
         {
@@ -422,9 +676,9 @@ export default function Home() {
 
     ].filter(item => item.permitido);
 
-    // =========================================
+    // =====================================
     // CARDS DO DASHBOARD
-    // =========================================
+    // =====================================
 
     const cardsResumo = [
 
@@ -433,7 +687,10 @@ export default function Home() {
             quantidade: artigos.length,
             rota: "/conteudos",
             etiqueta: "Publicados",
-            classeEtiqueta: "",
+            classeEtiqueta: "home-card-publicados",
+            tipo: "conteudos",
+            chave: "artigos",
+            icone: BookOpen,
             permitido: true
         },
 
@@ -441,8 +698,11 @@ export default function Home() {
             titulo: "Notas Fiscais",
             quantidade: notas.length,
             rota: "/notas-fiscais",
-            etiqueta: "Ativas",
+            etiqueta: "Registros",
             classeEtiqueta: "home-card-ativas",
+            tipo: "notas",
+            chave: "notas",
+            icone: Receipt,
             permitido: podeVerNotas
         },
 
@@ -450,71 +710,192 @@ export default function Home() {
             titulo: "Conteúdos em revisão",
             quantidade: pendentes.length,
             rota: "/conteudos/revisao",
-            etiqueta: "Atenção",
-            classeEtiqueta: "home-card-atencao",
+            etiqueta: pendentes.length > 0
+                ? "Pendentes"
+                : "Em revisão",
+            classeEtiqueta: pendentes.length > 0
+                ? "home-card-atencao"
+                : "home-card-neutro",
+            tipo: "revisao",
+            chave: "pendentes",
+            icone: ClipboardCheck,
             permitido: podeRevisar
         }
 
     ].filter(item => item.permitido);
 
-    // =========================================
+    const carregandoDados =
+        carregando || carregandoPermissoes;
+
+    // =====================================
     // RENDERIZAÇÃO
-    // =========================================
+    // =====================================
 
     return (
 
         <main className="home">
 
-            {/* =====================================
-                SIDEBAR COMPARTILHADO
-
-                Desktop, tablet e mobile.
-                Permissões dinâmicas e logout.
-            ===================================== */}
-
-          
-            {/* =====================================
-                ÁREA PRINCIPAL
-            ===================================== */}
+            {/* O menu e os headers continuam
+                no LayoutSistema compartilhado. */}
 
             <section className="home-area">
 
-                {/* HEADERS COMPARTILHADOS */}
-
-               
-
-                {/* =================================
-                    CONTEÚDO PRINCIPAL
-                ================================= */}
-
                 <div className="home-conteudo">
 
-                    {/* SAUDAÇÃO */}
+                    {/* =================================
+                        CABEÇALHO DO DASHBOARD
+                    ================================= */}
 
-                    <h1>
-                        Olá, {nomeUsuario}!
-                    </h1>
+                    <header className="home-boas-vindas">
 
-                    <p className="home-subtitulo">
+                        <div className="home-saudacao">
 
-                        Confira um resumo das principais
-                        informações do sistema.
+                            <span className="home-identificacao">
 
-                    </p>
+                                <LayoutDashboard
+                                    size={14}
+                                    aria-hidden="true"
+                                />
 
-                    {/* CARREGAMENTO DAS PERMISSÕES */}
+                                VISÃO GERAL DO PORTAL
 
-                    {carregandoPermissoes && (
+                            </span>
 
-                        <p role="status">
+                            <h1>
 
-                            Carregando permissões de acesso...
+                                Olá, {nomeUsuario}!
 
-                        </p>
+                            </h1>
 
-                    )}
+                            <p className="home-subtitulo">
 
-                    {/* ERRO DAS PERMISSÕES */}
+                                Confira um resumo das principais
+                                informações do sistema.
+
+                            </p>
+
+                            <span
+                                className="home-linha-destaque"
+                                aria-hidden="true"
+                            />
+
+                        </div>
+
+                        <div className="home-cabecalho-acoes">
+
+                            <div className="home-data">
+
+                                <CalendarDays
+                                    size={17}
+                                    aria-hidden="true"
+                                />
+
+                                <span>{dataHoje}</span>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                className="home-atualizar"
+                                onClick={atualizarDashboard}
+                                disabled={
+                                    carregandoDados ||
+                                    Boolean(erroPermissoes) ||
+                                    !token
+                                }
+                            >
+
+                                <RefreshCw
+                                    size={16}
+                                    className={
+                                        carregandoDados
+                                            ? "home-icone-carregando"
+                                            : ""
+                                    }
+                                    aria-hidden="true"
+                                />
+
+                                {carregandoDados
+
+                                    ? "Atualizando..."
+
+                                    : "Atualizar dados"
+
+                                }
+
+                            </button>
+
+                        </div>
+
+                    </header>
+
+                    {/* =================================
+                        INFORMAÇÕES DO DASHBOARD
+                    ================================= */}
+
+                    <div className="home-status-dashboard">
+
+                        {carregandoDados ? (
+
+                            <span role="status">
+
+                                <span className="home-status-ponto home-status-carregando" />
+
+                                {carregandoPermissoes
+
+                                    ? "Carregando permissões..."
+
+                                    : "Carregando informações..."
+
+                                }
+
+                            </span>
+
+                        ) : erroPermissoes ? (
+
+                            <span>
+
+                                <span className="home-status-ponto home-status-atencao" />
+
+                                Permissões indisponíveis
+
+                            </span>
+
+                        ) : ultimaAtualizacao ? (
+
+                            <span role="status">
+
+                                <span className="home-status-ponto home-status-ok" />
+
+                                Última atualização às{" "}
+
+                                {ultimaAtualizacao.toLocaleTimeString(
+                                    "pt-BR",
+                                    {
+                                        hour: "2-digit",
+                                        minute: "2-digit"
+                                    }
+                                )}
+
+                            </span>
+
+                        ) : erroDashboard ? (
+
+                            <span>
+
+                                <span className="home-status-ponto home-status-atencao" />
+
+                                Algumas informações estão indisponíveis
+
+                            </span>
+
+                        ) : null}
+
+                    </div>
+
+                    {/* =================================
+                        ERRO DAS PERMISSÕES
+                    ================================= */}
 
                     {erroPermissoes && (
 
@@ -523,22 +904,28 @@ export default function Home() {
                             role="alert"
                         >
 
-                            <p>
+                            <AlertCircle size={20} />
 
-                                Não foi possível carregar suas
-                                permissões de acesso.
+                            <div>
 
-                            </p>
+                                <p>
 
-                            <button
-                                type="button"
-                                className="home-ver-todos"
-                                onClick={atualizar}
-                            >
+                                    Não foi possível carregar suas
+                                    permissões de acesso.
 
-                                Tentar novamente
+                                </p>
 
-                            </button>
+                                <button
+                                    type="button"
+                                    className="home-ver-todos"
+                                    onClick={atualizar}
+                                >
+
+                                    Tentar novamente
+
+                                </button>
+
+                            </div>
 
                         </div>
 
@@ -548,14 +935,16 @@ export default function Home() {
 
                     {erroDashboard && (
 
-                        <p
+                        <div
                             className="home-erro"
                             role="alert"
                         >
 
-                            {erroDashboard}
+                            <AlertCircle size={20} />
 
-                        </p>
+                            <p>{erroDashboard}</p>
+
+                        </div>
 
                     )}
 
@@ -563,84 +952,33 @@ export default function Home() {
                         CARDS DE RESUMO
                     ================================= */}
 
-                    <div className="home-resumo">
+                    <section
+                        className="home-resumo"
+                        aria-label="Indicadores do dashboard"
+                    >
 
                         {cardsResumo.map(card => (
 
-                            <div
+                            <CardResumo
                                 key={card.rota}
-                                className="home-card"
-                                role="link"
-                                tabIndex={0}
-
-                                onClick={() =>
+                                card={card}
+                                carregando={carregandoDados}
+                                indisponivel={
+                                    Boolean(erroPermissoes) ||
+                                    Boolean(falhas[card.chave]) ||
+                                    !token
+                                }
+                                aoClicar={() =>
                                     navigate(card.rota)
                                 }
-
-                                onKeyDown={event =>
-                                    navegarComTeclado(
-                                        event,
-                                        () => navigate(card.rota)
-                                    )
-                                }
-
-                                style={{
-                                    cursor: "pointer"
-                                }}
-                            >
-
-                                {/* ÍCONE */}
-
-                                <div className="home-card-icone">
-
-                                    <img
-                                        src={arquivoHome}
-                                        alt=""
-                                    />
-
-                                </div>
-
-                                {/* INFORMAÇÕES */}
-
-                                <div className="home-card-info">
-
-                                    <p>
-                                        {card.titulo}
-                                    </p>
-
-                                    <strong>
-
-                                        {carregando ||
-                                        carregandoPermissoes
-                                            ? "..."
-                                            : erroPermissoes
-                                                ? "—"
-                                                : card.quantidade}
-
-                                    </strong>
-
-                                </div>
-
-                                {/* ETIQUETA */}
-
-                                <span
-                                    className={
-                                        `home-card-crescimento ${card.classeEtiqueta}`
-                                    }
-                                >
-
-                                    {card.etiqueta}
-
-                                </span>
-
-                            </div>
+                            />
 
                         ))}
 
-                    </div>
+                    </section>
 
                     {/* =================================
-                        LISTA E ACESSO RÁPIDO
+                        ÁREA INFERIOR
                     ================================= */}
 
                     <div className="home-baixo">
@@ -649,108 +987,169 @@ export default function Home() {
                             ÚLTIMAS ATUALIZAÇÕES
                         ================================= */}
 
-                        <section className="home-lista">
+                        <section
+                            className="home-lista"
+                            aria-busy={carregandoDados}
+                        >
 
-                            {ultimosArtigos.length > 0 &&
-                            !carregandoPermissoes &&
-                            !erroPermissoes ? (
+                            <div className="home-secao-cabecalho">
 
-                                ultimosArtigos.map(
-                                    (artigo, index) => (
+                                <div>
 
-                                        <div
-                                            key={artigo.artigoId}
-                                            className="home-lista-item"
-                                            role="link"
-                                            tabIndex={0}
+                                    <h2>
 
-                                            onClick={() =>
-                                                abrirConteudo(artigo)
-                                            }
+                                        Últimas atualizações
 
-                                            onKeyDown={event =>
-                                                navegarComTeclado(
-                                                    event,
-                                                    () => abrirConteudo(artigo)
-                                                )
-                                            }
+                                    </h2>
 
-                                            style={{
-                                                cursor: "pointer"
-                                            }}
-                                        >
+                                    <p>
 
-                                            {/* ÍCONE DO CONTEÚDO */}
+                                        Conteúdos publicados recentemente
 
-                                            <div
-                                                className={`home-lista-icone ${
-                                                    index === 0
-                                                        ? "home-lista-icone-verde"
-                                                        : index === 1
-                                                            ? "home-lista-icone-vermelho"
-                                                            : "home-lista-icone-azul"
-                                                }`}
+                                    </p>
+
+                                </div>
+
+                                <div className="home-secao-icone">
+
+                                    <FileText
+                                        size={21}
+                                        strokeWidth={1.8}
+                                        aria-hidden="true"
+                                    />
+
+                                </div>
+
+                            </div>
+
+                            {/* CARREGAMENTO */}
+
+                            {carregandoDados ? (
+
+                                <SkeletonConteudo />
+
+                            ) : erroPermissoes || falhas.artigos || !token ? (
+
+                                <div className="home-estado-vazio">
+
+                                    <AlertCircle
+                                        size={32}
+                                        strokeWidth={1.5}
+                                        aria-hidden="true"
+                                    />
+
+                                    <h3>
+
+                                        Conteúdos indisponíveis
+
+                                    </h3>
+
+                                    <p>
+
+                                        Não foi possível carregar
+                                        as últimas publicações.
+
+                                    </p>
+
+                                </div>
+
+                            ) : ultimosArtigos.length > 0 ? (
+
+                                <div className="home-lista-itens">
+
+                                    {ultimosArtigos.map(
+                                        (artigo, index) => (
+
+                                            <button
+                                                key={artigo.artigoId}
+                                                type="button"
+                                                className="home-lista-item"
+                                                onClick={() =>
+                                                    abrirConteudo(artigo)
+                                                }
                                             >
 
-                                                <img
-                                                    src={DoisDocumentos}
-                                                    alt=""
+                                                {/* ÍCONE */}
+
+                                                <div
+                                                    className={
+                                                        `home-lista-icone home-lista-icone-${index + 1}`
+                                                    }
+                                                >
+
+                                                    <img
+                                                        src={DoisDocumentos}
+                                                        alt=""
+                                                    />
+
+                                                </div>
+
+                                                {/* CONTEÚDO */}
+
+                                                <div className="home-lista-texto">
+
+                                                    <h3>
+
+                                                        {artigo.titulo}
+
+                                                    </h3>
+
+                                                    <p>
+
+                                                        Publicado em{" "}
+
+                                                        {formatarData(
+                                                            artigo.dataPublicacao
+                                                        )}
+
+                                                    </p>
+
+                                                    <span className="home-tag">
+
+                                                        {artigo.tema ||
+                                                            "Conteúdo"}
+
+                                                    </span>
+
+                                                </div>
+
+                                                <ChevronRight
+                                                    size={18}
+                                                    className="home-lista-seta"
+                                                    aria-hidden="true"
                                                 />
 
-                                            </div>
+                                            </button>
 
-                                            {/* TEXTO DO CONTEÚDO */}
+                                        )
+                                    )}
 
-                                            <div className="home-lista-texto">
-
-                                                <h3>
-                                                    {artigo.titulo}
-                                                </h3>
-
-                                                <p>
-
-                                                    Publicado em{" "}
-
-                                                    {formatarData(
-                                                        artigo.dataPublicacao
-                                                    )}
-
-                                                </p>
-
-                                            </div>
-
-                                            {/* TEMA */}
-
-                                            <span
-                                                className={`home-tag ${
-                                                    index === 0
-                                                        ? "home-tag-verde"
-                                                        : "home-tag-roxo"
-                                                }`}
-                                            >
-
-                                                {artigo.tema ||
-                                                    "Conteúdo"}
-
-                                            </span>
-
-                                        </div>
-
-                                    )
-                                )
+                                </div>
 
                             ) : (
 
-                                <p className="home-lista-vazia">
+                                <div className="home-estado-vazio">
 
-                                    {carregando ||
-                                    carregandoPermissoes
-                                        ? "Carregando conteúdos..."
-                                        : erroPermissoes
-                                            ? "Não foi possível carregar os conteúdos."
-                                            : "Nenhum conteúdo publicado encontrado."}
+                                    <BookOpen
+                                        size={36}
+                                        strokeWidth={1.5}
+                                        aria-hidden="true"
+                                    />
 
-                                </p>
+                                    <h3>
+
+                                        Nenhum conteúdo publicado
+
+                                    </h3>
+
+                                    <p>
+
+                                        As próximas publicações
+                                        aparecerão aqui.
+
+                                    </p>
+
+                                </div>
 
                             )}
 
@@ -764,7 +1163,12 @@ export default function Home() {
                                 }
                             >
 
-                                Ver todos →
+                                Ver todos os conteúdos
+
+                                <ArrowRight
+                                    size={16}
+                                    aria-hidden="true"
+                                />
 
                             </button>
 
@@ -776,49 +1180,108 @@ export default function Home() {
 
                         <section className="home-acesso">
 
-                            <h2>Acesso rápido</h2>
+                            <div className="home-secao-cabecalho">
 
-                            {acessosRapidos.map(item => (
+                                <div>
 
-                                <button
-                                    key={item.rota}
-                                    type="button"
-                                    className="home-acesso-botao"
+                                    <h2>Acesso rápido</h2>
 
-                                    onClick={() =>
-                                        navigate(item.rota)
-                                    }
-                                >
+                                    <p>
 
-                                    {/* ÍCONE DESKTOP */}
+                                        Suas principais ferramentas
 
-                                    <img
-                                        src={item.iconeDesktop}
-                                        alt=""
-                                        className={
-                                            `home-acesso-icone-desktop ${item.classeExtra || ""}`
+                                    </p>
+
+                                </div>
+
+                                <div className="home-secao-icone">
+
+                                    <LayoutDashboard
+                                        size={21}
+                                        strokeWidth={1.8}
+                                        aria-hidden="true"
+                                    />
+
+                                </div>
+
+                            </div>
+
+                            <div className="home-acesso-grid">
+
+                                {acessosRapidos.map(item => (
+
+                                    <button
+                                        key={item.rota}
+                                        type="button"
+                                        className="home-acesso-botao"
+                                        onClick={() =>
+                                            navigate(item.rota)
                                         }
-                                    />
+                                    >
 
-                                    {/* ÍCONE MOBILE */}
+                                        {/* ÍCONES */}
 
-                                    <img
-                                        src={item.iconeMobile}
-                                        alt=""
-                                        className="home-acesso-icone-mobile"
-                                    />
+                                        <div className="home-acesso-icone">
 
-                                    {/* TÍTULO */}
+                                            <img
+                                                src={item.iconeDesktop}
+                                                alt=""
+                                                className={
+                                                    `home-acesso-icone-desktop ${item.classeExtra || ""}`
+                                                }
+                                            />
 
-                                    <span>
-                                        {item.titulo}
-                                    </span>
+                                            <img
+                                                src={item.iconeMobile}
+                                                alt=""
+                                                className="home-acesso-icone-mobile"
+                                            />
 
-                                </button>
+                                        </div>
 
-                            ))}
+                                        {/* TÍTULO */}
+
+                                        <span>
+
+                                            {item.titulo}
+
+                                        </span>
+
+                                        <ChevronRight
+                                            size={16}
+                                            className="home-acesso-seta"
+                                            aria-hidden="true"
+                                        />
+
+                                    </button>
+
+                                ))}
+
+                            </div>
 
                         </section>
+
+                    </div>
+
+                    {/* =================================
+                        RODAPÉ DISCRETO DO DASHBOARD
+                    ================================= */}
+
+                    <div className="home-rodape">
+
+                        <span>
+
+                            Integra
+
+                        </span>
+
+                        <span className="home-rodape-separador" />
+
+                        <span>
+
+                            Portal Tributário
+
+                        </span>
 
                     </div>
 

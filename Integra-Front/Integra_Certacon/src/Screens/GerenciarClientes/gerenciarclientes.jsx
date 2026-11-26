@@ -5,6 +5,7 @@ import {
     useCallback
 } from "react";
 
+import { Building2, Users, UserCheck, UserMinus, CheckCircle2, LoaderCircle, Pencil, X } from "lucide-react";
 import "./gerenciarclientes.css";
 
 import { requisicaoApi } from "../../services/api";
@@ -920,7 +921,7 @@ function GerenciarClientes() {
 
             formularioRef.current?.scrollIntoView({
 
-                behavior: "smooth",
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
 
                 block: "start"
 
@@ -1162,6 +1163,7 @@ function GerenciarClientes() {
                         type="button"
 
                         title="Desativar empresa"
+                        className="gc-desativar"
 
                         aria-label="Desativar empresa"
 
@@ -1203,6 +1205,7 @@ function GerenciarClientes() {
                 <section className="conteudo-gerenciar-clientes">
 
                     <h1>Gerenciar Clientes</h1>
+                    <p className="gc-subtitulo">Organize os cadastros e acompanhe a situação das empresas.</p>
 
                     {/* CARREGANDO PERMISSÕES */}
 
@@ -1260,17 +1263,34 @@ function GerenciarClientes() {
 
                         <>
 
+                            {/* INDICADORES — dados da lista autorizada */}
+                            <section className="gc-indicadores" aria-label="Resumo de clientes" aria-busy={carregando}>
+                                {[
+                                    { titulo: "Total de empresas", valor: clientes.length, Icone: Building2, tipo: "total" },
+                                    { titulo: "Clientes ativos", valor: clientes.filter(c => c.status === "Ativo").length, Icone: UserCheck, tipo: "ativo" },
+                                    { titulo: "Clientes inativos", valor: clientes.filter(c => c.status === "Inativo").length, Icone: UserMinus, tipo: "inativo" }
+                                ].map(({titulo, valor, Icone, tipo}) => (
+                                    <article className={`gc-indicador gc-${tipo}`} key={tipo}>
+                                        <div className="gc-indicador-icone"><Icone size={22} aria-hidden="true" /></div>
+                                        <div><span>{titulo}</span>
+                                            {carregando ? <span className="gc-skeleton" aria-label="Carregando" /> : <strong>{erro ? "—" : valor.toLocaleString("pt-BR")}</strong>}
+                                        </div>
+                                    </article>
+                                ))}
+                            </section>
                             {/* FORMULÁRIO */}
 
                             <form
                                 ref={formularioRef}
 
-                                className="formulario-cliente"
+                                className={`formulario-cliente ${idEditando ? "gc-editando" : ""}`}
+                                aria-busy={salvando || verificandoCnpj}
 
                                 onSubmit={salvarCliente}
                             >
 
                                 <h2>
+                                    {idEditando ? <Pencil size={20} aria-hidden="true" /> : <Users size={20} aria-hidden="true" />}
 
                                     {idEditando
 
@@ -1450,6 +1470,7 @@ function GerenciarClientes() {
 
                                         <input
                                             id="cliente-cnpj"
+                                            className={cnpjValidado ? "gc-cnpj-validado" : ""}
 
                                             type="text"
 
@@ -1635,11 +1656,8 @@ function GerenciarClientes() {
                                             }
                                         >
 
-                                            {verificandoCnpj
-
-                                                ? "Verificando..."
-
-                                                : "Validar CNPJ"}
+                                            {verificandoCnpj ? <LoaderCircle className="gc-spinner" size={15} aria-hidden="true" /> : cnpjValidado ? <CheckCircle2 size={15} aria-hidden="true" /> : null}
+                                            {verificandoCnpj ? "Verificando..." : cnpjValidado ? "CNPJ validado" : "Validar CNPJ"}
 
                                         </button>
 
@@ -1658,6 +1676,7 @@ function GerenciarClientes() {
                                             }
                                         >
 
+                                            {salvando && <LoaderCircle className="gc-spinner" size={15} aria-hidden="true" />}
                                             {salvando
 
                                                 ? "Salvando..."
@@ -1752,14 +1771,14 @@ function GerenciarClientes() {
                                         )
                                     }
                                 />
-
+                                {pesquisa && <button type="button" className="gc-limpar-pesquisa" aria-label="Limpar pesquisa" onClick={() => alterarPesquisa("")}><X size={17} aria-hidden="true" /></button>}
                             </div>
 
                             {/* TOTAL DE CLIENTES */}
 
                             {!carregando && !erro && (
 
-                                <p className="total-clientes">
+                                <p className="total-clientes" role="status">
 
                                     {clientesFiltrados.length}
 
@@ -1783,7 +1802,7 @@ function GerenciarClientes() {
 
                                     <p className="sem-clientes-mobile">
 
-                                        Carregando empresas...
+                                        <span className="gc-loading-text"><LoaderCircle size={16} className="gc-spinner" aria-hidden="true" /> Carregando empresas...</span>
 
                                     </p>
 
@@ -1807,7 +1826,7 @@ function GerenciarClientes() {
                                             <div
                                                 key={cliente.id}
 
-                                                className="card-cliente"
+                                                className={`card-cliente ${idEditando === cliente.id ? "gc-selecionado" : ""}`}
                                             >
 
                                                 <div className="dados-card-cliente">
@@ -1914,7 +1933,7 @@ function GerenciarClientes() {
                                                     className="sem-clientes"
                                                 >
 
-                                                    Carregando empresas...
+                                                    <span className="gc-loading-text"><LoaderCircle size={16} className="gc-spinner" aria-hidden="true" /> Carregando empresas...</span>
 
                                                 </td>
 
@@ -1941,7 +1960,7 @@ function GerenciarClientes() {
 
                                             clientesExibidos.map(cliente => (
 
-                                                <tr key={cliente.id}>
+                                                <tr key={cliente.id} className={idEditando === cliente.id ? "gc-selecionado" : ""}>
 
                                                     <td>
 

@@ -5,7 +5,7 @@ import {
     BookOpen,
     FileSearch,
     ArrowRight,
-    Users,
+    Users
 } from "lucide-react";
 
 import api from "../../services/api";
@@ -17,6 +17,7 @@ import "./PortalPublico.css";
 // =========================================
 // FERRAMENTAS FISCAIS PÚBLICAS
 // =========================================
+
 const ferramentasPublicas = [
     {
         titulo: "Consultar NF-e",
@@ -60,11 +61,13 @@ function normalizar(valor) {
 }
 
 function formatarData(valor) {
+
     const data = new Date(valor);
 
     return valor && !isNaN(data)
         ? data.toLocaleDateString("pt-BR")
         : "";
+
 }
 
 // =========================================
@@ -80,9 +83,11 @@ async function buscar(caminho, signal) {
     });
 
     if (!resposta.ok) {
+
         throw new Error(
             "Não foi possível carregar o conteúdo público."
         );
+
     }
 
     return resposta.json();
@@ -99,9 +104,9 @@ export default function PortalPublico() {
 
     const id = params.get("artigo");
 
-    // =========================================
+    // =====================================
     // ESTADOS
-    // =========================================
+    // =====================================
 
     const [artigos, setArtigos] = useState([]);
     const [detalhe, setDetalhe] = useState(null);
@@ -118,9 +123,9 @@ export default function PortalPublico() {
 
     const artigosPorPagina = 6;
 
-    // =========================================
+    // =====================================
     // CARREGAR CONTEÚDOS
-    // =========================================
+    // =====================================
 
     useEffect(() => {
 
@@ -142,13 +147,17 @@ export default function PortalPublico() {
                     );
 
                     if (!publico(artigo)) {
+
                         throw new Error(
                             "Conteúdo indisponível para visitantes."
                         );
+
                     }
 
                     if (!controle.signal.aborted) {
+
                         setDetalhe(artigo);
+
                     }
 
                 } else {
@@ -159,13 +168,17 @@ export default function PortalPublico() {
                     );
 
                     if (!Array.isArray(lista)) {
+
                         throw new Error(
                             "Resposta inesperada da API."
                         );
+
                     }
 
                     if (!controle.signal.aborted) {
+
                         setArtigos(lista.filter(publico));
+
                     }
 
                 }
@@ -173,16 +186,20 @@ export default function PortalPublico() {
             } catch (error) {
 
                 if (!controle.signal.aborted) {
+
                     setErro(
                         error.message ||
                         "Não foi possível carregar os conteúdos."
                     );
+
                 }
 
             } finally {
 
                 if (!controle.signal.aborted) {
+
                     setCarregando(false);
+
                 }
 
             }
@@ -195,9 +212,9 @@ export default function PortalPublico() {
 
     }, [id, tentativa]);
 
-    // =========================================
+    // =====================================
     // TEMAS DISPONÍVEIS
-    // =========================================
+    // =====================================
 
     const temas = [
         ...new Set(
@@ -207,9 +224,9 @@ export default function PortalPublico() {
         )
     ].sort((a, b) => a.localeCompare(b, "pt-BR"));
 
-    // =========================================
+    // =====================================
     // PESQUISA E FILTROS
-    // =========================================
+    // =====================================
 
     const artigosFiltrados = artigos.filter(artigo => {
 
@@ -231,9 +248,9 @@ export default function PortalPublico() {
 
     });
 
-    // =========================================
+    // =====================================
     // PAGINAÇÃO
-    // =========================================
+    // =====================================
 
     const totalPaginas = Math.max(
         1,
@@ -252,9 +269,9 @@ export default function PortalPublico() {
         paginaAtual * artigosPorPagina
     );
 
-    // =========================================
+    // =====================================
     // RENDERIZAÇÃO
-    // =========================================
+    // =====================================
 
     return (
 
@@ -268,10 +285,12 @@ export default function PortalPublico() {
                     to="/portal"
                     aria-label="Portal Integra"
                 >
+
                     <img
                         src={LogoNome}
                         alt="Integra"
                     />
+
                 </Link>
 
                 <nav aria-label="Navegação pública">
@@ -284,8 +303,6 @@ export default function PortalPublico() {
                         Consultar NF-e
                     </Link>
 
-                    {/* NOVO LINK */}
-
                     <Link to="/glossario">
                         Glossário Fiscal
                     </Link>
@@ -293,8 +310,6 @@ export default function PortalPublico() {
                     <Link to="/area-cidadao">
                         Área do Cidadão
                     </Link>
-
-
 
                     {token ? (
 
@@ -308,6 +323,7 @@ export default function PortalPublico() {
                     ) : (
 
                         <>
+
                             <Link to="/login">
                                 Entrar
                             </Link>
@@ -318,6 +334,7 @@ export default function PortalPublico() {
                             >
                                 Criar conta
                             </Link>
+
                         </>
 
                     )}
@@ -371,9 +388,7 @@ export default function PortalPublico() {
 
                         </section>
 
-                        {/* =====================================
-                            NOVA SEÇÃO DE FERRAMENTAS FISCAIS
-                        ===================================== */}
+                        {/* FERRAMENTAS FISCAIS */}
 
                         <section
                             id="pp-ferramentas"
@@ -473,11 +488,13 @@ export default function PortalPublico() {
                                         value={pesquisa}
                                         placeholder="Título, assunto ou autor"
                                         onChange={event => {
+
                                             setPesquisa(
                                                 event.target.value
                                             );
 
                                             setPagina(1);
+
                                         }}
                                     />
 
@@ -490,11 +507,13 @@ export default function PortalPublico() {
                                     <select
                                         value={tema}
                                         onChange={event => {
+
                                             setTema(
                                                 event.target.value
                                             );
 
                                             setPagina(1);
+
                                         }}
                                     >
 
@@ -584,10 +603,13 @@ export default function PortalPublico() {
                             </h1>
 
                             <p className="pp-meta">
+
                                 {detalhe.autor} ·{" "}
+
                                 {formatarData(
                                     detalhe.dataPublicacao
                                 )}
+
                             </p>
 
                             {detalhe.resumo && (
@@ -612,6 +634,7 @@ export default function PortalPublico() {
                                 >
 
                                     Baixar documento:{" "}
+
                                     {detalhe.nomeArquivo || "Anexo"}
 
                                 </a>
@@ -646,10 +669,12 @@ export default function PortalPublico() {
                                     </h3>
 
                                     <p>
+
                                         {artigo.resumo ||
                                             String(
                                                 artigo.conteudo ?? ""
                                             ).slice(0, 180)}
+
                                     </p>
 
                                     <small>
@@ -732,7 +757,7 @@ export default function PortalPublico() {
                         <div>
 
                             <h2>
-                                Conheça o IntegraCertacon
+                                Conheça o Integra
                             </h2>
 
                             <p>
@@ -752,11 +777,40 @@ export default function PortalPublico() {
 
             </main>
 
-            {/* RODAPÉ */}
+            {/* =====================================
+                RODAPÉ COM LOGOTIPO
+            ===================================== */}
 
             <footer className="pp-footer">
 
-                IntegraCertacon · Portal tributário
+                <div className="pp-footer-conteudo">
+
+                    <Link
+                        to="/portal"
+                        className="pp-footer-marca"
+                        aria-label="Voltar ao portal Integra"
+                    >
+
+                        <img
+                            src={LogoNome}
+                            alt="Integra"
+                        />
+
+                    </Link>
+
+                    <div className="pp-footer-texto">
+
+                        <strong>
+                            Integra
+                        </strong>
+
+                        <span>
+                            Portal tributário
+                        </span>
+
+                    </div>
+
+                </div>
 
             </footer>
 

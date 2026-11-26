@@ -55,4 +55,7 @@ public partial class Usuario
 
     public virtual ICollection<Artigo> ArtigosAutorizadosIA { get; set; }
     = new List<Artigo>();
+
+    public virtual ICollection<RecuperacaoSenha> RecuperacaoSenhas { get; set; }
+    = new List<RecuperacaoSenha>();
 }

@@ -1,0 +1,375 @@
+/* =========================================
+   RECUPERAÇÃO DE SENHA
+========================================= */
+
+.recuperacao-pagina {
+    --rec-azul: #1d2e68;
+    --rec-laranja: #ff8500;
+    --rec-cinza: #667085;
+}
+
+/* CABEÇALHO */
+
+.recuperacao-pagina .formulario-cabecalho {
+    margin-bottom: 32px;
+}
+
+.recuperacao-pagina .formulario-cabecalho h2 {
+    font-size: 30px;
+    line-height: 1.3;
+}
+
+.recuperacao-pagina .formulario-cabecalho p {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--rec-cinza);
+}
+
+/* ÍCONE PRINCIPAL */
+
+.recuperacao-pagina .recuperacao-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 72px;
+    height: 72px;
+
+    margin-bottom: 22px;
+
+    border-radius: 18px;
+    background: #eaf0fa;
+}
+
+.recuperacao-pagina .recuperacao-icone img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+/* CAMPOS */
+
+.recuperacao-pagina .campo {
+    margin-bottom: 24px;
+}
+
+.recuperacao-pagina .campo label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.recuperacao-pagina .campo input {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 15px 0 46px;
+
+    border: 1px solid #cfd6e2;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #333;
+
+    font-size: 14px;
+
+    box-shadow: none;
+}
+
+.recuperacao-pagina .campo input:focus {
+    border-color: var(--rec-azul);
+
+    box-shadow:
+        0 0 0 3px rgba(29, 46, 104, 0.08);
+}
+
+.recuperacao-pagina .campo-icone {
+    display: block;
+
+    position: absolute;
+    top: 50%;
+    left: 14px;
+
+    width: 21px;
+    height: 21px;
+
+    object-fit: contain;
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+/* BOTÃO PRINCIPAL */
+
+.recuperacao-pagina .botao-entrar {
+    width: 100%;
+    min-height: 48px;
+
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    box-shadow: none;
+}
+
+.recuperacao-pagina .botao-entrar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* INFORMAÇÃO DE SEGURANÇA */
+
+.recuperacao-pagina .recuperacao-informacao {
+    width: 100%;
+
+    margin-top: 20px;
+    padding: 14px 16px;
+
+    border-left: 3px solid var(--rec-laranja);
+    border-radius: 6px;
+
+    background: #f4f7fc;
+    color: var(--rec-cinza);
+
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* VOLTAR AO LOGIN */
+
+.recuperacao-pagina .recuperacao-voltar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    margin-top: 26px;
+
+    color: var(--rec-azul);
+
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.recuperacao-pagina .recuperacao-voltar:hover {
+    color: var(--rec-laranja);
+    text-decoration: underline;
+}
+
+/* MENSAGENS */
+
+.recuperacao-pagina .recuperacao-mensagem {
+    width: 100%;
+
+    margin-bottom: 18px;
+    padding: 13px 15px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.recuperacao-pagina .recuperacao-mensagem.erro {
+    background: #fff0f0;
+    border-color: #efb5b5;
+    color: #a52b2b;
+}
+
+.recuperacao-pagina .recuperacao-mensagem.sucesso {
+    background: #eaf8ef;
+    border-color: #a7d9ba;
+    color: #236b42;
+}
+
+/* CONFIRMAÇÃO DE ENVIO */
+
+.recuperacao-pagina .recuperacao-confirmacao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+
+    padding: 24px 20px;
+
+    border: 1px solid #dfe6ef;
+    border-radius: 12px;
+
+    background: #f8faff;
+
+    text-align: center;
+}
+
+.recuperacao-pagina .recuperacao-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 60px;
+    height: 60px;
+
+    margin-bottom: 14px;
+
+    border-radius: 50%;
+
+    background: #e0f4e9;
+    color: #238451;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.recuperacao-pagina .recuperacao-confirmacao h3 {
+    margin: 0 0 8px;
+
+    color: var(--rec-azul);
+    font-size: 18px;
+}
+
+.recuperacao-pagina .recuperacao-confirmacao p {
+    margin: 10px 0;
+
+    color: var(--rec-cinza);
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.recuperacao-pagina .recuperacao-email {
+    width: 100%;
+
+    margin: 12px 0;
+    padding: 12px;
+
+    border: 1px solid #dce3ee;
+    border-radius: 8px;
+
+    background: #fff;
+    color: var(--rec-azul);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+.recuperacao-pagina .recuperacao-botao-secundario {
+    display: block;
+
+    width: 100%;
+    min-height: 44px;
+
+    margin-top: 15px;
+    padding: 12px;
+
+    border: 1px solid var(--rec-azul);
+    border-radius: 8px;
+
+    background: #fff;
+    color: var(--rec-azul);
+
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.recuperacao-pagina .recuperacao-botao-secundario:hover {
+    background: #eaf0fa;
+}
+
+.recuperacao-pagina a:focus-visible,
+.recuperacao-pagina button:focus-visible {
+    outline: 2px solid var(--rec-laranja);
+    outline-offset: 3px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (min-width: 601px) and (max-width: 900px) {
+
+    .recuperacao-pagina .formulario-cabecalho h2 {
+        font-size: 25px;
+    }
+
+    .recuperacao-pagina .formulario-cabecalho p {
+        font-size: 13px;
+    }
+
+    .recuperacao-pagina .recuperacao-icone {
+        width: 60px;
+        height: 60px;
+    }
+
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .recuperacao-pagina .login-formulario {
+        padding: 25px 20px;
+    }
+
+    .recuperacao-pagina .formulario-conteudo {
+        max-width: 380px;
+    }
+
+    .recuperacao-pagina .recuperacao-icone {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 16px;
+    }
+
+    .recuperacao-pagina .recuperacao-icone img {
+        width: 29px;
+        height: 29px;
+    }
+
+    .recuperacao-pagina .formulario-cabecalho {
+        margin-bottom: 24px;
+    }
+
+    .recuperacao-pagina .formulario-cabecalho h2 {
+        font-size: 23px;
+    }
+
+    .recuperacao-pagina .formulario-cabecalho p {
+        display: block;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .recuperacao-pagina .campo {
+        margin-bottom: 20px;
+    }
+
+    .recuperacao-pagina .campo input {
+        height: 50px;
+    }
+
+    .recuperacao-pagina .botao-entrar {
+        min-height: 50px;
+    }
+
+    .recuperacao-pagina .recuperacao-voltar {
+        margin-top: 22px;
+    }
+
+}

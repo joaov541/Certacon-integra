@@ -1,0 +1,203 @@
+/* =========================================
+   CAMPO DE SENHA
+========================================= */
+
+.recuperacao-pagina .campo-senha-rec input {
+    padding-right: 50px;
+}
+
+/* MOSTRAR E OCULTAR SENHA */
+
+.recuperacao-pagina .recuperacao-olho {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+
+    top: 50%;
+    right: 6px;
+
+    width: 38px;
+    height: 38px;
+
+    padding: 8px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: transparent;
+
+    transform: translateY(-50%);
+
+    cursor: pointer;
+}
+
+.recuperacao-pagina .recuperacao-olho:hover {
+    background: #edf2fa;
+}
+
+.recuperacao-pagina .recuperacao-olho img {
+    width: 21px;
+    height: 21px;
+
+    object-fit: contain;
+}
+
+/* =========================================
+   REQUISITOS DA SENHA
+========================================= */
+
+.recuperacao-pagina .recuperacao-requisitos {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin: 0 0 24px;
+    padding: 15px;
+
+    border: 1px solid #e1e6ef;
+    border-radius: 8px;
+
+    background: #f8faff;
+}
+
+.recuperacao-pagina .recuperacao-requisitos p {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0;
+
+    color: #667085;
+
+    font-size: 12px;
+}
+
+.recuperacao-pagina .recuperacao-requisitos span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+    height: 18px;
+
+    font-size: 17px;
+}
+
+.recuperacao-pagina .recuperacao-requisitos p.valido {
+    color: #238451;
+}
+
+/* =========================================
+   VALIDAÇÃO DO TOKEN
+========================================= */
+
+.recuperacao-pagina .recuperacao-validando {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    width: 100%;
+
+    padding: 30px 15px;
+
+    border: 1px solid #dfe6ef;
+    border-radius: 10px;
+
+    background: #f8faff;
+}
+
+.recuperacao-pagina .recuperacao-validando p {
+    margin: 0;
+
+    color: #667085;
+
+    font-size: 13px;
+    text-align: center;
+}
+
+.recuperacao-pagina .recuperacao-spinner {
+    width: 35px;
+    height: 35px;
+
+    border: 3px solid #dfe6ef;
+    border-top-color: #1d2e68;
+
+    border-radius: 50%;
+
+    animation: recuperacao-girar 0.8s linear infinite;
+}
+
+@keyframes recuperacao-girar {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* =========================================
+   LINK INVÁLIDO
+========================================= */
+
+.recuperacao-pagina .recuperacao-alerta-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 60px;
+    height: 60px;
+
+    margin-bottom: 16px;
+
+    border-radius: 50%;
+
+    background: #fff0df;
+    color: #d97706;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .recuperacao-pagina .recuperacao-requisitos {
+        margin-bottom: 20px;
+        padding: 12px;
+    }
+
+    .recuperacao-pagina .recuperacao-requisitos p {
+        font-size: 12px;
+    }
+
+    .recuperacao-pagina .recuperacao-olho {
+        width: 34px;
+        height: 34px;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .recuperacao-pagina .recuperacao-spinner {
+        animation: none;
+    }
+
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 
 import usePermissoes from "../../hooks/usePermissoes";
-
 import LogoNome from "../../assets/Icones/LogoNome.png";
 
 import "./AreaCidadao.css";
@@ -78,25 +77,468 @@ const perguntas = [
 const fontes = [
     {
         titulo: "Ministério da Fazenda",
-        descricao: "Informações sobre a Reforma Tributária do consumo.",
+        descricao:
+            "Informações sobre a Reforma Tributária do consumo.",
         url: "https://www.gov.br/fazenda/pt-br/acesso-a-informacao/acoes-e-programas/futuro-seguro/reforma-tributaria"
     },
     {
         titulo: "Câmara dos Deputados",
-        descricao: "Informações sobre a regulamentação da Reforma Tributária.",
+        descricao:
+            "Informações sobre a regulamentação da Reforma Tributária.",
         url: "https://www.camara.leg.br/noticias/1127237-REGULAMENTACAO-DA-REFORMA-TRIBUTARIA-E-SANCIONADA%3B-CONHECA-A-NOVA-LEI"
     },
     {
         titulo: "Ministério do Desenvolvimento Social",
-        descricao: "Informações sobre a devolução de tributos e o Cadastro Único.",
+        descricao:
+            "Informações sobre a devolução de tributos e o Cadastro Único.",
         url: "https://www.gov.br/mds/pt-br/noticias-e-conteudos/Noticias/2025/nova-politica-tributaria-vai-beneficiar-familias-inscritas-no-cadastro-unico/"
     },
     {
         titulo: "Secretaria da Fazenda de São Paulo",
-        descricao: "Informações e serviços da Nota Fiscal Paulista.",
+        descricao:
+            "Informações e serviços da Nota Fiscal Paulista.",
         url: "https://portal.fazenda.sp.gov.br/servicos/nfp"
     }
 ];
+
+// =========================================
+// IDENTIFICAR CONTAINER DE ROLAGEM
+// =========================================
+
+function encontrarContainerScroll(elemento) {
+
+    let atual = elemento?.parentElement;
+
+    while (
+        atual &&
+        atual !== document.body &&
+        atual !== document.documentElement
+    ) {
+
+        const estilo = window.getComputedStyle(atual);
+
+        if (
+            /auto|scroll|overlay/.test(estilo.overflowY) &&
+            atual.scrollHeight > atual.clientHeight + 1
+        ) {
+            return atual;
+        }
+
+        atual = atual.parentElement;
+
+    }
+
+    return window;
+
+}
+
+// =========================================
+// HOOK - ANIMAÇÕES DE ROLAGEM
+// =========================================
+
+function useAnimacaoRolagem(paginaRef, autenticado) {
+
+    useEffect(() => {
+
+        const pagina = paginaRef.current;
+
+        if (!pagina) return;
+
+        const reduzirMovimento = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        );
+
+        if (reduzirMovimento.matches) return;
+
+        if (!("IntersectionObserver" in window)) return;
+
+        const grupos = [
+
+            {
+                seletor: ".ac-atalho",
+                efeito: "subir",
+                intervalo: 65
+            },
+
+            {
+                seletor: ".ac-secao-cabecalho",
+                efeito: "lateral",
+                intervalo: 0
+            },
+
+            {
+                seletor: ".ac-texto",
+                efeito: "suave",
+                intervalo: 0
+            },
+
+            {
+                seletor: ".ac-beneficio",
+                efeito: "subir",
+                intervalo: 100
+            },
+
+            {
+                seletor: ".ac-info",
+                efeito: "suave",
+                intervalo: 0
+            },
+
+            {
+                seletor: ".ac-subtitulo",
+                efeito: "lateral",
+                intervalo: 0
+            },
+
+            {
+                seletor: ".ac-etapas > *",
+                efeito: "etapa",
+                intervalo: 100
+            },
+
+            {
+                seletor: ".ac-requisitos h3",
+                efeito: "suave",
+                intervalo: 0
+            },
+
+            {
+                seletor: ".ac-requisitos li",
+                efeito: "lateral",
+                intervalo: 65
+            },
+
+            {
+                seletor: ".ac-cronograma article",
+                efeito: "cronograma",
+                intervalo: 120
+            },
+
+            {
+                seletor: ".ac-comparacao",
+                efeito: "comparacao",
+                intervalo: 100
+            },
+
+            {
+                seletor: ".ac-direitos-lista li",
+                efeito: "lateral",
+                intervalo: 75
+            },
+
+            {
+                seletor: ".ac-faq-item",
+                efeito: "suave",
+                intervalo: 35
+            },
+
+            {
+                seletor: ".ac-fonte",
+                efeito: "subir",
+                intervalo: 65
+            },
+
+            {
+                seletor: ".ac-relacionados",
+                efeito: "suave",
+                intervalo: 0
+            },
+
+            {
+                seletor: ".ac-aviso-final",
+                efeito: "suave",
+                intervalo: 0
+            }
+
+        ];
+
+        const elementos = [];
+
+        grupos.forEach(grupo => {
+
+            const encontrados = pagina.querySelectorAll(
+                grupo.seletor
+            );
+
+            encontrados.forEach((elemento, indice) => {
+
+                elemento.setAttribute(
+                    "data-ac-reveal",
+                    grupo.efeito
+                );
+
+                elemento.style.setProperty(
+                    "--ac-delay",
+                    `${Math.min(
+                        indice * grupo.intervalo,
+                        300
+                    )}ms`
+                );
+
+                elementos.push(elemento);
+
+            });
+
+        });
+
+        // OBSERVADOR DE VISIBILIDADE
+
+        const observador = new IntersectionObserver(
+
+            entradas => {
+
+                entradas.forEach(entrada => {
+
+                    if (!entrada.isIntersecting) return;
+
+                    entrada.target.classList.add(
+                        "ac-revelado"
+                    );
+
+                    // Anima apenas uma vez.
+
+                    observador.unobserve(
+                        entrada.target
+                    );
+
+                });
+
+            },
+
+            {
+                root: null,
+                threshold: 0,
+                rootMargin: "0px 0px -15px 0px"
+            }
+
+        );
+
+        elementos.forEach(elemento => {
+
+            observador.observe(elemento);
+
+        });
+
+        pagina.classList.add(
+            "ac-animacoes-ativas"
+        );
+
+        // ACESSIBILIDADE - FOCO PELO TECLADO
+
+        function revelarAoFocar(evento) {
+
+            let elemento = evento.target.closest(
+                "[data-ac-reveal]"
+            );
+
+            while (elemento && pagina.contains(elemento)) {
+
+                elemento.classList.add("ac-revelado");
+
+                observador.unobserve(elemento);
+
+                elemento = elemento.parentElement?.closest(
+                    "[data-ac-reveal]"
+                );
+
+            }
+
+        }
+
+        pagina.addEventListener(
+            "focusin",
+            revelarAoFocar
+        );
+
+        // LIMPEZA
+
+        return () => {
+
+            observador.disconnect();
+
+            pagina.removeEventListener(
+                "focusin",
+                revelarAoFocar
+            );
+
+            pagina.classList.remove(
+                "ac-animacoes-ativas"
+            );
+
+            elementos.forEach(elemento => {
+
+                elemento.classList.remove(
+                    "ac-revelado"
+                );
+
+                elemento.removeAttribute(
+                    "data-ac-reveal"
+                );
+
+                elemento.style.removeProperty(
+                    "--ac-delay"
+                );
+
+            });
+
+        };
+
+    }, [paginaRef, autenticado]);
+
+}
+
+// =========================================
+// HOOK - PROGRESSO DE LEITURA
+// =========================================
+
+function useProgressoLeitura(paginaRef, autenticado) {
+
+    useEffect(() => {
+
+        const pagina = paginaRef.current;
+
+        if (!pagina) return;
+
+        const barra = pagina.querySelector(
+            ".ac-progresso-leitura > span"
+        );
+
+        if (!barra) return;
+
+        let scrollContainer =
+            encontrarContainerScroll(pagina);
+
+        let frame = null;
+
+        function atualizarProgresso() {
+
+            frame = null;
+
+            const retangulo =
+                pagina.getBoundingClientRect();
+
+            const janela =
+                scrollContainer === window;
+
+            const topoVisivel = janela
+
+                ? 0
+
+                : scrollContainer.getBoundingClientRect().top +
+                  scrollContainer.clientTop;
+
+            const alturaVisivel = janela
+
+                ? window.innerHeight
+
+                : scrollContainer.clientHeight;
+
+            const alturaTotal =
+                retangulo.height - alturaVisivel;
+
+            const alturaPercorrida =
+                topoVisivel - retangulo.top;
+
+            const progresso = alturaTotal > 0
+
+                ? Math.min(
+                    Math.max(
+                        alturaPercorrida / alturaTotal,
+                        0
+                    ),
+                    1
+                )
+
+                : 1;
+
+            barra.style.transform =
+                `scaleX(${progresso})`;
+
+        }
+
+        function agendarAtualizacao() {
+
+            if (frame !== null) return;
+
+            frame = window.requestAnimationFrame(
+                atualizarProgresso
+            );
+
+        }
+
+        function atualizarContainer() {
+
+            const novoContainer =
+                encontrarContainerScroll(pagina);
+
+            if (novoContainer !== scrollContainer) {
+
+                scrollContainer.removeEventListener(
+                    "scroll",
+                    agendarAtualizacao
+                );
+
+                scrollContainer = novoContainer;
+
+                scrollContainer.addEventListener(
+                    "scroll",
+                    agendarAtualizacao,
+                    { passive: true }
+                );
+
+            }
+
+            agendarAtualizacao();
+
+        }
+
+        scrollContainer.addEventListener(
+            "scroll",
+            agendarAtualizacao,
+            { passive: true }
+        );
+
+        window.addEventListener(
+            "resize",
+            atualizarContainer
+        );
+
+        const observadorTamanho =
+            typeof ResizeObserver !== "undefined"
+
+                ? new ResizeObserver(atualizarContainer)
+
+                : null;
+
+        observadorTamanho?.observe(pagina);
+
+        atualizarProgresso();
+
+        return () => {
+
+            scrollContainer.removeEventListener(
+                "scroll",
+                agendarAtualizacao
+            );
+
+            window.removeEventListener(
+                "resize",
+                atualizarContainer
+            );
+
+            observadorTamanho?.disconnect();
+
+            if (frame !== null) {
+
+                window.cancelAnimationFrame(frame);
+
+            }
+
+        };
+
+    }, [paginaRef, autenticado]);
+
+}
 
 // =========================================
 // COMPONENTE PRINCIPAL
@@ -106,24 +548,97 @@ export default function AreaCidadao() {
 
     const { autenticado } = usePermissoes();
 
+    const paginaRef = useRef(null);
+
     const [perguntaAberta, setPerguntaAberta] =
         useState(null);
 
+    useAnimacaoRolagem(
+        paginaRef,
+        autenticado
+    );
+
+    useProgressoLeitura(
+        paginaRef,
+        autenticado
+    );
+
+    // =====================================
+    // ALTERNAR PERGUNTAS FREQUENTES
+    // =====================================
+
     function alternarPergunta(index) {
+
         setPerguntaAberta(anterior =>
-            anterior === index ? null : index
+
+            anterior === index
+                ? null
+                : index
+
         );
+
     }
+
+    // =====================================
+    // NAVEGAÇÃO SUAVE ENTRE SEÇÕES
+    // =====================================
+
+    function navegarSecao(evento, id) {
+
+        if (
+            evento.ctrlKey ||
+            evento.metaKey ||
+            evento.shiftKey ||
+            evento.altKey
+        ) {
+            return;
+        }
+
+        const secao = document.getElementById(id);
+
+        if (!secao) return;
+
+        evento.preventDefault();
+
+        const reduzirMovimento = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        secao.scrollIntoView({
+
+            behavior: reduzirMovimento
+                ? "instant"
+                : "smooth",
+
+            block: "start"
+
+        });
+
+    }
+
+    // =====================================
+    // RENDERIZAÇÃO
+    // =====================================
 
     return (
 
         <div
+            ref={paginaRef}
             className={`ac-pagina ${
                 autenticado
                     ? "ac-autenticada"
                     : "ac-publica"
             }`}
         >
+
+            {/* PROGRESSO DE LEITURA */}
+
+            <div
+                className="ac-progresso-leitura"
+                aria-hidden="true"
+            >
+                <span />
+            </div>
 
             {/* CABEÇALHO PÚBLICO */}
 
@@ -135,10 +650,12 @@ export default function AreaCidadao() {
                         to="/portal"
                         aria-label="Portal IntegraCertacon"
                     >
+
                         <img
                             src={LogoNome}
                             alt="IntegraCertacon"
                         />
+
                     </Link>
 
                     <nav aria-label="Navegação pública">
@@ -188,41 +705,67 @@ export default function AreaCidadao() {
                     to={autenticado ? "/home" : "/portal"}
                     className="ac-voltar"
                 >
+
                     <ArrowLeft size={17} />
 
                     Voltar ao início
+
                 </Link>
 
-                {/* APRESENTAÇÃO */}
+                {/* =================================
+                    APRESENTAÇÃO
+                ================================= */}
 
                 <section className="ac-hero">
 
                     <div className="ac-hero-texto">
 
                         <span className="ac-hero-tag">
+
                             CIDADANIA FISCAL
+
                         </span>
 
                         <h1>
+
                             Área do Cidadão
+
                         </h1>
 
                         <p>
+
                             Entenda seus direitos, conheça a importância
                             dos documentos fiscais e descubra como a
                             Reforma Tributária pode impactar seu dia a dia.
+
                         </p>
 
                         <div className="ac-hero-acoes">
 
-                            <a href="#ac-cpf">
+                            <a
+                                href="#ac-cpf"
+                                onClick={evento =>
+                                    navegarSecao(evento, "ac-cpf")
+                                }
+                            >
+
                                 <Receipt size={18} />
+
                                 CPF na nota
+
                             </a>
 
-                            <a href="#ac-cashback">
+                            <a
+                                href="#ac-cashback"
+                                onClick={evento =>
+                                    navegarSecao(evento, "ac-cashback")
+                                }
+                            >
+
                                 <Wallet size={18} />
+
                                 Cashback tributário
+
                             </a>
 
                         </div>
@@ -233,19 +776,37 @@ export default function AreaCidadao() {
                         className="ac-hero-icone"
                         aria-hidden="true"
                     >
-                        <Users size={115} strokeWidth={1.3} />
+
+                        <Users
+                            size={115}
+                            strokeWidth={1.3}
+                        />
+
                     </div>
 
                 </section>
 
-                {/* NAVEGAÇÃO RÁPIDA */}
+                {/* =================================
+                    NAVEGAÇÃO RÁPIDA
+                ================================= */}
 
-                <section className="ac-atalhos">
+                <section
+                    className="ac-atalhos"
+                    aria-label="Atalhos da Área do Cidadão"
+                >
 
-                    <a href="#ac-cpf" className="ac-atalho">
+                    <a
+                        href="#ac-cpf"
+                        className="ac-atalho"
+                        onClick={evento =>
+                            navegarSecao(evento, "ac-cpf")
+                        }
+                    >
 
                         <div className="ac-atalho-icone">
+
                             <Receipt size={25} />
+
                         </div>
 
                         <strong>CPF na nota</strong>
@@ -254,10 +815,18 @@ export default function AreaCidadao() {
 
                     </a>
 
-                    <a href="#ac-cashback" className="ac-atalho">
+                    <a
+                        href="#ac-cashback"
+                        className="ac-atalho"
+                        onClick={evento =>
+                            navegarSecao(evento, "ac-cashback")
+                        }
+                    >
 
                         <div className="ac-atalho-icone">
+
                             <Wallet size={25} />
+
                         </div>
 
                         <strong>Cashback tributário</strong>
@@ -266,10 +835,18 @@ export default function AreaCidadao() {
 
                     </a>
 
-                    <a href="#ac-direitos" className="ac-atalho">
+                    <a
+                        href="#ac-direitos"
+                        className="ac-atalho"
+                        onClick={evento =>
+                            navegarSecao(evento, "ac-direitos")
+                        }
+                    >
 
                         <div className="ac-atalho-icone">
+
                             <ShieldCheck size={25} />
+
                         </div>
 
                         <strong>Seus direitos</strong>
@@ -278,10 +855,18 @@ export default function AreaCidadao() {
 
                     </a>
 
-                    <a href="#ac-perguntas" className="ac-atalho">
+                    <a
+                        href="#ac-perguntas"
+                        className="ac-atalho"
+                        onClick={evento =>
+                            navegarSecao(evento, "ac-perguntas")
+                        }
+                    >
 
                         <div className="ac-atalho-icone">
+
                             <HelpCircle size={25} />
+
                         </div>
 
                         <strong>Dúvidas frequentes</strong>
@@ -292,7 +877,9 @@ export default function AreaCidadao() {
 
                 </section>
 
-                {/* CPF NA NOTA */}
+                {/* =================================
+                    CPF NA NOTA
+                ================================= */}
 
                 <section
                     id="ac-cpf"
@@ -302,16 +889,22 @@ export default function AreaCidadao() {
                     <div className="ac-secao-cabecalho">
 
                         <div className="ac-secao-icone">
+
                             <Receipt size={27} />
+
                         </div>
 
                         <div>
 
-                            <h2>Por que pedir CPF na nota?</h2>
+                            <h2>
+                                Por que pedir CPF na nota?
+                            </h2>
 
                             <p>
+
                                 Pequenas atitudes que fortalecem
                                 a cidadania fiscal.
+
                             </p>
 
                         </div>
@@ -321,18 +914,22 @@ export default function AreaCidadao() {
                     <div className="ac-texto">
 
                         <p>
+
                             Solicitar a nota fiscal ao realizar uma
                             compra é uma forma de registrar a operação
                             comercial e incentivar o cumprimento das
                             obrigações fiscais pelos estabelecimentos.
+
                         </p>
 
                         <p>
+
                             Ao informar o CPF, o documento fiscal
                             poderá ser associado ao consumidor,
                             facilitando a identificação das compras
                             e a participação em programas estaduais,
                             quando aplicáveis.
+
                         </p>
 
                     </div>
@@ -343,11 +940,15 @@ export default function AreaCidadao() {
 
                             <ShieldCheck size={28} />
 
-                            <h3>Comprovação da compra</h3>
+                            <h3>
+                                Comprovação da compra
+                            </h3>
 
                             <p>
+
                                 A nota fiscal ajuda a comprovar a
                                 aquisição de produtos e serviços.
+
                             </p>
 
                         </article>
@@ -359,9 +960,11 @@ export default function AreaCidadao() {
                             <h3>Cidadania fiscal</h3>
 
                             <p>
+
                                 Solicitar o documento fiscal contribui
                                 para a formalização das operações
                                 comerciais.
+
                             </p>
 
                         </article>
@@ -370,12 +973,16 @@ export default function AreaCidadao() {
 
                             <Wallet size={28} />
 
-                            <h3>Programas de benefícios</h3>
+                            <h3>
+                                Programas de benefícios
+                            </h3>
 
                             <p>
+
                                 Alguns estados oferecem créditos,
                                 sorteios ou outros benefícios,
                                 conforme suas próprias regras.
+
                             </p>
 
                         </article>
@@ -387,17 +994,21 @@ export default function AreaCidadao() {
                         <Info size={22} />
 
                         <p>
+
                             Em São Paulo, existe o programa Nota Fiscal
                             Paulista. A participação e os benefícios
                             dependem das regras estabelecidas pelo
                             programa estadual.
+
                         </p>
 
                     </div>
 
                 </section>
 
-                {/* CASHBACK TRIBUTÁRIO */}
+                {/* =================================
+                    CASHBACK TRIBUTÁRIO
+                ================================= */}
 
                 <section
                     id="ac-cashback"
@@ -407,16 +1018,22 @@ export default function AreaCidadao() {
                     <div className="ac-secao-cabecalho">
 
                         <div className="ac-secao-icone">
+
                             <Wallet size={27} />
+
                         </div>
 
                         <div>
 
-                            <h2>O que é cashback tributário?</h2>
+                            <h2>
+                                O que é cashback tributário?
+                            </h2>
 
                             <p>
+
                                 Conheça um dos mecanismos sociais
                                 da Reforma Tributária.
+
                             </p>
 
                         </div>
@@ -426,16 +1043,20 @@ export default function AreaCidadao() {
                     <div className="ac-texto">
 
                         <p>
+
                             O cashback tributário é um mecanismo
                             que busca reduzir o impacto dos tributos
                             sobre o consumo no orçamento das
                             famílias de baixa renda.
+
                         </p>
 
                         <p>
+
                             Por meio dele, parte dos valores pagos
                             em IBS e CBS poderá ser devolvida às
                             famílias que atendam aos requisitos legais.
+
                         </p>
 
                     </div>
@@ -443,7 +1064,9 @@ export default function AreaCidadao() {
                     {/* ETAPAS ILUSTRATIVAS */}
 
                     <h3 className="ac-subtitulo">
+
                         Entenda como funciona
+
                     </h3>
 
                     <div className="ac-etapas">
@@ -451,7 +1074,9 @@ export default function AreaCidadao() {
                         <article className="ac-etapa">
 
                             <span className="ac-etapa-numero">
+
                                 1
+
                             </span>
 
                             <Receipt size={28} />
@@ -459,8 +1084,10 @@ export default function AreaCidadao() {
                             <h4>Compra realizada</h4>
 
                             <p>
+
                                 A família adquire produtos
                                 ou serviços abrangidos.
+
                             </p>
 
                         </article>
@@ -468,12 +1095,15 @@ export default function AreaCidadao() {
                         <ArrowRight
                             className="ac-etapa-seta"
                             size={23}
+                            aria-hidden="true"
                         />
 
                         <article className="ac-etapa">
 
                             <span className="ac-etapa-numero">
+
                                 2
+
                             </span>
 
                             <Users size={28} />
@@ -481,8 +1111,10 @@ export default function AreaCidadao() {
                             <h4>Identificação</h4>
 
                             <p>
+
                                 São considerados os dados da
                                 família e os critérios legais.
+
                             </p>
 
                         </article>
@@ -490,12 +1122,15 @@ export default function AreaCidadao() {
                         <ArrowRight
                             className="ac-etapa-seta"
                             size={23}
+                            aria-hidden="true"
                         />
 
                         <article className="ac-etapa">
 
                             <span className="ac-etapa-numero">
+
                                 3
+
                             </span>
 
                             <Wallet size={28} />
@@ -503,8 +1138,10 @@ export default function AreaCidadao() {
                             <h4>Devolução</h4>
 
                             <p>
+
                                 Parte dos tributos é devolvida
                                 conforme as regras aplicáveis.
+
                             </p>
 
                         </article>
@@ -516,32 +1153,46 @@ export default function AreaCidadao() {
                     <div className="ac-requisitos">
 
                         <h3>
+
                             Quem poderá receber?
+
                         </h3>
 
                         <ul>
 
                             <li>
+
                                 <CheckCircle size={20} />
+
                                 Família inscrita no Cadastro
                                 Único (CadÚnico).
+
                             </li>
 
                             <li>
+
                                 <CheckCircle size={20} />
+
                                 Renda familiar mensal por pessoa
                                 de até meio salário mínimo.
+
                             </li>
 
                             <li>
+
                                 <CheckCircle size={20} />
+
                                 Residência no território brasileiro.
+
                             </li>
 
                             <li>
+
                                 <CheckCircle size={20} />
+
                                 CPF regular, conforme os requisitos
                                 previstos na legislação.
+
                             </li>
 
                         </ul>
@@ -551,7 +1202,9 @@ export default function AreaCidadao() {
                     {/* CRONOGRAMA */}
 
                     <h3 className="ac-subtitulo">
+
                         Quando começa?
+
                     </h3>
 
                     <div className="ac-cronograma">
@@ -565,9 +1218,11 @@ export default function AreaCidadao() {
                             <h4>CBS</h4>
 
                             <p>
+
                                 Início previsto da devolução
                                 da Contribuição sobre Bens
                                 e Serviços, em janeiro.
+
                             </p>
 
                         </article>
@@ -581,9 +1236,11 @@ export default function AreaCidadao() {
                             <h4>IBS</h4>
 
                             <p>
+
                                 Início previsto da devolução
                                 do Imposto sobre Bens e
                                 Serviços, em janeiro.
+
                             </p>
 
                         </article>
@@ -595,35 +1252,45 @@ export default function AreaCidadao() {
                         <Info size={22} />
 
                         <p>
+
                             Os valores e procedimentos de devolução
                             dependem da legislação e da regulamentação.
                             Informar o CPF na nota, por si só, não
                             garante o recebimento do benefício.
+
                         </p>
 
                     </div>
 
                 </section>
 
-                {/* COMPARAÇÃO */}
+                {/* =================================
+                    COMPARAÇÃO ENTRE PROGRAMAS
+                ================================= */}
 
                 <section className="ac-secao">
 
                     <div className="ac-secao-cabecalho">
 
                         <div className="ac-secao-icone">
+
                             <Landmark size={27} />
+
                         </div>
 
                         <div>
 
                             <h2>
+
                                 Cashback ou Nota Fiscal Paulista?
+
                             </h2>
 
                             <p>
+
                                 Conheça as diferenças entre
                                 os dois mecanismos.
+
                             </p>
 
                         </div>
@@ -635,7 +1302,9 @@ export default function AreaCidadao() {
                         <article className="ac-comparacao">
 
                             <span className="ac-comparacao-tag">
+
                                 REFORMA TRIBUTÁRIA
+
                             </span>
 
                             <h3>Cashback tributário</h3>
@@ -645,15 +1314,19 @@ export default function AreaCidadao() {
                                 <dt>Finalidade</dt>
 
                                 <dd>
+
                                     Devolver parte dos tributos
                                     sobre o consumo.
+
                                 </dd>
 
                                 <dt>Público</dt>
 
                                 <dd>
+
                                     Famílias que atendam aos
                                     critérios legais de baixa renda.
+
                                 </dd>
 
                                 <dt>Abrangência</dt>
@@ -671,7 +1344,9 @@ export default function AreaCidadao() {
                         <article className="ac-comparacao">
 
                             <span className="ac-comparacao-tag">
+
                                 PROGRAMA ESTADUAL
+
                             </span>
 
                             <h3>Nota Fiscal Paulista</h3>
@@ -681,15 +1356,19 @@ export default function AreaCidadao() {
                                 <dt>Finalidade</dt>
 
                                 <dd>
+
                                     Incentivar a solicitação
                                     de documentos fiscais.
+
                                 </dd>
 
                                 <dt>Público</dt>
 
                                 <dd>
+
                                     Participantes que atendam
                                     às regras do programa.
+
                                 </dd>
 
                                 <dt>Abrangência</dt>
@@ -699,8 +1378,10 @@ export default function AreaCidadao() {
                                 <dt>Benefícios</dt>
 
                                 <dd>
+
                                     Créditos e sorteios,
                                     conforme as regras vigentes.
+
                                 </dd>
 
                             </dl>
@@ -711,7 +1392,9 @@ export default function AreaCidadao() {
 
                 </section>
 
-                {/* DIREITOS DO CIDADÃO */}
+                {/* =================================
+                    DIREITOS DO CIDADÃO
+                ================================= */}
 
                 <section
                     id="ac-direitos"
@@ -721,16 +1404,22 @@ export default function AreaCidadao() {
                     <div className="ac-secao-cabecalho">
 
                         <div className="ac-secao-icone">
+
                             <ShieldCheck size={27} />
+
                         </div>
 
                         <div>
 
-                            <h2>Seus direitos como cidadão</h2>
+                            <h2>
+                                Seus direitos como cidadão
+                            </h2>
 
                             <p>
+
                                 Informação é uma ferramenta
                                 importante para o consumidor.
+
                             </p>
 
                         </div>
@@ -740,17 +1429,22 @@ export default function AreaCidadao() {
                     <ul className="ac-direitos-lista">
 
                         <li>
+
                             <CheckCircle size={22} />
 
                             <div>
 
                                 <strong>
+
                                     Solicite o documento fiscal
+
                                 </strong>
 
                                 <p>
+
                                     Peça a nota fiscal referente
                                     às suas compras e serviços.
+
                                 </p>
 
                             </div>
@@ -758,17 +1452,22 @@ export default function AreaCidadao() {
                         </li>
 
                         <li>
+
                             <CheckCircle size={22} />
 
                             <div>
 
                                 <strong>
+
                                     Confira as informações
+
                                 </strong>
 
                                 <p>
+
                                     Verifique os produtos, valores
                                     e dados registrados no documento.
+
                                 </p>
 
                             </div>
@@ -776,18 +1475,23 @@ export default function AreaCidadao() {
                         </li>
 
                         <li>
+
                             <CheckCircle size={22} />
 
                             <div>
 
                                 <strong>
+
                                     Proteja seus dados pessoais
+
                                 </strong>
 
                                 <p>
+
                                     Informe seus dados somente
                                     quando necessário e utilize
                                     canais oficiais para consultas.
+
                                 </p>
 
                             </div>
@@ -795,18 +1499,23 @@ export default function AreaCidadao() {
                         </li>
 
                         <li>
+
                             <CheckCircle size={22} />
 
                             <div>
 
                                 <strong>
+
                                     Conheça os programas oficiais
+
                                 </strong>
 
                                 <p>
+
                                     Consulte os órgãos responsáveis
                                     para verificar requisitos,
                                     benefícios e procedimentos.
+
                                 </p>
 
                             </div>
@@ -817,7 +1526,9 @@ export default function AreaCidadao() {
 
                 </section>
 
-                {/* PERGUNTAS FREQUENTES */}
+                {/* =================================
+                    PERGUNTAS FREQUENTES
+                ================================= */}
 
                 <section
                     id="ac-perguntas"
@@ -827,7 +1538,9 @@ export default function AreaCidadao() {
                     <div className="ac-secao-cabecalho">
 
                         <div className="ac-secao-icone">
+
                             <HelpCircle size={27} />
+
                         </div>
 
                         <div>
@@ -835,8 +1548,10 @@ export default function AreaCidadao() {
                             <h2>Perguntas frequentes</h2>
 
                             <p>
+
                                 Tire suas principais dúvidas
                                 sobre cidadania fiscal.
+
                             </p>
 
                         </div>
@@ -873,7 +1588,9 @@ export default function AreaCidadao() {
                                         >
 
                                             <span>
+
                                                 {item.pergunta}
+
                                             </span>
 
                                             <ChevronDown
@@ -883,6 +1600,7 @@ export default function AreaCidadao() {
                                                         ? "ac-seta-aberta"
                                                         : ""
                                                 }
+                                                aria-hidden="true"
                                             />
 
                                         </button>
@@ -896,7 +1614,9 @@ export default function AreaCidadao() {
                                     >
 
                                         <p>
+
                                             {item.resposta}
+
                                         </p>
 
                                     </div>
@@ -911,14 +1631,18 @@ export default function AreaCidadao() {
 
                 </section>
 
-                {/* FONTES OFICIAIS */}
+                {/* =================================
+                    FONTES OFICIAIS
+                ================================= */}
 
                 <section className="ac-secao">
 
                     <div className="ac-secao-cabecalho">
 
                         <div className="ac-secao-icone">
+
                             <BookOpen size={27} />
+
                         </div>
 
                         <div>
@@ -926,8 +1650,10 @@ export default function AreaCidadao() {
                             <h2>Fontes oficiais</h2>
 
                             <p>
+
                                 Consulte informações diretamente
                                 nos órgãos responsáveis.
+
                             </p>
 
                         </div>
@@ -949,11 +1675,15 @@ export default function AreaCidadao() {
                                 <div>
 
                                     <strong>
+
                                         {fonte.titulo}
+
                                     </strong>
 
                                     <p>
+
                                         {fonte.descricao}
+
                                     </p>
 
                                 </div>
@@ -968,15 +1698,19 @@ export default function AreaCidadao() {
 
                 </section>
 
-                {/* FERRAMENTAS RELACIONADAS */}
+                {/* =================================
+                    FERRAMENTAS RELACIONADAS
+                ================================= */}
 
                 <section className="ac-relacionados">
 
                     <h2>Continue aprendendo</h2>
 
                     <p>
+
                         Explore outras ferramentas gratuitas
-                        do IntegraCertacon.
+                        do Integra.
+
                     </p>
 
                     <div className="ac-relacionados-grid">
@@ -990,7 +1724,9 @@ export default function AreaCidadao() {
                                 <strong>Glossário Fiscal</strong>
 
                                 <span>
+
                                     Conheça os termos tributários.
+
                                 </span>
 
                             </div>
@@ -1008,7 +1744,9 @@ export default function AreaCidadao() {
                                 <strong>Consultar NF-e</strong>
 
                                 <span>
+
                                     Verifique a estrutura da chave.
+
                                 </span>
 
                             </div>
@@ -1021,32 +1759,68 @@ export default function AreaCidadao() {
 
                 </section>
 
-                {/* AVISO LEGAL */}
+                {/* =================================
+                    AVISO LEGAL
+                ================================= */}
 
                 <div className="ac-aviso-final">
 
                     <Info size={20} />
 
                     <p>
+
                         Este conteúdo possui finalidade educativa.
-                        O IntegraCertacon não realiza pagamentos,
+                        O Integra não realiza pagamentos,
                         consultas de elegibilidade ou concessão de
                         benefícios governamentais. Consulte sempre
                         a legislação vigente e os canais oficiais.
                         Conteúdo revisado em novembro de 2026.
+
                     </p>
 
                 </div>
 
             </main>
 
-            {/* RODAPÉ PÚBLICO */}
+            {/* =================================
+                RODAPÉ PÚBLICO
+            ================================= */}
 
             {!autenticado && (
 
                 <footer className="ac-footer">
 
-                    IntegraCertacon · Cidadania Fiscal
+                    <div className="ac-footer-conteudo">
+
+                        <Link
+                            to="/portal"
+                            aria-label="Voltar ao portal Integra"
+                        >
+
+                            <img
+                                src={LogoNome}
+                                alt="IntegraCertacon"
+                            />
+
+                        </Link>
+
+                        <div className="ac-footer-texto">
+
+                            <strong>
+
+                                Integra
+
+                            </strong>
+
+                            <span>
+
+                                Cidadania Fiscal
+
+                            </span>
+
+                        </div>
+
+                    </div>
 
                 </footer>
 

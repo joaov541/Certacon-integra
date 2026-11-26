@@ -1,31 +1,134 @@
 /* =========================================
-   CONFIGURAÇÕES DO SIDEBAR
+   INTEGRA CERTACON
+   SMART NAVIGATION
 ========================================= */
 
 .integra-sidebar {
     --sidebar-azul: #1d2e68;
     --sidebar-laranja: #ff8500;
 
+    --sidebar-curva: cubic-bezier(0.22, 1, 0.36, 1);
+    --sidebar-transicao: 0.25s ease;
+
+    position: relative;
+
     display: flex;
+
     flex: 0 0 334px;
     flex-direction: column;
 
     width: 334px;
     min-width: 334px;
+
     height: 100vh;
     height: 100dvh;
 
     padding: 25px 20px;
 
-    background: var(--sidebar-azul);
+    background: linear-gradient(
+        165deg,
+        #1d2e68 0%,
+        #1d2e68 65%,
+        #19295f 100%
+    );
+
     color: #ffffff;
 
     font-family: Arial, sans-serif;
+
     box-sizing: border-box;
 }
 
 .integra-sidebar * {
     box-sizing: border-box;
+}
+
+.integra-sidebar button {
+    font-family: inherit;
+}
+
+/* =========================================
+   ANIMAÇÕES PRINCIPAIS
+========================================= */
+
+@keyframes integraSidebarEntrada {
+
+    from {
+        opacity: 0;
+
+        translate: -8px 0;
+    }
+
+    to {
+        opacity: 1;
+
+        translate: 0 0;
+    }
+
+}
+
+@keyframes integraSidebarMarca {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+@keyframes integraSubmenuEntrada {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+@keyframes integraSubitemEntrada {
+
+    from {
+        opacity: 0;
+
+        translate: -5px 0;
+    }
+
+    to {
+        opacity: 1;
+
+        translate: 0 0;
+    }
+
+}
+
+@keyframes integraPontoAtivo {
+
+    from {
+        opacity: 0;
+
+        transform: scale(0.5);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: scale(1);
+    }
+
 }
 
 /* =========================================
@@ -34,12 +137,33 @@
 
 .integra-sidebar-marca {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     flex-shrink: 0;
 
     width: 100%;
-    margin-bottom: 35px;
+
+    margin-bottom: 24px;
+
+    animation:
+        integraSidebarMarca
+        0.6s
+        var(--sidebar-curva);
+}
+
+.integra-sidebar-marca-link {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    border-radius: 8px;
+
+    text-decoration: none;
 }
 
 .integra-sidebar-logo {
@@ -47,9 +171,45 @@
 
     width: 100%;
     max-width: 300px;
+
     height: auto;
 
     object-fit: contain;
+
+    transition:
+        transform 0.4s var(--sidebar-curva),
+        filter 0.35s ease;
+}
+
+.integra-sidebar-marca-link:hover
+.integra-sidebar-logo {
+
+    transform: scale(1.025);
+
+    filter: drop-shadow(
+        0 0 9px rgba(255, 255, 255, 0.08)
+    );
+
+}
+
+/* =========================================
+   DIVISOR ABAIXO DA MARCA
+========================================= */
+
+.integra-sidebar-divisor-marca {
+    flex-shrink: 0;
+
+    width: calc(100% - 24px);
+    height: 1px;
+
+    margin: 0 12px 22px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.18),
+        transparent
+    );
 }
 
 /* =========================================
@@ -57,19 +217,115 @@
 ========================================= */
 
 .integra-sidebar-lista {
+    position: relative;
+
     display: flex;
+
+    flex: 1;
+
     flex-direction: column;
 
-    gap: 25px;
+    gap: 9px;
 
     width: 100%;
     min-height: 0;
+
+    padding: 2px 4px 12px 7px;
 
     overflow-y: auto;
     overflow-x: hidden;
 
     scrollbar-width: thin;
-    scrollbar-color: #7188c7 transparent;
+
+    scrollbar-color:
+        rgba(173, 192, 240, 0.35)
+        transparent;
+}
+
+/* SCROLLBAR PERSONALIZADA */
+
+.integra-sidebar-lista::-webkit-scrollbar {
+    width: 4px;
+}
+
+.integra-sidebar-lista::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.integra-sidebar-lista::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background: rgba(173, 192, 240, 0.35);
+}
+
+/* =========================================
+   CATEGORIAS DO MENU
+========================================= */
+
+.integra-sidebar-categoria {
+    flex-shrink: 0;
+
+    margin: 0 0 5px 12px;
+
+    color: #a7b6df;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+
+    line-height: 1.5;
+
+    user-select: none;
+}
+
+/* =========================================
+   DIVISORES INTERNOS
+========================================= */
+
+.integra-sidebar-divisor {
+    flex-shrink: 0;
+
+    height: 1px;
+
+    margin: 12px 10px;
+
+    background: rgba(
+        255, 255, 255, 0.12
+    );
+}
+
+/* =========================================
+   INDICADOR LARANJA DESLIZANTE
+========================================= */
+
+.integra-sidebar-indicador {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    z-index: 5;
+
+    width: 3px;
+    height: 30px;
+
+    border-radius: 0 5px 5px 0;
+
+    background: var(--sidebar-laranja);
+
+    opacity: 0;
+
+    box-shadow:
+        0 0 9px rgba(255, 133, 0, 0.30);
+
+    pointer-events: none;
+
+    transition:
+        transform 0.35s var(--sidebar-curva),
+        height 0.35s var(--sidebar-curva),
+        width 0.35s var(--sidebar-curva),
+        opacity 0.2s ease;
 }
 
 /* =========================================
@@ -77,19 +333,28 @@
 ========================================= */
 
 .integra-sidebar-item {
+    position: relative;
+
     display: flex;
+
     align-items: center;
+
     flex-shrink: 0;
 
     gap: 13px;
 
-    margin-left: 20px;
-    padding: 9px 8px;
+    min-width: 0;
+    min-height: 48px;
 
-    border: none;
-    border-radius: 5px;
+    margin: 0;
+
+    padding: 11px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
 
     background: transparent;
+
     color: #ffffff;
 
     font-family: inherit;
@@ -100,27 +365,118 @@
 
     cursor: pointer;
 
-    transition: background 0.2s ease;
+    transition:
+        background var(--sidebar-transicao),
+        border-color var(--sidebar-transicao),
+        color var(--sidebar-transicao);
 }
+
+/* ENTRADA SEQUENCIAL */
+
+.integra-sidebar-lista > .integra-sidebar-item,
+.integra-sidebar-grupo > .integra-sidebar-item {
+
+    animation:
+        integraSidebarEntrada
+        0.45s
+        var(--sidebar-curva)
+        backwards;
+
+    animation-delay:
+        var(--sidebar-atraso, 0ms);
+}
+
+/* =========================================
+   ÍCONES PRINCIPAIS
+========================================= */
 
 .integra-sidebar-item img,
 .integra-sidebar-item .integra-sidebar-icone {
     display: block;
+
     flex-shrink: 0;
 
-    width: 33px;
-    height: 33px;
+    width: 30px;
+    height: 30px;
 
     object-fit: contain;
+
+    transition:
+        transform 0.3s var(--sidebar-curva),
+        filter 0.25s ease,
+        color 0.25s ease;
 }
 
 .integra-sidebar-item span {
+    min-width: 0;
+
     font-size: 14px;
+
+    line-height: 1.4;
+
+    transition:
+        color var(--sidebar-transicao),
+        translate 0.25s var(--sidebar-curva);
 }
 
-.integra-sidebar-item:hover,
-.integra-sidebar-ativo {
-    background: rgba(255, 255, 255, 0.13);
+/* =========================================
+   HOVER DOS ITENS
+========================================= */
+
+.integra-sidebar-item:hover {
+    border-color:
+        rgba(255, 255, 255, 0.045);
+
+    background:
+        rgba(255, 255, 255, 0.07);
+}
+
+.integra-sidebar-item:hover img,
+.integra-sidebar-item:hover .integra-sidebar-icone {
+
+    transform: scale(1.08);
+
+}
+
+.integra-sidebar-item:hover > span {
+    translate: 2px 0;
+}
+
+/* =========================================
+   ITEM ATIVO
+========================================= */
+
+.integra-sidebar-item.integra-sidebar-ativo {
+    border-color:
+        rgba(255, 255, 255, 0.08);
+
+    background: linear-gradient(
+        90deg,
+        rgba(255, 133, 0, 0.12),
+        rgba(255, 255, 255, 0.065)
+    );
+
+    color: #ffb45e;
+
+    font-weight: 600;
+}
+
+.integra-sidebar-ativo img {
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(56%)
+        sepia(96%)
+        saturate(1600%)
+        hue-rotate(359deg)
+        brightness(102%);
+}
+
+.integra-sidebar-ativo
+.integra-sidebar-icone {
+
+    color: var(--sidebar-laranja);
+
 }
 
 /* =========================================
@@ -129,6 +485,7 @@
 
 .integra-sidebar-grupo {
     display: flex;
+
     flex-direction: column;
 
     flex-shrink: 0;
@@ -138,18 +495,37 @@
 }
 
 .integra-sidebar-ferramentas {
-    width: calc(100% - 20px);
+    width: 100%;
 }
 
 .integra-sidebar-ferramentas
 .integra-ferramentas-desktop {
+
     flex: 1;
+
     min-width: 0;
 }
 
 .integra-sidebar-ferramentas
 .integra-ferramentas-mobile {
+
     display: none;
+}
+
+/* FERRAMENTAS EXPANDIDAS */
+
+.integra-sidebar-ferramentas.integra-ferramentas-aberto {
+    background: rgba(
+        255, 255, 255, 0.07
+    );
+}
+
+.integra-sidebar-ferramentas.integra-ferramentas-aberto.integra-sidebar-ativo {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 133, 0, 0.12),
+        rgba(255, 255, 255, 0.065)
+    );
 }
 
 /* =========================================
@@ -159,14 +535,20 @@
 .integra-sidebar-seta {
     flex-shrink: 0;
 
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
 
-    transition: transform 0.2s ease;
+    color: #b9c7eb;
+
+    transition:
+        transform 0.3s var(--sidebar-curva),
+        color 0.25s ease;
 }
 
 .integra-sidebar-seta.integra-seta-aberta {
     transform: rotate(180deg);
+
+    color: #ffb45e;
 }
 
 /* =========================================
@@ -175,35 +557,36 @@
 
 .integra-sidebar-submenu {
     display: flex;
+
     flex-direction: column;
 
-    gap: 6px;
+    gap: 5px;
 
     min-width: 0;
 
-    margin: 8px 0 0 42px;
-    padding: 5px 0 5px 12px;
+    margin: 10px 0 3px 26px;
 
-    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 3px 0 3px 12px;
 
-    animation: integra-submenu-entrada 0.18s ease;
+    border-left: 1px solid rgba(
+        255, 255, 255, 0.17
+    );
+
+    animation:
+        integraSubmenuEntrada
+        0.3s
+        var(--sidebar-curva);
 }
 
-@keyframes integra-submenu-entrada {
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
+/* GARANTIR QUE O MENU FECHADO
+   NÃO SEJA ACESSÍVEL PELO TECLADO */
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.integra-sidebar-submenu[hidden] {
+    display: none !important;
 }
 
 /* =========================================
-   CABEÇALHO DO SUBMENU
-   EXCLUSIVO MOBILE
+   CABEÇALHO MOBILE DO SUBMENU
 ========================================= */
 
 .integra-submenu-topo {
@@ -215,76 +598,184 @@
 ========================================= */
 
 .integra-sidebar-subitem {
+    position: relative;
+
     display: flex;
+
     align-items: center;
 
-    gap: 12px;
+    gap: 11px;
 
     min-width: 0;
-    min-height: 40px;
+    min-height: 39px;
 
     padding: 9px 10px;
 
-    border-radius: 6px;
+    border: 1px solid transparent;
+    border-radius: 7px;
 
     background: transparent;
-    color: #ffffff;
 
-    font-size: 13px;
+    color: #dce4f8;
+
+    font-size: 12px;
+
+    line-height: 1.4;
 
     text-decoration: none;
 
     cursor: pointer;
 
+    animation:
+        integraSubitemEntrada
+        0.3s
+        var(--sidebar-curva)
+        backwards;
+
+    animation-delay:
+        var(--submenu-atraso, 0ms);
+
     transition:
-        background 0.2s ease,
-        color 0.2s ease;
+        background var(--sidebar-transicao),
+        border-color var(--sidebar-transicao),
+        color var(--sidebar-transicao);
 }
 
 .integra-sidebar-subitem > svg {
     flex-shrink: 0;
 
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
+
+    transition:
+        transform 0.3s var(--sidebar-curva),
+        color var(--sidebar-transicao);
 }
 
-.integra-sidebar-subitem > span {
+.integra-sidebar-subitem > span:not(.integra-subitem-ponto) {
+
+    flex: 1;
+
     min-width: 0;
+
     overflow-wrap: anywhere;
-}
 
-.integra-sidebar-subitem:hover {
-    background: rgba(255, 255, 255, 0.13);
-}
-
-.integra-sidebar-subitem.integra-subitem-ativo {
-    background: rgba(255, 255, 255, 0.13);
-    color: var(--sidebar-laranja);
-
-    font-weight: 700;
 }
 
 /* =========================================
-   BOTÃO SAIR
+   HOVER DO SUBMENU
+========================================= */
+
+.integra-sidebar-subitem:hover {
+    background:
+        rgba(255, 255, 255, 0.075);
+
+    color: #ffffff;
+}
+
+.integra-sidebar-subitem:hover > svg {
+    transform: scale(1.08);
+
+    color: #ffb45e;
+}
+
+/* =========================================
+   SUBITEM ATIVO
+========================================= */
+
+.integra-sidebar-subitem.integra-subitem-ativo {
+    border-color: rgba(
+        255, 133, 0, 0.14
+    );
+
+    background: rgba(
+        255, 133, 0, 0.10
+    );
+
+    color: #ffb45e;
+
+    font-weight: 600;
+}
+
+.integra-subitem-ativo > svg {
+    color: var(--sidebar-laranja);
+}
+
+/* PONTO DE IDENTIFICAÇÃO */
+
+.integra-subitem-ponto {
+    display: none;
+
+    flex-shrink: 0;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--sidebar-laranja);
+
+    box-shadow:
+        0 0 7px rgba(255, 133, 0, 0.25);
+}
+
+.integra-subitem-ativo
+.integra-subitem-ponto {
+
+    display: block;
+
+    animation:
+        integraPontoAtivo
+        0.3s
+        var(--sidebar-curva);
+
+}
+
+/* =========================================
+   RODAPÉ DO SIDEBAR
+========================================= */
+
+.integra-sidebar-rodape {
+    display: flex;
+
+    flex-direction: column;
+
+    flex-shrink: 0;
+
+    margin-top: auto;
+}
+
+.integra-sidebar-rodape
+.integra-sidebar-divisor {
+
+    margin: 10px 10px 13px;
+
+}
+
+/* =========================================
+   BOTÃO SAIR / ENTRAR
 ========================================= */
 
 .integra-sidebar-sair {
     display: flex;
+
     align-items: center;
 
     flex-shrink: 0;
 
     gap: 13px;
 
-    margin-top: auto;
-    margin-left: 20px;
+    min-height: 48px;
 
-    padding: 10px 8px;
+    margin: 0 4px 0 7px;
 
-    border: none;
-    border-radius: 5px;
+    padding: 10px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
 
     background: transparent;
+
     color: #ffffff;
 
     font-family: inherit;
@@ -294,16 +785,25 @@
 
     cursor: pointer;
 
-    transition: background 0.2s ease;
+    transition:
+        background var(--sidebar-transicao),
+        border-color var(--sidebar-transicao),
+        color var(--sidebar-transicao);
 }
 
 .integra-sidebar-sair img {
     display: block;
 
-    width: 33px;
-    height: 33px;
+    flex-shrink: 0;
+
+    width: 29px;
+    height: 29px;
 
     object-fit: contain;
+
+    transition:
+        transform 0.3s var(--sidebar-curva),
+        filter 0.25s ease;
 }
 
 .integra-sidebar-sair span {
@@ -311,7 +811,72 @@
 }
 
 .integra-sidebar-sair:hover {
-    background: rgba(255, 255, 255, 0.13);
+    background: rgba(
+        255, 255, 255, 0.09
+    );
+}
+
+/* =========================================
+   EFEITO ESPECIAL DO LOGOUT
+========================================= */
+
+.integra-sidebar-logout:hover {
+    border-color: rgba(
+        255, 125, 125, 0.15
+    );
+
+    background: rgba(
+        239, 91, 91, 0.10
+    );
+
+    color: #ffb4b4;
+}
+
+.integra-sidebar-logout:hover img {
+    transform: translateX(3px);
+
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(79%)
+        sepia(29%)
+        saturate(1250%)
+        hue-rotate(310deg)
+        brightness(106%);
+}
+
+/* =========================================
+   ASSINATURA INSTITUCIONAL
+========================================= */
+
+.integra-sidebar-assinatura {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 17px;
+
+    color: #a0afd8;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+.integra-sidebar-assinatura-ponto {
+    flex-shrink: 0;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: var(--sidebar-laranja);
 }
 
 /* =========================================
@@ -321,19 +886,12 @@
 .integra-sidebar-item:focus-visible,
 .integra-sidebar-sair:focus-visible,
 .integra-sidebar-subitem:focus-visible,
+.integra-sidebar-marca-link:focus-visible,
 .integra-submenu-topo button:focus-visible {
+
     outline: 2px solid var(--sidebar-laranja);
+
     outline-offset: -2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-    .integra-sidebar *,
-    .integra-sidebar *::before,
-    .integra-sidebar *::after {
-        animation: none;
-        transition: none;
-    }
 
 }
 
@@ -353,62 +911,167 @@
         padding: 20px 10px;
     }
 
+    /* LOGOTIPO */
+
     .integra-sidebar-marca {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
     .integra-sidebar-logo {
         max-width: 190px;
     }
 
+    .integra-sidebar-divisor-marca {
+        margin-bottom: 18px;
+    }
+
+    /* NAVEGAÇÃO */
+
     .integra-sidebar-lista {
-        gap: 16px;
+        gap: 7px;
+
+        padding-right: 2px;
+        padding-left: 6px;
+    }
+
+    .integra-sidebar-categoria {
+        margin-left: 7px;
+
+        font-size: 8px;
+
+        letter-spacing: 0.7px;
     }
 
     .integra-sidebar-item {
         gap: 9px;
 
-        margin-left: 4px;
-        padding: 8px 5px;
+        min-height: 43px;
+
+        margin: 0;
+
+        padding: 8px 7px;
     }
 
     .integra-sidebar-item img,
     .integra-sidebar-item .integra-sidebar-icone {
-        width: 28px;
-        height: 28px;
+
+        width: 25px;
+        height: 25px;
+
     }
 
     .integra-sidebar-item span {
-        font-size: 13px;
-    }
-
-    .integra-sidebar-ferramentas {
-        width: calc(100% - 4px);
-    }
-
-    .integra-sidebar-seta {
-        width: 15px;
-        height: 15px;
-    }
-
-    .integra-sidebar-submenu {
-        margin-left: 21px;
-        padding-left: 9px;
-    }
-
-    .integra-sidebar-subitem {
-        gap: 8px;
-        padding: 8px 6px;
         font-size: 12px;
     }
 
-    .integra-sidebar-subitem > svg {
-        width: 19px;
-        height: 19px;
+    /* FERRAMENTAS */
+
+    .integra-sidebar-ferramentas {
+        width: 100%;
     }
 
+    .integra-sidebar-seta {
+        width: 14px;
+        height: 14px;
+    }
+
+    .integra-sidebar-submenu {
+        margin-left: 16px;
+
+        padding-left: 7px;
+    }
+
+    .integra-sidebar-subitem {
+        gap: 7px;
+
+        min-height: 36px;
+
+        padding: 8px 5px;
+
+        font-size: 11px;
+    }
+
+    .integra-sidebar-subitem > svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .integra-subitem-ponto {
+        width: 4px;
+        height: 4px;
+    }
+
+    /* RODAPÉ */
+
     .integra-sidebar-sair {
-        margin-left: 4px;
+        gap: 9px;
+
+        margin-left: 6px;
+
+        padding: 9px 7px;
+    }
+
+    .integra-sidebar-sair img {
+        width: 26px;
+        height: 26px;
+    }
+
+    .integra-sidebar-sair span {
+        font-size: 13px;
+    }
+
+    .integra-sidebar-assinatura {
+        font-size: 9px;
+
+        margin-top: 13px;
+    }
+
+}
+
+/* =========================================
+   DESKTOP COM POUCA ALTURA
+========================================= */
+
+@media (min-width: 701px) and (max-height: 760px) {
+
+    .integra-sidebar {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .integra-sidebar-marca {
+        margin-bottom: 12px;
+    }
+
+    .integra-sidebar-divisor-marca {
+        margin-bottom: 12px;
+    }
+
+    .integra-sidebar-lista {
+        gap: 6px;
+    }
+
+    .integra-sidebar-item {
+        min-height: 43px;
+
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .integra-sidebar-subitem {
+        min-height: 35px;
+
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+
+    .integra-sidebar-divisor {
+        margin-top: 7px;
+        margin-bottom: 7px;
+    }
+
+    .integra-sidebar-assinatura {
+        margin-top: 9px;
     }
 
 }
@@ -433,6 +1096,7 @@
 
         width: 100%;
         min-width: 0;
+
         height: 64px;
 
         padding: 0;
@@ -441,64 +1105,119 @@
         background: var(--sidebar-azul);
 
         box-shadow:
-            0 -2px 8px rgba(0, 0, 0, 0.10);
+            0 -3px 14px
+            rgba(29, 46, 104, 0.14);
     }
 
-    /* ESCONDER LOGO */
+    /* =====================================
+       ESCONDER ELEMENTOS DESKTOP
+    ===================================== */
 
-    .integra-sidebar-marca {
+    .integra-sidebar-marca,
+    .integra-sidebar-divisor-marca,
+    .integra-sidebar-categoria,
+    .integra-sidebar-divisor,
+    .integra-sidebar-rodape,
+    .integra-sidebar-assinatura {
+
         display: none;
+
     }
 
-    /* NAVEGAÇÃO INFERIOR */
+    /* =====================================
+       LISTA MOBILE
+    ===================================== */
 
     .integra-sidebar-lista {
+        position: relative;
+
         display: flex;
+
         flex-direction: row;
 
         align-items: center;
         justify-content: space-around;
 
+        gap: 0;
+
         width: 100%;
         height: 100%;
 
-        gap: 0;
-
         padding: 5px 3px;
+
         margin: 0;
 
         overflow: visible;
     }
 
-    /* ITENS MOBILE */
+    /* =====================================
+       INDICADOR ATIVO MOBILE
+
+       DESLIZA HORIZONTALMENTE
+    ===================================== */
+
+    .integra-sidebar-indicador {
+        top: 0;
+        left: 0;
+
+        width: 30px;
+        height: 3px;
+
+        border-radius: 0 0 5px 5px;
+
+        box-shadow:
+            0 2px 8px
+            rgba(255, 133, 0, 0.25);
+    }
+
+    /* =====================================
+       ITENS MOBILE
+    ===================================== */
 
     .integra-sidebar-item {
         display: flex;
+
         flex: 1 1 0;
+
         flex-direction: column;
 
         align-items: center;
         justify-content: center;
 
-        gap: 2px;
+        gap: 4px;
 
         min-width: 0;
+        min-height: 0;
+
         height: 100%;
 
         margin: 0;
-        padding: 2px 0;
 
-        border-radius: 0;
+        padding: 3px 1px;
+
+        border: none;
+        border-radius: 7px;
 
         background: transparent;
+
         color: #ffffff;
 
         text-align: center;
         text-decoration: none;
     }
 
+    .integra-sidebar-lista > .integra-sidebar-item,
+    .integra-sidebar-grupo > .integra-sidebar-item {
+
+        animation: none;
+
+    }
+
+    /* ÍCONES */
+
     .integra-sidebar-item img,
     .integra-sidebar-item .integra-sidebar-icone {
+
         display: block;
 
         width: 25px;
@@ -509,22 +1228,36 @@
 
     .integra-sidebar-item span {
         font-size: 9px;
-        line-height: 1.1;
+
+        line-height: 1.15;
 
         white-space: normal;
+
         text-align: center;
+
+        overflow-wrap: anywhere;
     }
 
-    /* ITEM ATIVO */
+    /* =====================================
+       ITEM ATIVO MOBILE
+    ===================================== */
 
-    .integra-sidebar-item:hover,
-    .integra-sidebar-ativo {
+    .integra-sidebar-item:hover {
         background: transparent;
     }
 
-    .integra-sidebar-ativo {
+    .integra-sidebar-item.integra-sidebar-ativo {
+        border: none;
+
+        background: transparent;
+
         color: var(--sidebar-laranja);
+
         font-weight: 700;
+    }
+
+    .integra-sidebar-item:hover > span {
+        translate: none;
     }
 
     .integra-sidebar-ativo img {
@@ -538,7 +1271,9 @@
             brightness(102%);
     }
 
-    /* GRUPO FERRAMENTAS */
+    /* =====================================
+       GRUPO DE FERRAMENTAS
+    ===================================== */
 
     .integra-sidebar-grupo {
         display: flex;
@@ -546,7 +1281,9 @@
         flex: 1 1 0;
 
         width: auto;
+
         min-width: 0;
+
         height: 100%;
     }
 
@@ -557,12 +1294,28 @@
 
     .integra-sidebar-ferramentas
     .integra-ferramentas-desktop {
+
         display: none;
+
     }
 
     .integra-sidebar-ferramentas
     .integra-ferramentas-mobile {
+
         display: block;
+
+    }
+
+    .integra-sidebar-ferramentas.integra-ferramentas-aberto {
+        background: rgba(
+            255, 255, 255, 0.08
+        );
+    }
+
+    .integra-sidebar-ferramentas.integra-ferramentas-aberto.integra-sidebar-ativo {
+        background: rgba(
+            255, 255, 255, 0.08
+        );
     }
 
     .integra-sidebar-seta {
@@ -570,7 +1323,7 @@
     }
 
     /* =====================================
-       SUBMENU EXPANSÍVEL MOBILE
+       SUBMENU MOBILE
     ===================================== */
 
     .integra-sidebar-submenu {
@@ -583,87 +1336,157 @@
         z-index: 1001;
 
         display: flex;
+
         flex-direction: column;
 
         gap: 6px;
 
         width: auto;
+
         max-height: 60vh;
         max-height: 60dvh;
 
         margin: 0;
-        padding: 15px;
+
+        padding: 16px;
 
         overflow-y: auto;
         overflow-x: hidden;
 
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 12px;
+        border: 1px solid rgba(
+            255, 255, 255, 0.15
+        );
 
-        background: var(--sidebar-azul);
+        border-radius: 14px;
+
+        background: linear-gradient(
+            145deg,
+            #1d2e68,
+            #233975
+        );
 
         box-shadow:
-            0 -5px 25px rgba(0, 0, 0, 0.20);
+            0 -5px 25px
+            rgba(0, 0, 0, 0.20);
 
-        animation: integra-submenu-mobile 0.2s ease;
+        animation:
+            integraSubmenuMobile
+            0.3s
+            var(--sidebar-curva);
     }
 
-    @keyframes integra-submenu-mobile {
+    @keyframes integraSubmenuMobile {
+
         from {
             opacity: 0;
-            transform: translateY(12px);
+
+            transform:
+                translateY(10px)
+                scale(0.985);
         }
 
         to {
             opacity: 1;
-            transform: translateY(0);
+
+            transform:
+                translateY(0)
+                scale(1);
         }
+
     }
 
-    /* CABEÇALHO DO SUBMENU */
+    /* =====================================
+       CABEÇALHO DO SUBMENU MOBILE
+    ===================================== */
 
     .integra-submenu-topo {
         display: flex;
+
         align-items: center;
         justify-content: space-between;
 
         gap: 12px;
 
-        margin-bottom: 5px;
-        padding: 0 0 12px;
+        margin-bottom: 7px;
 
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 13px;
+
+        border-bottom: 1px solid rgba(
+            255, 255, 255, 0.14
+        );
+    }
+
+    .integra-submenu-titulo {
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        min-width: 0;
+    }
+
+    .integra-submenu-titulo > svg {
+        flex-shrink: 0;
+
+        color: var(--sidebar-laranja);
     }
 
     .integra-submenu-topo strong {
         color: #ffffff;
+
         font-size: 15px;
         font-weight: 600;
     }
 
+    /* FECHAR SUBMENU */
+
     .integra-submenu-topo button {
         display: flex;
+
         align-items: center;
         justify-content: center;
 
-        width: 30px;
-        height: 30px;
+        flex-shrink: 0;
+
+        width: 32px;
+        height: 32px;
 
         padding: 0;
 
         border: none;
-        border-radius: 5px;
+        border-radius: 7px;
 
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(
+            255, 255, 255, 0.09
+        );
+
         color: #ffffff;
 
         cursor: pointer;
+
+        transition:
+            background 0.25s ease,
+            transform 0.25s ease;
     }
 
-    /* LINKS DAS FERRAMENTAS */
+    .integra-submenu-topo button:hover {
+        background: rgba(
+            255, 255, 255, 0.16
+        );
+    }
+
+    .integra-submenu-topo button:active {
+        transform: scale(0.95);
+    }
+
+    /* =====================================
+       LINKS DO SUBMENU MOBILE
+    ===================================== */
 
     .integra-sidebar-subitem {
         display: flex;
+
         align-items: center;
 
         gap: 13px;
@@ -672,17 +1495,17 @@
 
         padding: 12px;
 
-        border-radius: 7px;
+        border-radius: 8px;
 
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .integra-sidebar-subitem > svg {
-        width: 23px;
-        height: 23px;
+        width: 22px;
+        height: 22px;
     }
 
-    /* ESCONDER SAIR NO MENU MOBILE */
+    /* ESCONDER SAIR NO MOBILE */
 
     .integra-sidebar-sair {
         display: none;
@@ -700,8 +1523,13 @@
         height: 62px;
     }
 
+    .integra-sidebar-item {
+        gap: 3px;
+    }
+
     .integra-sidebar-item img,
     .integra-sidebar-item .integra-sidebar-icone {
+
         width: 23px;
         height: 23px;
     }
@@ -719,7 +1547,64 @@
     }
 
     .integra-sidebar-subitem {
-        font-size: 13px;
+        font-size: 12px;
+    }
+
+}
+
+/* =========================================
+   DISPOSITIVOS SEM MOUSE
+========================================= */
+
+@media (hover: none) {
+
+    .integra-sidebar-item:hover img,
+    .integra-sidebar-item:hover .integra-sidebar-icone,
+    .integra-sidebar-subitem:hover > svg,
+    .integra-sidebar-marca-link:hover .integra-sidebar-logo,
+    .integra-sidebar-logout:hover img {
+
+        transform: none;
+
+    }
+
+    .integra-sidebar-item:hover > span {
+        translate: none;
+    }
+
+}
+
+/* =========================================
+   ACESSIBILIDADE
+   REDUÇÃO DE MOVIMENTOS
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .integra-sidebar *,
+    .integra-sidebar *::before,
+    .integra-sidebar *::after {
+
+        animation: none !important;
+
+        transition: none !important;
+
+        scroll-behavior: auto !important;
+
+    }
+
+    .integra-sidebar-item:hover img,
+    .integra-sidebar-item:hover .integra-sidebar-icone,
+    .integra-sidebar-subitem:hover > svg,
+    .integra-sidebar-marca-link:hover .integra-sidebar-logo,
+    .integra-sidebar-logout:hover img {
+
+        transform: none !important;
+
+    }
+
+    .integra-sidebar-item:hover > span {
+        translate: none !important;
     }
 
 }

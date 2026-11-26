@@ -43,8 +43,69 @@ public partial class IntegraCertaconContext : DbContext
     public virtual DbSet<ResumoInteligente> ResumoInteligentes { get; set; }
 
     public virtual DbSet<UsoInteligenciaArtificial> UsoInteligenciaArtificiais { get; set; }
+    public virtual DbSet<RecuperacaoSenha> RecuperacaoSenhas { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // =========================================
+        // RECUPERAÇÃO DE SENHA
+        // =========================================
+
+        modelBuilder.Entity<RecuperacaoSenha>(entity =>
+        {
+            entity.HasKey(e => e.RecuperacaoSenhaId)
+                .HasName("PK_RECUPERACAO_SENHA");
+
+            entity.ToTable("RECUPERACAO_SENHA");
+
+            entity.HasIndex(
+                e => e.TokenHash,
+                "UQ_RECUPERACAO_SENHA_TOKEN"
+            )
+            .IsUnique();
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.UsuarioId,
+                    e.DataCriacao
+                },
+                "IX_RECUPERACAO_SENHA_USUARIO"
+            );
+
+            entity.Property(e => e.RecuperacaoSenhaId)
+                .HasColumnName("RecuperacaoSenha_Id")
+                .HasDefaultValueSql("(newsequentialid())");
+
+            entity.Property(e => e.UsuarioId)
+                .HasColumnName("Usuario_Id");
+
+            entity.Property(e => e.TokenHash)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .IsRequired();
+
+            entity.Property(e => e.DataCriacao)
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.Property(e => e.DataExpiracao)
+                .HasColumnType("datetime2");
+
+            entity.Property(e => e.DataUtilizacao)
+                .HasColumnType("datetime2");
+
+            entity.Property(e => e.Revogado)
+                .HasDefaultValue(false);
+
+            entity.HasOne(d => d.Usuario)
+                .WithMany(p => p.RecuperacaoSenhas)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_RECUPERACAO_SENHA_USUARIO"
+                );
+        });
         modelBuilder.Entity<UsoInteligenciaArtificial>(entity =>
         {
             entity.HasKey(e => e.UsoInteligenciaArtificialId)

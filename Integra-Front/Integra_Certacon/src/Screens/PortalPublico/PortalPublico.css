@@ -3,6 +3,12 @@
 ========================================= */
 
 .pp-pagina {
+    --pp-azul: #1d2e68;
+    --pp-laranja: #ff8500;
+
+    display: flex;
+    flex-direction: column;
+
     min-height: 100vh;
 
     background: #f4f7fb;
@@ -14,6 +20,50 @@
 
 .pp-pagina * {
     box-sizing: border-box;
+}
+
+/* =========================================
+   ANIMAÇÕES
+========================================= */
+
+@keyframes ppFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+@keyframes ppFadeInUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+@keyframes ppFadeInDown {
+
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
 }
 
 /* =========================================
@@ -30,8 +80,10 @@
 
     padding: 16px max(24px, calc((100% - 1160px) / 2));
 
-    background: #1d2e68;
+    background: var(--pp-azul);
     color: #ffffff;
+
+    animation: ppFadeInDown 0.5s ease-out both;
 }
 
 .pp-header img {
@@ -42,6 +94,12 @@
     max-height: 65px;
 
     object-fit: contain;
+
+    transition: transform 0.25s ease;
+}
+
+.pp-header > a:hover img {
+    transform: scale(1.035);
 }
 
 .pp-header nav {
@@ -57,10 +115,12 @@
 
     text-decoration: none;
     font-size: 14px;
+
+    transition: color 0.2s ease;
 }
 
-.pp-header a:hover {
-    text-decoration: underline;
+.pp-header nav > a:not(.pp-cta):hover {
+    color: #ffb45e;
 }
 
 .pp-header .pp-cta {
@@ -69,9 +129,23 @@
     border-radius: 7px;
 
     background: #ffffff;
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.pp-header .pp-cta:hover {
+    transform: translateY(-2px);
+
+    background: #f3f6fc;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* =========================================
@@ -79,10 +153,12 @@
 ========================================= */
 
 .pp-main {
+    flex: 1;
+
     width: 100%;
     max-width: 1208px;
 
-    margin: auto;
+    margin: 0 auto;
     padding: 32px 24px 48px;
 }
 
@@ -97,16 +173,24 @@
 
     border-radius: 16px;
 
-    background: #1d2e68;
+    background: var(--pp-azul);
     color: #ffffff;
+
+    animation:
+        ppFadeInUp 0.65s ease-out 0.08s backwards;
 }
 
-.pp-hero span {
+.pp-hero > span {
+    display: inline-block;
+
     color: #ffb45e;
 
     font-size: 12px;
     letter-spacing: 2px;
     font-weight: bold;
+
+    animation:
+        ppFadeInUp 0.55s ease-out 0.15s backwards;
 }
 
 .pp-hero h1 {
@@ -116,12 +200,18 @@
 
     font-size: clamp(28px, 4vw, 46px);
     line-height: 1.16;
+
+    animation:
+        ppFadeInUp 0.6s ease-out 0.22s backwards;
 }
 
 .pp-hero p {
     max-width: 660px;
 
     color: #e4e8f4;
+
+    animation:
+        ppFadeInUp 0.6s ease-out 0.3s backwards;
 }
 
 .pp-acoes {
@@ -130,6 +220,9 @@
 
     gap: 12px;
     margin-top: 24px;
+
+    animation:
+        ppFadeInUp 0.6s ease-out 0.38s backwards;
 }
 
 .pp-acoes a,
@@ -143,13 +236,16 @@
     border: 1px solid transparent;
     border-radius: 7px;
 
-    background: #ff8500;
+    background: var(--pp-laranja);
     color: #17234c;
 
     text-decoration: none;
     font-weight: bold;
 
-    transition: 0.2s;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .pp-acoes a + a {
@@ -161,7 +257,19 @@
 
 .pp-acoes a:hover,
 .pp-convite a:hover {
-    opacity: 0.85;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.pp-acoes a:first-child:hover,
+.pp-convite a:hover {
+    background: #ff9d2e;
+}
+
+.pp-acoes a + a:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* =========================================
@@ -176,12 +284,15 @@
 
 .pp-secao-titulo {
     margin-bottom: 20px;
+
+    animation:
+        ppFadeInUp 0.6s ease-out 0.2s backwards;
 }
 
 .pp-secao-titulo h2 {
     margin: 0 0 6px;
 
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-size: 25px;
     font-weight: 700;
@@ -195,17 +306,22 @@
     font-size: 14px;
 }
 
-/* GRID DAS FERRAMENTAS */
+/* =========================================
+   GRID DAS FERRAMENTAS
+========================================= */
 
 .pp-ferramentas-grid {
     display: grid;
 
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
 
     gap: 18px;
 }
 
-/* CARD DA FERRAMENTA */
+/* =========================================
+   CARD DA FERRAMENTA
+========================================= */
 
 .pp-ferramenta-card {
     display: flex;
@@ -226,22 +342,43 @@
 
     overflow-wrap: anywhere;
 
+    animation:
+        ppFadeInUp 0.65s ease-out backwards;
+
     transition:
-        box-shadow 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
+        box-shadow 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
 }
 
+/* ANIMAÇÃO SEQUENCIAL */
+
+.pp-ferramenta-card:nth-child(1) {
+    animation-delay: 0.25s;
+}
+
+.pp-ferramenta-card:nth-child(2) {
+    animation-delay: 0.35s;
+}
+
+.pp-ferramenta-card:nth-child(3) {
+    animation-delay: 0.45s;
+}
+
+/* EFEITO HOVER */
+
 .pp-ferramenta-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
 
     border-color: #bac9e3;
 
     box-shadow:
-        0 5px 18px rgba(29, 46, 104, 0.10);
+        0 8px 24px rgba(29, 46, 104, 0.12);
 }
 
-/* ÍCONE */
+/* =========================================
+   ÍCONE DA FERRAMENTA
+========================================= */
 
 .pp-ferramenta-icone {
     display: flex;
@@ -256,15 +393,29 @@
     border-radius: 10px;
 
     background: #e6edf9;
-    color: #1d2e68;
+    color: var(--pp-azul);
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
-/* TÍTULO E DESCRIÇÃO */
+.pp-ferramenta-card:hover .pp-ferramenta-icone {
+    background: var(--pp-azul);
+    color: #ffffff;
+
+    transform: scale(1.06);
+}
+
+/* =========================================
+   TÍTULO E DESCRIÇÃO
+========================================= */
 
 .pp-ferramenta-card h3 {
     margin: 0;
 
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-size: 20px;
     font-weight: 700;
@@ -279,7 +430,9 @@
     line-height: 1.65;
 }
 
-/* LINK DA FERRAMENTA */
+/* =========================================
+   LINK DA FERRAMENTA
+========================================= */
 
 .pp-ferramenta-link {
     display: inline-flex;
@@ -289,7 +442,7 @@
 
     margin-top: auto;
 
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-size: 14px;
     font-weight: 700;
@@ -302,7 +455,7 @@
 .pp-ferramenta-link svg {
     flex-shrink: 0;
 
-    transition: transform 0.2s ease;
+    transition: transform 0.25s ease;
 }
 
 .pp-ferramenta-link:hover {
@@ -310,7 +463,7 @@
 }
 
 .pp-ferramenta-link:hover svg {
-    transform: translateX(4px);
+    transform: translateX(5px);
 }
 
 /* =========================================
@@ -319,13 +472,16 @@
 
 .pp-lista {
     scroll-margin-top: 20px;
+
+    animation:
+        ppFadeInUp 0.6s ease-out 0.3s backwards;
 }
 
 .pp-lista h2,
 .pp-convite h2 {
     margin: 0;
 
-    color: #1d2e68;
+    color: var(--pp-azul);
 }
 
 .pp-lista p {
@@ -346,7 +502,7 @@
 
     gap: 6px;
 
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-size: 13px;
     font-weight: 600;
@@ -366,6 +522,18 @@
     color: #252525;
 
     font: inherit;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.pp-filtros input:focus,
+.pp-filtros select:focus {
+    border-color: var(--pp-azul);
+
+    box-shadow:
+        0 0 0 3px rgba(29, 46, 104, 0.08);
 }
 
 /* =========================================
@@ -375,7 +543,8 @@
 .pp-grid {
     display: grid;
 
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
 
     gap: 18px;
 }
@@ -401,13 +570,55 @@
 
     gap: 10px;
 
-    transition: 0.2s;
+    animation:
+        ppFadeInUp 0.6s ease-out backwards;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+/* =========================================
+   ANIMAÇÃO SEQUENCIAL DOS ARTIGOS
+========================================= */
+
+.pp-card:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+.pp-card:nth-child(2) {
+    animation-delay: 0.16s;
+}
+
+.pp-card:nth-child(3) {
+    animation-delay: 0.24s;
+}
+
+.pp-card:nth-child(4) {
+    animation-delay: 0.32s;
+}
+
+.pp-card:nth-child(5) {
+    animation-delay: 0.40s;
+}
+
+.pp-card:nth-child(6) {
+    animation-delay: 0.48s;
 }
 
 .pp-card:hover {
+    transform: translateY(-4px);
+
+    border-color: #bac9e3;
+
     box-shadow:
-        0 4px 15px rgba(29, 46, 104, 0.10);
+        0 7px 20px rgba(29, 46, 104, 0.12);
 }
+
+/* =========================================
+   TEMA DO ARTIGO
+========================================= */
 
 .pp-tema {
     display: inline-block;
@@ -417,7 +628,7 @@
     border-radius: 6px;
 
     background: #e6edf9;
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-size: 12px;
     font-weight: bold;
@@ -426,7 +637,7 @@
 .pp-card h3 {
     margin: 0;
 
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-size: 19px;
 }
@@ -452,15 +663,17 @@
 
 .pp-card a,
 .pp-anexo {
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-weight: bold;
     text-decoration: none;
+
+    transition: color 0.2s ease;
 }
 
 .pp-card a:hover,
 .pp-anexo:hover {
-    text-decoration: underline;
+    color: #b85e00;
 }
 
 /* =========================================
@@ -476,6 +689,8 @@
 
     gap: 16px;
     margin: 24px 0;
+
+    animation: ppFadeIn 0.5s ease-out;
 }
 
 .pp-pagina button {
@@ -485,10 +700,24 @@
     border-radius: 6px;
 
     background: #ffffff;
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font: inherit;
+
     cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.pp-pagina button:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    background: #e8eef9;
+
+    border-color: var(--pp-azul);
 }
 
 .pp-pagina button:disabled {
@@ -503,10 +732,18 @@
 
 .pp-voltar {
     margin-bottom: 18px;
+
+    animation:
+        ppFadeInUp 0.4s ease-out backwards;
+}
+
+.pp-detalhe {
+    animation:
+        ppFadeInUp 0.65s ease-out backwards;
 }
 
 .pp-detalhe h1 {
-    color: #1d2e68;
+    color: var(--pp-azul);
 
     font-size: clamp(24px, 4vw, 36px);
     line-height: 1.2;
@@ -543,6 +780,17 @@
     background: #e6edf9;
 
     overflow-wrap: anywhere;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.pp-anexo:hover {
+    transform: translateY(-2px);
+
+    background: #dbe5f7;
 }
 
 /* =========================================
@@ -556,6 +804,8 @@
 
     background: #ffffff;
     color: #9e3030;
+
+    animation: ppFadeIn 0.4s ease-out;
 }
 
 .pp-erro button {
@@ -578,6 +828,9 @@
     padding: 26px 0;
 
     border-top: 1px solid #d9e1ee;
+
+    animation:
+        ppFadeInUp 0.65s ease-out 0.2s backwards;
 }
 
 .pp-convite p {
@@ -591,12 +844,85 @@
 ========================================= */
 
 .pp-footer {
-    padding: 20px;
+    width: 100%;
 
-    background: #1d2e68;
+    margin-top: auto;
+
+    padding: 28px 24px;
+
+    border-top: 3px solid var(--pp-laranja);
+
+    background: var(--pp-azul);
     color: #ffffff;
 
-    text-align: center;
+    font-size: 13px;
+
+    animation: ppFadeIn 0.65s ease-out;
+}
+
+/* CONTEÚDO DO RODAPÉ */
+
+.pp-footer-conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+
+    gap: 25px;
+
+    width: 100%;
+    max-width: 1160px;
+
+    margin: 0 auto;
+}
+
+/* LOGOTIPO DO RODAPÉ */
+
+.pp-footer-marca {
+    display: inline-flex;
+    align-items: center;
+
+    text-decoration: none;
+}
+
+.pp-footer-marca img {
+    display: block;
+
+    width: 185px;
+    max-width: 100%;
+    max-height: 75px;
+
+    object-fit: contain;
+
+    transition: transform 0.25s ease;
+}
+
+.pp-footer-marca:hover img {
+    transform: scale(1.04);
+}
+
+/* TEXTO DO RODAPÉ */
+
+.pp-footer-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    gap: 4px;
+
+    text-align: right;
+}
+
+.pp-footer-texto strong {
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.pp-footer-texto span {
+    color: #d5daea;
 
     font-size: 13px;
 }
@@ -609,24 +935,8 @@
 .pp-pagina button:focus-visible,
 .pp-pagina input:focus-visible,
 .pp-pagina select:focus-visible {
-    outline: 3px solid #ff8500;
+    outline: 3px solid var(--pp-laranja);
     outline-offset: 3px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-    .pp-pagina *,
-    .pp-pagina *::before,
-    .pp-pagina *::after {
-        animation: none;
-        transition: none;
-    }
-
-    .pp-ferramenta-card:hover,
-    .pp-ferramenta-link:hover svg {
-        transform: none;
-    }
-
 }
 
 /* =========================================
@@ -635,8 +945,10 @@
 
 @media (max-width: 850px) {
 
-    .pp-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .pp-grid,
+    .pp-ferramentas-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     .pp-header {
@@ -649,6 +961,14 @@
 
     .pp-ferramenta-card {
         padding: 20px;
+    }
+
+    .pp-footer {
+        padding: 24px;
+    }
+
+    .pp-footer-marca img {
+        width: 165px;
     }
 
 }
@@ -698,7 +1018,8 @@
     .pp-grid,
     .pp-filtros,
     .pp-ferramentas-grid {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns:
+            minmax(0, 1fr);
     }
 
     .pp-card,
@@ -790,6 +1111,43 @@
         margin-left: 0;
     }
 
+    /* RODAPÉ MOBILE */
+
+    .pp-footer {
+        padding: 25px 16px;
+    }
+
+    .pp-footer-conteudo {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 14px;
+    }
+
+    .pp-footer-marca {
+        justify-content: center;
+    }
+
+    .pp-footer-marca img {
+        width: 155px;
+        max-height: 65px;
+    }
+
+    .pp-footer-texto {
+        align-items: center;
+
+        text-align: center;
+    }
+
+    .pp-footer-texto strong {
+        font-size: 14px;
+    }
+
+    .pp-footer-texto span {
+        font-size: 12px;
+    }
+
 }
 
 /* =========================================
@@ -836,27 +1194,27 @@
         font-size: 13px;
     }
 
-}
-/* =========================================
-   GRID ATUALIZADO DAS FERRAMENTAS FISCAIS
-========================================= */
-
-.pp-ferramentas-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-@media (max-width: 850px) {
-
-    .pp-ferramentas-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .pp-footer-marca img {
+        width: 140px;
     }
 
 }
 
-@media (max-width: 600px) {
+/* =========================================
+   ACESSIBILIDADE - REDUZIR MOVIMENTOS
+========================================= */
 
-    .pp-ferramentas-grid {
-        grid-template-columns: minmax(0, 1fr);
+@media (prefers-reduced-motion: reduce) {
+
+    .pp-pagina *,
+    .pp-pagina *::before,
+    .pp-pagina *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .pp-pagina *:hover {
+        transform: none !important;
     }
 
 }

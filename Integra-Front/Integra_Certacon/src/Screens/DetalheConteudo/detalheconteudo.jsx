@@ -1485,21 +1485,31 @@ function ResumoInteligente({ artigoId, token }) {
 
   return (
     <section className="detalhe-ia" aria-label="Resumo inteligente">
+
       <div className="detalhe-ia-topo">
+
         <div>
-          <h2><Sparkles size={21} aria-hidden="true" /> Resumo inteligente</h2>
-          <p>Entenda este artigo em linguagem simples. Disponível para conteúdos autorizados pela Certacon.</p>
+          <h2><Sparkles size={21} aria-hidden="true" /> Resumo inteligente
+          </h2>
+
+          <p>Entenda este artigo em linguagem simples. Disponível para conteúdos autorizados pela Certacon.
+
+          </p>
+
         </div>
+
         <button type="button" className="detalhe-ia-botao"
           onClick={gerarResumo} disabled={carregando} aria-expanded={aberto}>
           {carregando ? <LoaderCircle size={18} className="detalhe-favorito-loading" aria-hidden="true" />
             : aberto ? <X size={18} aria-hidden="true" /> : <Sparkles size={18} aria-hidden="true" />}
           {carregando ? "Gerando resumo..." : aberto ? "Ocultar resumo" : "Resumir com IA"}
         </button>
+
       </div>
       {carregando && <p className="detalhe-ia-info" role="status">Consultando a inteligência artificial...</p>}
       {erro && <p className="detalhe-ia-erro" role="alert">{erro}</p>}
       {aberto && resultado && (
+        
         <div className="detalhe-ia-resultado" aria-live="polite">
           <div className="detalhe-ia-meta">
             <span>{resultado.origem === "CACHE" ? "Resumo armazenado" : "Gerado com inteligência artificial"}</span>
@@ -1508,6 +1518,7 @@ function ResumoInteligente({ artigoId, token }) {
           <div className="detalhe-ia-texto">
             <RespostaIA texto={resultado.resumo} />
           </div>
+
           <div className="detalhe-ia-rodape">
             <button type="button" className="detalhe-botao-favorito" onClick={copiarResumo}>
               <Copy size={16} aria-hidden="true" /> {copiado ? "Copiado!" : "Copiar resumo"}

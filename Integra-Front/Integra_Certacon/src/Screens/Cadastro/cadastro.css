@@ -1,229 +1,1369 @@
-
-* {
-    box-sizing: border-box;
-}
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
 
 .cadastro {
     --azul-integra: #1d2e68;
     --laranja-integra: #ff8500;
+    --cad-verde: #21864e;
+    --cad-vermelho: #b43a3a;
+    --cad-borda: #dce3ee;
+    --cad-curva: cubic-bezier(0.22, 1, 0.36, 1);
 
     display: flex;
+
     width: 100%;
     min-height: 100vh;
+
     background: #f2f4f7;
-    font-family: Arial, sans-serif;
     color: #252525;
+
+    font-family: Arial, sans-serif;
 }
 
-/* Painel azul esquerdo */
+.cadastro * {
+    box-sizing: border-box;
+}
+
+.cadastro button,
+.cadastro input {
+    font-family: inherit;
+}
+
+/* =========================================
+   ANIMAÇÕES PRINCIPAIS
+========================================= */
+
+@keyframes cadastroEntrada {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+@keyframes cadastroEntradaLateral {
+
+    from {
+        opacity: 0;
+
+        transform: translateX(-15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+
+}
+
+@keyframes cadastroConfirmacao {
+
+    0% {
+        opacity: 0;
+
+        transform: scale(0.55);
+    }
+
+    70% {
+        opacity: 1;
+
+        transform: scale(1.15);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform: scale(1);
+    }
+
+}
+
+@keyframes cadastroGirar {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* =========================================
+   PAINEL AZUL ESQUERDO
+========================================= */
 
 .cadastro-apresentacao {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 29%;
-    min-height: 100vh;
-    padding: 3px 25px;
-    color: #fff;
-    background: var(--azul-integra);
-    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.16);
     position: relative;
+
     z-index: 1;
+
+    isolation: isolate;
+
+    display: flex;
+
+    flex-direction: column;
+
+    flex: 0 0 29%;
+
+    min-width: 0;
+    min-height: 100vh;
+
+    padding: 12px 25px 25px;
+
+    overflow: hidden;
+
+    color: #ffffff;
+
+    background:
+
+        radial-gradient(
+            ellipse at 85% 75%,
+            #304b94,
+            transparent 65%
+        ),
+
+        linear-gradient(
+            150deg,
+            #16244f,
+            #1d2e68 55%,
+            #243c7e
+        );
+
+    box-shadow:
+        8px 0 20px rgba(0, 0, 0, 0.16);
 }
 
-/* Livro e nome do portal */
+/* =========================================
+   FUNDO DIGITAL ORBIT
+========================================= */
+
+.cadastro-fundo-digital {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: -1;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+/* =========================================
+   ILUMINAÇÃO DO FUNDO
+========================================= */
+
+.cadastro-luz-digital {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        radial-gradient(
+            ellipse at 15% 15%,
+            rgba(102, 143, 242, 0.15),
+            transparent 55%
+        ),
+
+        radial-gradient(
+            ellipse at 85% 85%,
+            rgba(86, 125, 222, 0.18),
+            transparent 55%
+        );
+}
+
+/* =========================================
+   GRADE TECNOLÓGICA
+========================================= */
+
+.cadastro-grade-digital {
+    position: absolute;
+
+    inset: 0;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 38px 38px;
+
+    mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        #000
+    );
+}
+
+/* =========================================
+   CONTAINER DAS ÓRBITAS
+========================================= */
+
+.cadastro-orbitas {
+    position: absolute;
+
+    bottom: -125px;
+    right: -150px;
+
+    width: 450px;
+    height: 450px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0.75;
+}
+
+/* =========================================
+   ANÉIS ORBITAIS
+========================================= */
+
+.cadastro-orbita {
+    position: absolute;
+
+    border: 1px solid
+        rgba(169, 192, 255, 0.25);
+
+    border-radius: 50%;
+
+    animation:
+        cadastroOrbitar
+        25s
+        linear
+        infinite;
+}
+
+/* PRIMEIRA ÓRBITA */
+
+.cadastro-orbita-1 {
+    width: 420px;
+    height: 420px;
+
+    animation-duration: 34s;
+}
+
+/* SEGUNDA ÓRBITA */
+
+.cadastro-orbita-2 {
+    width: 330px;
+    height: 330px;
+
+    animation-duration: 26s;
+    animation-direction: reverse;
+}
+
+/* TERCEIRA ÓRBITA */
+
+.cadastro-orbita-3 {
+    width: 245px;
+    height: 245px;
+
+    border-style: dashed;
+
+    animation-duration: 22s;
+}
+
+/* QUARTA ÓRBITA */
+
+.cadastro-orbita-4 {
+    width: 160px;
+    height: 160px;
+
+    animation-duration: 16s;
+    animation-direction: reverse;
+}
+
+/* ROTAÇÃO CONTÍNUA */
+
+@keyframes cadastroOrbitar {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* =========================================
+   PARTÍCULAS ORBITAIS
+========================================= */
+
+.cadastro-particula,
+.cadastro-particula-secundaria {
+    position: absolute;
+
+    top: 50%;
+    right: -3px;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #ffb45e;
+
+    box-shadow:
+
+        0 0 8px #ff8500,
+
+        0 0 18px
+        rgba(255, 133, 0, 0.45);
+}
+
+.cadastro-particula-secundaria {
+    top: 0;
+    right: 50%;
+
+    width: 5px;
+    height: 5px;
+
+    background: #a9c0ff;
+
+    box-shadow:
+
+        0 0 10px
+        rgba(169, 192, 255, 0.7);
+}
+
+/* =========================================
+   NÚCLEO DIGITAL
+========================================= */
+
+.cadastro-nucleo {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100px;
+    height: 100px;
+
+    border: 1px solid
+        rgba(255, 133, 0, 0.35);
+
+    border-radius: 50%;
+
+    background: rgba(
+        41, 71, 141, 0.35
+    );
+
+    color: rgba(
+        255, 255, 255, 0.5
+    );
+
+    box-shadow:
+
+        0 0 0 12px
+        rgba(169, 192, 255, 0.025),
+
+        0 0 30px
+        rgba(255, 133, 0, 0.06);
+}
+
+/* =========================================
+   PONTOS DIGITAIS
+========================================= */
+
+.cadastro-pontos-digitais {
+    position: absolute;
+
+    inset: 0;
+}
+
+.cadastro-pontos-digitais > span {
+    position: absolute;
+
+    left: var(--ponto-x);
+    top: var(--ponto-y);
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #a9c0ff;
+
+    opacity: 0.3;
+
+    box-shadow:
+        0 0 8px rgba(169, 192, 255, 0.4);
+}
+
+/* =========================================
+   MARCA DO PORTAL
+========================================= */
 
 .cadastro-marca {
+    position: relative;
+
     display: flex;
+
     align-items: center;
     justify-content: flex-start;
+
     gap: 14px;
+
     min-height: 55px;
-    margin-bottom: 20px;
+
+    margin-bottom: 24px;
+
+    animation:
+
+        cadastroEntradaLateral
+        0.7s
+        var(--cad-curva)
+        backwards;
 }
 
 .cadastro-logo {
     display: block;
+
     width: 90px;
     height: 90px;
+
     flex-shrink: 0;
+
     object-fit: contain;
     object-position: center;
-    margin-top: 20px;
+
+    margin-top: 15px;
+
+    transition:
+        transform 0.35s ease;
+}
+
+.cadastro-logo:hover {
+    transform: scale(1.05);
 }
 
 .cadastro-marca-texto {
     display: flex;
+
     flex-direction: column;
+
     gap: 3px;
+
+    min-width: 0;
 }
 
 .cadastro-marca-texto h2 {
     margin: 0;
-    color: #fff;
+
+    color: #ffffff;
+
     font-size: 25px;
     font-weight: 400;
+
     line-height: 1.2;
 }
 
 .cadastro-marca-texto p {
     margin: 0;
+
     color: #aab5d3;
+
     font-size: 14px;
     font-weight: 400;
 }
 
-/* Texto principal */
+/* =========================================
+   TEXTO PRINCIPAL
+========================================= */
 
 .cadastro-texto {
+    position: relative;
+
     margin-bottom: 0;
+
+    animation:
+
+        cadastroEntradaLateral
+        0.8s
+        var(--cad-curva)
+        0.12s
+        backwards;
+}
+
+/* ETIQUETA DE BOAS-VINDAS */
+
+.cadastro-etiqueta {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+    color: #b8c8ec;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 1.6px;
+}
+
+.cadastro-etiqueta > span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--laranja-integra);
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(255, 133, 0, 0.12);
 }
 
 .cadastro-texto h1 {
     margin: 0;
-    font-size: clamp(22px, 1.8vw, 28px);
-    line-height: 1.2;
+
+    color: #ffffff;
+
+    font-size: clamp(
+        22px,
+        1.8vw,
+        28px
+    );
+
+    line-height: 1.35;
+
     font-weight: 700;
+
+    overflow-wrap: anywhere;
 }
 
 .cadastro-texto h1 span {
     color: var(--laranja-integra);
 }
 
-/* Vantagens */
+/* =========================================
+   VANTAGENS DO SISTEMA
+========================================= */
 
 .cadastro-vantagens {
+    position: relative;
+
     display: flex;
+
     flex-direction: column;
-    gap: 28px;
-    margin-top: 65px;
-    margin-left: 0;
+
+    gap: 15px;
+
+    margin-top: 40px;
 }
 
+/* =========================================
+   GLASS CARDS
+========================================= */
+
 .cadastro-vantagem {
+    position: relative;
+
     display: flex;
+
     align-items: center;
+
     gap: 12px;
+
+    min-width: 0;
+
+    padding: 13px;
+
+    overflow: hidden;
+
+    border: 1px solid
+
+        rgba(255, 255, 255, 0.11);
+
+    border-radius: 12px;
+
+    background: rgba(
+
+        255, 255, 255, 0.055
+
+    );
+
+    box-shadow:
+
+        0 4px 14px
+        rgba(0, 0, 0, 0.05);
+
+    animation:
+
+        cadastroEntrada
+        0.7s
+        var(--cad-curva)
+        backwards;
+
+    transition:
+
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
+
+/* ANIMAÇÃO SEQUENCIAL */
+
+.cadastro-vantagem:nth-child(1) {
+    animation-delay: 0.15s;
+}
+
+.cadastro-vantagem:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.cadastro-vantagem:nth-child(3) {
+    animation-delay: 0.35s;
+}
+
+.cadastro-vantagem:nth-child(4) {
+    animation-delay: 0.45s;
+}
+
+/* REFLEXO LUMINOSO */
+
+.cadastro-vantagem::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: -90%;
+
+    width: 50%;
+
+    transform: skewX(-25deg);
+
+    background: linear-gradient(
+
+        90deg,
+
+        transparent,
+
+        rgba(255, 255, 255, 0.055),
+
+        transparent
+
+    );
+
+    transition:
+        left 0.75s ease;
+
+    pointer-events: none;
+}
+
+.cadastro-vantagem:hover::before {
+    left: 140%;
+}
+
+.cadastro-vantagem:hover {
+    border-color:
+
+        rgba(255, 133, 0, 0.45);
+
+    background:
+
+        rgba(255, 255, 255, 0.1);
+
+    box-shadow:
+
+        0 5px 20px
+        rgba(0, 0, 0, 0.08);
+}
+
+.cadastro-vantagem > div:last-child {
+    min-width: 0;
+}
+
+/* =========================================
+   ÍCONES DAS VANTAGENS
+========================================= */
 
 .cadastro-icone {
     display: flex;
+
     align-items: center;
     justify-content: center;
-    flex: 0 0 65px;
-    width: 65px;
-    height: 65px;
-    border-radius: 7px;
-    background: #293f8b;
+
+    flex: 0 0 58px;
+
+    width: 58px;
+    height: 58px;
+
+    border: 1px solid
+
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+
+        145deg,
+
+        #38549c,
+
+        #293f8b
+
+    );
+
+    transition:
+
+        background 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 .cadastro-icone img {
-    width: 42px;
-    height: 42px;
+    width: 37px;
+    height: 37px;
+
     object-fit: contain;
+
+    transition:
+        transform 0.3s ease;
+}
+
+.cadastro-vantagem:hover .cadastro-icone {
+    box-shadow:
+
+        0 0 16px
+        rgba(255, 133, 0, 0.12);
+}
+
+.cadastro-vantagem:hover .cadastro-icone img {
+    transform: scale(1.08);
 }
 
 .cadastro-vantagem h3 {
-    margin: 0 0 4px;
-    color: var(--laranja-integra);
-    font-size: 19px;
+    margin: 0 0 5px;
+
+    color: #ffb45e;
+
+    font-size: 16px;
     font-weight: 500;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
 }
 
 .cadastro-vantagem p {
     margin: 0;
-    color: #c8cfe2;
-    font-size: 13px;
-    line-height: 1.35;
+
+    color: #d5daea;
+
+    font-size: 12px;
+
+    line-height: 1.5;
 }
 
-/* Área do formulário */
+/* =========================================
+   RODAPÉ DO PAINEL AZUL
+========================================= */
+
+.cadastro-painel-rodape {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: auto;
+
+    padding-top: 42px;
+
+    color: #b8c8ec;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.cadastro-status-digital {
+    flex-shrink: 0;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #ffb45e;
+
+    box-shadow:
+
+        0 0 8px
+        rgba(255, 133, 0, 0.5);
+}
+
+/* =========================================
+   ÁREA DO FORMULÁRIO
+========================================= */
 
 .cadastro-area {
     display: flex;
+
     flex: 1;
+
     flex-direction: column;
+
     min-width: 0;
     min-height: 100vh;
-    padding: 14px 10px 18px 36px;
+
+    padding: 18px 24px 24px;
+
+    background: linear-gradient(
+
+        145deg,
+
+        #f2f4f7,
+
+        #f6f8fc
+
+    );
 }
+
+/* =========================================
+   TOPO - JÁ TEM UMA CONTA?
+========================================= */
 
 .cadastro-topo {
     display: flex;
+
     justify-content: flex-end;
     align-items: center;
+
     gap: 14px;
-    min-height: 25px;
-    margin-bottom: 8px;
+
+    min-height: 30px;
+
+    margin-bottom: 13px;
+
+    color: #68758a;
+
     font-size: 12px;
-    color: #555;
 }
 
 .cadastro-botao-entrar {
-    padding: 4px 9px;
-    border: 2px solid var(--laranja-integra);
-    border-radius: 4px;
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 7px 12px;
+
+    border: 1px solid var(--laranja-integra);
+
+    border-radius: 6px;
+
     background: transparent;
-    color: var(--laranja-integra);
+    color: #b85e00;
+
     font-size: 12px;
+    font-weight: 600;
+
     cursor: pointer;
+
+    transition:
+
+        background 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
 }
 
-.cadastro-botao-entrar:hover {
+.cadastro-botao-entrar:hover:not(:disabled) {
     background: var(--laranja-integra);
-    color: #fff;
+
+    color: #17234c;
 }
+
+.cadastro-botao-entrar svg {
+    transition:
+        transform 0.25s ease;
+}
+
+.cadastro-botao-entrar:hover:not(:disabled) svg {
+    transform: translateX(3px);
+}
+
+/* =========================================
+   CARTÃO PRINCIPAL
+========================================= */
 
 .cadastro-cartao {
     width: 100%;
+
     flex: 1;
+
     min-width: 0;
-    padding: 20px 20px 13px;
-    border-radius: 6px;
-    background: #fff;
+
+    padding: 25px;
+
+    border: 1px solid var(--cad-borda);
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    box-shadow:
+
+        0 5px 25px
+        rgba(29, 46, 104, 0.04);
+
+    animation:
+
+        cadastroEntrada
+        0.55s
+        var(--cad-curva);
 }
 
-/* Cabeçalho do cadastro */
+/* =========================================
+   CABEÇALHO DO CADASTRO
+========================================= */
 
 .cadastro-cabecalho {
     display: flex;
+
     align-items: center;
+
     gap: 14px;
-    padding-bottom: 15px;
+
+    padding-bottom: 20px;
+
     border-bottom: 1px solid #e5e5e5;
 }
 
+.cadastro-cabecalho > div:last-child {
+    min-width: 0;
+}
+
+/* =========================================
+   AVATAR DO CADASTRO
+========================================= */
+
 .cadastro-avatar {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     flex-shrink: 0;
+
+    width: 68px;
+    height: 68px;
+
+    border: 1px solid #ffe1c0;
+
+    border-radius: 15px;
+
+    background: linear-gradient(
+
+        145deg,
+
+        #fff6eb,
+
+        #ffebd5
+
+    );
+
+    animation:
+
+        cadastroConfirmacao
+        0.6s
+        var(--cad-curva)
+        backwards;
 }
 
 .cadastro-avatar img {
     display: block;
-    width: 60px;
-    height: 60px;
+
+    width: 48px;
+    height: 48px;
+
     object-fit: contain;
 }
 
-/* Título principal */
+/* =========================================
+   TÍTULO PRINCIPAL
+========================================= */
 
 .cadastro .cadastro-cartao .cadastro-cabecalho h2 {
     margin: 0;
-    color: var(--laranja-integra);
-    font-size: 36px;
+
+    color: var(--azul-integra);
+
+    font-size: 34px;
     font-weight: 700;
+
     line-height: 1.2;
 }
 
 .cadastro-cabecalho p {
-    margin: 6px 0 0;
-    color: #555;
+    margin: 7px 0 0;
+
+    color: #68758a;
+
     font-size: 13px;
+
     line-height: 1.5;
 }
 
-/* Seções */
+/* =========================================
+   SMART PROGRESS
+========================================= */
+
+.cadastro-progresso-painel {
+    margin: 20px 0 25px;
+
+    padding: 18px;
+
+    border: 1px solid #dce5f3;
+    border-radius: 11px;
+
+    background: linear-gradient(
+
+        120deg,
+
+        #f7f9fd,
+
+        #eef3fb
+
+    );
+
+    animation:
+
+        cadastroEntrada
+        0.6s
+        var(--cad-curva)
+        0.12s
+        backwards;
+
+    transition:
+
+        background 0.45s ease,
+        border-color 0.45s ease;
+}
+
+/* PROGRESSO COMPLETO */
+
+.cadastro-progresso-completo {
+    border-color: #b7ddc6;
+
+    background: linear-gradient(
+
+        120deg,
+
+        #f5fbf7,
+
+        #eaf6ee
+
+    );
+}
+
+/* =========================================
+   CABEÇALHO DO PROGRESSO
+========================================= */
+
+.cadastro-progresso-topo {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.cadastro-progresso-topo h3 {
+    margin: 0;
+
+    color: var(--azul-integra);
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.cadastro-progresso-topo p {
+    margin: 5px 0 0;
+
+    color: #68758a;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+/* =========================================
+   PORCENTAGEM
+========================================= */
+
+.cadastro-progresso-percentual {
+    flex-shrink: 0;
+
+    color: var(--azul-integra);
+
+    font-size: 27px;
+    font-weight: 700;
+
+    font-variant-numeric: tabular-nums;
+
+    transition:
+        color 0.3s ease;
+}
+
+.cadastro-progresso-percentual small {
+    font-size: 14px;
+}
+
+.cadastro-progresso-completo
+.cadastro-progresso-percentual {
+
+    color: var(--cad-verde);
+}
+
+/* =========================================
+   BARRA DE PROGRESSO ANIMADA
+========================================= */
+
+.cadastro-progresso-barra {
+    position: relative;
+
+    width: 100%;
+    height: 7px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #dfe7f4;
+}
+
+.cadastro-progresso-barra > span {
+    position: relative;
+
+    display: block;
+
+    height: 100%;
+
+    overflow: hidden;
+
+    border-radius: inherit;
+
+    background: linear-gradient(
+
+        90deg,
+
+        #1d2e68,
+
+        #4264b9,
+
+        #ff8500
+
+    );
+
+    transition:
+
+        width 0.65s var(--cad-curva),
+        background 0.4s ease;
+}
+
+/* REFLEXO DA BARRA */
+
+.cadastro-progresso-barra > span::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background: linear-gradient(
+
+        180deg,
+
+        rgba(255, 255, 255, 0.22),
+
+        transparent
+
+    );
+}
+
+.cadastro-progresso-completo
+.cadastro-progresso-barra {
+
+    background: #d4e9da;
+}
+
+.cadastro-progresso-completo
+.cadastro-progresso-barra > span {
+
+    background: linear-gradient(
+
+        90deg,
+
+        #21864e,
+
+        #52b77a
+
+    );
+}
+
+/* =========================================
+   ETAPAS DO PREENCHIMENTO
+========================================= */
+
+.cadastro-progresso-etapas {
+    display: grid;
+
+    grid-template-columns:
+
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 18px;
+}
+
+.cadastro-progresso-etapa {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+/* ÍCONE DA ETAPA */
+
+.cadastro-etapa-icone {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid #d5dfef;
+
+    border-radius: 50%;
+
+    background: #e4ebf8;
+    color: var(--azul-integra);
+
+    transition:
+
+        background 0.35s ease,
+        border-color 0.35s ease,
+        color 0.35s ease;
+}
+
+/* ETAPA PREENCHIDA */
+
+.cadastro-etapa-concluida
+.cadastro-etapa-icone {
+
+    border-color: #b8ddc5;
+
+    background: #dff3e6;
+
+    color: var(--cad-verde);
+}
+
+.cadastro-etapa-concluida
+.cadastro-etapa-icone svg {
+
+    animation:
+
+        cadastroConfirmacao
+        0.4s
+        var(--cad-curva);
+}
+
+/* TEXTO DA ETAPA */
+
+.cadastro-etapa-texto {
+    display: flex;
+
+    flex: 1;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    min-width: 0;
+}
+
+.cadastro-etapa-texto strong {
+    color: var(--azul-integra);
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+.cadastro-etapa-texto small {
+    color: #68758a;
+
+    font-size: 10px;
+
+    line-height: 1.4;
+}
+
+.cadastro-etapa-concluida
+.cadastro-etapa-texto small {
+
+    color: var(--cad-verde);
+}
+
+.cadastro-etapa-seta {
+    flex-shrink: 0;
+
+    color: #b9c5da;
+}
+
+.cadastro-etapa-concluida
+.cadastro-etapa-seta {
+
+    color: var(--cad-verde);
+}
+
+/* =========================================
+   SEÇÕES DO FORMULÁRIO
+========================================= */
 
 .cadastro-secao {
     margin-top: 12px;
@@ -231,312 +1371,1186 @@
 
 .cadastro-titulo-secao {
     display: flex;
+
     align-items: center;
-    gap: 6px;
-    margin-bottom: 25px;
+
+    gap: 9px;
+
+    margin-bottom: 23px;
 }
 
 .cadastro-mini-icone {
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
+
     width: 33px;
     height: 33px;
-    border-radius: 50%;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
     background: #fff0e2;
+
     color: var(--laranja-integra);
-    font-size: 12px;
+
+    object-fit: contain;
 }
 
 .cadastro-titulo-secao h3 {
+    position: relative;
+
     margin: 0;
-    color: var(--laranja-integra);
-    font-size: 20px;
-    font-weight: 500;
+
+    color: var(--azul-integra);
+
+    font-size: 19px;
+    font-weight: 600;
 }
+
+.cadastro-secao-check {
+    flex-shrink: 0;
+
+    color: var(--cad-verde);
+
+    animation:
+
+        cadastroConfirmacao
+        0.4s
+        var(--cad-curva);
+}
+
+/* =========================================
+   GRID DOS CAMPOS
+========================================= */
 
 .cadastro-grade {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 48px;
-    row-gap: 25px;
+
+    grid-template-columns:
+
+        repeat(2, minmax(0, 1fr));
+
+    column-gap: 32px;
+
+    row-gap: 22px;
 }
+
+/* =========================================
+   CAMPOS
+========================================= */
 
 .cadastro-campo {
     display: flex;
+
     flex-direction: column;
+
     min-width: 0;
 }
 
 .cadastro-campo label {
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+
+    color: #354052;
+
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
+
+    transition:
+        color 0.25s ease;
 }
 
-/* Inputs simples */
-
-.cadastro-campo > input {
-    width: 100%;
-    min-width: 0;
-    height: 40px;
-    padding: 0 10px;
-    border: 1px solid #d2d2d2;
-    border-radius: 4px;
-    outline: none;
-    color: #333;
-    background: #fff;
-    font-family: inherit;
-    font-size: 13px;
-}
-
-.cadastro-campo > input::placeholder {
-    color: #aaa;
-}
-
-.cadastro-campo > input:focus {
-    border-color: var(--laranja-integra);
-    box-shadow: 0 0 0 2px rgba(255, 133, 0, 0.1);
+.cadastro-campo:focus-within label {
+    color: var(--azul-integra);
 }
 
 .cadastro-campo-largo {
     grid-column: 1 / -1;
 }
 
-/* Inputs com ícones */
+/* =========================================
+   INPUTS SIMPLES
+========================================= */
+
+.cadastro-campo > input {
+    width: 100%;
+
+    min-width: 0;
+    height: 44px;
+
+    padding: 0 12px;
+
+    border: 1px solid #d2d9e4;
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+    color: #333333;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition:
+
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.cadastro-campo > input::placeholder {
+    color: #929eb0;
+}
+
+.cadastro-campo > input:focus {
+    border-color: var(--azul-integra);
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(29, 46, 104, 0.07);
+}
+
+/* =========================================
+   INPUTS COM ÍCONES
+========================================= */
 
 .cadastro-input-icone {
     display: flex;
+
     align-items: center;
+
     width: 100%;
-    height: 40px;
+    height: 44px;
+
     padding: 0 12px;
-    border: 1px solid #d2d2d2;
-    border-radius: 4px;
-    background: #fff;
+
+    border: 1px solid #d2d9e4;
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    transition:
+
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .cadastro-input-icone:focus-within {
-    border-color: var(--laranja-integra);
-    box-shadow: 0 0 0 2px rgba(255, 133, 0, 0.1);
+    border-color: var(--azul-integra);
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(29, 46, 104, 0.07);
 }
 
 .cadastro-input-icone img {
     width: 21px;
     height: 21px;
+
     flex-shrink: 0;
+
     object-fit: contain;
+
+    transition:
+        transform 0.25s ease;
+}
+
+.cadastro-input-icone:focus-within > img {
+    transform: scale(1.06);
 }
 
 .cadastro-input-icone input {
     flex: 1;
+
     width: 100%;
+
     min-width: 0;
     height: 100%;
+
     padding: 0 8px;
+
     border: none;
+
     outline: none;
+
     background: transparent;
-    color: #333;
+    color: #333333;
+
     font-family: inherit;
     font-size: 13px;
+
     box-shadow: none;
 }
 
 .cadastro-input-icone input::placeholder {
-    color: #aaa;
+    color: #929eb0;
 }
 
 .cadastro-input-icone input:focus {
     border: none;
+
     box-shadow: none;
 }
 
-/* Campos de senha */
+/* =========================================
+   INPUT PREENCHIDO
+========================================= */
+
+.cadastro-input-preenchido {
+    border-color: #9ac9ac;
+
+    background: #fcfffd;
+}
+
+.cadastro-check-campo {
+    flex-shrink: 0;
+
+    color: var(--cad-verde);
+
+    animation:
+
+        cadastroConfirmacao
+        0.35s
+        var(--cad-curva);
+}
+
+/* =========================================
+   INPUT INVÁLIDO
+========================================= */
+
+.cadastro-input-invalido {
+    border-color: #db9e9e !important;
+
+    background: #fffafa;
+}
+
+/* =========================================
+   CAMPOS DE SENHA
+========================================= */
 
 .cadastro-input-senha {
     display: flex;
+
     align-items: center;
+
     width: 100%;
-    height: 40px;
+    height: 44px;
+
     padding-left: 12px;
-    border: 1px solid #d2d2d2;
-    border-radius: 4px;
-    background: #fff;
+
+    border: 1px solid #d2d9e4;
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    transition:
+
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.cadastro-input-senha.cadastro-input-preenchido {
+    border-color: #9ac9ac;
+
+    background: #fcfffd;
 }
 
 .cadastro-input-senha:focus-within {
-    border-color: var(--laranja-integra);
-    box-shadow: 0 0 0 2px rgba(255, 133, 0, 0.1);
-}
+    border-color: var(--azul-integra);
 
-/* Ícone do cadeado */
+    box-shadow:
+
+        0 0 0 3px
+        rgba(29, 46, 104, 0.07);
+}
 
 .cadastro-icone-input {
     width: 21px;
     height: 21px;
+
     flex-shrink: 0;
+
     object-fit: contain;
 }
 
 .cadastro-input-senha input {
     flex: 1;
+
     min-width: 0;
     width: 100%;
     height: 100%;
+
     padding: 0 8px;
+
     border: none;
+
     outline: none;
+
     background: transparent;
-    color: #333;
+    color: #333333;
+
     font-family: inherit;
     font-size: 13px;
+
     box-shadow: none;
 }
 
 .cadastro-input-senha input::placeholder {
-    color: #aaa;
+    color: #929eb0;
 }
 
 .cadastro-input-senha input:focus {
     border: none;
+
     box-shadow: none;
 }
 
-/* Esconde o olho nativo do navegador */
+/* =========================================
+   ESCONDER OLHO NATIVO
+========================================= */
 
 .cadastro-input-senha input::-ms-reveal,
 .cadastro-input-senha input::-ms-clear {
     display: none;
 }
 
-.cadastro-input-senha input::-webkit-credentials-auto-fill-button {
+.cadastro-input-senha
+input::-webkit-credentials-auto-fill-button {
+
     visibility: hidden;
+
     display: none !important;
+
     pointer-events: none;
 }
 
-/* Botão do olho personalizado */
+/* =========================================
+   OLHO PERSONALIZADO
+========================================= */
 
 .cadastro-input-senha .cadastro-olho-senha {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     flex-shrink: 0;
-    width: 36px;
-    height: 38px;
+
+    width: 38px;
+    height: 40px;
+
     padding: 0;
+
     border: none;
+    border-radius: 6px;
+
     background: transparent;
+
     cursor: pointer;
+
+    transition:
+        background 0.25s ease;
 }
 
-.cadastro-input-senha .cadastro-olho-senha img {
+.cadastro-input-senha
+.cadastro-olho-senha:hover {
+
+    background: #edf2f9;
+}
+
+.cadastro-input-senha
+.cadastro-olho-senha img {
+
     display: block;
+
     width: 19px;
     height: 19px;
+
     object-fit: contain;
 }
 
-/* Dados da empresa */
+/* =========================================
+   REQUISITOS DA SENHA
+========================================= */
 
-.cadastro-secao-empresa {
-    margin-top: 22px;
-    padding-top: 12px;
-    border-top: 1px solid #e5e5e5;
+.cadastro-requisito-senha {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 9px;
+
+    color: #8490a2;
+
+    font-size: 11px;
+
+    transition:
+        color 0.3s ease;
 }
 
-.cadastro-secao-empresa .cadastro-titulo-secao {
+.cadastro-requisito-senha svg {
+    flex-shrink: 0;
+}
+
+.cadastro-requisito-ok {
+    color: var(--cad-verde);
+}
+
+.cadastro-requisito-ok svg {
+    animation:
+
+        cadastroConfirmacao
+        0.35s
+        var(--cad-curva);
+}
+
+/* =========================================
+   CONFIRMAÇÃO DA SENHA
+========================================= */
+
+.cadastro-feedback-senha {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 8px;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    animation:
+
+        cadastroEntrada
+        0.3s
+        ease-out;
+}
+
+.cadastro-feedback-senha svg {
+    flex-shrink: 0;
+}
+
+.cadastro-feedback-ok {
+    color: var(--cad-verde);
+}
+
+.cadastro-feedback-erro {
+    color: var(--cad-vermelho);
+}
+
+/* =========================================
+   DADOS DA EMPRESA
+========================================= */
+
+.cadastro-secao-empresa {
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5e9f0;
+}
+
+.cadastro-secao-empresa
+.cadastro-titulo-secao {
+
     margin-bottom: 22px;
 }
 
-.cadastro-secao-empresa .cadastro-grade {
+.cadastro-secao-empresa
+.cadastro-grade {
+
     row-gap: 14px;
 }
 
-.cadastro-secao-empresa .cadastro-titulo-secao img {
+.cadastro-secao-empresa
+.cadastro-titulo-secao img {
+
     width: 20px;
     height: 20px;
+
     object-fit: contain;
 }
 
-/* Botão principal */
-
-.cadastro-botao-submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    width: 100%;
-    height: 37px;
-    margin-top: 14px;
-    border: none;
-    border-radius: 4px;
-    background: var(--azul-integra);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.cadastro-botao-submit img {
-    height: 20px;
-    width: 20px;
-    object-fit: contain;
-}
-
-.cadastro-botao-submit:hover {
-    background: #293f8b;
-}
-
-/* Botão de validar CNPJ */
+/* =========================================
+   BOTÃO VERIFICAR CNPJ
+========================================= */
 
 .cadastro-botao-verificar {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
     width: 250px;
-    height: 34px;
-    padding: 0 16px;
-    margin-top: 20px;
+
+    max-width: 100%;
+
+    min-height: 38px;
+
+    padding: 10px 16px;
+
+    margin-top: 15px;
+
     border: 1px solid var(--laranja-integra);
-    border-radius: 4px;
+    border-radius: 7px;
+
     background: var(--laranja-integra);
-    color: #fff;
+    color: #17234c;
+
     font-family: inherit;
     font-size: 13px;
     font-weight: 600;
+
     cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
+
+    transition:
+
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
 }
 
 .cadastro-botao-verificar:hover:not(:disabled) {
-    background: #e87500;
-    border-color: #e87500;
+    border-color: #ef890e;
+
+    background: #ff9c30;
+
+    box-shadow:
+
+        0 4px 13px
+        rgba(255, 133, 0, 0.16);
+
+    transform: translateY(-2px);
 }
 
 .cadastro-botao-verificar:disabled {
-    opacity: 0.6;
+    opacity: 0.7;
+
     cursor: not-allowed;
 }
 
-/* Mensagem de CNPJ verificado */
+/* =========================================
+   CNPJ VERIFICADO
+========================================= */
 
-.cadastro-cnpj-sucesso {
-    margin: 8px 0 0;
-    color: #218838;
-    font-size: 12px;
+.cadastro-campo > input.cadastro-cnpj-verificado {
+    border-color: #a5cfb5;
+
+    background: #fcfffd;
 }
 
-/* Responsividade para telas médias */
+.cadastro-botao-verificar.cadastro-verificacao-ok {
+    border-color: #b6dfc6;
+
+    background: #e4f5e9;
+
+    color: var(--cad-verde);
+}
+
+.cadastro-botao-verificar.cadastro-verificacao-ok:hover:not(:disabled) {
+    border-color: #9bc9ac;
+
+    background: #d7efdf;
+}
+
+/* =========================================
+   MENSAGEM CNPJ CONSULTADO
+========================================= */
+
+.cadastro-cnpj-sucesso {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 7px;
+
+    margin: 10px 0 0;
+
+    color: var(--cad-verde);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+    animation:
+
+        cadastroEntrada
+        0.35s
+        var(--cad-curva);
+}
+
+.cadastro-cnpj-sucesso svg {
+    flex-shrink: 0;
+
+    animation:
+
+        cadastroConfirmacao
+        0.4s
+        var(--cad-curva);
+}
+
+/* =========================================
+   ERRO NA CONSULTA
+========================================= */
+
+.cadastro-cnpj-erro {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 7px;
+
+    margin: 10px 0 0;
+
+    color: var(--cad-vermelho);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    animation:
+
+        cadastroEntrada
+        0.3s
+        ease-out;
+}
+
+.cadastro-cnpj-erro svg {
+    flex-shrink: 0;
+}
+
+/* =========================================
+   RAZÃO SOCIAL
+========================================= */
+
+.cadastro-razao-container {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+
+    height: 44px;
+
+    overflow: hidden;
+
+    border: 1px solid #d2d9e4;
+    border-radius: 7px;
+
+    background: #f4f6fa;
+
+    transition:
+
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.cadastro-razao-container input {
+    width: 100%;
+
+    min-width: 0;
+    height: 100%;
+
+    padding: 0 35px 0 12px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+    color: #354052;
+
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.cadastro-razao-container input::placeholder {
+    color: #929eb0;
+}
+
+/* RAZÃO SOCIAL VERIFICADA */
+
+.cadastro-razao-verificada {
+    border-color: #a5cfb5;
+
+    background: #f1faf4;
+}
+
+.cadastro-razao-check {
+    position: absolute;
+
+    right: 12px;
+
+    color: var(--cad-verde);
+
+    animation:
+
+        cadastroConfirmacao
+        0.45s
+        var(--cad-curva);
+
+    pointer-events: none;
+}
+
+/* INFORMAÇÃO DA RAZÃO SOCIAL */
+
+.cadastro-razao-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 10px;
+
+    color: var(--cad-verde);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    animation:
+
+        cadastroEntrada
+        0.3s
+        ease-out;
+}
+
+/* =========================================
+   SKELETON DE CONSULTA
+========================================= */
+
+.cadastro-razao-carregando::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: -80%;
+
+    width: 60%;
+
+    background: linear-gradient(
+
+        90deg,
+
+        transparent,
+
+        rgba(255, 255, 255, 0.9),
+
+        transparent
+
+    );
+
+    animation:
+
+        cadastroSkeleton
+        1.2s
+        ease-in-out
+        infinite;
+
+    pointer-events: none;
+}
+
+@keyframes cadastroSkeleton {
+
+    from {
+        left: -80%;
+    }
+
+    to {
+        left: 140%;
+    }
+
+}
+
+/* =========================================
+   SPINNER
+========================================= */
+
+.cadastro-spinner {
+    flex-shrink: 0;
+
+    animation:
+
+        cadastroGirar
+        0.8s
+        linear
+        infinite;
+}
+
+/* =========================================
+   MENSAGEM DE ERRO GERAL
+========================================= */
+
+.cadastro-mensagem-erro {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+    padding: 13px 15px;
+
+    border: 1px solid #edc0c0;
+    border-left: 3px solid var(--cad-vermelho);
+
+    border-radius: 7px;
+
+    background: #fff2f2;
+
+    color: var(--cad-vermelho);
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+
+    animation:
+
+        cadastroEntrada
+        0.35s
+        var(--cad-curva);
+}
+
+.cadastro-mensagem-erro svg {
+    flex-shrink: 0;
+}
+
+/* =========================================
+   BOTÃO FINALIZAR CADASTRO
+========================================= */
+
+.cadastro-botao-submit {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    width: 100%;
+
+    min-height: 45px;
+
+    margin-top: 24px;
+
+    padding: 12px 38px;
+
+    overflow: hidden;
+
+    border: none;
+    border-radius: 8px;
+
+    background: linear-gradient(
+
+        115deg,
+
+        #1d2e68,
+
+        #29478d
+
+    );
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+
+        background 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+}
+
+.cadastro-botao-submit img {
+    width: 20px;
+    height: 20px;
+
+    object-fit: contain;
+}
+
+.cadastro-botao-submit:hover:not(:disabled) {
+    background: linear-gradient(
+
+        115deg,
+
+        #243b80,
+
+        #3455a2
+
+    );
+
+    transform: translateY(-2px);
+
+    box-shadow:
+
+        0 5px 15px
+        rgba(29, 46, 104, 0.2);
+}
+
+/* =========================================
+   REFLEXO DO BOTÃO
+========================================= */
+
+.cadastro-botao-submit::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: -65%;
+
+    width: 40%;
+
+    transform: skewX(-25deg);
+
+    background: linear-gradient(
+
+        90deg,
+
+        transparent,
+
+        rgba(255, 255, 255, 0.15),
+
+        transparent
+
+    );
+
+    transition:
+        left 0.7s ease;
+
+    pointer-events: none;
+}
+
+.cadastro-botao-submit:hover:not(:disabled)::before {
+    left: 140%;
+}
+
+/* =========================================
+   SETA DO BOTÃO
+========================================= */
+
+.cadastro-submit-seta {
+    position: absolute;
+
+    right: 18px;
+
+    transition:
+        transform 0.3s ease;
+}
+
+.cadastro-botao-submit:hover:not(:disabled)
+.cadastro-submit-seta {
+
+    transform: translateX(4px);
+}
+
+/* =========================================
+   CADASTRO PRONTO PARA ENVIO
+========================================= */
+
+.cadastro-botao-submit.cadastro-submit-pronto {
+    box-shadow:
+
+        0 0 0 3px
+        rgba(33, 134, 78, 0.12),
+
+        0 5px 18px
+        rgba(29, 46, 104, 0.14);
+}
+
+.cadastro-botao-submit.cadastro-submit-pronto
+.cadastro-submit-seta {
+
+    color: #a5edbd;
+}
+
+.cadastro-botao-submit:disabled {
+    opacity: 0.7;
+
+    cursor: not-allowed;
+}
+
+/* =========================================
+   AVISO FINAL
+========================================= */
+
+.cadastro-seguranca-final {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    margin-top: 15px;
+
+    color: #8490a2;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.cadastro-seguranca-final svg {
+    flex-shrink: 0;
+
+    color: #68758a;
+}
+
+/* =========================================
+   ACESSIBILIDADE
+========================================= */
+
+.cadastro button:focus-visible {
+    outline: 2px solid var(--laranja-integra);
+
+    outline-offset: 3px;
+}
+
+.cadastro input:disabled {
+    opacity: 0.7;
+
+    cursor: not-allowed;
+}
+
+.cadastro button:disabled {
+    cursor: not-allowed;
+}
+
+/* =========================================
+   DESKTOP COMPACTO
+========================================= */
+
+@media (min-width: 901px) and (max-width: 1200px) {
+
+    .cadastro-apresentacao {
+        padding: 15px 18px 25px;
+    }
+
+    .cadastro-marca {
+        gap: 10px;
+    }
+
+    .cadastro-logo {
+        width: 65px;
+        height: 65px;
+    }
+
+    .cadastro-marca-texto h2 {
+        font-size: 21px;
+    }
+
+    .cadastro-marca-texto p {
+        font-size: 12px;
+    }
+
+    .cadastro-vantagem {
+        padding: 10px;
+    }
+
+    .cadastro-icone {
+        flex-basis: 45px;
+
+        width: 45px;
+        height: 45px;
+    }
+
+    .cadastro-icone img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .cadastro-vantagem h3 {
+        font-size: 14px;
+    }
+
+    .cadastro-vantagem p {
+        font-size: 11px;
+    }
+
+    .cadastro-area {
+        padding: 16px 18px 20px;
+    }
+
+    .cadastro-cartao {
+        padding: 20px;
+    }
+
+    .cadastro-grade {
+        column-gap: 22px;
+    }
+
+    .cadastro-progresso-etapas {
+        gap: 8px;
+    }
+
+    .cadastro-etapa-icone {
+        width: 30px;
+        height: 30px;
+    }
+
+    .cadastro-etapa-texto strong {
+        font-size: 10px;
+    }
+
+    .cadastro-etapa-texto small {
+        font-size: 9px;
+    }
+
+    .cadastro-etapa-seta {
+        display: none;
+    }
+
+}
+
+/* =========================================
+   TABLETS
+========================================= */
 
 @media (max-width: 900px) {
+
     .cadastro-apresentacao {
         flex-basis: 30%;
-        padding: 25px 18px;
+
+        padding: 20px 15px;
+    }
+
+    .cadastro-marca {
+        gap: 9px;
     }
 
     .cadastro-logo {
         width: 45px;
         height: 50px;
+
+        margin-top: 0;
     }
 
     .cadastro-marca-texto h2 {
@@ -547,118 +2561,311 @@
         font-size: 10px;
     }
 
+    .cadastro-etiqueta {
+        font-size: 8px;
+
+        letter-spacing: 0.8px;
+    }
+
+    .cadastro-texto h1 {
+        font-size: 22px;
+    }
+
     .cadastro-vantagens {
-        gap: 20px;
-        margin-top: 45px;
+        gap: 12px;
+
+        margin-top: 30px;
+    }
+
+    .cadastro-vantagem {
+        align-items: flex-start;
+
+        gap: 9px;
+
+        padding: 10px;
     }
 
     .cadastro-icone {
-        flex-basis: 55px;
-        width: 55px;
-        height: 55px;
+        flex-basis: 40px;
+
+        width: 40px;
+        height: 40px;
     }
 
     .cadastro-icone img {
-        width: 35px;
-        height: 35px;
+        width: 27px;
+        height: 27px;
     }
 
     .cadastro-vantagem h3 {
-        font-size: 16px;
-    }
-
-    .cadastro-vantagem p {
-        font-size: 12px;
-    }
-
-    .cadastro-area {
-        padding-left: 20px;
-    }
-
-    .cadastro-grade {
-        column-gap: 24px;
-    }
-}
-
-/* Responsividade para celulares */
-
-@media (max-width: 650px) {
-
-    /* Estrutura principal */
-
-    .cadastro {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100dvh;
-        min-height: 0;
-        overflow: hidden;
-    }
-
-    /* Remove completamente o painel azul */
-
-    .cadastro-apresentacao {
-        display: none;
-    }
-
-    /* Área do formulário com rolagem */
-
-    .cadastro-area {
-        display: block;
-        width: 100%;
-        height: 100dvh;
-        min-height: 0;
-        padding: 60px 14px 14px;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-    /* Já tem uma conta? e botão Entrar fixos */
-
-    .cadastro-topo {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        min-height: 50px;
-        margin: 0;
-        padding: 0 20px;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 14px;
-        background: #f2f4f7;
-        z-index: 10;
-    }
-
-    .cadastro-botao-entrar {
-        padding: 5px 12px;
         font-size: 13px;
     }
 
-    /* Cartão do formulário */
-
-    .cadastro-cartao {
-        width: 100%;
-        flex: none;
-        min-width: 0;
-        padding: 18px 14px;
-        margin-bottom: 10px;
+    .cadastro-vantagem p {
+        font-size: 11px;
     }
 
-    .cadastro-cabecalho {
-        justify-content: center;
+    .cadastro-orbitas {
+        right: -210px;
+    }
+
+    .cadastro-area {
+        padding: 14px;
+    }
+
+    .cadastro-cartao {
+        padding: 17px;
+    }
+
+    .cadastro-avatar {
+        width: 54px;
+        height: 54px;
+    }
+
+    .cadastro-avatar img {
+        width: 40px;
+        height: 40px;
     }
 
     .cadastro .cadastro-cartao .cadastro-cabecalho h2 {
         font-size: 28px;
     }
 
-    /* Campos em uma coluna */
+    .cadastro-grade {
+        column-gap: 18px;
+    }
+
+    .cadastro-progresso-painel {
+        padding: 13px;
+    }
+
+    .cadastro-progresso-etapas {
+        gap: 8px;
+    }
+
+    .cadastro-progresso-etapa {
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+    .cadastro-etapa-seta {
+        display: none;
+    }
+
+    .cadastro-etapa-icone {
+        width: 30px;
+        height: 30px;
+    }
+
+    .cadastro-etapa-texto strong {
+        font-size: 10px;
+    }
+
+    .cadastro-etapa-texto small {
+        font-size: 9px;
+    }
+
+}
+
+/* =========================================
+   CELULARES
+   ATÉ 650px
+========================================= */
+
+@media (max-width: 650px) {
+
+    /* ESTRUTURA PRINCIPAL */
+
+    .cadastro {
+        display: flex;
+
+        flex-direction: column;
+
+        width: 100%;
+
+        height: 100vh;
+        height: 100dvh;
+
+        min-height: 0;
+
+        overflow: hidden;
+    }
+
+    /* ESCONDER PAINEL AZUL */
+
+    .cadastro-apresentacao {
+        display: none;
+    }
+
+    .cadastro-orbita {
+        animation: none;
+    }
+
+    /* ÁREA DO FORMULÁRIO */
+
+    .cadastro-area {
+        display: block;
+
+        width: 100%;
+
+        height: 100vh;
+        height: 100dvh;
+
+        min-height: 0;
+
+        padding: 62px 14px 14px;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* TOPO FIXO */
+
+    .cadastro-topo {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        z-index: 10;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: flex-end;
+
+        gap: 12px;
+
+        width: 100%;
+
+        height: 50px;
+        min-height: 50px;
+
+        margin: 0;
+
+        padding: 0 18px;
+
+        border-bottom: 1px solid #e0e6ef;
+
+        background: #f2f4f7;
+    }
+
+    .cadastro-botao-entrar {
+        padding: 6px 10px;
+
+        font-size: 12px;
+    }
+
+    /* CARTÃO */
+
+    .cadastro-cartao {
+        flex: none;
+
+        width: 100%;
+
+        min-width: 0;
+
+        margin-bottom: 10px;
+
+        padding: 18px 14px;
+
+        border-radius: 11px;
+    }
+
+    /* CABEÇALHO */
+
+    .cadastro-cabecalho {
+        justify-content: center;
+
+        gap: 10px;
+    }
+
+    .cadastro-avatar {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 11px;
+    }
+
+    .cadastro-avatar img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .cadastro .cadastro-cartao .cadastro-cabecalho h2 {
+        font-size: 25px;
+    }
+
+    .cadastro-cabecalho p {
+        font-size: 11px;
+    }
+
+    /* PROGRESSO */
+
+    .cadastro-progresso-painel {
+        margin: 17px 0 20px;
+
+        padding: 12px;
+    }
+
+    .cadastro-progresso-topo h3 {
+        font-size: 13px;
+    }
+
+    .cadastro-progresso-topo p {
+        font-size: 10px;
+    }
+
+    .cadastro-progresso-percentual {
+        font-size: 24px;
+    }
+
+    .cadastro-progresso-etapas {
+        gap: 8px;
+    }
+
+    .cadastro-progresso-etapa {
+        flex-direction: column;
+    }
+
+    .cadastro-etapa-icone {
+        width: 33px;
+        height: 33px;
+    }
+
+    .cadastro-etapa-texto strong {
+        font-size: 10px;
+    }
+
+    .cadastro-etapa-texto small {
+        font-size: 9px;
+    }
+
+    /* SEÇÕES */
+
+    .cadastro-titulo-secao {
+        margin-bottom: 18px;
+    }
+
+    .cadastro-titulo-secao h3 {
+        font-size: 17px;
+    }
+
+    .cadastro-mini-icone {
+        width: 30px;
+        height: 30px;
+    }
+
+    /* CAMPOS EM UMA COLUNA */
 
     .cadastro-grade {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+
+            minmax(0, 1fr);
+
         row-gap: 18px;
     }
 
@@ -666,9 +2873,134 @@
         grid-column: auto;
     }
 
-    /* Botão de verificar CNPJ */
+    .cadastro-campo label {
+        font-size: 12px;
+    }
+
+    .cadastro-input-icone,
+    .cadastro-input-senha,
+    .cadastro-campo > input,
+    .cadastro-razao-container {
+
+        min-height: 46px;
+    }
+
+    .cadastro-input-senha
+    .cadastro-olho-senha {
+
+        height: 44px;
+    }
+
+    /* BOTÃO VERIFICAR CNPJ */
 
     .cadastro-botao-verificar {
         width: 100%;
+
+        min-height: 42px;
     }
+
+    /* BOTÃO CADASTRAR */
+
+    .cadastro-botao-submit {
+        min-height: 48px;
+
+        font-size: 14px;
+    }
+
+    .cadastro-seguranca-final {
+        font-size: 10px;
+    }
+
+}
+
+/* =========================================
+   CELULARES ESTREITOS
+========================================= */
+
+@media (max-width: 360px) {
+
+    .cadastro-area {
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    .cadastro-cartao {
+        padding: 14px 11px;
+    }
+
+    .cadastro .cadastro-cartao .cadastro-cabecalho h2 {
+        font-size: 22px;
+    }
+
+    .cadastro-avatar {
+        width: 42px;
+        height: 42px;
+    }
+
+    .cadastro-avatar img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .cadastro-progresso-painel {
+        padding: 10px;
+    }
+
+    .cadastro-etapa-texto strong {
+        font-size: 9px;
+    }
+
+    .cadastro-etapa-texto small {
+        font-size: 8px;
+    }
+
+}
+
+/* =========================================
+   DISPOSITIVOS SEM MOUSE
+========================================= */
+
+@media (hover: none) {
+
+    .cadastro-vantagem:hover::before {
+        left: -90%;
+    }
+
+    .cadastro-botao-submit:hover:not(:disabled),
+    .cadastro-botao-verificar:hover:not(:disabled) {
+
+        transform: none;
+    }
+
+}
+
+/* =========================================
+   ACESSIBILIDADE
+   REDUÇÃO DE MOVIMENTOS
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cadastro *,
+    .cadastro *::before,
+    .cadastro *::after {
+
+        animation: none !important;
+
+        transition: none !important;
+
+        scroll-behavior: auto !important;
+    }
+
+    .cadastro-logo:hover,
+    .cadastro-vantagem:hover .cadastro-icone img,
+    .cadastro-botao-entrar:hover svg,
+    .cadastro-input-icone:focus-within > img,
+    .cadastro-botao-submit:hover,
+    .cadastro-botao-verificar:hover,
+    .cadastro-botao-submit:hover .cadastro-submit-seta {
+
+        transform: none !important;
+    }
+
 }

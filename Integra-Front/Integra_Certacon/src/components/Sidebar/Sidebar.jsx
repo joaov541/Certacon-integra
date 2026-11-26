@@ -45,6 +45,8 @@ export default function Sidebar() {
 
     const sidebarRef = useRef(null);
     const ferramentasRef = useRef(null);
+    const listaRef = useRef(null);
+    const indicadorRef = useRef(null);
 
     const [ferramentasAberto, setFerramentasAberto] =
         useState(false);
@@ -103,6 +105,7 @@ export default function Sidebar() {
             icone: PessoaBranca,
             permitido: autenticado && podeGerenciarUsuarios
         }
+
     ].filter(item => item.permitido);
 
     // =========================================
@@ -128,7 +131,6 @@ export default function Sidebar() {
             Icone: Users,
             permitido: true
         },
-
         {
             titulo: "Minha Biblioteca",
             rota: "/minha-biblioteca",
@@ -153,11 +155,8 @@ export default function Sidebar() {
         },
         {
             titulo: "Simulador Tributário",
-
             rota: "/simulador-tributario",
-
             Icone: Calculator,
-
             permitido:
                 autenticado &&
                 (
@@ -188,6 +187,14 @@ export default function Sidebar() {
         location.pathname.startsWith(`${item.rota}/`)
     );
 
+    const rotasMenu = itensMenu
+        .map(item => item.rota)
+        .join("|");
+
+    const rotasFerramentas = ferramentas
+        .map(item => item.rota)
+        .join("|");
+
     // =========================================
     // CONTROLAR MENU AO NAVEGAR
     // =========================================
@@ -203,6 +210,164 @@ export default function Sidebar() {
         );
 
     }, [location.pathname, ferramentaAtiva]);
+
+    // =========================================
+    // INDICADOR ATIVO DESLIZANTE
+    // =========================================
+
+    useEffect(() => {
+
+        const lista = listaRef.current;
+        const indicador = indicadorRef.current;
+
+        if (!lista || !indicador) return;
+
+        let frame = null;
+
+        function atualizarIndicador() {
+
+            frame = null;
+
+            const itemAtivo = lista.querySelector(
+                ".integra-sidebar-item.integra-sidebar-ativo"
+            );
+
+            if (!itemAtivo) {
+
+                indicador.style.opacity = "0";
+
+                return;
+
+            }
+
+            const mobile = window.matchMedia(
+                "(max-width: 700px)"
+            ).matches;
+
+            const retanguloLista =
+                lista.getBoundingClientRect();
+
+            const retanguloItem =
+                itemAtivo.getBoundingClientRect();
+
+            if (mobile) {
+
+                const largura = Math.min(
+                    30,
+                    retanguloItem.width * 0.45
+                );
+
+                const posicaoX =
+                    retanguloItem.left -
+                    retanguloLista.left +
+                    lista.scrollLeft +
+                    (retanguloItem.width - largura) / 2;
+
+                indicador.style.width =
+                    `${largura}px`;
+
+                indicador.style.height = "3px";
+
+                indicador.style.transform =
+                    `translate3d(${posicaoX}px, 0, 0)`;
+
+            } else {
+
+                const altura = Math.max(
+                    20,
+                    retanguloItem.height - 16
+                );
+
+                const posicaoY =
+                    retanguloItem.top -
+                    retanguloLista.top +
+                    lista.scrollTop +
+                    8;
+
+                indicador.style.width = "3px";
+
+                indicador.style.height =
+                    `${altura}px`;
+
+                indicador.style.transform =
+                    `translate3d(0, ${posicaoY}px, 0)`;
+
+            }
+
+            indicador.style.opacity = "1";
+
+        }
+
+        function agendarAtualizacao() {
+
+            if (frame !== null) return;
+
+            frame = requestAnimationFrame(
+                atualizarIndicador
+            );
+
+        }
+
+        atualizarIndicador();
+
+        // Atualiza quando o tamanho do menu mudar.
+
+        const observador =
+            typeof ResizeObserver !== "undefined"
+
+                ? new ResizeObserver(agendarAtualizacao)
+
+                : null;
+
+        observador?.observe(lista);
+
+        lista.querySelectorAll(
+            ".integra-sidebar-item, .integra-sidebar-grupo"
+        ).forEach(elemento => {
+
+            observador?.observe(elemento);
+
+        });
+
+        window.addEventListener(
+            "resize",
+            agendarAtualizacao
+        );
+
+        lista.addEventListener(
+            "scroll",
+            agendarAtualizacao,
+            { passive: true }
+        );
+
+        return () => {
+
+            observador?.disconnect();
+
+            window.removeEventListener(
+                "resize",
+                agendarAtualizacao
+            );
+
+            lista.removeEventListener(
+                "scroll",
+                agendarAtualizacao
+            );
+
+            if (frame !== null) {
+
+                cancelAnimationFrame(frame);
+
+            }
+
+        };
+
+    }, [
+        location.pathname,
+        ferramentasAberto,
+        rotasMenu,
+        rotasFerramentas
+    ]);
 
     // =========================================
     // FECHAR MENU MOBILE AO CLICAR FORA
@@ -223,7 +388,9 @@ export default function Sidebar() {
                 sidebarRef.current &&
                 !sidebarRef.current.contains(event.target)
             ) {
+
                 setFerramentasAberto(false);
+
             }
 
         }
@@ -231,8 +398,11 @@ export default function Sidebar() {
         function pressionarTecla(event) {
 
             if (event.key === "Escape") {
+
                 setFerramentasAberto(false);
+
                 ferramentasRef.current?.focus();
+
             }
 
         }
@@ -248,6 +418,7 @@ export default function Sidebar() {
         );
 
         return () => {
+
             document.removeEventListener(
                 "pointerdown",
                 clicarFora
@@ -257,6 +428,7 @@ export default function Sidebar() {
                 "keydown",
                 pressionarTecla
             );
+
         };
 
     }, [ferramentasAberto]);
@@ -270,7 +442,9 @@ export default function Sidebar() {
         if (
             window.matchMedia("(max-width: 700px)").matches
         ) {
+
             setFerramentasAberto(false);
+
         }
 
     }
@@ -303,7 +477,7 @@ export default function Sidebar() {
 
     function renderizarLinks() {
 
-        return itensMenu.map(item => (
+        return itensMenu.map((item, indice) => (
 
             <NavLink
                 key={item.rota}
@@ -318,10 +492,23 @@ export default function Sidebar() {
                         ? "integra-sidebar-item integra-sidebar-ativo"
                         : "integra-sidebar-item"
                 }
+                style={{
+                    "--sidebar-atraso": `${indice * 55}ms`
+                }}
+                title={item.titulo}
             >
-                <img src={item.icone} alt="" />
 
-                <span>{item.titulo}</span>
+                <img
+                    src={item.icone}
+                    alt=""
+                />
+
+                <span>
+
+                    {item.titulo}
+
+                </span>
+
             </NavLink>
 
         ));
@@ -340,106 +527,190 @@ export default function Sidebar() {
             aria-label="Menu principal"
         >
 
-            {/* LOGOTIPO */}
+            {/* =================================
+                LOGOTIPO
+            ================================= */}
 
             <div className="integra-sidebar-marca">
 
-                <img
-                    src={LogoNome}
-                    alt="Integra"
-                    className="integra-sidebar-logo"
-                />
+                <NavLink
+                    to={autenticado ? "/home" : "/portal"}
+                    className="integra-sidebar-marca-link"
+                    aria-label="Voltar ao início"
+                >
+
+                    <img
+                        src={LogoNome}
+                        alt="Integra"
+                        className="integra-sidebar-logo"
+                    />
+
+                </NavLink>
 
             </div>
 
-            {/* NAVEGAÇÃO */}
+            <div
+                className="integra-sidebar-divisor-marca"
+                aria-hidden="true"
+            />
+
+            {/* =================================
+                NAVEGAÇÃO PRINCIPAL
+            ================================= */}
 
             <nav
+                ref={listaRef}
                 className="integra-sidebar-lista"
                 aria-label="Navegação principal"
             >
 
+                {/* INDICADOR DESLIZANTE */}
+
+                <span
+                    ref={indicadorRef}
+                    className="integra-sidebar-indicador"
+                    aria-hidden="true"
+                />
+
+                {/* IDENTIFICAÇÃO DO MENU */}
+
+                <div className="integra-sidebar-categoria">
+
+                    NAVEGAÇÃO PRINCIPAL
+
+                </div>
+
+                {/* LINKS PRINCIPAIS */}
+
                 {renderizarLinks()}
 
-                {/* FERRAMENTAS FISCAIS */}
+                {/* =================================
+                    FERRAMENTAS FISCAIS
+                ================================= */}
 
                 {ferramentas.length > 0 && (
 
-                    <div className="integra-sidebar-grupo">
+                    <>
 
-                        <button
-                            ref={ferramentasRef}
-                            type="button"
-                            className={`integra-sidebar-item integra-sidebar-ferramentas ${ferramentaAtiva
-                                ? "integra-sidebar-ativo"
-                                : ""
-                                }`}
-                            onClick={() =>
-                                setFerramentasAberto(
-                                    anterior => !anterior
-                                )
-                            }
-                            aria-expanded={ferramentasAberto}
-                            aria-controls="integra-submenu-ferramentas"
-                            aria-label="Ferramentas Fiscais"
+                        <div
+                            className="integra-sidebar-divisor"
+                            aria-hidden="true"
+                        />
+
+                        <div className="integra-sidebar-categoria">
+
+                            RECURSOS E FERRAMENTAS
+
+                        </div>
+
+                        <div
+                            className="integra-sidebar-grupo"
+                            style={{
+                                "--sidebar-atraso":
+                                    `${itensMenu.length * 55}ms`
+                            }}
                         >
 
-                            <Wrench
-                                className="integra-sidebar-icone"
-                                aria-hidden="true"
-                            />
+                            <button
+                                ref={ferramentasRef}
+                                type="button"
+                                className={`integra-sidebar-item integra-sidebar-ferramentas ${
+                                    ferramentaAtiva
+                                        ? "integra-sidebar-ativo"
+                                        : ""
+                                } ${
+                                    ferramentasAberto
+                                        ? "integra-ferramentas-aberto"
+                                        : ""
+                                }`}
+                                onClick={() =>
+                                    setFerramentasAberto(
+                                        anterior => !anterior
+                                    )
+                                }
+                                aria-expanded={ferramentasAberto}
+                                aria-controls="integra-submenu-ferramentas"
+                                aria-label="Ferramentas Fiscais"
+                            >
 
-                            <span className="integra-ferramentas-desktop">
-                                Ferramentas Fiscais
-                            </span>
+                                <Wrench
+                                    className="integra-sidebar-icone"
+                                    aria-hidden="true"
+                                />
 
-                            <span className="integra-ferramentas-mobile">
-                                Ferramentas
-                            </span>
+                                <span className="integra-ferramentas-desktop">
 
-                            <ChevronDown
-                                className={`integra-sidebar-seta ${ferramentasAberto
-                                    ? "integra-seta-aberta"
-                                    : ""
+                                    Ferramentas Fiscais
+
+                                </span>
+
+                                <span className="integra-ferramentas-mobile">
+
+                                    Ferramentas
+
+                                </span>
+
+                                <ChevronDown
+                                    className={`integra-sidebar-seta ${
+                                        ferramentasAberto
+                                            ? "integra-seta-aberta"
+                                            : ""
                                     }`}
-                                aria-hidden="true"
-                            />
+                                    aria-hidden="true"
+                                />
 
-                        </button>
+                            </button>
 
-                        {/* SUBMENU */}
-
-                        {ferramentasAberto && (
+                            {/* =================================
+                                SUBMENU DE FERRAMENTAS
+                            ================================= */}
 
                             <div
                                 id="integra-submenu-ferramentas"
                                 className="integra-sidebar-submenu"
+                                hidden={!ferramentasAberto}
                             >
 
                                 {/* CABEÇALHO MOBILE */}
 
                                 <div className="integra-submenu-topo">
 
-                                    <strong>
-                                        Ferramentas Fiscais
-                                    </strong>
+                                    <div className="integra-submenu-titulo">
+
+                                        <Wrench
+                                            size={18}
+                                            aria-hidden="true"
+                                        />
+
+                                        <strong>
+
+                                            Ferramentas Fiscais
+
+                                        </strong>
+
+                                    </div>
 
                                     <button
                                         type="button"
                                         onClick={() => {
+
                                             setFerramentasAberto(false);
+
                                             ferramentasRef.current?.focus();
+
                                         }}
                                         aria-label="Fechar ferramentas"
                                     >
+
                                         <X size={21} />
+
                                     </button>
 
                                 </div>
 
                                 {/* LINKS DAS FERRAMENTAS */}
 
-                                {ferramentas.map(item => {
+                                {ferramentas.map((item, indice) => {
 
                                     const Icone = item.Icone;
 
@@ -454,6 +725,11 @@ export default function Sidebar() {
                                                     ? "integra-sidebar-subitem integra-subitem-ativo"
                                                     : "integra-sidebar-subitem"
                                             }
+                                            style={{
+                                                "--submenu-atraso":
+                                                    `${indice * 35}ms`
+                                            }}
+                                            title={item.titulo}
                                         >
 
                                             <Icone
@@ -462,8 +738,15 @@ export default function Sidebar() {
                                             />
 
                                             <span>
+
                                                 {item.titulo}
+
                                             </span>
+
+                                            <span
+                                                className="integra-subitem-ponto"
+                                                aria-hidden="true"
+                                            />
 
                                         </NavLink>
 
@@ -473,39 +756,81 @@ export default function Sidebar() {
 
                             </div>
 
-                        )}
+                        </div>
 
-                    </div>
+                    </>
 
                 )}
 
             </nav>
 
-            {/* SAIR OU ENTRAR */}
+            {/* =================================
+                RODAPÉ DO SIDEBAR
+            ================================= */}
 
-            {autenticado ? (
+            <div className="integra-sidebar-rodape">
 
-                <button
-                    type="button"
-                    className="integra-sidebar-sair"
-                    onClick={sairSistema}
-                >
-                    <img src={SairBranco} alt="" />
-                    <span>Sair</span>
-                </button>
+                <div
+                    className="integra-sidebar-divisor"
+                    aria-hidden="true"
+                />
 
-            ) : (
+                {/* SAIR OU ENTRAR */}
 
-                <button
-                    type="button"
-                    className="integra-sidebar-sair"
-                    onClick={() => navigate("/login")}
-                >
-                    <img src={PessoaBranca} alt="" />
-                    <span>Entrar</span>
-                </button>
+                {autenticado ? (
 
-            )}
+                    <button
+                        type="button"
+                        className="integra-sidebar-sair integra-sidebar-logout"
+                        onClick={sairSistema}
+                    >
+
+                        <img
+                            src={SairBranco}
+                            alt=""
+                        />
+
+                        <span>Sair</span>
+
+                    </button>
+
+                ) : (
+
+                    <button
+                        type="button"
+                        className="integra-sidebar-sair"
+                        onClick={() => navigate("/login")}
+                    >
+
+                        <img
+                            src={PessoaBranca}
+                            alt=""
+                        />
+
+                        <span>Entrar</span>
+
+                    </button>
+
+                )}
+
+                {/* IDENTIDADE INSTITUCIONAL */}
+
+                <div className="integra-sidebar-assinatura">
+
+                    <span
+                        className="integra-sidebar-assinatura-ponto"
+                        aria-hidden="true"
+                    />
+
+                    <span>
+
+                        Integra · 2026
+
+                    </span>
+
+                </div>
+
+            </div>
 
         </aside>
 

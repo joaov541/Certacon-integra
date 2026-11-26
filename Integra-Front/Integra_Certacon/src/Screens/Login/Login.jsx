@@ -16,7 +16,12 @@ import ChaveSenha from "../../assets/Icones/ChaveSenha.png";
 import ConsultarNFEmobile from "../../assets/Icones/ConsultarNFEmobile.png";
 
 function Login() {
+
     const navigate = useNavigate();
+
+    // =====================================
+    // ESTADOS
+    // =====================================
 
     const [cnpj, setCnpj] = useState("");
     const [senha, setSenha] = useState("");
@@ -24,22 +29,39 @@ function Login() {
     const [erro, setErro] = useState("");
     const [carregando, setCarregando] = useState(false);
 
+    // =====================================
+    // REALIZAR LOGIN
+    // =====================================
+
     async function entrar(event) {
+
         event.preventDefault();
 
         setErro("");
 
         if (!cnpj.trim() || !senha.trim()) {
-            setErro("Informe seu e-mail ou CNPJ e sua senha.");
+
+            setErro(
+                "Informe seu e-mail ou CNPJ e sua senha."
+            );
+
             return;
+
         }
 
         try {
+
             setCarregando(true);
 
-            const dados = await realizarLogin(cnpj, senha);
+            const dados = await realizarLogin(
+                cnpj,
+                senha
+            );
 
-            localStorage.setItem("token", dados.token);
+            localStorage.setItem(
+                "token",
+                dados.token
+            );
 
             localStorage.setItem(
                 "usuario",
@@ -59,7 +81,11 @@ function Login() {
             navigate("/home");
 
         } catch (error) {
-            console.error("Erro ao realizar login:", error);
+
+            console.error(
+                "Erro ao realizar login:",
+                error
+            );
 
             setErro(
                 error.message ||
@@ -67,24 +93,85 @@ function Login() {
             );
 
         } finally {
+
             setCarregando(false);
+
         }
+
     }
+
+    // =====================================
+    // RECUPERAR SENHA
+    // =====================================
 
     function recuperarSenha() {
-        alert("Recuperação de senha em breve.");
+
+        navigate("/esqueci-senha");
+
     }
+
+    // =====================================
+    // CRIAR CONTA
+    // =====================================
 
     function criarConta() {
+
         navigate("/cadastro");
+
     }
 
+    // =====================================
+    // RENDERIZAÇÃO
+    // =====================================
+
     return (
+
         <main className="login">
 
-            {/* LADO ESQUERDO */}
+            {/* =================================
+                LADO ESQUERDO - PAINEL ANIMADO
+            ================================= */}
 
-            <section className="login-apresentacao">
+            <section className="login-apresentacao login-ambient">
+
+                {/* =================================
+                    FUNDO ANIMADO - AMBIENT WAVES
+                ================================= */}
+
+                <div
+                    className="login-fundo-animado"
+                    aria-hidden="true"
+                >
+
+                    {/* ILUMINAÇÃO AMBIENTE */}
+
+                    <div className="login-luz-ambiente" />
+
+                    {/* PRIMEIRA ONDA */}
+
+                    <div className="login-onda login-onda-1" />
+
+                    {/* SEGUNDA ONDA */}
+
+                    <div className="login-onda login-onda-2" />
+
+                    {/* TERCEIRA ONDA */}
+
+                    <div className="login-onda login-onda-3" />
+
+                    {/* QUARTA ONDA */}
+
+                    <div className="login-onda login-onda-4" />
+
+                    {/* TEXTURA TECNOLÓGICA */}
+
+                    <div className="login-grade-tecnologica" />
+
+                </div>
+
+                {/* =================================
+                    LOGOTIPO
+                ================================= */}
 
                 <div className="marca-integra">
 
@@ -96,56 +183,98 @@ function Login() {
 
                 </div>
 
+                {/* =================================
+                    TEXTO DE APRESENTAÇÃO
+                ================================= */}
+
                 <div className="texto-apresentacao">
 
                     <h1>
+
                         Bem Vindo(a) ao
-                        <span>Integra 2026</span>
+
+                        <span>
+                            Integra 2026
+                        </span>
+
                     </h1>
 
                     <p>
+
                         Acesse o sistema e tenha em mãos os
                         conteúdos tributários, notas fiscais e todas
                         as informações que você precisa, de forma
                         segura e organizada.
+
                     </p>
 
                 </div>
 
+                {/* =================================
+                    VANTAGENS DO SISTEMA
+                ================================= */}
+
                 <div className="vantagens">
 
+                    {/* CONTEÚDO CONFIÁVEL */}
+
                     <div className="vantagem">
 
-                        <img src={iconeEscudo} alt="" />
+                        <img
+                            src={iconeEscudo}
+                            alt=""
+                        />
 
                         <span>
+
                             Conteúdo
+
                             <br />
+
                             confiável
+
                         </span>
 
                     </div>
 
+                    {/* INFORMAÇÃO ATUALIZADA */}
+
                     <div className="vantagem">
 
-                        <img src={iconeDocumento} alt="" />
+                        <img
+                            src={iconeDocumento}
+                            alt=""
+                        />
 
                         <span>
+
                             Informação
+
                             <br />
+
                             atualizada
+
                         </span>
 
                     </div>
 
+                    {/* ACESSO POR PERFIL */}
+
                     <div className="vantagem">
 
-                        <img src={iconeGrupo} alt="" />
+                        <img
+                            src={iconeGrupo}
+                            alt=""
+                        />
 
                         <span>
+
                             Acesso
+
                             <br />
+
                             por perfil
+
                         </span>
 
                     </div>
@@ -154,7 +283,9 @@ function Login() {
 
             </section>
 
-            {/* LADO DIREITO */}
+            {/* =================================
+                LADO DIREITO - FORMULÁRIO
+            ================================= */}
 
             <section className="login-formulario">
 
@@ -176,7 +307,9 @@ function Login() {
 
                     <header className="formulario-cabecalho">
 
-                        <h2>Acesse sua conta</h2>
+                        <h2>
+                            Acesse sua conta
+                        </h2>
 
                         <p>
                             Digite suas credenciais para continuar
@@ -184,7 +317,9 @@ function Login() {
 
                     </header>
 
-                    {/* FORMULÁRIO */}
+                    {/* =================================
+                        FORMULÁRIO DE LOGIN
+                    ================================= */}
 
                     <form onSubmit={entrar}>
 
@@ -193,7 +328,9 @@ function Login() {
                         <div className="campo">
 
                             <label htmlFor="cnpj">
+
                                 Identificador: Email/CNPJ
+
                             </label>
 
                             <div className="campo-input">
@@ -250,12 +387,16 @@ function Login() {
 
                             </div>
 
+                            {/* RECUPERAÇÃO DE SENHA */}
+
                             <button
                                 type="button"
                                 className="link-recuperar"
                                 onClick={recuperarSenha}
                             >
+
                                 Esqueceu sua senha?
+
                             </button>
 
                         </div>
@@ -268,7 +409,9 @@ function Login() {
                                 className="login-erro"
                                 role="alert"
                             >
+
                                 {erro}
+
                             </p>
 
                         )}
@@ -280,32 +423,47 @@ function Login() {
                             className="botao-entrar"
                             disabled={carregando}
                         >
-                            {carregando ? "Entrando..." : "Entrar"}
+
+                            {carregando
+                                ? "Entrando..."
+                                : "Entrar"
+                            }
+
                         </button>
 
                     </form>
 
-                    {/* DIVISOR */}
+                    {/* =================================
+                        DIVISOR
+                    ================================= */}
 
                     <div className="divisor">
 
-                        <span></span>
+                        <span />
+
                         <small>ou</small>
-                        <span></span>
+
+                        <span />
 
                     </div>
 
-                    {/* CADASTRO */}
+                    {/* =================================
+                        CRIAR CONTA
+                    ================================= */}
 
                     <button
                         type="button"
                         className="link-criar-conta"
                         onClick={criarConta}
                     >
+
                         Criar uma conta
+
                     </button>
 
-                    {/* CONSULTA NF-E SEM LOGIN */}
+                    {/* =================================
+                        CONSULTA NF-E SEM LOGIN
+                    ================================= */}
 
                     <Link
                         to="/consultar-chave"
@@ -321,13 +479,17 @@ function Login() {
 
                     </Link>
 
-                    {/* PORTAL PÚBLICO */}
+                    {/* =================================
+                        PORTAL PÚBLICO
+                    ================================= */}
 
                     <Link
                         to="/portal"
                         className="link-consultar-nfe"
                     >
+
                         Explorar conteúdos públicos
+
                     </Link>
 
                 </div>
@@ -335,7 +497,9 @@ function Login() {
             </section>
 
         </main>
+
     );
+
 }
 
 export default Login;
