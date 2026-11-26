@@ -1,0 +1,248 @@
+/* =========================================
+   FORMATAÇÃO DAS RESPOSTAS DA IA
+========================================= */
+
+.resposta-ia {
+    width: 100%;
+    min-width: 0;
+
+    color: #344054;
+
+    font-size: 14px;
+    line-height: 1.85;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+/* PARÁGRAFOS */
+
+.resposta-ia p {
+    margin: 0 0 14px;
+}
+
+.resposta-ia > :first-child {
+    margin-top: 0;
+}
+
+.resposta-ia > :last-child {
+    margin-bottom: 0;
+}
+
+/* TÍTULOS */
+
+.resposta-ia h1,
+.resposta-ia h2,
+.resposta-ia h3,
+.resposta-ia h4,
+.resposta-ia h5,
+.resposta-ia h6 {
+    margin: 23px 0 12px;
+
+    color: #1d2e68;
+
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.resposta-ia h1 {
+    font-size: 23px;
+}
+
+.resposta-ia h2 {
+    font-size: 20px;
+}
+
+.resposta-ia h3 {
+    font-size: 17px;
+}
+
+.resposta-ia h4,
+.resposta-ia h5,
+.resposta-ia h6 {
+    font-size: 15px;
+}
+
+/* NEGRITO E ITÁLICO */
+
+.resposta-ia strong {
+    color: #1d2e68;
+    font-weight: 700;
+}
+
+.resposta-ia em {
+    font-style: italic;
+}
+
+/* LISTAS */
+
+.resposta-ia ul,
+.resposta-ia ol {
+    margin: 12px 0 18px;
+
+    padding-left: 25px;
+
+    list-style-position: outside;
+}
+
+.resposta-ia ul {
+    list-style-type: disc;
+}
+
+.resposta-ia ol {
+    list-style-type: decimal;
+}
+
+.resposta-ia li {
+    display: list-item;
+
+    margin-bottom: 8px;
+
+    padding-left: 3px;
+}
+
+.resposta-ia li::marker {
+    color: #1d2e68;
+    font-weight: 600;
+}
+
+.resposta-ia li p {
+    margin: 0;
+}
+
+/* CITAÇÕES */
+
+.resposta-ia blockquote {
+    margin: 18px 0;
+    padding: 13px 17px;
+
+    border-left: 4px solid #ff8500;
+    border-radius: 0 7px 7px 0;
+
+    background: #f3f6fc;
+    color: #596579;
+}
+
+.resposta-ia blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* SEPARADORES */
+
+.resposta-ia hr {
+    margin: 22px 0;
+
+    border: none;
+    border-top: 1px solid #dce3ee;
+}
+
+/* TABELAS */
+
+.resposta-ia table {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    margin: 18px 0;
+
+    border-collapse: collapse;
+
+    overflow-x: auto;
+
+    font-size: 13px;
+}
+
+.resposta-ia th,
+.resposta-ia td {
+    padding: 11px 13px;
+
+    border: 1px solid #dce3ee;
+
+    text-align: left;
+    vertical-align: top;
+}
+
+.resposta-ia th {
+    background: #1d2e68;
+    color: #ffffff;
+
+    font-weight: 600;
+}
+
+.resposta-ia th strong {
+    color: inherit;
+}
+
+.resposta-ia tbody tr:nth-child(even) {
+    background: #f3f6fc;
+}
+
+/* CÓDIGOS */
+
+.resposta-ia code {
+    padding: 3px 5px;
+
+    border-radius: 4px;
+
+    background: #eaf0fa;
+    color: #1d2e68;
+
+    font-family: Consolas, monospace;
+    font-size: 12px;
+}
+
+.resposta-ia pre {
+    max-width: 100%;
+
+    margin: 15px 0;
+    padding: 15px;
+
+    border-radius: 8px;
+
+    background: #1d2e68;
+    color: #ffffff;
+
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.resposta-ia pre code {
+    padding: 0;
+
+    background: transparent;
+    color: inherit;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 700px) {
+
+    .resposta-ia {
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .resposta-ia h1 {
+        font-size: 20px;
+    }
+
+    .resposta-ia h2 {
+        font-size: 18px;
+    }
+
+    .resposta-ia h3 {
+        font-size: 16px;
+    }
+
+    .resposta-ia ul,
+    .resposta-ia ol {
+        padding-left: 20px;
+    }
+
+    .resposta-ia th,
+    .resposta-ia td {
+        padding: 9px;
+        font-size: 12px;
+    }
+}

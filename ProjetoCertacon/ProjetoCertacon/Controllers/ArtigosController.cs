@@ -186,7 +186,7 @@ namespace ProjetoCertacon.Controllers
                 artigo.TamanhoArquivo = arquivo.Length;
                 artigo.DataAtualizacao = DateTime.UtcNow;
 
-                await _context.SaveChangesAsync();
+                await SalvarAlteracaoComRevogacaoIAAsync(artigo);
             }
             catch
             {
@@ -471,7 +471,7 @@ namespace ProjetoCertacon.Controllers
             artigo.Conteudo = dados.Conteudo;
             artigo.Visibilidade = dados.Visibilidade;
             artigo.DataAtualizacao = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            await SalvarAlteracaoComRevogacaoIAAsync(artigo);
             await _auditoria.RegistrarAsync(usuarioId.Value, "ARTIGO_EDITADO", "ARTIGO", artigo.ArtigoId,
                 HttpContext.Connection.RemoteIpAddress?.ToString(), "Artigo editado: " + artigo.Titulo);
             return Ok(new { mensagem = "Artigo atualizado com sucesso.", artigo.ArtigoId, artigo.Titulo, artigo.Status });
@@ -551,7 +551,7 @@ namespace ProjetoCertacon.Controllers
             artigo.Status = "ARQUIVADO";
             artigo.DataAtualizacao = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
+            await SalvarAlteracaoComRevogacaoIAAsync(artigo);
 
             await _auditoria.RegistrarAsync(
                 usuarioId.Value,
@@ -602,7 +602,7 @@ namespace ProjetoCertacon.Controllers
             artigo.Status = "EM_REVISAO";
             artigo.DataAtualizacao = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
+            await SalvarAlteracaoComRevogacaoIAAsync(artigo);
 
             await _auditoria.RegistrarAsync(autorId.Value, "ARTIGO_ENVIADO_REVISAO", "ARTIGO",
                 artigo.ArtigoId, HttpContext.Connection.RemoteIpAddress?.ToString(),
@@ -695,7 +695,7 @@ namespace ProjetoCertacon.Controllers
 
             _context.RevisaoArtigos.Add(revisao);
 
-            await _context.SaveChangesAsync();
+            await SalvarAlteracaoComRevogacaoIAAsync(artigo);
 
             await _auditoria.RegistrarAsync(
                 revisorId.Value,
@@ -764,7 +764,7 @@ namespace ProjetoCertacon.Controllers
 
             _context.RevisaoArtigos.Add(revisao);
 
-            await _context.SaveChangesAsync();
+            await SalvarAlteracaoComRevogacaoIAAsync(artigo);
 
             await _auditoria.RegistrarAsync(
                 revisorId.Value,
@@ -833,7 +833,7 @@ namespace ProjetoCertacon.Controllers
 
             _context.RevisaoArtigos.Add(revisao);
 
-            await _context.SaveChangesAsync();
+            await SalvarAlteracaoComRevogacaoIAAsync(artigo);
 
             await _auditoria.RegistrarAsync(
                 revisorId.Value,
@@ -918,7 +918,7 @@ namespace ProjetoCertacon.Controllers
             artigo.DataPublicacao = DateTime.UtcNow;
             artigo.DataAtualizacao = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
+            await SalvarAlteracaoComRevogacaoIAAsync(artigo);
 
             await _auditoria.RegistrarAsync(
                 usuarioId.Value,
@@ -942,6 +942,38 @@ namespace ProjetoCertacon.Controllers
         // ============================================================
         // MÉTODOS AUXILIARES
         // ============================================================
+
+        // Salva a alteração e invalida a autorização e o cache na mesma transação.
+        private async Task SalvarAlteracaoComRevogacaoIAAsync(Artigo artigo)
+        {
+            var usuarioId = ObterUsuarioId();
+            var agora = DateTime.UtcNow;
+
+            await using var transacao = await _context.Database.BeginTransactionAsync();
+
+            await _context.SaveChangesAsync();
+
+            var revogados = await _context.Artigos
+                .Where(a => a.ArtigoId == artigo.ArtigoId &&
+                    (a.AutorizadoIA || a.HashAutorizacaoIA != null))
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(a => a.AutorizadoIA, false)
+                    .SetProperty(a => a.HashAutorizacaoIA, (string?)null)
+                    .SetProperty(a => a.DataRevogacaoIA, (DateTime?)agora));
+
+            await _context.ResumoInteligentes
+                .Where(r => r.ArtigoId == artigo.ArtigoId)
+                .ExecuteDeleteAsync();
+
+            if (revogados > 0)
+            {
+                await _auditoria.RegistrarAsync(usuarioId, "ARTIGO_REVOGADO_IA", "ARTIGO",
+                    artigo.ArtigoId, HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    "Autorização de IA revogada automaticamente por alteração do artigo: " + artigo.Titulo);
+            }
+
+            await transacao.CommitAsync();
+        }
 
         private Guid? ObterUsuarioId() => _permissao.ObterUsuarioId(User);
 

@@ -14,6 +14,7 @@ import {
     Bookmark,
     CalendarDays,
     Calculator,
+    Bot,
     X
 } from "lucide-react";
 
@@ -139,7 +140,6 @@ export default function Sidebar() {
                     temPermissao("historico.leitura.gerenciar.proprio")
                 )
         },
-
         {
             titulo: "Agenda Fiscal",
             rota: "/agenda-fiscal",
@@ -152,19 +152,30 @@ export default function Sidebar() {
                 )
         },
         {
-    titulo: "Simulador Tributário",
+            titulo: "Simulador Tributário",
 
-    rota: "/simulador-tributario",
+            rota: "/simulador-tributario",
 
-    Icone: Calculator,
+            Icone: Calculator,
 
-    permitido:
-        autenticado &&
-        (
-            temPermissao("simulador.calcular") ||
-            temPermissao("simulador.gerenciar")
-        )
-}
+            permitido:
+                autenticado &&
+                (
+                    temPermissao("simulador.calcular") ||
+                    temPermissao("simulador.gerenciar")
+                )
+        },
+        {
+            titulo: "Assistente Fiscal IA",
+            rota: "/assistente-ia",
+            Icone: Bot,
+            permitido:
+                autenticado &&
+                (
+                    temPermissao("ia.consultar") ||
+                    temPermissao("ia.gerenciar.artigos")
+                )
+        }
 
     ].filter(item => item.permitido);
 

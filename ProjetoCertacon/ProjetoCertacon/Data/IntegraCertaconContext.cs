@@ -39,8 +39,153 @@ public partial class IntegraCertaconContext : DbContext
     public virtual DbSet<ObrigacaoFiscal> ObrigacaoFiscais { get; set; }
 
     public virtual DbSet<CenarioTributario> CenarioTributarios { get; set; }
+
+    public virtual DbSet<ResumoInteligente> ResumoInteligentes { get; set; }
+
+    public virtual DbSet<UsoInteligenciaArtificial> UsoInteligenciaArtificiais { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<UsoInteligenciaArtificial>(entity =>
+        {
+            entity.HasKey(e => e.UsoInteligenciaArtificialId)
+                .HasName("PK_USO_INTELIGENCIA_ARTIFICIAL");
+
+            entity.ToTable("USO_INTELIGENCIA_ARTIFICIAL", tabela =>
+            {
+                tabela.HasCheckConstraint(
+                    "CK_USO_IA_QUANTIDADE_RESUMOS",
+                    "[QuantidadeResumos] >= 0"
+                );
+
+                tabela.HasCheckConstraint(
+                    "CK_USO_IA_QUANTIDADE_PERGUNTAS",
+                    "[QuantidadePerguntas] >= 0"
+                );
+            });
+
+            // =====================================
+            // ÍNDICE ÚNICO POR USUÁRIO E DIA
+            // =====================================
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.UsuarioId,
+                    e.DataReferencia
+                },
+                "UQ_USO_IA_USUARIO_DATA"
+            ).IsUnique();
+
+            // =====================================
+            // PROPRIEDADES
+            // =====================================
+
+            entity.Property(e => e.UsoInteligenciaArtificialId)
+                .HasDefaultValueSql("(newsequentialid())")
+                .HasColumnName("UsoInteligenciaArtificial_Id");
+
+            entity.Property(e => e.UsuarioId)
+                .HasColumnName("Usuario_Id");
+
+            entity.Property(e => e.DataReferencia)
+                .HasColumnType("date");
+
+            entity.Property(e => e.QuantidadeResumos)
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.QuantidadePerguntas)
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.DataUltimaConsulta)
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            // =====================================
+            // RELACIONAMENTO COM USUARIO
+            // =====================================
+
+            entity.HasOne(d => d.Usuario)
+                .WithMany(p => p.UsoInteligenciaArtificiais)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_USO_IA_USUARIO"
+                );
+        });
+        modelBuilder.Entity<ResumoInteligente>(entity =>
+        {
+            entity.HasKey(e => e.ResumoInteligenteId)
+                .HasName("PK_RESUMO_INTELIGENTE");
+
+            entity.ToTable("RESUMO_INTELIGENTE", tabela =>
+            {
+                tabela.HasCheckConstraint(
+                    "CK_RESUMO_INTELIGENTE_RESUMO",
+                    "LEN(LTRIM(RTRIM([Resumo]))) > 0"
+                );
+            });
+
+            // =====================================
+            // ÍNDICE ÚNICO POR ARTIGO
+            // =====================================
+
+            entity.HasIndex(
+                e => e.ArtigoId,
+                "UQ_RESUMO_INTELIGENTE_ARTIGO"
+            ).IsUnique();
+
+            // =====================================
+            // PROPRIEDADES
+            // =====================================
+
+            entity.Property(e => e.ResumoInteligenteId)
+                .HasDefaultValueSql("(newsequentialid())")
+                .HasColumnName("ResumoInteligente_Id");
+
+            entity.Property(e => e.ArtigoId)
+                .HasColumnName("Artigo_Id");
+
+            entity.Property(e => e.Resumo)
+                .HasColumnType("nvarchar(max)")
+                .IsRequired();
+
+            entity.Property(e => e.HashConteudo)
+                .HasColumnType("char(64)")
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .IsRequired();
+
+            entity.Property(e => e.Provedor)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(e => e.Modelo)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.VersaoPrompt)
+                .HasMaxLength(30)
+                .IsRequired();
+
+            entity.Property(e => e.DataGeracao)
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysutcdatetime())");
+
+            // =====================================
+            // RELACIONAMENTO COM ARTIGO
+            // =====================================
+
+            entity.HasOne(d => d.Artigo)
+                .WithOne(p => p.ResumoInteligente)
+                .HasForeignKey<ResumoInteligente>(
+                    d => d.ArtigoId
+                )
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_RESUMO_INTELIGENTE_ARTIGO"
+                );
+        });
         OnModelCreatingPartial(modelBuilder);
         modelBuilder.Entity<CenarioTributario>(entity =>
         {
@@ -358,6 +503,53 @@ public partial class IntegraCertaconContext : DbContext
         });
         modelBuilder.Entity<Artigo>(entity =>
         {
+            // =========================================
+            // AUTORIZAÇÃO PARA INTELIGÊNCIA ARTIFICIAL
+            // =========================================
+
+            entity.Property(e => e.AutorizadoIA)
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.HashAutorizacaoIA)
+                .HasColumnType("char(64)")
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .IsFixedLength();
+
+            entity.Property(e => e.AutorizadorIAId)
+                .HasColumnName("AutorizadorIA_Id");
+
+            entity.Property(e => e.DataAutorizacaoIA)
+                .HasColumnType("datetime2");
+
+            entity.Property(e => e.DataRevogacaoIA)
+                .HasColumnType("datetime2");
+
+            // =========================================
+            // ÍNDICE DA BASE DE CONHECIMENTO
+            // =========================================
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.AutorizadoIA,
+                    e.Status,
+                    e.Visibilidade
+                },
+                "IX_ARTIGO_BASE_CONHECIMENTO_IA"
+            );
+
+            // =========================================
+            // RELACIONAMENTO COM AUTORIZADOR
+            // =========================================
+
+            entity.HasOne(d => d.AutorizadorIA)
+                .WithMany(p => p.ArtigosAutorizadosIA)
+                .HasForeignKey(d => d.AutorizadorIAId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_ARTIGO_AUTORIZADOR_IA"
+                );
             entity.ToTable("ARTIGO");
 
             entity.HasIndex(e => e.AutorUsuarioId, "IX_ARTIGO_AutorUsuario_Id");

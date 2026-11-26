@@ -32,11 +32,26 @@ public partial class Artigo
     public virtual ICollection<RevisaoArtigo> RevisaoArtigos { get; set; } = new List<RevisaoArtigo>();
 
     public virtual Tema Tema { get; set; } = null!;
+
+    public virtual ResumoInteligente? ResumoInteligente { get; set; }
+
     public string? NomeArquivo { get; set; }
 
     public string? CaminhoArquivo { get; set; }
 
     public string? TipoConteudo { get; set; }
+
+    public bool AutorizadoIA { get; set; }
+
+    public string? HashAutorizacaoIA { get; set; }
+
+    public Guid? AutorizadorIAId { get; set; }
+
+    public DateTime? DataAutorizacaoIA { get; set; }
+
+    public DateTime? DataRevogacaoIA { get; set; }
+
+    public virtual Usuario? AutorizadorIA { get; set; }
 
     public long? TamanhoArquivo { get; set; }
     public virtual ICollection<FavoritoArtigo> FavoritoArtigos { get; set; }

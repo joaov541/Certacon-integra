@@ -1,0 +1,141 @@
+/* Calculadora Receita Federal — identidade IntegraCertacon */
+.rf-calculadora {
+    --rf-azul: #1d2e68;
+    --rf-laranja: #ff8500;
+    --rf-borda: #dce3ee;
+    --rf-fundo: #f3f6fc;
+    container-type: inline-size;
+    min-width: 0;
+}
+
+.rf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.rf-calculadora .st-card {
+    border-radius: 14px;
+    box-shadow: 0 3px 14px rgba(29, 46, 104, .045);
+}
+
+.rf-campos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+
+.rf-largo { grid-column: 1 / -1; }
+.rf-calculadora .st-campo > input,
+.rf-calculadora .st-campo > select { min-height: 44px; }
+
+.rf-lista-itens { gap: 12px; padding-top: 18px; border-top: 1px solid var(--rf-borda); }
+.rf-lista-titulo { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.rf-lista-titulo h3, .rf-exemplos h3 { margin: 0; color: var(--rf-azul); font-size: 15px; }
+.rf-lista-titulo > span { background: #e8eef9; color: var(--rf-azul); padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+.rf-item { border: 1px solid var(--rf-borda); border-radius: 12px; background: #fff; min-width: 0; overflow: hidden; }
+.rf-item-cabecalho { display: flex; align-items: center; gap: 8px; padding: 12px; background: #f8faff; }
+.rf-item-toggle { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; text-align: left; border: 0; background: transparent; color: var(--rf-azul); padding: 4px; }
+.rf-item-icone { width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center; border-radius: 9px; background: #e6edf9; }
+.rf-item-identidade { flex: 1; min-width: 0; display: grid; gap: 4px; overflow-wrap: anywhere; }
+.rf-item-identidade strong { font-size: 15px; }
+.rf-item-identidade small { color: #68758a; font-size: 11px; }
+.rf-item-valor { font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }
+.rf-chevron { flex-shrink: 0; transition: transform .2s; }
+.rf-chevron.aberto { transform: rotate(180deg); }
+.rf-item-corpo { padding: 18px; border-top: 1px solid var(--rf-borda); }
+.rf-item-corpo[hidden] { display: none; }
+.rf-consultar { align-self: end; min-height: 44px; }
+.rf-adicionar { border-style: dashed; min-height: 46px; }
+.rf-calculadora .st-botao-calcular { min-height: 50px; box-shadow: 0 4px 12px rgba(29,46,104,.15); }
+
+.rf-ncm, .rf-memoria > div { background: var(--rf-fundo); border: 1px solid var(--rf-borda); border-radius: 9px; padding: 13px; overflow-wrap: anywhere; font-size: 13px; line-height: 1.6; }
+.rf-ncm strong { color: var(--rf-azul); }
+.rf-ncm p, .rf-memoria p { margin: 6px 0 0; }
+.rf-memoria { display: grid; gap: 10px; margin-top: 20px; }
+.rf-memoria h3 { margin: 0; color: var(--rf-azul); font-size: 15px; }
+.rf-painel-resultado { position: static; max-height: none; overflow: visible; min-height: 0; }
+.rf-painel-resultado .st-tributo { background: #fff; border-radius: 10px; }
+.rf-painel-resultado .st-total { background: var(--rf-azul); border-left: 5px solid var(--rf-laranja); }
+.rf-resultado-item { background: #f8faff; }
+.rf-resultado-item summary { cursor: pointer; color: var(--rf-azul); padding: 5px 0; }
+.rf-resultado-item[open] summary { margin-bottom: 12px; border-bottom: 1px solid var(--rf-borda); padding-bottom: 12px; }
+.rf-resultado-item .st-resultados-grid { margin-top: 12px; }
+.rf-exemplos { border-top: 1px solid var(--rf-borda); padding-top: 16px; display: grid; gap: 10px; }
+.rf-exemplos-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.rf-exemplos-grid button { font-size: 12px; }
+.rf-calculadora input:focus-visible, .rf-calculadora select:focus-visible, .rf-calculadora button:focus-visible, .rf-calculadora summary:focus-visible { outline: 2px solid var(--rf-azul); outline-offset: 2px; }
+
+@container (max-width: 900px) {
+    .rf-grid { grid-template-columns: 1fr; }
+    .rf-painel-resultado { position: static; max-height: none; overflow: visible; }
+}
+@media (max-width: 1100px) {
+    .rf-grid { grid-template-columns: 1fr; }
+    .rf-painel-resultado { position: static; max-height: none; overflow: visible; }
+}
+@container (max-width: 480px) {
+    .rf-campos, .rf-exemplos-grid { grid-template-columns: 1fr; }
+    .rf-item-valor { display: none; }
+    .rf-item-corpo { padding: 12px; }
+    .rf-calculadora .st-card { padding: 14px; }
+}
+@media (max-width: 480px) {
+    .rf-campos, .rf-exemplos-grid { grid-template-columns: 1fr; }
+    .rf-grid { gap: 12px; }
+    .rf-item-valor { display: none; }
+    .rf-calculadora .st-card { padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .rf-chevron { transition: none; } }
+
+/* Layout horizontal: formulário e resultado em largura integral. */
+.rf-calculadora .rf-grid > .st-card {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.rf-calculadora .rf-grid > .st-card > .st-formulario > .rf-campos,
+.rf-calculadora .rf-item-corpo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.rf-calculadora .rf-painel-resultado .st-resultado-vazio {
+    min-height: 160px;
+    padding: 20px;
+    gap: 10px;
+}
+
+.rf-calculadora .rf-painel-resultado .st-resultados-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@container (min-width: 1000px) {
+    .rf-calculadora .rf-grid > .st-card > .st-formulario > .rf-campos,
+    .rf-calculadora .rf-item-corpo {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .rf-calculadora .st-formulario > .rf-campos > label.rf-largo {
+        grid-column: auto;
+    }
+    .rf-calculadora .rf-item-corpo > label.rf-largo {
+        grid-column: span 2;
+    }
+    .rf-calculadora .rf-painel-resultado .st-resultados-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@container (max-width: 480px) {
+    .rf-calculadora .rf-grid > .st-card > .st-formulario > .rf-campos,
+    .rf-calculadora .rf-item-corpo,
+    .rf-calculadora .rf-painel-resultado .st-resultados-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

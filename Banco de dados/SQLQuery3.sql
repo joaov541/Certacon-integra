@@ -583,3 +583,502 @@ WHERE PM.Codigo IN
 )
 
 ORDER BY P.Nome, PM.Codigo;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IF OBJECT_ID('dbo.RESUMO_INTELIGENTE', 'U') IS NULL
+BEGIN
+
+    CREATE TABLE dbo.RESUMO_INTELIGENTE
+    (
+        ResumoInteligente_Id UNIQUEIDENTIFIER NOT NULL
+            DEFAULT NEWSEQUENTIALID(),
+
+        Artigo_Id UNIQUEIDENTIFIER NOT NULL,
+
+        Resumo NVARCHAR(MAX) NOT NULL,
+
+        HashConteudo CHAR(64) NOT NULL,
+
+        Provedor NVARCHAR(50) NOT NULL,
+
+        Modelo NVARCHAR(100) NOT NULL,
+
+        VersaoPrompt NVARCHAR(30) NOT NULL,
+
+        DataGeracao DATETIME2 NOT NULL
+            DEFAULT SYSUTCDATETIME(),
+
+        CONSTRAINT PK_RESUMO_INTELIGENTE
+            PRIMARY KEY (ResumoInteligente_Id),
+
+        CONSTRAINT FK_RESUMO_INTELIGENTE_ARTIGO
+            FOREIGN KEY (Artigo_Id)
+            REFERENCES dbo.ARTIGO (Artigo_Id),
+
+        CONSTRAINT UQ_RESUMO_INTELIGENTE_ARTIGO
+            UNIQUE (Artigo_Id),
+
+        CONSTRAINT CK_RESUMO_INTELIGENTE_RESUMO
+            CHECK (LEN(LTRIM(RTRIM(Resumo))) > 0)
+    );
+
+    PRINT 'Tabela RESUMO_INTELIGENTE criada com sucesso.';
+
+END
+ELSE
+BEGIN
+
+    PRINT 'A tabela RESUMO_INTELIGENTE já existe.';
+
+END;
+
+
+
+
+
+
+
+
+
+
+
+IF OBJECT_ID(
+    'dbo.USO_INTELIGENCIA_ARTIFICIAL', 'U'
+) IS NULL
+BEGIN
+
+    CREATE TABLE dbo.USO_INTELIGENCIA_ARTIFICIAL
+    (
+        UsoInteligenciaArtificial_Id UNIQUEIDENTIFIER NOT NULL
+            DEFAULT NEWSEQUENTIALID(),
+
+        Usuario_Id UNIQUEIDENTIFIER NOT NULL,
+
+        DataReferencia DATE NOT NULL,
+
+        QuantidadeResumos INT NOT NULL
+            DEFAULT 0,
+
+        QuantidadePerguntas INT NOT NULL
+            DEFAULT 0,
+
+        DataUltimaConsulta DATETIME2 NOT NULL
+            DEFAULT SYSUTCDATETIME(),
+
+        CONSTRAINT PK_USO_INTELIGENCIA_ARTIFICIAL
+            PRIMARY KEY (
+                UsoInteligenciaArtificial_Id
+            ),
+
+        CONSTRAINT FK_USO_IA_USUARIO
+            FOREIGN KEY (Usuario_Id)
+            REFERENCES dbo.USUARIO (Usuario_Id),
+
+        CONSTRAINT UQ_USO_IA_USUARIO_DATA
+            UNIQUE (
+                Usuario_Id,
+                DataReferencia
+            ),
+
+        CONSTRAINT CK_USO_IA_QUANTIDADE_RESUMOS
+            CHECK (QuantidadeResumos >= 0),
+
+        CONSTRAINT CK_USO_IA_QUANTIDADE_PERGUNTAS
+            CHECK (QuantidadePerguntas >= 0)
+    );
+
+    PRINT 'Tabela USO_INTELIGENCIA_ARTIFICIAL criada com sucesso.';
+
+END
+ELSE
+BEGIN
+
+    PRINT 'A tabela USO_INTELIGENCIA_ARTIFICIAL já existe.';
+
+END;
+
+
+
+
+
+
+
+
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM dbo.PERMISSAO
+    WHERE Codigo = 'ia.resumir.artigo'
+)
+BEGIN
+
+    INSERT INTO dbo.PERMISSAO
+    (
+        Permissao_Id,
+        Codigo,
+        Nome,
+        Descricao
+    )
+    VALUES
+    (
+        NEWID(),
+        'ia.resumir.artigo',
+        N'Resumir Artigos com IA',
+        N'Permite gerar e consultar resumos inteligentes de artigos autorizados.'
+    );
+
+END;
+
+
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM dbo.PERMISSAO
+    WHERE Codigo = 'ia.consultar'
+)
+BEGIN
+
+    INSERT INTO dbo.PERMISSAO
+    (
+        Permissao_Id,
+        Codigo,
+        Nome,
+        Descricao
+    )
+    VALUES
+    (
+        NEWID(),
+        'ia.consultar',
+        N'Utilizar Assistente Fiscal IA',
+        N'Permite realizar perguntas ao assistente de inteligência artificial.'
+    );
+
+END;
+
+
+
+
+INSERT INTO dbo.PERFIL_PERMISSAO
+(
+    PerfilPermissao_Id,
+    Perfil_Id,
+    Permissao_Id,
+    Tema_Id
+)
+SELECT
+    NEWID(),
+    P.Perfil_Id,
+    PM.Permissao_Id,
+    NULL
+
+FROM dbo.PERFIL P
+
+CROSS JOIN dbo.PERMISSAO PM
+
+WHERE P.Ativo = 1
+
+    AND PM.Ativo = 1
+
+    AND P.Nome IN
+    (
+        N'Administrador',
+        N'Coordenador Fiscal',
+        N'Analista SPED',
+        N'Analista de Documentos Fiscais',
+        N'Analista de Reforma Tributária',
+        N'Cliente'
+    )
+
+    AND PM.Codigo IN
+    (
+        'ia.resumir.artigo',
+        'ia.consultar'
+    )
+
+    AND NOT EXISTS
+    (
+        SELECT 1
+
+        FROM dbo.PERFIL_PERMISSAO PP
+
+        WHERE PP.Perfil_Id = P.Perfil_Id
+
+          AND PP.Permissao_Id = PM.Permissao_Id
+
+          AND PP.Tema_Id IS NULL
+    );
+
+
+
+
+SELECT
+    P.Nome AS Perfil,
+    PM.Codigo AS Permissao,
+    PM.Nome AS NomePermissao,
+    PM.Ativo,
+    PP.Tema_Id
+
+FROM dbo.PERFIL_PERMISSAO PP
+
+INNER JOIN dbo.PERFIL P
+    ON P.Perfil_Id = PP.Perfil_Id
+
+INNER JOIN dbo.PERMISSAO PM
+    ON PM.Permissao_Id = PP.Permissao_Id
+
+WHERE PM.Codigo IN
+(
+    'ia.resumir.artigo',
+    'ia.consultar'
+)
+
+ORDER BY
+    P.Nome,
+    PM.Codigo;
+
+
+
+
+
+
+
+    SELECT
+    A.Artigo_Id,
+    A.Titulo,
+    T.Nome AS Tema,
+    A.Status,
+    A.Visibilidade,
+    A.DataPublicacao
+
+FROM dbo.ARTIGO A
+
+INNER JOIN dbo.TEMA T
+    ON T.Tema_Id = A.Tema_Id
+
+WHERE A.Status = 'PUBLICADO'
+
+    AND A.Visibilidade = 'PUBLICO'
+
+ORDER BY A.DataPublicacao DESC;
+
+
+
+
+SELECT
+    A.Artigo_Id,
+    A.Titulo,
+    A.Resumo,
+    A.Conteudo,
+    T.Nome AS Tema,
+    A.Status,
+    A.Visibilidade
+FROM dbo.ARTIGO A
+
+INNER JOIN dbo.TEMA T
+    ON T.Tema_Id = A.Tema_Id
+
+WHERE A.Status = 'PUBLICADO'
+    AND A.Visibilidade = 'PUBLICO'
+
+ORDER BY A.DataPublicacao DESC;
+
+
+
+SELECT
+    P.Nome AS Perfil,
+    PM.Codigo AS Permissao,
+    PM.Nome AS NomePermissao,
+    PM.Ativo,
+    PP.Tema_Id
+
+FROM dbo.PERFIL_PERMISSAO PP
+
+INNER JOIN dbo.PERFIL P
+    ON P.Perfil_Id = PP.Perfil_Id
+
+INNER JOIN dbo.PERMISSAO PM
+    ON PM.Permissao_Id = PP.Permissao_Id
+
+WHERE PM.Codigo IN
+(
+    'ia.consultar',
+    'ia.resumir.artigo',
+    'ia.gerenciar.artigos'
+)
+
+ORDER BY P.Nome, PM.Codigo;
+
+
+
+
+SELECT
+    A.Artigo_Id,
+    A.Titulo,
+    A.Status,
+    A.Visibilidade,
+    A.AutorizadoIA,
+    A.HashAutorizacaoIA,
+    U.Nome AS Autorizador,
+    A.DataAutorizacaoIA,
+    A.DataRevogacaoIA
+
+FROM dbo.ARTIGO A
+
+LEFT JOIN dbo.USUARIO U
+    ON U.Usuario_Id = A.AutorizadorIA_Id
+
+ORDER BY
+    A.AutorizadoIA DESC,
+    A.DataAutorizacaoIA DESC;
+
+
+
+
+
+SELECT
+    R.ResumoInteligente_Id,
+    R.Artigo_Id,
+    A.Titulo,
+    R.Resumo,
+    R.HashConteudo,
+    R.Provedor,
+    R.Modelo,
+    R.VersaoPrompt,
+    R.DataGeracao
+FROM dbo.RESUMO_INTELIGENTE R
+INNER JOIN dbo.ARTIGO A
+    ON A.Artigo_Id = R.Artigo_Id;
+
+
+
+    DECLARE @ArtigoId UNIQUEIDENTIFIER =
+    'B512193B-FB45-407C-8BF1-395FA9FEC8AA';
+
+-- 1. VERIFICAR REVOGAÇÃO AUTOMÁTICA
+
+SELECT
+    Artigo_Id,
+    Titulo,
+    Status,
+    Visibilidade,
+    AutorizadoIA,
+    HashAutorizacaoIA,
+    DataAutorizacaoIA,
+    DataRevogacaoIA
+FROM dbo.ARTIGO
+WHERE Artigo_Id = @ArtigoId;
+
+-- 2. VERIFICAR EXCLUSÃO DO CACHE
+
+SELECT *
+FROM dbo.RESUMO_INTELIGENTE
+WHERE Artigo_Id = @ArtigoId;
+
+-- 3. VERIFICAR AUDITORIA
+
+SELECT *
+FROM dbo.LOG_AUDITORIA
+WHERE Registro_Id = @ArtigoId
+ORDER BY DataHora DESC;
+
+
+
+DECLARE @ArtigoId UNIQUEIDENTIFIER =
+    '2C19ADC9-6089-4442-A0E7-E3849AB22467';
+
+-- AUTORIZAÇÃO
+
+SELECT
+    Titulo,
+    Status,
+    AutorizadoIA,
+    HashAutorizacaoIA,
+    DataAutorizacaoIA,
+    DataRevogacaoIA
+FROM dbo.ARTIGO
+WHERE Artigo_Id = @ArtigoId;
+
+-- CACHE
+
+SELECT *
+FROM dbo.RESUMO_INTELIGENTE
+WHERE Artigo_Id = @ArtigoId;
+
+-- AUDITORIA
+
+SELECT
+    Acao,
+    Detalhes,
+    DataHora
+FROM dbo.LOG_AUDITORIA
+WHERE Registro_Id = @ArtigoId
+ORDER BY DataHora DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DECLARE @ArtigoId UNIQUEIDENTIFIER =
+    '2C19ADC9-6089-4442-A0E7-E3849AB22467';
+
+-- AUTORIZAÇÃO
+
+SELECT
+    Titulo,
+    Status,
+    AutorizadoIA,
+    HashAutorizacaoIA,
+    DataAutorizacaoIA,
+    DataRevogacaoIA
+FROM dbo.ARTIGO
+WHERE Artigo_Id = @ArtigoId;
+
+-- CACHE
+
+SELECT *
+FROM dbo.RESUMO_INTELIGENTE
+WHERE Artigo_Id = @ArtigoId;
+
+-- AUDITORIA
+
+SELECT
+    Acao,
+    Detalhes,
+    DataHora
+FROM dbo.LOG_AUDITORIA
+WHERE Registro_Id = @ArtigoId
+ORDER BY DataHora DESC;

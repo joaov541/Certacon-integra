@@ -5,11 +5,14 @@ import {
   useLocation,
   useSearchParams
 } from "react-router-dom";
-
+import RespostaIA from "../../components/RespostaIA/RespostaIA";
 import {
   Bookmark,
   BookmarkCheck,
-  LoaderCircle
+  LoaderCircle,
+  Sparkles,
+  Copy,
+  X
 } from "lucide-react";
 
 import DOMPurify from "dompurify";
@@ -867,6 +870,16 @@ function DetalheConteudo() {
 
     if (
       autenticado &&
+      location.state?.origem === "/assistente-ia" &&
+      (temPermissao("ia.consultar") || temPermissao("ia.gerenciar.artigos"))
+    ) {
+      navigate("/assistente-ia");
+      return;
+    }
+
+
+    if (
+      autenticado &&
       location.state?.origem === "/conteudos/revisao"
     ) {
 
@@ -988,12 +1001,11 @@ function DetalheConteudo() {
 
                   <button
                     type="button"
-                    className={`detalhe-botao-favorito ${
-                      favoritado &&
-                      chaveFavoritoCarregado === chaveContexto
+                    className={`detalhe-botao-favorito ${favoritado &&
+                        chaveFavoritoCarregado === chaveContexto
                         ? "detalhe-favorito-ativo"
                         : ""
-                    }`}
+                      }`}
                     onClick={alternarFavorito}
                     disabled={
                       carregandoFavorito ||
@@ -1039,8 +1051,8 @@ function DetalheConteudo() {
                           ? "Salvando..."
                           : favoritado &&
                             chaveFavoritoCarregado === chaveContexto
-                              ? "Favoritado"
-                              : "Favoritar"}
+                            ? "Favoritado"
+                            : "Favoritar"}
 
                     </span>
 
@@ -1159,6 +1171,19 @@ function DetalheConteudo() {
                 </div>
 
               )}
+
+              {/* RESUMO INTELIGENTE */}
+
+              {autenticado && token && !erroPermissoes &&
+                temPermissao("ia.resumir.artigo") &&
+                artigoPublicado &&
+                String(artigo.visibilidade || "").trim().toUpperCase() === "PUBLICO" && (
+                  <ResumoInteligente
+                    key={chaveContexto}
+                    artigoId={idArtigoCarregado}
+                    token={token}
+                  />
+                )}
 
               {/* CONTEÚDO FORMATADO */}
 
@@ -1385,6 +1410,114 @@ function DetalheConteudo() {
 
     </div>
 
+  );
+}
+
+// =========================================
+// RESUMO INTELIGENTE DO ARTIGO
+// =========================================
+
+function ResumoInteligente({ artigoId, token }) {
+  const [resultado, setResultado] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+  const [aberto, setAberto] = useState(false);
+  const [erro, setErro] = useState("");
+  const [copiado, setCopiado] = useState(false);
+  const ativo = useRef(false);
+  const operacao = useRef(false);
+
+  useEffect(() => {
+    ativo.current = true;
+    return () => { ativo.current = false; };
+  }, []);
+
+  function sessaoValida() {
+    return ativo.current && localStorage.getItem("token") === token;
+  }
+
+  async function gerarResumo() {
+    if (!artigoId || operacao.current || !sessaoValida()) return;
+    if (aberto) {
+      setAberto(false);
+      setResultado(null);
+      setErro("");
+      setCopiado(false);
+      return;
+    }
+
+    operacao.current = true;
+    setCarregando(true);
+    setErro("");
+    setResultado(null);
+    setCopiado(false);
+
+    try {
+      const dados = await requisicaoApi(
+        `/api/InteligenciaArtificial/resumir/${encodeURIComponent(artigoId)}`,
+        { method: "POST" }
+      );
+      if (!sessaoValida()) return;
+      if (typeof dados?.resumo !== "string" || !dados.resumo.trim()) {
+        throw new Error("A API não retornou um resumo válido.");
+      }
+      setResultado(dados);
+      setAberto(true);
+    } catch (error) {
+      if (!sessaoValida()) return;
+      setErro(error.message || "Não foi possível gerar o resumo inteligente.");
+    } finally {
+      operacao.current = false;
+      if (sessaoValida()) setCarregando(false);
+    }
+  }
+
+  async function copiarResumo() {
+    if (!resultado?.resumo || !sessaoValida()) return;
+    try {
+      await navigator.clipboard.writeText(resultado.resumo);
+      if (sessaoValida()) setCopiado(true);
+    } catch {
+      if (sessaoValida()) {
+        setErro("Não foi possível copiar automaticamente. Selecione o texto para copiá-lo.");
+      }
+    }
+  }
+
+  return (
+    <section className="detalhe-ia" aria-label="Resumo inteligente">
+      <div className="detalhe-ia-topo">
+        <div>
+          <h2><Sparkles size={21} aria-hidden="true" /> Resumo inteligente</h2>
+          <p>Entenda este artigo em linguagem simples. Disponível para conteúdos autorizados pela Certacon.</p>
+        </div>
+        <button type="button" className="detalhe-ia-botao"
+          onClick={gerarResumo} disabled={carregando} aria-expanded={aberto}>
+          {carregando ? <LoaderCircle size={18} className="detalhe-favorito-loading" aria-hidden="true" />
+            : aberto ? <X size={18} aria-hidden="true" /> : <Sparkles size={18} aria-hidden="true" />}
+          {carregando ? "Gerando resumo..." : aberto ? "Ocultar resumo" : "Resumir com IA"}
+        </button>
+      </div>
+      {carregando && <p className="detalhe-ia-info" role="status">Consultando a inteligência artificial...</p>}
+      {erro && <p className="detalhe-ia-erro" role="alert">{erro}</p>}
+      {aberto && resultado && (
+        <div className="detalhe-ia-resultado" aria-live="polite">
+          <div className="detalhe-ia-meta">
+            <span>{resultado.origem === "CACHE" ? "Resumo armazenado" : "Gerado com inteligência artificial"}</span>
+            {typeof resultado.consultasRestantes === "number" && <span>{resultado.consultasRestantes} consultas restantes</span>}
+          </div>
+          <div className="detalhe-ia-texto">
+            <RespostaIA texto={resultado.resumo} />
+          </div>
+          <div className="detalhe-ia-rodape">
+            <button type="button" className="detalhe-botao-favorito" onClick={copiarResumo}>
+              <Copy size={16} aria-hidden="true" /> {copiado ? "Copiado!" : "Copiar resumo"}
+            </button>
+            <span role="status" className="detalhe-ia-info">{copiado ? "Resumo copiado." : ""}</span>
+          </div>
+          <p className="detalhe-ia-info">{resultado.aviso || "A IA pode cometer erros. Consulte o artigo original e a equipe fiscal."}</p>
+        </div>
+      )}
+    </section>
   );
 }
 

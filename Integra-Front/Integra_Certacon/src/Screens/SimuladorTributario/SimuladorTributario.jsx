@@ -31,6 +31,7 @@ import { requisicaoApi } from "../../services/api";
 import usePermissoes from "../../hooks/usePermissoes";
 
 import "./SimuladorTributario.css";
+import CalculadoraReceita from "./CalculadoraReceita";
 
 // =========================================
 // CONSTANTES
@@ -1131,13 +1132,14 @@ function SimuladorConteudo({
 
                         <p>
                             Simule os impactos do IBS e da CBS
-                            utilizando cenários tributários.
+                            utilizando cenários próprios ou a calculadora da Receita Federal.
                         </p>
 
                     </div>
 
                 </div>
 
+                {aba !== "receita" && (
                 <div className="st-cabecalho-acoes">
 
                     <button
@@ -1179,10 +1181,12 @@ function SimuladorConteudo({
 
                 </div>
 
+                )}
             </header>
 
             {/* AVISO */}
 
+            {aba !== "receita" && (
             <div className="st-aviso">
 
                 <Info size={21} />
@@ -1203,6 +1207,8 @@ function SimuladorConteudo({
                 </div>
 
             </div>
+
+            )}
 
             {/* PAINEL */}
 
@@ -1234,6 +1240,17 @@ function SimuladorConteudo({
 
                     )}
 
+                    {podeCalcular && (
+                        <button type="button"
+                            className={aba === "receita" ? "st-aba st-aba-ativa" : "st-aba"}
+                            aria-pressed={aba === "receita"}
+                            disabled={ocupado}
+                            onClick={() => trocarAba("receita")}>
+                            <Landmark size={19} />
+                            Receita Federal
+                        </button>
+                    )}
+
                     {podeGerenciar && (
 
                         <button
@@ -1262,6 +1279,9 @@ function SimuladorConteudo({
 
                 <div className="st-painel-conteudo">
 
+                    {aba === "receita" && podeCalcular ? (
+                        <CalculadoraReceita token={token} />
+                    ) : (<>
                     {/* MENSAGENS */}
 
                     {mensagem && (
@@ -2373,6 +2393,7 @@ function SimuladorConteudo({
 
                     )}
 
+                    </>)}
                 </div>
 
             </section>

@@ -497,6 +497,69 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ProjetoCertacon.Controllers.BaseConhecimentoIAController",
+    "Method": "Listar",
+    "RelativePath": "api/BaseConhecimentoIA",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pesquisa",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "temaId",
+        "Type": "System.Nullable\u00601[[System.Guid, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "situacao",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.BaseConhecimentoIAController",
+    "Method": "ConsultarArtigo",
+    "RelativePath": "api/BaseConhecimentoIA/{artigoId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.BaseConhecimentoIAController",
+    "Method": "AlterarAutorizacao",
+    "RelativePath": "api/BaseConhecimentoIA/{artigoId}/autorizacao",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.AutorizacaoIARequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProjetoCertacon.Controllers.CadastroClientesController",
     "Method": "Cadastrar",
     "RelativePath": "api/CadastroClientes",
@@ -844,6 +907,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ProjetoCertacon.Controllers.GroqTesteController",
+    "Method": "Testar",
+    "RelativePath": "api/GroqTeste",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProjetoCertacon.Controllers.HistoricoLeituraController",
     "Method": "Listar",
     "RelativePath": "api/HistoricoLeitura",
@@ -884,6 +957,48 @@
     "Method": "Remover",
     "RelativePath": "api/HistoricoLeitura/{artigoId}",
     "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "artigoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.InteligenciaArtificialController",
+    "Method": "ConsultarLimites",
+    "RelativePath": "api/InteligenciaArtificial/limites",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.InteligenciaArtificialController",
+    "Method": "Perguntar",
+    "RelativePath": "api/InteligenciaArtificial/perguntar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dados",
+        "Type": "ProjetoCertacon.Controllers.PerguntaIARequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProjetoCertacon.Controllers.InteligenciaArtificialController",
+    "Method": "Resumir",
+    "RelativePath": "api/InteligenciaArtificial/resumir/{artigoId}",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [

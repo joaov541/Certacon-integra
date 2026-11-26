@@ -84,6 +84,16 @@ builder.Services.AddScoped<AuditoriaService>();
 builder.Services.AddScoped<PermissaoService>();
 builder.Services.AddSingleton<LimiteConsultaChavesService>();
 builder.Services.AddScoped<SimuladorTributarioService>();
+builder.Services.AddHttpClient<GroqService>();
+// =========================================
+// INTELIGÊNCIA ARTIFICIAL
+// =========================================
+
+builder.Services.AddScoped<ControleUsoIAService>();
+
+builder.Services.AddScoped<BuscaArtigosService>();
+
+builder.Services.AddScoped<InteligenciaArtificialService>();
 
 // =========================================
 // PROTEÇÃO DE SENHAS

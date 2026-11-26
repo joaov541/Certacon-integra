@@ -3,24 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\simuladortributariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\simuladortributariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\agendafiscalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\agendafiscalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\artigoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\artigoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\services\\simuladortributarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\services\\simuladortributarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\services\\inteligenciaartificialservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\services\\inteligenciaartificialservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\models\\resumointeligente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\models\\resumointeligente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\services\\buscaartigosservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\services\\buscaartigosservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\baseconhecimentoiacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\baseconhecimentoiacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\services\\hashartigoiaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\services\\hashartigoiaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\data\\integracertaconcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -29,6 +37,53 @@
     {
       "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\models\\artigo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\models\\artigo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\inteligenciaartificialcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\inteligenciaartificialcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\services\\controleusoiaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\services\\controleusoiaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\models\\usointeligenciaartificial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\models\\usointeligenciaartificial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\groqtestecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\groqtestecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\services\\groqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\services\\groqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\44788197855\\AppData\\Roaming\\Microsoft\\UserSecrets\\d76744aa-b8dc-42d1-94c8-f86bc9027c53\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\projetocertacon.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\projetocertacon.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\simuladortributariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\simuladortributariocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\agendafiscalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\agendafiscalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\services\\simuladortributarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\services\\simuladortributarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\models\\cenariotributario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -49,10 +104,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\favoritoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\favoritoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\models\\artigo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\models\\artigo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\models\\historicoleitura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -139,10 +190,6 @@
       "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\notasfiscaiscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\artigoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\artigoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|c:\\users\\44788197855\\desktop\\certacon-integra\\projetocertacon\\projetocertacon\\controllers\\minhaspermissoescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{16823AE1-98B3-1FAE-8D9B-3D09803D42B0}|ProjetoCertacon\\ProjetoCertacon.csproj|solutionrelative:projetocertacon\\controllers\\minhaspermissoescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -178,50 +225,271 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "HashArtigoIAService.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\HashArtigoIAService.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\HashArtigoIAService.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\HashArtigoIAService.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Services\\HashArtigoIAService.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAmwF8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T12:02:25.981Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Program.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Program.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Program.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Program.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAmwF8AAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-22T13:49:33.738Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\appsettings.json",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\appsettings.json",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\appsettings.json",
+              "RelativeToolTip": "ProjetoCertacon\\appsettings.json",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAgwBIAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-22T13:47:36.275Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BuscaArtigosService.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\BuscaArtigosService.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\BuscaArtigosService.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\BuscaArtigosService.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Services\\BuscaArtigosService.cs",
+              "ViewState": "AgIAAAICAAAAAAAAAAAkwBACAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:46:37.105Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UsoInteligenciaArtificial.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\UsoInteligenciaArtificial.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\UsoInteligenciaArtificial.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\UsoInteligenciaArtificial.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Models\\UsoInteligenciaArtificial.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:40:31.498Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "ArtigosController.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\ArtigosController.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\ArtigosController.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\ArtigosController.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Controllers\\ArtigosController.cs",
+              "ViewState": "AgIAABgEAAAAAAAAAAAAwCYEAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-22T14:29:00.465Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "InteligenciaArtificialService.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\InteligenciaArtificialService.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\InteligenciaArtificialService.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\InteligenciaArtificialService.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Services\\InteligenciaArtificialService.cs",
+              "ViewState": "AgIAAOUBAAAAAAAAAAAAAPYBAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T12:06:36.377Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ResumoInteligente.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\ResumoInteligente.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\ResumoInteligente.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\ResumoInteligente.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Models\\ResumoInteligente.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAADwvxIAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:39:12.865Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BaseConhecimentoIAController.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\BaseConhecimentoIAController.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\BaseConhecimentoIAController.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\BaseConhecimentoIAController.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Controllers\\BaseConhecimentoIAController.cs",
+              "ViewState": "AgIAAD4CAAAAAAAAAAAmwFwCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T12:03:04.879Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ControleUsoIAService.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\ControleUsoIAService.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\ControleUsoIAService.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\ControleUsoIAService.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Services\\ControleUsoIAService.cs",
+              "ViewState": "AgIAACwBAAAAAAAAAAAmwEIBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:45:40.966Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Artigo.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Artigo.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Artigo.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Artigo.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Models\\Artigo.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAA0wDUAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-17T18:33:27.711Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Usuario.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Usuario.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Usuario.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Models\\Usuario.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAA8wDgAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-22T19:27:41.224Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IntegraCertaconContext.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
+              "ViewState": "AgIAAAkCAAAAAAAAAAAmwCcCAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-22T13:43:40.348Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "InteligenciaArtificialController.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\InteligenciaArtificialController.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\InteligenciaArtificialController.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\InteligenciaArtificialController.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Controllers\\InteligenciaArtificialController.cs",
+              "ViewState": "AgIAABYBAAAAAAAAAAAcwLMBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:51:05.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "GroqTesteController.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\GroqTesteController.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\GroqTesteController.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\GroqTesteController.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Controllers\\GroqTesteController.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAmwHgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:31:12.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "secrets.json",
+              "DocumentMoniker": "C:\\Users\\44788197855\\AppData\\Roaming\\Microsoft\\UserSecrets\\d76744aa-b8dc-42d1-94c8-f86bc9027c53\\secrets.json",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\d76744aa-b8dc-42d1-94c8-f86bc9027c53\\secrets.json",
+              "ToolTip": "C:\\Users\\44788197855\\AppData\\Roaming\\Microsoft\\UserSecrets\\d76744aa-b8dc-42d1-94c8-f86bc9027c53\\secrets.json",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\d76744aa-b8dc-42d1-94c8-f86bc9027c53\\secrets.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-11-26T11:28:59.759Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "ProjetoCertacon",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\ProjetoCertacon.csproj",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\ProjetoCertacon.csproj",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\ProjetoCertacon.csproj",
+              "RelativeToolTip": "ProjetoCertacon\\ProjetoCertacon.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-11-26T11:28:55.656Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "GroqService.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\GroqService.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\GroqService.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\GroqService.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Services\\GroqService.cs",
+              "ViewState": "AgIAAOMAAAAAAAAAAAAIwAoBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:30:13.622Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
               "Title": "SimuladorTributarioController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\SimuladorTributarioController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\SimuladorTributarioController.cs",
               "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\SimuladorTributarioController.cs",
               "RelativeToolTip": "ProjetoCertacon\\Controllers\\SimuladorTributarioController.cs",
-              "ViewState": "AgIAAAgCAAAAAAAAAAAqwBsCAAALAAAAAAAAAA==",
+              "ViewState": "AgIAAAgCAAAAAAAAAAAqwA0CAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-24T19:32:47.605Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "SimuladorTributarioService.cs",
-              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
-              "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
-              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
-              "RelativeToolTip": "ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
-              "ViewState": "AgIAAPEAAAAAAAAAAAAkwAsBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-24T19:32:07.675Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 21,
               "Title": "CenarioTributario.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\CenarioTributario.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\CenarioTributario.cs",
               "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\CenarioTributario.cs",
               "RelativeToolTip": "ProjetoCertacon\\Models\\CenarioTributario.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAEBUwB0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-24T19:30:03.53Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 19,
               "Title": "AgendaFiscalController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\AgendaFiscalController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\AgendaFiscalController.cs",
@@ -234,46 +502,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Usuario.cs",
-              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Usuario.cs",
-              "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Usuario.cs",
-              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Usuario.cs",
-              "RelativeToolTip": "ProjetoCertacon\\Models\\Usuario.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAqwDIAAAAkAAAAAAAAAA==",
+              "DocumentIndex": 20,
+              "Title": "SimuladorTributarioService.cs",
+              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
+              "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
+              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
+              "RelativeToolTip": "ProjetoCertacon\\Services\\SimuladorTributarioService.cs",
+              "ViewState": "AgIAAPEAAAAAAAAAAAAkwAsBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-22T19:27:41.224Z",
+              "WhenOpened": "2026-11-24T19:32:07.675Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\appsettings.json",
-              "RelativeDocumentMoniker": "ProjetoCertacon\\appsettings.json",
-              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\appsettings.json",
-              "RelativeToolTip": "ProjetoCertacon\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-10-22T13:47:36.275Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Program.cs",
-              "RelativeDocumentMoniker": "ProjetoCertacon\\Program.cs",
-              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Program.cs",
-              "RelativeToolTip": "ProjetoCertacon\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-22T13:49:33.738Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 28,
               "Title": "GlossarioController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\GlossarioController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\GlossarioController.cs",
@@ -286,7 +528,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 27,
               "Title": "Model FavoritoArtigo.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Model FavoritoArtigo.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Model FavoritoArtigo.cs",
@@ -299,20 +541,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "IntegraCertaconContext.cs",
-              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
-              "RelativeDocumentMoniker": "ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
-              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
-              "RelativeToolTip": "ProjetoCertacon\\Data\\IntegraCertaconContext.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAxwCsAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-22T13:43:40.348Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 26,
               "Title": "HistoricoLeitura.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\HistoricoLeitura.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\HistoricoLeitura.cs",
@@ -325,7 +554,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 23,
               "Title": "ObrigacaoFiscal.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\ObrigacaoFiscal.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\ObrigacaoFiscal.cs",
@@ -338,7 +567,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 22,
               "Title": "Tema.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Tema.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Tema.cs",
@@ -351,7 +580,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 24,
               "Title": "HistoricoLeituraController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\HistoricoLeituraController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\HistoricoLeituraController.cs",
@@ -364,33 +593,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 25,
               "Title": "FavoritosController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\FavoritosController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\FavoritosController.cs",
               "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\FavoritosController.cs",
               "RelativeToolTip": "ProjetoCertacon\\Controllers\\FavoritosController.cs",
-              "ViewState": "AgIAADQBAAAAAAAAAAAAAFMBAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADEBAAAAAAAAAIBJwFMBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-24T18:04:05.832Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Artigo.cs",
-              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Artigo.cs",
-              "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Artigo.cs",
-              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Artigo.cs",
-              "RelativeToolTip": "ProjetoCertacon\\Models\\Artigo.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAmwC8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-17T18:33:27.711Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 31,
               "Title": "ChavesController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\ChavesController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\ChavesController.cs",
@@ -403,7 +619,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 29,
               "Title": "GlossarioFiscal.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\GlossarioFiscal.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\GlossarioFiscal.cs",
@@ -416,7 +632,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 33,
               "Title": "ValidacaoCnpjService.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\ValidacaoCnpjService.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\ValidacaoCnpjService.cs",
@@ -429,7 +645,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 30,
               "Title": "LimiteConsultaChavesService.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\LimiteConsultaChavesService.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\LimiteConsultaChavesService.cs",
@@ -442,7 +658,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 34,
               "Title": "PermissoesController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\PermissoesController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\PermissoesController.cs",
@@ -455,7 +671,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 40,
               "Title": "TemasController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\TemasController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\TemasController.cs",
@@ -468,7 +684,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 32,
               "Title": "ValidacaoNfeService.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\ValidacaoNfeService.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\ValidacaoNfeService.cs",
@@ -481,7 +697,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 41,
               "Title": "UsuariosController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\UsuariosController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\UsuariosController.cs",
@@ -494,7 +710,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 36,
               "Title": "ClientesCrontoller.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\ClientesCrontoller.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\ClientesCrontoller.cs",
@@ -507,7 +723,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 35,
               "Title": "PerfisController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\PerfisController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\PerfisController.cs",
@@ -520,7 +736,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 38,
               "Title": "MeuPerfilController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\MeuPerfilController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\MeuPerfilController.cs",
@@ -533,7 +749,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 39,
               "Title": "AuditoriaController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\AuditoriaController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\AuditoriaController.cs",
@@ -546,7 +762,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 37,
               "Title": "FotoPerfilController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\FotoPerfilController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\FotoPerfilController.cs",
@@ -559,7 +775,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 42,
               "Title": "CadastroClientesController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\CadastroClientesController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\CadastroClientesController.cs",
@@ -572,7 +788,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 43,
               "Title": "AutenticacaoController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\AutenticacaoController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\AutenticacaoController.cs",
@@ -585,7 +801,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 44,
               "Title": "PerfilPermissao.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\PerfilPermissao.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\PerfilPermissao.cs",
@@ -598,7 +814,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 45,
               "Title": "ArmazenamentoXmlService.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\ArmazenamentoXmlService.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\ArmazenamentoXmlService.cs",
@@ -611,7 +827,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 46,
               "Title": "NotasFiscaisController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\NotasFiscaisController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\NotasFiscaisController.cs",
@@ -624,20 +840,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
-              "Title": "ArtigosController.cs",
-              "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\ArtigosController.cs",
-              "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\ArtigosController.cs",
-              "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\ArtigosController.cs",
-              "RelativeToolTip": "ProjetoCertacon\\Controllers\\ArtigosController.cs",
-              "ViewState": "AgIAAOwDAAAAAAAAAAAqwBIEAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-22T14:29:00.465Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 51,
               "Title": "Permissao.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Permissao.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Permissao.cs",
@@ -650,7 +853,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 50,
               "Title": "Perfil.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Models\\Perfil.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Models\\Perfil.cs",
@@ -663,7 +866,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 49,
               "Title": "IntegraCertaconContext.Permissoes.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Data\\IntegraCertaconContext.Permissoes.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Data\\IntegraCertaconContext.Permissoes.cs",
@@ -676,7 +879,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 47,
               "Title": "MinhasPermissoesController.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Controllers\\MinhasPermissoesController.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Controllers\\MinhasPermissoesController.cs",
@@ -689,7 +892,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 48,
               "Title": "PermissaoService.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\PermissaoService.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\PermissaoService.cs",
@@ -702,19 +905,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 52,
               "Title": "AuditoriaService.cs",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\AuditoriaService.cs",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Services\\AuditoriaService.cs",
               "ToolTip": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Services\\AuditoriaService.cs",
               "RelativeToolTip": "ProjetoCertacon\\Services\\AuditoriaService.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAA4wCcAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAcwCcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-27T17:01:49.018Z"
+              "WhenOpened": "2026-10-27T17:01:49.018Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 53,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\44788197855\\Desktop\\Certacon-integra\\ProjetoCertacon\\ProjetoCertacon\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "ProjetoCertacon\\Properties\\launchSettings.json",
@@ -722,7 +926,8 @@
               "RelativeToolTip": "ProjetoCertacon\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAUAAAAAAAAAAAAowBcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-10-22T14:03:31.182Z"
+              "WhenOpened": "2026-10-22T14:03:31.182Z",
+              "EditorCaption": ""
             }
           ]
         }

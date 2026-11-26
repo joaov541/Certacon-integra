@@ -2371,3 +2371,6 @@
         font-size: 19px;
     }
 }
+/* Abas com integração externa */
+.st-abas { flex-wrap: wrap; }
+.st-aba { min-width: 0; }

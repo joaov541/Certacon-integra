@@ -49,4 +49,10 @@ public partial class Usuario
 
     public virtual ICollection<CenarioTributario> CenarioTributarios { get; set; }
     = new List<CenarioTributario>();
+
+    public virtual ICollection<UsoInteligenciaArtificial> UsoInteligenciaArtificiais { get; set; }
+    = new List<UsoInteligenciaArtificial>();
+
+    public virtual ICollection<Artigo> ArtigosAutorizadosIA { get; set; }
+    = new List<Artigo>();
 }

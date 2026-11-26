@@ -9,7 +9,10 @@ import RotaProtegida from "./RotaProtegida";
 import LayoutSistema from "../layouts/LayoutSistema";
 import usePermissoes from "../hooks/usePermissoes";
 
+// =========================================
 // TELAS
+// =========================================
+
 import SimuladorTributario from "../Screens/SimuladorTributario/SimuladorTributario";
 import AgendaFiscal from "../Screens/AgendaFiscal/AgendaFiscal";
 import MinhaBiblioteca from "../Screens/MinhaBiblioteca/MinhaBiblioteca";
@@ -29,10 +32,11 @@ import NovoConteudo from "../Screens/NovoConteudo/NovoConteudo";
 import Usuario from "../Screens/Usuário/usuario";
 import ConsultaChave from "../Screens/ConsultaChave/ConsultaChave";
 import PortalPublico from "../Screens/PortalPublico/PortalPublico";
-
-// NOVO BÔNUS
-
 import GlossarioFiscal from "../Screens/GlossarioFiscal/GlossarioFiscal";
+
+// INTELIGÊNCIA ARTIFICIAL
+
+import AssistenteIA from "../Screens/AssistenteIA/AssistenteIA";
 
 // =========================================
 // LAYOUT OPCIONAL
@@ -60,14 +64,33 @@ function AppRoutes() {
   return (
     <Routes>
 
-      {/* ROTAS PÚBLICAS */}
+      {/* =================================
+          ROTAS PÚBLICAS
+      ================================= */}
 
-      <Route path="/" element={<PortalPublico />} />
-      <Route path="/portal" element={<PortalPublico />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<Cadastro />} />
+      <Route
+        path="/"
+        element={<PortalPublico />}
+      />
 
-      {/* ROTAS PÚBLICAS E AUTENTICADAS */}
+      <Route
+        path="/portal"
+        element={<PortalPublico />}
+      />
+
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        path="/cadastro"
+        element={<Cadastro />}
+      />
+
+      {/* =================================
+          ROTAS PÚBLICAS E AUTENTICADAS
+      ================================= */}
 
       <Route element={<LayoutOpcional />}>
 
@@ -92,29 +115,61 @@ function AppRoutes() {
         />
 
       </Route>
-      {/* ROTAS PROTEGIDAS */}
+
+      {/* =================================
+          ROTAS PROTEGIDAS
+      ================================= */}
 
       <Route element={<RotaProtegida />}>
 
         <Route element={<LayoutSistema />}>
+
+          {/* HOME */}
 
           <Route
             path="/home"
             element={<Home />}
           />
 
+          {/* CONTEÚDOS */}
+
           <Route
             path="/conteudos"
             element={<ConteudoTributario />}
           />
+
+          {/* PERFIL */}
 
           <Route
             path="/perfil"
             element={<EditarPerfil />}
           />
 
+          {/* =================================
+              INTELIGÊNCIA ARTIFICIAL
+          ================================= */}
 
-          {/* SIMULADOR DA REFORMA TRIBUTÁRIA */}
+          <Route
+            element={
+              <RotaProtegida
+                permissoes={[
+                  "ia.consultar",
+                  "ia.gerenciar.artigos"
+                ]}
+              />
+            }
+          >
+
+            <Route
+              path="/assistente-ia"
+              element={<AssistenteIA />}
+            />
+
+          </Route>
+
+          {/* =================================
+              SIMULADOR DA REFORMA TRIBUTÁRIA
+          ================================= */}
 
           <Route
             element={
@@ -133,7 +188,10 @@ function AppRoutes() {
             />
 
           </Route>
-          {/* AGENDA FISCAL */}
+
+          {/* =================================
+              AGENDA FISCAL
+          ================================= */}
 
           <Route
             element={
@@ -153,7 +211,9 @@ function AppRoutes() {
 
           </Route>
 
-          {/* MINHA BIBLIOTECA */}
+          {/* =================================
+              MINHA BIBLIOTECA
+          ================================= */}
 
           <Route
             element={
@@ -172,7 +232,10 @@ function AppRoutes() {
             />
 
           </Route>
-          {/* CRIAR CONTEÚDO */}
+
+          {/* =================================
+              CRIAR CONTEÚDO
+          ================================= */}
 
           <Route
             element={
@@ -182,13 +245,17 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/conteudos/novo"
               element={<NovoConteudo />}
             />
+
           </Route>
 
-          {/* EDITAR CONTEÚDO */}
+          {/* =================================
+              EDITAR CONTEÚDO
+          ================================= */}
 
           <Route
             element={
@@ -198,13 +265,17 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/conteudos/editar/:id"
               element={<NovoConteudo />}
             />
+
           </Route>
 
-          {/* REVISAR CONTEÚDOS */}
+          {/* =================================
+              REVISAR CONTEÚDOS
+          ================================= */}
 
           <Route
             element={
@@ -214,13 +285,17 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/conteudos/revisao"
               element={<ConteudoRevisao />}
             />
+
           </Route>
 
-          {/* NOTAS FISCAIS */}
+          {/* =================================
+              NOTAS FISCAIS
+          ================================= */}
 
           <Route
             element={
@@ -232,13 +307,17 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/notas-fiscais"
               element={<NotasFiscais />}
             />
+
           </Route>
 
-          {/* ENVIAR XML */}
+          {/* =================================
+              ENVIAR XML
+          ================================= */}
 
           <Route
             element={
@@ -247,13 +326,17 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/enviar-xml"
               element={<EnvioArquivoXML />}
             />
+
           </Route>
 
-          {/* GERENCIAR CLIENTES */}
+          {/* =================================
+              GERENCIAR CLIENTES
+          ================================= */}
 
           <Route
             element={
@@ -262,13 +345,17 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/clientes"
               element={<GerenciarClientes />}
             />
+
           </Route>
 
-          {/* GERENCIAR USUÁRIOS */}
+          {/* =================================
+              GERENCIAR USUÁRIOS
+          ================================= */}
 
           <Route
             element={
@@ -277,13 +364,17 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/usuario"
               element={<Usuario />}
             />
+
           </Route>
 
-          {/* HISTÓRICO DE AÇÕES */}
+          {/* =================================
+              HISTÓRICO DE AÇÕES
+          ================================= */}
 
           <Route
             element={
@@ -292,17 +383,21 @@ function AppRoutes() {
               />
             }
           >
+
             <Route
               path="/historico"
               element={<HistoricoAcoes />}
             />
+
           </Route>
 
         </Route>
 
       </Route>
 
-      {/* ROTA NÃO ENCONTRADA */}
+      {/* =================================
+          ROTA NÃO ENCONTRADA
+      ================================= */}
 
       <Route
         path="*"
